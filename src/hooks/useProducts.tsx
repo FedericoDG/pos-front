@@ -1,38 +1,27 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-// import { useToast } from '@chakra-ui/react';
 
-import { getRequest, postRequest, putRequest } from '../services/httpRequest';
+import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
 import { Product } from '../interfaces';
 
 const getProducts = () => getRequest('/products');
 const createProduct = (product: Product) => postRequest('/products/', product);
 const updateProduct = (product: Product) => putRequest(`/products/${product?.id}`, product);
+const deleteProduct = (id: number) => deleteRequest(`/products/${id}`);
 
-export const useGetProducts = () => {
-  //const toast = useToast();
-
-  return useQuery(['products'], () => getProducts(), {
+export const useGetProducts = () =>
+  useQuery(['products'], () => getProducts(), {
     enabled: true,
     retry: 1,
     cacheTime: 1,
     refetchOnWindowFocus: false,
-    /*  onSuccess: () =>
-      toast({
-        title: 'Unidades recuperadas',
-        status: 'info',
-        duration: 2000,
-        isClosable: true,
-      }),
-    onError: () => { }, */
     select: (data) => data.body.products,
   });
-};
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation(createProduct, {
-    onSuccess: (res) => {
+    onSuccess: () => {
       queryClient.invalidateQueries('products');
     },
     onError: (error) => {
@@ -40,11 +29,25 @@ export const useCreateProduct = () => {
     },
   });
 };
+
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation(updateProduct, {
-    onSuccess: (res) => {
+    onSuccess: () => {
+      queryClient.invalidateQueries('products');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(deleteProduct, {
+    onSuccess: () => {
       queryClient.invalidateQueries('products');
     },
     onError: (error) => {

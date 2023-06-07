@@ -23,9 +23,9 @@ import { FiChevronDown, FiMenu } from 'react-icons/fi';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useMyContext } from '../context';
+import { useMyContext } from '../../context';
 
-import { Footer, SidebarContent } from '.';
+import { SidebarContent } from '.';
 
 interface Props {
   children: ReactNode;
@@ -103,12 +103,7 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
               <Menu>
                 <MenuButton _focus={{ boxShadow: 'none' }} py={2} transition="all 0.3s">
                   <HStack>
-                    <VStack
-                      alignItems="flex-start"
-                      // display={{ base: 'none', md: 'flex' }}
-                      ml="2"
-                      spacing="1px"
-                    >
+                    <VStack alignItems="flex-start" ml="2" spacing="1px">
                       <Text fontSize="x-small" fontWeight="bold">
                         {user.name.toLocaleUpperCase()} {user.lastname.toLocaleUpperCase()}
                       </Text>
@@ -116,9 +111,7 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
                         {user.role.name}
                       </Text>
                     </VStack>
-                    <Box
-                    //display={{ base: 'none', md: 'flex' }}
-                    >
+                    <Box>
                       <FiChevronDown />
                     </Box>
                   </HStack>
@@ -153,7 +146,6 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
             {children}
           </Flex>
         </Flex>
-        {/* <Footer /> */}
       </Box>
     </Box>
   );

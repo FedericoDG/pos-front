@@ -1,6 +1,6 @@
 import { chakra, Flex, Icon } from '@chakra-ui/react';
 
-import { useMyContext } from '../context';
+import { useMyContext } from '../../context';
 
 export const Footer = () => {
   const { handleScroll, top } = useMyContext();

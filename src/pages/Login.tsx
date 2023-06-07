@@ -4,26 +4,23 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
   Stack,
-  Image,
   Text,
 } from '@chakra-ui/react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-//import axios from 'axios';
 
-import { schema } from '../componets/login/schema';
-import { postRequest } from '../services/httpRequest';
-import { useMyContext } from '../context';
+import { postRequest } from '../services/';
+import { schema } from '../componets/login/schemas/';
 import { sessionStorage } from '../utils';
+import { useMyContext } from '../context';
 
 export const Login = () => {
   const { dispatchLogin } = useMyContext();
-  const login = async (body: any) => {
+  const login = async () => {
     try {
-      // setFetching(true);
-
       const {
         body: { user, token },
       } = await postRequest('/auth/login', {
@@ -31,33 +28,11 @@ export const Login = () => {
         password: 'super33',
       });
 
-      // const data = await axios.post('http://localhost:3005/auth/login', body);
-
-      // setFetching(false);
-
       sessionStorage.write('user', { ...user, logged: true });
       sessionStorage.write('token', token);
 
       dispatchLogin(user);
-      /* enqueueSnackbar('Login exitoso', {
-        variant: 'success',
-        autoHideDuration: 2000,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'left',
-        },
-      }); */
     } catch (error: any) {
-      // setFetching(false);
-      /* enqueueSnackbar(error.response.data.msg, {
-        variant: 'error',
-        autoHideDuration: 2000,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'left',
-        },
-      }); */
-
       throw new Error(error);
     }
   };

@@ -1,7 +1,6 @@
 import { CloseIcon, Search2Icon } from '@chakra-ui/icons';
 import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react';
-import { useEffect, useRef } from 'react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   value: string | number;

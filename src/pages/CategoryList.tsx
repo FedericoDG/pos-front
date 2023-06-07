@@ -1,8 +1,8 @@
 import { Text } from '@chakra-ui/react';
 
-import { DashBoard } from '../componets';
+import { DashBoard } from '../componets/common';
+import { Loading } from '../componets/common/Loading';
 import { useGetUnits } from '../hooks/useUnits';
-import { Loading } from '../componets/Loading';
 
 export const CategoryList = () => {
   const { data: units, isFetching } = useGetUnits();

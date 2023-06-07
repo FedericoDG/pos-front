@@ -23,11 +23,9 @@ export const SidebarItem = (props: Item) => {
       display="flex"
       fontSize="md"
       fontWeight="bold"
-      //mx="1"
       px="4"
       py="2"
       role="group"
-      //rounded="xl"
       to={link}
       transition=".15s ease"
       {...rest}
@@ -50,7 +48,6 @@ export const SidebarItem = (props: Item) => {
         color="black"
         fontSize="md"
         fontWeight="bold"
-        //mx="1"
         px="4"
         py="2"
         transition=".15s ease"
@@ -82,12 +79,10 @@ export const SidebarItem = (props: Item) => {
           color="blackAlpha.900"
           cursor="pointer"
           display="flex"
-          //mx="2"
           my="1"
           px="8"
           py="2"
           role="group"
-          //rounded="xl"
           to={link}
           transition=".15s ease"
           {...rest}

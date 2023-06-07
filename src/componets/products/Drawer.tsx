@@ -17,13 +17,13 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { FormikHelpers, useFormik, useFormikContext } from 'formik';
+import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 import { Category, Product, Unit } from '../../interfaces';
 import { useCreateProduct, useUpdateProduct } from '../../hooks/';
 
-import { schema } from '.';
+import { schema } from './schemas';
 
 interface Props {
   initialValues: Product;
@@ -34,16 +34,6 @@ interface Props {
   onClose: () => void;
   setinitialValues: Dispatch<SetStateAction<Product>>;
 }
-
-let resetPresForm = {}; // You will have to define this before useEffect
-
-const ResettingForm = () => {
-  const { resetForm } = useFormikContext();
-
-  resetPresForm = resetForm; // Store the value of resetForm in this variable
-
-  return null;
-};
 
 export const Drawer = ({
   initialValues,
@@ -82,7 +72,7 @@ export const Drawer = ({
   };
 
   const close = () => {
-    //resetForm();
+    // resetForm();
     setinitialValues(resetValues);
     onClose();
   };
@@ -110,7 +100,9 @@ export const Drawer = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="1px">Crear nuevo producto</DrawerHeader>
+          <DrawerHeader borderBottomWidth="1px">
+            {initialValues.id ? 'Editar producto' : 'Crear nuevo producto'}
+          </DrawerHeader>
           <form onSubmit={handleSubmit}>
             <DrawerBody>
               <Stack spacing="24px">

@@ -1,6 +1,6 @@
 import { Text } from '@chakra-ui/react';
 
-import { DashBoard } from '../componets';
+import { DashBoard } from '../componets/common';
 
 const Component = () => <Text>Home</Text>;
 

@@ -115,12 +115,6 @@ export const SidebarContent = (props: Props) => (
           title={title}
         />
       ))}
-      {/* <SidebarItem icon={FaRss}>Articles</SidebarItem>
-      <SidebarItem icon={HiCollection}>Collections</SidebarItem>
-      <SidebarItem icon={FaClipboardCheck}>Checklists</SidebarItem>
-      <SidebarItem icon={HiCode}>Integrations</SidebarItem>
-      <SidebarItem icon={AiFillGift}>Changelog</SidebarItem>
-      <SidebarItem icon={BsGearFill}>Settings</SidebarItem> */}
     </Flex>
   </Box>
 );

@@ -1,3 +1,4 @@
 export * from './Drawer';
+export * from './hooks';
 export * from './index';
-export * from './schema';
+export * from './schemas';

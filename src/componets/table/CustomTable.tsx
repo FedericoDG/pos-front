@@ -1,13 +1,13 @@
 import type { FilterFn, SortingState } from '@tanstack/react-table';
 
 import {
-  getCoreRowModel,
-  useReactTable,
-  flexRender,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
   ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
 } from '@tanstack/react-table';
 import {
   Box,
@@ -151,7 +151,7 @@ export const CustomTable = <T extends object>({
             justifyContent="flex-end"
             p="2"
           >
-            {table.getAllLeafColumns().map((column, idx) => (
+            {table.getAllLeafColumns().map((column) => (
               <FormControl
                 key={column.id}
                 alignItems="center"
