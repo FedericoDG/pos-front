@@ -4,15 +4,19 @@ import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { TbListDetails } from 'react-icons/Tb';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 import { Product } from '../../../interfaces';
 
 interface Props {
   onOpen: () => void;
+  onOpenModal: () => void;
   setinitialValues: Dispatch<SetStateAction<Product>>;
 }
 
-export const useColumns = ({ onOpen, setinitialValues }: Props) => {
+export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => {
+  const navigate = useNavigate();
+
   const columns = useMemo<ColumnDef<Product>[]>(
     () => [
       {
@@ -94,7 +98,12 @@ export const useColumns = ({ onOpen, setinitialValues }: Props) => {
                 variant="outline"
               />
               <MenuList>
-                <MenuItem icon={<TbListDetails />}>Ver Detalles</MenuItem>
+                <MenuItem
+                  icon={<TbListDetails />}
+                  onClick={() => navigate(`/panel/productos/${row.original.id}`)}
+                >
+                  Ver Detalles
+                </MenuItem>
                 <MenuItem
                   icon={<FaRegEdit />}
                   onClick={() => {
@@ -104,7 +113,13 @@ export const useColumns = ({ onOpen, setinitialValues }: Props) => {
                 >
                   Editar
                 </MenuItem>
-                <MenuItem icon={<FaRegTrashAlt />} onClick={() => console.log(row.original.id)}>
+                <MenuItem
+                  icon={<FaRegTrashAlt />}
+                  onClick={() => {
+                    onOpenModal();
+                    setinitialValues(row.original);
+                  }}
+                >
                   Eliminar
                 </MenuItem>
               </MenuList>
@@ -117,7 +132,7 @@ export const useColumns = ({ onOpen, setinitialValues }: Props) => {
         size: 80,
       },
     ],
-    [onOpen]
+    [onOpen, onOpenModal]
   );
 
   return { columns };

@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
-import { Drawer } from '../componets/products';
+import { ConfirmationModal, Drawer } from '../componets/products';
 import { Loading } from '../componets/common/';
 import { Product } from '../interfaces';
 import { useColumns } from '../componets/products/hooks';
@@ -12,6 +12,7 @@ import { useGetCategories, useGetUnits, useGetProducts } from '../hooks';
 
 export const Products = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
 
   const resetValues: Product = useMemo(
     () => ({
@@ -35,7 +36,7 @@ export const Products = () => {
 
   const isIndeterminate = isFetchingProducts || isFetchingCategories || isFetchingUnits;
 
-  const { columns } = useColumns({ onOpen, setinitialValues });
+  const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Productos">
@@ -64,6 +65,11 @@ export const Products = () => {
             setinitialValues={setinitialValues}
             units={units}
             onClose={onClose}
+          />
+          <ConfirmationModal
+            initialValues={initialValues}
+            isOpen={isOpenModal}
+            onClose={onCloseModal}
           />
         </>
       )}
