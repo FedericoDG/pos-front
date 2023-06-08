@@ -49,19 +49,19 @@ export interface Product {
 }
 
 export interface Category {
-  id: number;
+  id?: number;
   name: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
+  description: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Unit {
-  id: number;
+  id?: number;
   code: string;
   name: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Price {
@@ -102,6 +102,23 @@ export interface Warehouses {
   updatedAt: string;
 }
 
+export interface Client {
+  id?: number;
+  name: string;
+  lastname: string;
+  document: string;
+  email: string;
+  password: string;
+  password2?: string;
+  phone?: string;
+  mobile?: string;
+  address?: string;
+  info?: string;
+  roleId: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface ProductResponse {
   body: {
     product: Product;
@@ -135,5 +152,16 @@ export interface UnitResponse {
 export interface UnitsResponse {
   body: {
     units: Unit[];
+  };
+}
+
+export interface ClientResponse {
+  body: {
+    client: Client;
+  };
+}
+export interface ClientsResponse {
+  body: {
+    clients: Client[];
   };
 }

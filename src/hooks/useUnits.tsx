@@ -1,9 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { getRequest } from '../services/';
-import { UnitsResponse } from '../interfaces';
+import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
+import { Unit, UnitsResponse } from '../interfaces';
 
 const getUnits = () => getRequest<UnitsResponse>(`/units`);
+const createUnit = (unit: Unit) => postRequest('/units/', unit);
+const updateUnit = (unit: Unit) => putRequest(`/units/${unit?.id}`, unit);
+const deleteUnit = (id: number) => deleteRequest(`/units/${id}`);
 
 export const useGetUnits = () =>
   useQuery(['units'], () => getUnits(), {
@@ -14,31 +17,41 @@ export const useGetUnits = () =>
     select: (data) => data.body.units,
   });
 
-/* export const usePostBalance = () => {
-  const { enqueueSnackbar } = useSnackbar();
+export const useCreateUnits = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(createBalance, {
-    onSuccess: (res) => {
-      queryClient.invalidateQueries('balance');
-      enqueueSnackbar(res.msg, {
-        variant: 'success',
-        autoHideDuration: 3000,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'left',
-        },
-      });
+  return useMutation(createUnit, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('units');
     },
     onError: (error) => {
-      enqueueSnackbar(error.response.data.msg, {
-        variant: 'error',
-        autoHideDuration: 3000,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'left',
-        },
-      });
+      console.log(error);
     },
   });
-}; */
+};
+
+export const useUpdateUnits = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(updateUnit, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('units');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+};
+
+export const useDeleteUnits = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(deleteUnit, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('units');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+};

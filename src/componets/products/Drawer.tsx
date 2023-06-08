@@ -102,9 +102,9 @@ export const Drawer = ({
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="1px">
-            {initialValues.id ? 'Editar producto' : 'Crear nuevo producto'}
+          <DrawerCloseButton color="white" />
+          <DrawerHeader bg="green.500" borderBottomWidth="1px" color="white">
+            {initialValues.id ? 'Editar Producto' : 'Crear Producto'}
           </DrawerHeader>
           <form onSubmit={handleSubmit}>
             <DrawerBody>
@@ -124,14 +124,8 @@ export const Drawer = ({
 
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
-                    <FormLabel htmlFor="unitId">Unidad</FormLabel>
-                    <Select
-                      id="unitId"
-                      minW="224px"
-                      name="unitId"
-                      value={values.unitId}
-                      onChange={handleChange}
-                    >
+                    <FormLabel htmlFor="unitId">Unidad:</FormLabel>
+                    <Select id="unitId" minW="224px" name="unitId" onChange={handleChange}>
                       {units.map((unit) => (
                         <option key={unit.name} value={unit.id}>
                           {unit.name}
@@ -142,14 +136,8 @@ export const Drawer = ({
                   </Box>
 
                   <Box>
-                    <FormLabel htmlFor="categoryId">Categoría</FormLabel>
-                    <Select
-                      id="categoryId"
-                      minW="224px"
-                      name="categoryId"
-                      value={values.categoryId}
-                      onChange={handleChange}
-                    >
+                    <FormLabel htmlFor="categoryId">Categoría:</FormLabel>
+                    <Select id="categoryId" minW="224px" name="categoryId" onChange={handleChange}>
                       {categories.map((category) => (
                         <option key={category.name} value={category.id}>
                           {category.name}

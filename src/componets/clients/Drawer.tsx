@@ -1,0 +1,260 @@
+import {
+  Box,
+  Button,
+  Drawer as ChakraDrawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  FormLabel,
+  Input,
+  NumberInput,
+  NumberInputField,
+  Stack,
+  Textarea,
+} from '@chakra-ui/react';
+import { Dispatch, SetStateAction, useRef } from 'react';
+import { FormikHelpers, useFormik } from 'formik';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
+
+import { Client } from '../../interfaces';
+import { useCreateClient, useUpdateClient } from '../../hooks/';
+import { ErrorMessage } from '../common';
+
+import { schema, schema2 } from './schemas';
+
+interface Props {
+  initialValues: Client;
+  resetValues: Client;
+  isOpen: boolean;
+  onClose: () => void;
+  setinitialValues: Dispatch<SetStateAction<Client>>;
+}
+
+export const Drawer = ({
+  initialValues,
+  resetValues,
+  setinitialValues,
+  isOpen,
+  onClose,
+}: Props) => {
+  const firstField = useRef<HTMLInputElement | null>(null);
+
+  const { mutate: createClient } = useCreateClient();
+  const { mutate: updateClient } = useUpdateClient();
+
+  const onSubmit = (values: Client, actions: FormikHelpers<Client>) => {
+    const { password2, ...rest } = values;
+
+    if (values?.id) {
+      updateClient(rest);
+    } else {
+      createClient(rest);
+    }
+    setinitialValues(resetValues);
+    actions.resetForm();
+    onClose();
+  };
+
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues,
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: initialValues.id
+      ? () => toFormikValidationSchema(schema2)
+      : () => toFormikValidationSchema(schema),
+    onSubmit,
+  });
+
+  const { handleSubmit, handleChange, values, errors, touched } = formik;
+
+  const close = () => {
+    // resetForm();
+    //formik.setTouched({}, false);
+    formik.resetForm();
+    setinitialValues(resetValues);
+    onClose();
+  };
+
+  return (
+    <>
+      <ChakraDrawer
+        initialFocusRef={firstField}
+        isOpen={isOpen}
+        placement="right"
+        size="md"
+        onClose={close}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton color="white" />
+          <DrawerHeader bg="whatsapp.600" borderBottomWidth="1px" color="white">
+            {initialValues.id ? 'Editar Cliente' : 'Crear Cliente'}
+          </DrawerHeader>
+          <form onSubmit={handleSubmit}>
+            <DrawerBody>
+              <Stack spacing="14px">
+                <Flex gap="4" justifyContent="space-between">
+                  <Box>
+                    <FormLabel htmlFor="name">Nombre:</FormLabel>
+                    <Input
+                      ref={firstField}
+                      id="name"
+                      name="name"
+                      placeholder="Juan"
+                      value={values.name}
+                      onChange={handleChange}
+                    />
+                    {errors.name && touched.name && <ErrorMessage>{errors.name}</ErrorMessage>}
+                  </Box>
+                  <Box>
+                    <FormLabel htmlFor="lastname">Apellido:</FormLabel>
+                    <Input
+                      id="lastname"
+                      name="lastname"
+                      placeholder="Pérez"
+                      value={values.lastname}
+                      onChange={handleChange}
+                    />
+                    {errors.lastname && touched.lastname && (
+                      <ErrorMessage>{errors.lastname}</ErrorMessage>
+                    )}
+                  </Box>
+                </Flex>
+
+                <Flex gap="4" justifyContent="space-between">
+                  <Box>
+                    <FormLabel htmlFor="document">DNI:</FormLabel>
+                    <NumberInput>
+                      <NumberInputField
+                        id="document"
+                        name="document"
+                        placeholder="28809909"
+                        type="number"
+                        value={values.document}
+                        onChange={handleChange}
+                      />
+                    </NumberInput>
+                    {errors.document && touched.document && (
+                      <ErrorMessage>{errors.document}</ErrorMessage>
+                    )}
+                  </Box>
+                  <Box>
+                    <FormLabel htmlFor="email">Email:</FormLabel>
+                    <Input
+                      autoComplete="off"
+                      id="email"
+                      name="email"
+                      placeholder="juanperez@gmail.com"
+                      value={values.email}
+                      onChange={handleChange}
+                    />
+                    {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+                  </Box>
+                </Flex>
+
+                {!initialValues.id && (
+                  <Flex gap="4" justifyContent="space-between">
+                    <Box>
+                      <FormLabel htmlFor="password">Contraseña:</FormLabel>
+                      <Input
+                        autoComplete="new-password"
+                        id="password"
+                        name="password"
+                        placeholder="hola123"
+                        type="password"
+                        value={values.password}
+                        onChange={handleChange}
+                      />
+                      {errors.password && touched.password && (
+                        <ErrorMessage>{errors.password}</ErrorMessage>
+                      )}
+                    </Box>
+                    <Box>
+                      <FormLabel htmlFor="password2">Repetir contraseña:</FormLabel>
+                      <Input
+                        id="password2"
+                        name="password2"
+                        placeholder="hola123"
+                        type="password"
+                        value={values.password2 || ''}
+                        onChange={handleChange}
+                      />
+                      {errors.password2 && touched.password2 && (
+                        <ErrorMessage>{errors.password2}</ErrorMessage>
+                      )}
+                    </Box>
+                  </Flex>
+                )}
+
+                <Flex gap="4" justifyContent="space-between">
+                  <Box>
+                    <FormLabel htmlFor="phone">Teléfono:</FormLabel>
+                    <NumberInput>
+                      <NumberInputField
+                        id="phone"
+                        name="phone"
+                        placeholder="11436874"
+                        type="number"
+                        value={values.phone}
+                        onChange={handleChange}
+                      />
+                    </NumberInput>
+                  </Box>
+                  <Box>
+                    <FormLabel htmlFor="mobile">Celular:</FormLabel>
+                    <NumberInput>
+                      <NumberInputField
+                        id="mobile"
+                        name="mobile"
+                        placeholder="11614155"
+                        type="number"
+                        value={values.mobile}
+                        onChange={handleChange}
+                      />
+                    </NumberInput>
+                  </Box>
+                </Flex>
+
+                <Box>
+                  <FormLabel htmlFor="address">Dirección:</FormLabel>
+                  <Input
+                    id="address"
+                    name="address"
+                    placeholder="Av. San Martín 358"
+                    value={values.address}
+                    onChange={handleChange}
+                  />
+                </Box>
+
+                <Box>
+                  <FormLabel htmlFor="info">Información extra:</FormLabel>
+                  <Textarea
+                    id="info"
+                    name="info"
+                    placeholder="Edificio de rejas negras."
+                    value={values.info}
+                    onChange={handleChange}
+                  />
+                </Box>
+              </Stack>
+            </DrawerBody>
+
+            <DrawerFooter borderTopWidth="1px" bottom="0" position="fixed" w="full">
+              <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
+                Cancelar
+              </Button>
+              <Button colorScheme="blue" type="submit" w="full">
+                Guardar
+              </Button>
+            </DrawerFooter>
+          </form>
+        </DrawerContent>
+      </ChakraDrawer>
+    </>
+  );
+};

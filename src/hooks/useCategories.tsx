@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { getRequest } from '../services/';
-import { CategoriesResponse } from '../interfaces';
+import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
+import { CategoriesResponse, Category } from '../interfaces';
 
 const getCategories = () => getRequest<CategoriesResponse>(`/categories`);
+const createCategory = (category: Category) => postRequest('/categories/', category);
+const updateCategory = (category: Category) => putRequest(`/categories/${category?.id}`, category);
+const deleteCategory = (id: number) => deleteRequest(`/categories/${id}`);
 
-// GET units
 export const useGetCategories = () =>
   useQuery(['categories'], () => getCategories(), {
     enabled: true,
@@ -15,32 +17,41 @@ export const useGetCategories = () =>
     select: (data) => data.body.categories,
   });
 
-// MUTATION POST
-/* export const usePostBalance = () => {
-  const { enqueueSnackbar } = useSnackbar();
+export const useCreateCategory = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(createBalance, {
-    onSuccess: (res) => {
-      queryClient.invalidateQueries('balance');
-      enqueueSnackbar(res.msg, {
-        variant: 'success',
-        autoHideDuration: 3000,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'left',
-        },
-      });
+  return useMutation(createCategory, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('categories');
     },
     onError: (error) => {
-      enqueueSnackbar(error.response.data.msg, {
-        variant: 'error',
-        autoHideDuration: 3000,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'left',
-        },
-      });
+      console.log(error);
     },
   });
-}; */
+};
+
+export const useUpdateCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(updateCategory, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('categories');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+};
+
+export const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(deleteCategory, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('categories');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+};

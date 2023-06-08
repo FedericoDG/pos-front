@@ -12,15 +12,15 @@ import {
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 
-import { Product } from '../../interfaces';
-import { useDeleteProduct } from '../../hooks';
+import { Client } from '../../interfaces';
+import { useDeleteClient } from '../../hooks';
 
 interface Props {
-  initialValues: Product;
-  resetValues: Product;
+  initialValues: Client;
+  resetValues: Client;
   isOpen: boolean;
   onClose: () => void;
-  setinitialValues: Dispatch<SetStateAction<Product>>;
+  setinitialValues: Dispatch<SetStateAction<Client>>;
 }
 
 export const ConfirmationModal = ({
@@ -30,13 +30,13 @@ export const ConfirmationModal = ({
   isOpen,
   onClose,
 }: Props) => {
-  const { mutate } = useDeleteProduct();
+  const { mutate } = useDeleteClient();
 
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Eliminar Producto</ModalHeader>
+        <ModalHeader>Eliminar Cliente</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text fontSize="2xl">¿Confirma la eliminación?</Text>

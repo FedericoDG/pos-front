@@ -9,30 +9,33 @@ export const SidebarItem = (props: Item) => {
   return link ? (
     <Link
       _activeLink={{
-        color: 'whatsapp.600',
-        bg: 'gray.100',
+        color: 'whitesmoke',
+        bg: 'green.500',
       }}
       _hover={{
-        color: 'whatsapp.600',
-        bg: 'gray.100',
+        color: 'whitesmoke',
+        bg: 'green.600',
       }}
       alignItems="center"
       as={RouterLink}
-      color="blackAlpha.800"
+      color="blackAlpha.700"
       cursor="pointer"
       display="flex"
       fontSize="md"
       fontWeight="bold"
+      mx="2"
+      my="1"
       px="4"
       py="2"
       role="group"
+      rounded="md"
       to={link}
       transition=".15s ease"
       {...rest}
     >
       <Icon
         _groupHover={{
-          color: 'whatsapp.600',
+          color: 'whitesmoke',
         }}
         as={icon}
         boxSize="5"
@@ -55,7 +58,7 @@ export const SidebarItem = (props: Item) => {
       >
         <Icon
           _groupHover={{
-            color: 'whatsapp.600',
+            color: 'green.500',
           }}
           as={icon}
           boxSize="5"

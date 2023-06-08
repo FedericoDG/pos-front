@@ -1,80 +1,61 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
-import { ConfirmationModal, Drawer } from '../componets/products';
-import { Loading } from '../componets/common/';
-import { Product } from '../interfaces';
-import { useColumns } from '../componets/products/hooks';
-import { useGetCategories, useGetUnits, useGetProducts } from '../hooks';
+import { Loading } from '../componets/common';
+import { Category } from '../interfaces';
+import { useColumns } from '../componets/categories/hooks';
+import { useGetCategories } from '../hooks';
+import { ConfirmationModal, Drawer } from '../componets/categories';
 
-export const Products = () => {
+export const Categories = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
 
-  const resetValues: Product = useMemo(
+  const resetValues: Category = useMemo(
     () => ({
-      code: '',
-      barcode: '',
       name: '',
       description: '',
-      categoryId: 1,
-      unitId: 1,
-      status: 'ENABLED',
-      allownegativestock: 'DISABLED',
-      alertlowstock: 'DISABLED',
-      lowstock: 0,
     }),
     []
   );
 
   const [initialValues, setinitialValues] = useState(resetValues);
 
-  const { data: products, isFetching: isFetchingProducts } = useGetProducts();
   const { data: categories, isFetching: isFetchingCategories } = useGetCategories();
-  const { data: units, isFetching: isFetchingUnits } = useGetUnits();
 
-  useEffect(() => {
-    if (!categories || !units) return;
-
-    resetValues.categoryId = categories[0].id!;
-    resetValues.unitId = units[0].id!;
-  }, [categories, resetValues, units]);
-
-  const isIndeterminate = isFetchingProducts || isFetchingCategories || isFetchingUnits;
+  const isIndeterminate = isFetchingCategories;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
   return (
-    <DashBoard isIndeterminate={isIndeterminate} title="Productos">
+    <DashBoard isIndeterminate={isIndeterminate} title="Categorías">
       <Button colorScheme="green" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
-        Crear Producto
+        Crear Categoría
       </Button>
 
-      {!products || !categories || !units ? (
+      {!categories ? (
         <Loading />
       ) : (
         <>
-          <Box w="full">
+          <Box maxW="800px" w="full">
             <CustomTable
-              //showColumsSelector
+              showColumsSelector
               showGlobalFilter
-              //showNavigation
-              //showPrintOption
-              amount={products.length}
+              showNavigation
+              showPrintOption
+              amount={categories.length}
               columns={columns}
-              data={products}
+              data={categories}
             />
           </Box>
           <Drawer
-            categories={categories}
             initialValues={initialValues}
             isOpen={isOpen}
             resetValues={resetValues}
             setinitialValues={setinitialValues}
-            units={units}
             onClose={onClose}
           />
           <ConfirmationModal

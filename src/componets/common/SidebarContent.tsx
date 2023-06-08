@@ -1,10 +1,11 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { BiCategoryAlt } from 'react-icons/bi';
 import { FaCubes, FaHome, FaBalanceScale, FaFileInvoiceDollar, FaWarehouse } from 'react-icons/fa';
+import { BsPersonVcard } from 'react-icons/bs';
 //import { AiOutlineUnorderedList, AiOutlinePlusCircle } from 'react-icons/ai';
 import { IconType } from 'react-icons';
 
-import { SidebarItem } from '.';
+import { Footer, SidebarItem } from '.';
 
 interface Props {
   borderRight?: string;
@@ -30,38 +31,37 @@ export interface Item {
 
 const items: Item[] = [
   {
-    title: 'INICIO',
+    title: 'Inicio',
     link: '/panel/',
     icon: FaHome,
   },
   {
-    title: 'PRODUCTOS',
+    title: 'Productos',
+    link: '/panel/productos',
     icon: FaCubes,
-    subItems: [
-      {
-        name: 'Productos',
-        icon: FaCubes,
-        link: '/panel/productos',
-      },
-      {
-        name: 'Categorías',
-        icon: BiCategoryAlt,
-        link: '/panel/categorias',
-      },
-      {
-        name: 'Unidades',
-        icon: FaBalanceScale,
-        link: '/panel/unidades',
-      },
-    ],
   },
   {
-    title: 'DEPÓSITOS',
+    title: 'Categorías',
+    link: '/panel/categorias',
+    icon: BiCategoryAlt,
+  },
+  {
+    title: 'Unidades',
+    link: '/panel/unidades',
+    icon: FaBalanceScale,
+  },
+  {
+    title: 'Clientes',
+    link: '/panel/clientes',
+    icon: BsPersonVcard,
+  },
+  {
+    title: 'Depósitos',
     link: '/panel/depositos',
     icon: FaWarehouse,
   },
   {
-    title: 'LISTA DE PRECIOS',
+    title: 'Lista de precios',
     link: '/panel/lista-precios',
     icon: FaFileInvoiceDollar,
   },
@@ -101,7 +101,7 @@ export const SidebarContent = (props: Props) => (
     {...props}
   >
     <Flex align="center" px="4" py="3">
-      <Text color="whatsapp.500" fontSize="2xl" fontWeight="bold" ml="2">
+      <Text color="green.500" fontSize="2xl" fontWeight="bold" ml="2">
         Sistema
       </Text>
     </Flex>

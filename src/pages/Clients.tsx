@@ -1,80 +1,70 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
-import { ConfirmationModal, Drawer } from '../componets/products';
-import { Loading } from '../componets/common/';
-import { Product } from '../interfaces';
-import { useColumns } from '../componets/products/hooks';
-import { useGetCategories, useGetUnits, useGetProducts } from '../hooks';
+import { ConfirmationModal, Drawer } from '../componets/clients';
+import { Loading } from '../componets/common';
+import { Client } from '../interfaces';
+import { useColumns } from '../componets/clients/hooks';
+import { useGetClients } from '../hooks';
 
-export const Products = () => {
+export const Clients = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
 
-  const resetValues: Product = useMemo(
+  const resetValues: Client = useMemo(
     () => ({
-      code: '',
-      barcode: '',
       name: '',
-      description: '',
-      categoryId: 1,
-      unitId: 1,
-      status: 'ENABLED',
-      allownegativestock: 'DISABLED',
-      alertlowstock: 'DISABLED',
-      lowstock: 0,
+      lastname: '',
+      document: '',
+      email: '',
+      password: '',
+      password2: '',
+      phone: '',
+      mobile: '',
+      address: '',
+      info: '',
+      roleId: 5,
     }),
     []
   );
 
   const [initialValues, setinitialValues] = useState(resetValues);
 
-  const { data: products, isFetching: isFetchingProducts } = useGetProducts();
-  const { data: categories, isFetching: isFetchingCategories } = useGetCategories();
-  const { data: units, isFetching: isFetchingUnits } = useGetUnits();
+  const { data: clients, isFetching: isFetchingClients } = useGetClients();
 
-  useEffect(() => {
-    if (!categories || !units) return;
-
-    resetValues.categoryId = categories[0].id!;
-    resetValues.unitId = units[0].id!;
-  }, [categories, resetValues, units]);
-
-  const isIndeterminate = isFetchingProducts || isFetchingCategories || isFetchingUnits;
+  const isIndeterminate = isFetchingClients;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Productos">
       <Button colorScheme="green" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
-        Crear Producto
+        Crear Cliente
       </Button>
 
-      {!products || !categories || !units ? (
+      {!clients ? (
         <Loading />
       ) : (
         <>
           <Box w="full">
             <CustomTable
-              //showColumsSelector
+              showColumsSelector
               showGlobalFilter
-              //showNavigation
-              //showPrintOption
-              amount={products.length}
+              showNavigation
+              showPrintOption
+              amount={clients.length}
               columns={columns}
-              data={products}
+              data={clients}
             />
           </Box>
           <Drawer
-            categories={categories}
             initialValues={initialValues}
             isOpen={isOpen}
             resetValues={resetValues}
             setinitialValues={setinitialValues}
-            units={units}
             onClose={onClose}
           />
           <ConfirmationModal
