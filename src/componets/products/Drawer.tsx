@@ -59,6 +59,9 @@ export const Drawer = ({
           : 'ENABLED',
       categoryId: Number(values.categoryId),
       unitId: Number(values.unitId),
+      alertlowstock:
+        !values.alertlowstock || values.alertlowstock === 'DISABLED' ? 'DISABLED' : 'ENABLED',
+      lowstock: Number(values.lowstock),
     };
 
     if (values?.id) {
@@ -192,6 +195,35 @@ export const Drawer = ({
                     onChange={handleChange}
                   />
                 </Box>
+
+                <Flex gap="4" justifyContent="space-between">
+                  <Box>
+                    <FormLabel htmlFor="alertlowstock">Alerta por stock bajo</FormLabel>
+                    <Switch
+                      defaultChecked={initialValues.alertlowstock === 'ENABLED'}
+                      id="alertlowstock"
+                      name="alertlowstock"
+                      size="lg"
+                      onChange={handleChange}
+                    />
+                    {errors.alertlowstock && touched.alertlowstock && (
+                      <div>{errors.alertlowstock}</div>
+                    )}
+                  </Box>
+
+                  <Box>
+                    <FormLabel htmlFor="lowstock">Stock mínimo</FormLabel>
+                    <Input
+                      id="lowstock"
+                      isDisabled={values.alertlowstock === 'DISABLED' || !values.alertlowstock}
+                      name="lowstock"
+                      placeholder="20"
+                      value={values.lowstock}
+                      onChange={handleChange}
+                    />
+                    {errors.lowstock && touched.lowstock && <div>{errors.lowstock}</div>}
+                  </Box>
+                </Flex>
 
                 <Flex gap="4" justifyContent="space-between">
                   <Box>

@@ -26,40 +26,6 @@ export interface Role {
   description: string | null;
 }
 
-/* export interface Product {
-  id?: number;
-  code: string;
-  barcode: string;
-  name: string;
-  status: string;
-  allownegativestock: string;
-  description: string | null;
-  categoryId: number;
-  unitId: number;
-  totalStock?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  units?: Unit;
-  categories?: Category;
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  description: string | null;
-  createdAt: string;
-  updatedAt: string;
-  products: Product[];
-}
-
-export interface Unit {
-  id: number;
-  code: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-} */
-
 export interface Product {
   id?: number;
   code: string;
@@ -70,6 +36,8 @@ export interface Product {
   description: string;
   categoryId: number;
   unitId: number;
+  alertlowstock: string;
+  lowstock: number;
   totalStock?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -86,7 +54,6 @@ export interface Category {
   description?: string;
   createdAt: string;
   updatedAt: string;
-  code?: string;
 }
 
 export interface Unit {
@@ -133,4 +100,40 @@ export interface Warehouses {
   address: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ProductResponse {
+  body: {
+    product: Product;
+  };
+}
+
+export interface ProductsResponse {
+  body: {
+    products: Product[];
+  };
+}
+
+export interface CategoryResponse {
+  body: {
+    category: Category;
+  };
+}
+
+export interface CategoriesResponse {
+  body: {
+    categories: Category[];
+  };
+}
+
+export interface UnitResponse {
+  body: {
+    unit: Unit;
+  };
+}
+
+export interface UnitsResponse {
+  body: {
+    units: Unit[];
+  };
 }

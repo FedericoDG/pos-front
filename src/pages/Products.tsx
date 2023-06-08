@@ -1,4 +1,4 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { useMemo, useState } from 'react';
 
@@ -24,6 +24,8 @@ export const Products = () => {
       unitId: 1,
       status: 'ENABLED',
       allownegativestock: 'DISABLED',
+      alertlowstock: 'DISABLED',
+      lowstock: 0,
     }),
     []
   );
@@ -48,15 +50,17 @@ export const Products = () => {
         <Loading />
       ) : (
         <>
-          <CustomTable
-            showColumsSelector
-            showGlobalFilter
-            showNavigation
-            showPrintOption
-            amount={products.length}
-            columns={columns}
-            data={products}
-          />
+          <Box w="full">
+            <CustomTable
+              //showColumsSelector
+              showGlobalFilter
+              //showNavigation
+              //showPrintOption
+              amount={products.length}
+              columns={columns}
+              data={products}
+            />
+          </Box>
           <Drawer
             categories={categories}
             initialValues={initialValues}

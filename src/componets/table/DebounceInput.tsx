@@ -41,19 +41,19 @@ export const DebouncedInput = ({
   };
 
   return (
-    <InputGroup boxShadow="md" maxW={250} rounded="md">
+    <InputGroup maxW={250} rounded="md">
       <InputLeftElement pointerEvents="none">
         <Search2Icon color="gray.400" />
       </InputLeftElement>
       <Input
         ref={inputRef}
         autoFocus
-        _focus={{ bg: 'white' }}
-        _hover={{ bg: 'white' }}
+        /*  _focus={{ bg: 'white' }}
+        _hover={{ bg: 'white' }} */
         bg="white"
         placeholder={placeholder}
         value={value}
-        variant="filled"
+        variant="outline"
         onChange={(e) => setValue(e.target.value)}
       />
       {value && (

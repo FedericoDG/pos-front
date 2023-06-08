@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
-import { Product } from '../interfaces';
+import { Product, ProductResponse, ProductsResponse } from '../interfaces';
 
-const getProducts = () => getRequest('/products');
-const getProduct = (id: number) => getRequest(`/products/${id}`);
+const getProducts = () => getRequest<ProductsResponse>('/products');
+const getProduct = (id: number) => getRequest<ProductResponse>(`/products/${id}`);
 const createProduct = (product: Product) => postRequest('/products/', product);
 const updateProduct = (product: Product) => putRequest(`/products/${product?.id}`, product);
 const deleteProduct = (id: number) => deleteRequest(`/products/${id}`);

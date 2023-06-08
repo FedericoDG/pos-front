@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { getRequest } from '../services/';
+import { CategoriesResponse } from '../interfaces';
 
-const getCategories = () => getRequest(`/categories`);
+const getCategories = () => getRequest<CategoriesResponse>(`/categories`);
 
 // GET units
 export const useGetCategories = () =>

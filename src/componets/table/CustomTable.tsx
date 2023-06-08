@@ -122,7 +122,7 @@ export const CustomTable = <T extends object>({
   });
 
   return (
-    <Box mb={20} minW="1066px">
+    <Box bg="white" mb={20} p="4" rounded="md" shadow="md" w="full">
       {showPrintOption ? (
         <Flex justifyContent="flex-end">
           <Button colorScheme="linkedin" leftIcon={<ImPrinter />} size="sm" onClick={handlePrint}>
@@ -145,11 +145,13 @@ export const CustomTable = <T extends object>({
         {showColumsSelector ? (
           <Flex
             bg="white"
-            borderRadius="md"
-            boxShadow="md"
-            direction={{ base: 'column', md: 'row' }}
+            border="1px"
             justifyContent="flex-end"
             p="2"
+            rounded="md"
+            borderColor="blackAlpha.100"
+            // boxShadow="md"
+            direction={{ base: 'column', md: 'row' }}
           >
             {table.getAllLeafColumns().map((column) => (
               <FormControl
@@ -185,12 +187,11 @@ export const CustomTable = <T extends object>({
       <TableContainer
         ref={tableRef}
         bg="white"
+        border="1px"
         borderColor="blackAlpha.300"
-        borderRadius=" md"
-        borderStyle="solid"
-        borderWidth="1px"
         fontFamily="IBM Plex Mono, mono"
         mt="6"
+        rounded=" md"
         w="full"
       >
         <TableChakra colorScheme="blackAlpha" size="sm" variant="simple">

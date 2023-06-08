@@ -7,12 +7,12 @@ interface Config {
   url?: string;
 }
 
-const httpRequest = (
+const httpRequest = <T>(
   verb: string,
   endpoint: string,
   data?: Record<string, any> | null,
   headers = {}
-) => {
+): Promise<T> => {
   const config: Config = {
     headers,
   };
@@ -38,47 +38,14 @@ const httpRequest = (
   });
 };
 
-// handle get requests
-/**
- * @param {string} endpoint
- * @param {object} headers
- * @returns {Promise}
- *
- * This function is used to handle get requests, receives the endpoint and the headers,
- * if not headers are passed, then the headers object is setted to {}
- * if token exist in localStorage, then add it to headers
- */
-export const getRequest = (endpoint: string, headers?: Record<string, any>): Promise<any> =>
-  httpRequest('get', endpoint, null, headers);
+export const getRequest = <T>(endpoint: string, headers?: Record<string, any>): Promise<T> =>
+  httpRequest<T>('get', endpoint, null, headers);
 
-// handle post requests
-/**
- * @param {string} endpoint
- * @param {object} data
- * @param {object} headers
- * @returns {Promise}
- *
- * this function is used to handle post requests, receives the endpoint, data and headers,
- * if not headers are passed, then the headers object is setted to {}
- * if token exist in localStorage, then add it to headers
- */
 export const postRequest = (
   endpoint: string,
   data: any,
   headers?: Record<string, any>
 ): Promise<any> => httpRequest('post', endpoint, data, headers);
-
-// handle put requests
-/**
- * @param {string} endpoint
- * @param {object} data
- * @param {object} headers
- * @returns {Promise}
- *
- * this function is used to handle put requests, receives the endpoint, data and headers,
- * if not headers are passed, then the headers object is setted to {}
- * if token exist in localStorage, then add it to headers
- */
 
 export const putRequest = (
   endpoint: string,
@@ -86,32 +53,11 @@ export const putRequest = (
   headers?: Record<string, any>
 ): Promise<any> => httpRequest('put', endpoint, data, headers);
 
-// handle patch requests
-/**
- * @param {string} endpoint
- * @param {object} data
- * @param {object} headers
- * @returns {Promise}
- *
- * this function is used to handle put requests, receives the endpoint, data and headers,
- * if not headers are passed, then the headers object is setted to {}
- * if token exist in localStorage, then add it to headers
- */
 export const patchRequest = (
   endpoint: string,
   data: Record<string, any>,
   headers?: Record<string, any>
 ): Promise<any> => httpRequest('patch', endpoint, data, headers);
-
-/**
- * @param {string} endpoint
- * @param {object} headers
- * @returns {Promise}
- *
- * this function is used to handle delete requests, receives the endpoint, data and headers,
- * if not headers are passed, then the headers object is setted to {}
- * if token exist in localStorage, then add it to headers
- */
 
 export const deleteRequest = (endpoint: string, headers?: Record<string, any>): Promise<any> =>
   httpRequest('delete', endpoint, null, headers);

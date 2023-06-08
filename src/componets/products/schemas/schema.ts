@@ -7,4 +7,5 @@ export const schema = z.object({
   description: z.string().optional(),
   unitId: z.preprocess((val) => Number(val), z.number()),
   categoryId: z.preprocess((val) => Number(val), z.number()),
+  lowstock: z.preprocess((val) => Number(val), z.number()),
 });

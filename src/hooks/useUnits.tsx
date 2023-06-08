@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { getRequest } from '../services/';
+import { UnitsResponse } from '../interfaces';
 
-const getUnits = () => getRequest(`/units`);
+const getUnits = () => getRequest<UnitsResponse>(`/units`);
 
 export const useGetUnits = () =>
   useQuery(['units'], () => getUnits(), {

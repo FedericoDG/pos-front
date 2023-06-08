@@ -56,7 +56,7 @@ export const Login = () => {
           >
             <Form>
               <FormControl id="email">
-                <FormLabel>Correo Electrónico</FormLabel>
+                <FormLabel>Correo Electrónico:</FormLabel>
                 <Input as={Field} name="email" type="text" />
                 <ErrorMessage name="email">
                   {(msg) => (
@@ -75,7 +75,7 @@ export const Login = () => {
                 </ErrorMessage>
               </FormControl>
               <FormControl id="password">
-                <FormLabel>Contraseña</FormLabel>
+                <FormLabel>Contraseña:</FormLabel>
                 <Input as={Field} name="password" type="password" />
                 <ErrorMessage name="password">
                   {(msg) => (
@@ -94,7 +94,7 @@ export const Login = () => {
                 </ErrorMessage>
               </FormControl>
               <Stack mt="3">
-                <Button colorScheme="whatsapp" type="submit" variant="solid">
+                <Button colorScheme="blue" type="submit" variant="solid">
                   INICIAR SESIÓN
                 </Button>
               </Stack>
