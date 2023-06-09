@@ -59,10 +59,10 @@ export const Products = () => {
         <>
           <Box w="full">
             <CustomTable
-              //showColumsSelector
+              showColumsSelector
               showGlobalFilter
-              //showNavigation
-              //showPrintOption
+              showNavigation
+              showPrintOption
               amount={products.length}
               columns={columns}
               data={products}

@@ -5,7 +5,6 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Center,
   Divider,
   Flex,
   Heading,
@@ -18,7 +17,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import Barcode from 'react-barcode';
-import { LegacyRef, useRef } from 'react';
+import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 import { DashBoard } from '../componets/common';
@@ -37,6 +36,21 @@ export const ProductDetails = () => {
   const handlePrint = useReactToPrint({
     content: () => barcodeRef.current,
   });
+
+  const getBgColor = ({
+    totalStock,
+    alertNeg,
+    alertStock,
+  }: {
+    totalStock: number;
+    alertNeg: string;
+    alertStock: number;
+  }): string => {
+    if (totalStock <= 0) return 'red.400';
+    if (alertNeg === 'ENABLED' && totalStock <= alertStock) return 'orange.300';
+
+    return 'whatsapp.300';
+  };
 
   if (!product) return <h1>Cargando...</h1>;
 
@@ -104,7 +118,7 @@ export const ProductDetails = () => {
         </Card>
 
         <Stack bg="white" borderRadius="md" p="4" shadow="md" w="full">
-          {product.prices ? (
+          {product.prices?.length! > 0 ? (
             <>
               <Heading mx="3" size="md">
                 PRECIOS ACTUALES
@@ -116,7 +130,7 @@ export const ProductDetails = () => {
                 textAlign="center"
                 w="full"
               >
-                {product.prices.map((item) => (
+                {product.prices!.map((item) => (
                   <Stat
                     key={item?.id}
                     bg="gray.700"
@@ -135,12 +149,12 @@ export const ProductDetails = () => {
                   </Stat>
                 ))}
               </StatGroup>
+              <Divider orientation="horizontal" />
             </>
           ) : null}
 
           {product.stocks ? (
             <>
-              <Divider orientation="horizontal" />
               <Stack mx="3">
                 <Heading size="md">STOCK</Heading>
                 <StatGroup
@@ -151,8 +165,13 @@ export const ProductDetails = () => {
                 >
                   <Stat
                     alignSelf="stretch"
-                    bg="whatsapp.100"
+                    bg={getBgColor({
+                      totalStock: product.totalStock!,
+                      alertNeg: product.alertlowstock,
+                      alertStock: product.lowstock!,
+                    })}
                     borderRadius="md"
+                    color="blackAlpha.600"
                     maxW="200px"
                     mr="3"
                     p="2"
@@ -186,9 +205,6 @@ export const ProductDetails = () => {
           ) : null}
         </Stack>
       </Flex>
-      <Button mt="5" onClick={handlePrint}>
-        Imprimir código de barra
-      </Button>
     </DashBoard>
   );
 };

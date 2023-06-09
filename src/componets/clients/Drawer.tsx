@@ -11,8 +11,6 @@ import {
   Flex,
   FormLabel,
   Input,
-  NumberInput,
-  NumberInputField,
   Stack,
   Textarea,
 } from '@chakra-ui/react';
@@ -129,16 +127,14 @@ export const Drawer = ({
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
                     <FormLabel htmlFor="document">DNI:</FormLabel>
-                    <NumberInput>
-                      <NumberInputField
-                        id="document"
-                        name="document"
-                        placeholder="28809909"
-                        type="number"
-                        value={values.document}
-                        onChange={handleChange}
-                      />
-                    </NumberInput>
+                    <Input
+                      id="document"
+                      name="document"
+                      placeholder="28809909"
+                      //
+                      value={values.document}
+                      onChange={handleChange}
+                    />
                     {errors.document && touched.document && (
                       <ErrorMessage>{errors.document}</ErrorMessage>
                     )}
@@ -194,29 +190,27 @@ export const Drawer = ({
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
                     <FormLabel htmlFor="phone">Teléfono:</FormLabel>
-                    <NumberInput>
-                      <NumberInputField
-                        id="phone"
-                        name="phone"
-                        placeholder="11436874"
-                        type="number"
-                        value={values.phone}
-                        onChange={handleChange}
-                      />
-                    </NumberInput>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      placeholder="11436874"
+                      value={values.phone}
+                      onChange={handleChange}
+                    />
+                    {errors.phone && touched.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
                   </Box>
                   <Box>
                     <FormLabel htmlFor="mobile">Celular:</FormLabel>
-                    <NumberInput>
-                      <NumberInputField
-                        id="mobile"
-                        name="mobile"
-                        placeholder="11614155"
-                        type="number"
-                        value={values.mobile}
-                        onChange={handleChange}
-                      />
-                    </NumberInput>
+                    <Input
+                      id="mobile"
+                      name="mobile"
+                      placeholder="11614155"
+                      value={values.mobile}
+                      onChange={handleChange}
+                    />
+                    {errors.mobile && touched.mobile && (
+                      <ErrorMessage>{errors.mobile}</ErrorMessage>
+                    )}
                   </Box>
                 </Flex>
 

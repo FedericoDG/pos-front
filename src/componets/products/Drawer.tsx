@@ -22,6 +22,7 @@ import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 import { Category, Product, Unit } from '../../interfaces';
 import { useCreateProduct, useUpdateProduct } from '../../hooks/';
+import { ErrorMessage } from '../common';
 
 import { schema } from './schemas';
 
@@ -75,7 +76,7 @@ export const Drawer = ({
   };
 
   const close = () => {
-    // resetForm();
+    formik.resetForm();
     setinitialValues(resetValues);
     onClose();
   };
@@ -108,18 +109,18 @@ export const Drawer = ({
           </DrawerHeader>
           <form onSubmit={handleSubmit}>
             <DrawerBody>
-              <Stack spacing="24px">
+              <Stack spacing="14px">
                 <Box>
-                  <FormLabel htmlFor="name">Nombre</FormLabel>
+                  <FormLabel htmlFor="name">Nombre:</FormLabel>
                   <Input
                     ref={firstField}
                     id="name"
                     name="name"
-                    placeholder="Nombre del producto..."
+                    placeholder="Tomate redondo"
                     value={values.name}
                     onChange={handleChange}
                   />
-                  {errors.name && touched.name && <div>{errors.name}</div>}
+                  {errors.name && touched.name && <ErrorMessage>{errors.name}</ErrorMessage>}
                 </Box>
 
                 <Flex gap="4" justifyContent="space-between">
@@ -132,7 +133,9 @@ export const Drawer = ({
                         </option>
                       ))}
                     </Select>
-                    {errors.unitId && touched.unitId && <div>{errors.unitId}</div>}
+                    {errors.unitId && touched.unitId && (
+                      <ErrorMessage>{errors.unitId}</ErrorMessage>
+                    )}
                   </Box>
 
                   <Box>
@@ -144,41 +147,46 @@ export const Drawer = ({
                         </option>
                       ))}
                     </Select>
-                    {errors.categoryId && touched.categoryId && <div>{errors.categoryId}</div>}
+                    {errors.categoryId && touched.categoryId && (
+                      <ErrorMessage>{errors.categoryId}</ErrorMessage>
+                    )}
                   </Box>
                 </Flex>
 
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
-                    <FormLabel htmlFor="code">Código</FormLabel>
+                    <FormLabel htmlFor="code">Código:</FormLabel>
                     <Input
                       id="code"
                       name="code"
-                      placeholder="Código..."
+                      placeholder="tomre"
                       value={values.code}
                       onChange={handleChange}
                     />
-                    {errors.code && touched.code && <div>{errors.code}</div>}
+                    {errors.code && touched.code && <ErrorMessage>{errors.code}</ErrorMessage>}
                   </Box>
 
                   <Box>
-                    <FormLabel htmlFor="barcode">Código de Barra</FormLabel>
+                    <FormLabel htmlFor="barcode">Código de Barra:</FormLabel>
                     <Input
                       id="barcode"
                       name="barcode"
-                      placeholder="Código de barra..."
+                      placeholder="012345678912"
                       value={values.barcode}
                       onChange={handleChange}
                     />
-                    {errors.barcode && touched.barcode && <div>{errors.barcode}</div>}
+                    {errors.barcode && touched.barcode && (
+                      <ErrorMessage>{errors.barcode}</ErrorMessage>
+                    )}
                   </Box>
                 </Flex>
 
                 <Box>
-                  <FormLabel htmlFor="description">Descripción</FormLabel>
+                  <FormLabel htmlFor="description">Descripción:</FormLabel>
                   <Textarea
                     id="description"
                     name="description"
+                    placeholder="Tomate redondo primera calidad"
                     value={values.description!}
                     onChange={handleChange}
                   />
@@ -186,36 +194,7 @@ export const Drawer = ({
 
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
-                    <FormLabel htmlFor="alertlowstock">Alerta por stock bajo</FormLabel>
-                    <Switch
-                      defaultChecked={initialValues.alertlowstock === 'ENABLED'}
-                      id="alertlowstock"
-                      name="alertlowstock"
-                      size="lg"
-                      onChange={handleChange}
-                    />
-                    {errors.alertlowstock && touched.alertlowstock && (
-                      <div>{errors.alertlowstock}</div>
-                    )}
-                  </Box>
-
-                  <Box>
-                    <FormLabel htmlFor="lowstock">Stock mínimo</FormLabel>
-                    <Input
-                      id="lowstock"
-                      isDisabled={values.alertlowstock === 'DISABLED' || !values.alertlowstock}
-                      name="lowstock"
-                      placeholder="20"
-                      value={values.lowstock}
-                      onChange={handleChange}
-                    />
-                    {errors.lowstock && touched.lowstock && <div>{errors.lowstock}</div>}
-                  </Box>
-                </Flex>
-
-                <Flex gap="4" justifyContent="space-between">
-                  <Box>
-                    <FormLabel htmlFor="status">Producto habilitado</FormLabel>
+                    <FormLabel htmlFor="status">Producto habilitado:</FormLabel>
                     <Switch
                       defaultChecked={initialValues.status === 'ENABLED'}
                       id="status"
@@ -223,11 +202,10 @@ export const Drawer = ({
                       size="lg"
                       onChange={handleChange}
                     />
-                    {errors.status && touched.status && <div>{errors.status}</div>}
                   </Box>
 
                   <Box>
-                    <FormLabel htmlFor="allownegativestock">Permitir stock negativo</FormLabel>
+                    <FormLabel htmlFor="allownegativestock">Permitir stock negativo:</FormLabel>
                     <Switch
                       colorScheme="red"
                       defaultChecked={initialValues.allownegativestock === 'ENABLED'}
@@ -236,9 +214,31 @@ export const Drawer = ({
                       size="lg"
                       onChange={handleChange}
                     />
-                    {errors.allownegativestock && touched.allownegativestock && (
-                      <div>{errors.allownegativestock}</div>
-                    )}
+                  </Box>
+                </Flex>
+
+                <Flex gap="4" justifyContent="space-between">
+                  <Box>
+                    <FormLabel htmlFor="alertlowstock">Alerta por stock bajo:</FormLabel>
+                    <Switch
+                      defaultChecked={initialValues.alertlowstock === 'ENABLED'}
+                      id="alertlowstock"
+                      name="alertlowstock"
+                      size="lg"
+                      onChange={handleChange}
+                    />
+                  </Box>
+
+                  <Box>
+                    <FormLabel htmlFor="lowstock">Stock mínimo:</FormLabel>
+                    <Input
+                      id="lowstock"
+                      isDisabled={values.alertlowstock === 'DISABLED' || !values.alertlowstock}
+                      name="lowstock"
+                      placeholder="20"
+                      value={values.lowstock}
+                      onChange={handleChange}
+                    />
                   </Box>
                 </Flex>
               </Stack>

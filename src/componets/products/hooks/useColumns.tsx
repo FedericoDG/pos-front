@@ -1,5 +1,14 @@
 import { DragHandleIcon } from '@chakra-ui/icons';
-import { Badge, Box, Menu, MenuButton, IconButton, MenuList, MenuItem } from '@chakra-ui/react';
+import {
+  Badge,
+  Box,
+  Menu,
+  MenuButton,
+  IconButton,
+  MenuList,
+  MenuItem,
+  Text,
+} from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { TbListDetails } from 'react-icons/Tb';
@@ -20,13 +29,6 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
   const columns = useMemo<ColumnDef<Product>[]>(
     () => [
       {
-        id: 'id',
-        header: 'Id',
-        cell: (row: CellContext<Product, unknown>) => row.renderValue(),
-        accessorKey: 'id',
-        size: 50,
-      },
-      {
         id: 'nombre',
         header: 'Nombre',
         cell: (row: CellContext<Product, unknown>) => row.renderValue(),
@@ -43,6 +45,16 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         header: 'Cód. de Barra',
         cell: (row: CellContext<Product, unknown>) => row.renderValue(),
         accessorKey: 'barcode',
+      },
+      {
+        id: 'stock',
+        header: 'Stock Total',
+        cell: ({ row }: CellContext<Product, unknown>) => (
+          <p>
+            {row.original.totalStock} {row.original.unit?.code}
+          </p>
+        ),
+        accessorFn: (x) => x.totalStock,
       },
       {
         id: 'habilitado',
@@ -76,14 +88,19 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         accessorFn: (x) => x.allownegativestock,
       },
       {
-        id: 'stock',
-        header: 'Stock',
-        cell: ({ row }: CellContext<Product, unknown>) => (
-          <p>
-            {row.original.totalStock} {row.original.unit?.code}
-          </p>
-        ),
-        accessorFn: (x) => x.totalStock,
+        id: 'alertar',
+        header: 'Alertar bajo stock',
+        cell: (row: CellContext<Product, unknown>) =>
+          row.renderValue() === 'ENABLED' ? (
+            <Text>
+              {row.row.original.lowstock} {row.row.original.unit?.code}
+            </Text>
+          ) : (
+            <Badge colorScheme="red" variant="subtle">
+              No Alertar
+            </Badge>
+          ),
+        accessorFn: (x) => x.alertlowstock,
       },
       {
         id: 'acciones',

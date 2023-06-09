@@ -12,9 +12,9 @@ export const schema = z
       .nonempty({ message: 'Debe contener al menos un caracter' }),
     document: z
       .string({ required_error: 'El DNI es requerido' })
-      .trim()
-      .min(8, 'Debe tener 8 caracteres')
-      .max(8, 'Debe tener 8 caracteres'),
+      .regex(/^[0-9]+$/, 'Sólo se aceptan números')
+      .min(8, 'Debe tener 8 dígitos')
+      .max(8, 'Debe tener 8 dígitos'),
     email: z.string({ required_error: 'El Email es requerido' }).email('No es un Email válido'),
     password: z
       .string({ required_error: 'La contraseña es requerida' })
@@ -24,8 +24,14 @@ export const schema = z
       .string({ required_error: 'La contraseña es requerida' })
       .trim()
       .min(6, 'Debe tener al menos 6 caracteres'),
-    phone: z.string().optional(),
-    mobile: z.string().optional(),
+    phone: z
+      .string()
+      .regex(/^[0-9]+$/, 'Sólo se aceptan números')
+      .optional(),
+    mobile: z
+      .string()
+      .regex(/^[0-9]+$/, 'Sólo se aceptan números')
+      .optional(),
     address: z.string().optional(),
     info: z.string().optional(),
   })

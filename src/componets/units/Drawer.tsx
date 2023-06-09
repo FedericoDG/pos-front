@@ -58,6 +58,7 @@ export const Drawer = ({
   };
 
   const close = () => {
+    formik.resetForm();
     setinitialValues(resetValues);
     onClose();
   };
