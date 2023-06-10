@@ -38,7 +38,11 @@ import { useReactToPrint } from 'react-to-print';
 import { DebouncedInput } from './';
 import { filterFns } from './';
 
-interface ReactTableProps<T extends object> {
+interface Id {
+  id: string;
+}
+
+interface ReactTableProps<T extends object & Id> {
   data: T[];
   columns: ColumnDef<T>[];
   amount: number;
@@ -47,6 +51,7 @@ interface ReactTableProps<T extends object> {
   showGlobalFilter?: boolean;
   showColumsSelector?: boolean;
   showPrintOption?: boolean;
+  showSelectButton?: boolean;
   filterFn?: FilterFn<T>;
 }
 
@@ -75,7 +80,7 @@ const PagButton = (props: any) => {
   );
 };
 
-export const CustomTable = <T extends object>({
+export const CustomTable = <T extends object & Id>({
   data,
   columns,
   amount,
@@ -84,13 +89,16 @@ export const CustomTable = <T extends object>({
   showGlobalFilter = false,
   showColumsSelector = false,
   showPrintOption = false,
-  filterFn = filterFns.contains,
+  showSelectButton = false,
+  filterFn = filterFns.fuzzy,
 }: ReactTableProps<T>) => {
   const [globalFilter, setGlobalFilter] = useState('');
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const [columnVisibility, setColumnVisibility] = useState({});
+
+  const [rowSelection, setRowSelection] = useState({});
 
   const tableRef = useRef<HTMLDivElement | null>(null);
 
@@ -104,6 +112,7 @@ export const CustomTable = <T extends object>({
       globalFilter,
       sorting,
       columnVisibility,
+      rowSelection,
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -115,21 +124,41 @@ export const CustomTable = <T extends object>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    //
+    onRowSelectionChange: setRowSelection,
   });
 
   const handlePrint = useReactToPrint({
     content: () => tableRef.current,
   });
 
+  const getIds = (rows: T[]) => {
+    const ids = JSON.stringify(rows.map((el) => el.id));
+
+    console.log(ids);
+  };
+
   return (
     <Box bg="white" mb={20} p="4" rounded="md" shadow="md" w="full">
-      {showPrintOption ? (
-        <Flex justifyContent="flex-end">
+      <Flex gap="1" justifyContent="flex-end">
+        {showPrintOption ? (
           <Button colorScheme="linkedin" leftIcon={<ImPrinter />} size="sm" onClick={handlePrint}>
             Imprimir
           </Button>
-        </Flex>
-      ) : null}
+        ) : null}
+        {showSelectButton ? (
+          <Button
+            colorScheme="purple"
+            isDisabled={table.getSelectedRowModel().flatRows.length < 1}
+            size="sm"
+            onClick={() => {
+              getIds(table.getSelectedRowModel().flatRows.map((el) => el.original));
+            }}
+          >
+            Hacer algo con las filas seleccionadas
+          </Button>
+        ) : null}
+      </Flex>
       <Flex
         alignItems={{ base: 'flex-start', md: 'center' }}
         direction={{ base: 'column', md: 'row' }}
@@ -146,12 +175,11 @@ export const CustomTable = <T extends object>({
           <Flex
             bg="white"
             border="1px"
+            borderColor="blackAlpha.100"
+            direction={{ base: 'column', md: 'row' }}
             justifyContent="flex-end"
             p="2"
             rounded="md"
-            borderColor="blackAlpha.100"
-            // boxShadow="md"
-            direction={{ base: 'column', md: 'row' }}
           >
             {table.getAllLeafColumns().map((column) => (
               <FormControl

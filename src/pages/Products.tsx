@@ -63,6 +63,7 @@ export const Products = () => {
               showGlobalFilter
               showNavigation
               showPrintOption
+              showSelectButton
               amount={products.length}
               columns={columns}
               data={products}

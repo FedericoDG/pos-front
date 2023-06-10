@@ -2,19 +2,20 @@ import { DragHandleIcon } from '@chakra-ui/icons';
 import {
   Badge,
   Box,
+  IconButton,
   Menu,
   MenuButton,
-  IconButton,
-  MenuList,
   MenuItem,
+  MenuList,
   Text,
 } from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
-import { TbListDetails } from 'react-icons/Tb';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
+import { TbListDetails } from 'react-icons/Tb';
 import { useNavigate } from 'react-router-dom';
 
+import { IndeterminateCheckbox } from '../';
 import { Product } from '../../../interfaces';
 
 interface Props {
@@ -29,10 +30,29 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
   const columns = useMemo<ColumnDef<Product>[]>(
     () => [
       {
-        id: 'nombre',
-        header: 'Nombre',
-        cell: (row: CellContext<Product, unknown>) => row.renderValue(),
-        accessorKey: 'name',
+        id: 'seleccion',
+        header: ({ table }) => (
+          <IndeterminateCheckbox
+            {...{
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
+            }}
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="px-1">
+            <IndeterminateCheckbox
+              {...{
+                key: row.original.id,
+                checked: row.getIsSelected(),
+                disabled: !row.getCanSelect(),
+                indeterminate: row.getIsSomeSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              }}
+            />
+          </div>
+        ),
       },
       {
         id: 'cod',
@@ -70,7 +90,8 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
               Deshabilitado
             </Badge>
           ),
-        accessorKey: 'status',
+        //enableSorting: false,
+        accessorFn: (x) => x.status,
       },
       {
         id: 'stock(-)',
@@ -149,7 +170,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         size: 80,
       },
     ],
-    [onOpen, onOpenModal]
+    [navigate, onOpen, onOpenModal, setinitialValues]
   );
 
   return { columns };

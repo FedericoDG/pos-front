@@ -40,7 +40,7 @@ export const Clients = () => {
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
   return (
-    <DashBoard isIndeterminate={isIndeterminate} title="Productos">
+    <DashBoard isIndeterminate={isIndeterminate} title="Clientes">
       <Button colorScheme="green" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
         Crear Cliente
       </Button>

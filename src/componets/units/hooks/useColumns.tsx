@@ -1,9 +1,8 @@
-import { DragHandleIcon } from '@chakra-ui/icons';
 import { Box, Menu, MenuButton, IconButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
+import { DragHandleIcon } from '@chakra-ui/icons';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 
 import { Unit } from '../../../interfaces';
 
@@ -14,17 +13,8 @@ interface Props {
 }
 
 export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => {
-  const navigate = useNavigate();
-
   const columns = useMemo<ColumnDef<Unit>[]>(
     () => [
-      {
-        id: 'id',
-        header: 'Id',
-        cell: (row: CellContext<Unit, unknown>) => row.renderValue(),
-        accessorKey: 'id',
-        size: 50,
-      },
       {
         id: 'codigo',
         header: 'Código',

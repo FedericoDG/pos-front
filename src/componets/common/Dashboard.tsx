@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useMyContext } from '../../context';
 
-import { SidebarContent } from '.';
+import { Footer, SidebarContent } from '.';
 
 interface Props {
   children: ReactNode;
@@ -64,14 +64,14 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
         }}
         transition=".3s ease"
       >
-        <Flex alignItems="center" flexDir="column" minH="93vh">
+        <Flex alignItems="center" flexDir="column" minH="calc(100vh - 62px)">
           <Flex
             align="center"
             as="header"
             bg="white"
             //borderBottomWidth={3}
             borderColor="whatsapp.300"
-            h="14"
+            h="56px"
             justify="space-between"
             px="4"
             w="full"
@@ -138,7 +138,6 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
             as="main"
             direction="column"
             display="flex"
-            flex="1"
             p={3}
             pb={0}
             w="full"
@@ -146,6 +145,7 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
             {children}
           </Flex>
         </Flex>
+        <Footer />
       </Box>
     </Box>
   );
