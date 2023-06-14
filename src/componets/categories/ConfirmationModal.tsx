@@ -42,7 +42,7 @@ export const ConfirmationModal = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button colorScheme="brand" mr={3} onClick={onClose}>
             Cancelar
           </Button>
           <Button

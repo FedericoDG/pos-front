@@ -19,14 +19,11 @@ import { useMyContext } from '../context';
 
 export const Login = () => {
   const { dispatchLogin } = useMyContext();
-  const login = async () => {
+  const login = async (values: { email: string; password: string; }) => {
     try {
       const {
         body: { user, token },
-      } = await postRequest('/auth/login', {
-        email: 'superadmin@gmail.com',
-        password: 'super33',
-      });
+      } = await postRequest('/auth/login', values);
 
       sessionStorage.write('user', { ...user, logged: true });
       sessionStorage.write('token', token);
@@ -94,7 +91,7 @@ export const Login = () => {
                 </ErrorMessage>
               </FormControl>
               <Stack mt="3">
-                <Button colorScheme="blue" type="submit" variant="solid">
+                <Button colorScheme="brand" type="submit" variant="solid">
                   INICIAR SESIÓN
                 </Button>
               </Stack>

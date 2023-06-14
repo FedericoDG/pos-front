@@ -104,7 +104,12 @@ export const Drawer = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton color="white" />
-          <DrawerHeader bg="green.500" borderBottomWidth="1px" color="white">
+          {/* x' bgGradient='linear(to-r, green.200, pink.500)' */}
+          <DrawerHeader
+            bgGradient="linear(to-r, brand.600, blue.500)"
+            borderBottomWidth="1px"
+            color="white"
+          >
             {initialValues.id ? 'Editar Producto' : 'Crear Producto'}
           </DrawerHeader>
           <form onSubmit={handleSubmit}>
@@ -119,6 +124,7 @@ export const Drawer = ({
                     placeholder="Tomate redondo"
                     value={values.name}
                     onChange={handleChange}
+                    onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                   />
                   {errors.name && touched.name && <ErrorMessage>{errors.name}</ErrorMessage>}
                 </Box>
@@ -126,7 +132,13 @@ export const Drawer = ({
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
                     <FormLabel htmlFor="unitId">Unidad:</FormLabel>
-                    <Select id="unitId" minW="224px" name="unitId" onChange={handleChange}>
+                    <Select
+                      id="unitId"
+                      minW="224px"
+                      name="unitId"
+                      value={initialValues.unit?.id}
+                      onChange={handleChange}
+                    >
                       {units.map((unit) => (
                         <option key={unit.name} value={unit.id}>
                           {unit.name}
@@ -140,7 +152,13 @@ export const Drawer = ({
 
                   <Box>
                     <FormLabel htmlFor="categoryId">Categoría:</FormLabel>
-                    <Select id="categoryId" minW="224px" name="categoryId" onChange={handleChange}>
+                    <Select
+                      id="categoryId"
+                      minW="224px"
+                      name="categoryId"
+                      value={initialValues.category?.id}
+                      onChange={handleChange}
+                    >
                       {categories.map((category) => (
                         <option key={category.name} value={category.id}>
                           {category.name}
@@ -196,6 +214,7 @@ export const Drawer = ({
                   <Box>
                     <FormLabel htmlFor="status">Producto habilitado:</FormLabel>
                     <Switch
+                      colorScheme="brand"
                       defaultChecked={initialValues.status === 'ENABLED'}
                       id="status"
                       name="status"
@@ -221,6 +240,7 @@ export const Drawer = ({
                   <Box>
                     <FormLabel htmlFor="alertlowstock">Alerta por stock bajo:</FormLabel>
                     <Switch
+                      colorScheme="brand"
                       defaultChecked={initialValues.alertlowstock === 'ENABLED'}
                       id="alertlowstock"
                       name="alertlowstock"
@@ -248,7 +268,7 @@ export const Drawer = ({
               <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
                 Cancelar
               </Button>
-              <Button colorScheme="blue" type="submit" w="full">
+              <Button colorScheme="brand" type="submit" w="full">
                 Guardar
               </Button>
             </DrawerFooter>

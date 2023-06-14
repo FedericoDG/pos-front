@@ -13,36 +13,32 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   Icon,
-  Select,
-  Switch,
+  Stack,
   Table as TableChakra,
   TableContainer,
   Tbody,
   Td,
-  Text,
   Tfoot,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import './customTable.css';
 import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons';
 import { ImPrinter } from 'react-icons/im';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { useMemo, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
-import { DebouncedInput } from './';
+import { usePriceListContext } from '../pricelistreport/context';
+
+import { Navigation } from './Navigation';
+
+import { ColumnSelector, GlobalFilter } from './';
 import { filterFns } from './';
 
-interface Id {
-  id: string;
-}
-
-interface ReactTableProps<T extends object & Id> {
+interface ReactTableProps<T extends object> {
   data: T[];
   columns: ColumnDef<T>[];
   amount: number;
@@ -53,34 +49,10 @@ interface ReactTableProps<T extends object & Id> {
   showPrintOption?: boolean;
   showSelectButton?: boolean;
   filterFn?: FilterFn<T>;
+  flag?: string;
 }
 
-const PagButton = (props: any) => {
-  const activeStyle = {
-    bg: 'gray.300',
-    color: 'white',
-  };
-
-  return (
-    <Button
-      _hover={!props.isDisabled && activeStyle}
-      bg="white"
-      color="gray.800"
-      cursor={props.isDisabled && 'not-allowed'}
-      mx={1}
-      opacity={props.isDisabled && 0.6}
-      px={4}
-      py={2}
-      rounded="lg"
-      {...(props.active && activeStyle)}
-      {...props}
-    >
-      {props.children}
-    </Button>
-  );
-};
-
-export const CustomTable = <T extends object & Id>({
+export const CustomTable = <T extends object>({
   data,
   columns,
   amount,
@@ -90,7 +62,8 @@ export const CustomTable = <T extends object & Id>({
   showColumsSelector = false,
   showPrintOption = false,
   showSelectButton = false,
-  filterFn = filterFns.fuzzy,
+  filterFn = filterFns.contains,
+  flag = '',
 }: ReactTableProps<T>) => {
   const [globalFilter, setGlobalFilter] = useState('');
 
@@ -112,7 +85,7 @@ export const CustomTable = <T extends object & Id>({
       globalFilter,
       sorting,
       columnVisibility,
-      rowSelection,
+      rowSelection: rowSelection,
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -128,37 +101,70 @@ export const CustomTable = <T extends object & Id>({
     onRowSelectionChange: setRowSelection,
   });
 
+  const {
+    setProductList,
+    setPriceListsList,
+    setWarehousesList,
+    goToNext,
+    goToPrevious,
+    activeStep,
+  } = usePriceListContext();
+
   const handlePrint = useReactToPrint({
     content: () => tableRef.current,
   });
 
-  const getIds = (rows: T[]) => {
-    const ids = JSON.stringify(rows.map((el) => el.id));
+  const getIds = (rows: any[]) => {
+    if (flag === 'products') {
+      setProductList(() => [...rows.map((el) => el.id)]);
+    }
 
-    console.log(ids);
+    if (flag === 'priceLists') {
+      setPriceListsList(() => [...rows.map((el) => el.id)]);
+    }
+
+    if (flag === 'warehouses') {
+      setWarehousesList(() => [...rows.map((el) => el.id)]);
+    }
+    setRowSelection({});
+    goToNext();
   };
 
   return (
-    <Box bg="white" mb={20} p="4" rounded="md" shadow="md" w="full">
+    <Box _dark={{ bg: 'gray.700' }} bg="white" mb={20} p="4" rounded="md" shadow="md" w="full">
       <Flex gap="1" justifyContent="flex-end">
-        {showPrintOption ? (
+        {showPrintOption && (
           <Button colorScheme="linkedin" leftIcon={<ImPrinter />} size="sm" onClick={handlePrint}>
             Imprimir
           </Button>
-        ) : null}
-        {showSelectButton ? (
-          <Button
-            colorScheme="purple"
-            isDisabled={table.getSelectedRowModel().flatRows.length < 1}
-            size="sm"
-            onClick={() => {
-              getIds(table.getSelectedRowModel().flatRows.map((el) => el.original));
-            }}
-          >
-            Hacer algo con las filas seleccionadas
-          </Button>
-        ) : null}
+        )}
+
+        {showSelectButton && (
+          <Stack direction="row" justifyContent="space-between" w="full">
+            <Button
+              colorScheme="brand"
+              isDisabled={activeStep === 1}
+              leftIcon={<ArrowBackIcon />}
+              minW="150px"
+              size="lg"
+              onClick={goToPrevious}
+            >
+              Anterior
+            </Button>
+            <Button
+              colorScheme="brand"
+              isDisabled={Object.keys(rowSelection).length === 0 && flag !== 'warehouses'}
+              minW="150px"
+              rightIcon={<ArrowForwardIcon />}
+              size="lg"
+              onClick={() => getIds(table.getSelectedRowModel().flatRows.map((el) => el.original))}
+            >
+              Siguiente
+            </Button>
+          </Stack>
+        )}
       </Flex>
+
       <Flex
         alignItems={{ base: 'flex-start', md: 'center' }}
         direction={{ base: 'column', md: 'row' }}
@@ -166,54 +172,14 @@ export const CustomTable = <T extends object & Id>({
         py="2"
       >
         {showGlobalFilter ? (
-          <DebouncedInput
-            value={globalFilter ?? ''}
-            onChange={(value) => setGlobalFilter(String(value))}
-          />
+          <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
         ) : null}
-        {showColumsSelector ? (
-          <Flex
-            bg="white"
-            border="1px"
-            borderColor="blackAlpha.100"
-            direction={{ base: 'column', md: 'row' }}
-            justifyContent="flex-end"
-            p="2"
-            rounded="md"
-          >
-            {table.getAllLeafColumns().map((column) => (
-              <FormControl
-                key={column.id}
-                alignItems="center"
-                display="flex"
-                justifyContent="flex-end"
-              >
-                <FormLabel
-                  alignItems="center"
-                  cursor="pointer"
-                  display="flex"
-                  htmlFor={column.id}
-                  mb="0"
-                  ml="5"
-                  mr="0"
-                >
-                  <Text fontSize="sm">{column.id}</Text>
-                  <Switch
-                    id={column.id}
-                    isChecked={column.getIsVisible()}
-                    ml={1}
-                    size="sm"
-                    onChange={column.getToggleVisibilityHandler()}
-                  />
-                </FormLabel>
-              </FormControl>
-            ))}
-          </Flex>
-        ) : null}
+        {showColumsSelector ? <ColumnSelector table={table} /> : null}
       </Flex>
 
       <TableContainer
         ref={tableRef}
+        _dark={{ bg: 'gray.700', color: 'whitesmoke' }}
         bg="white"
         border="1px"
         borderColor="blackAlpha.300"
@@ -230,7 +196,7 @@ export const CustomTable = <T extends object & Id>({
                   return (
                     <Th
                       key={header.id}
-                      bg="blackAlpha.800"
+                      bg="gray.700"
                       colSpan={header.colSpan}
                       color="whitesmoke"
                       px="1"
@@ -271,7 +237,7 @@ export const CustomTable = <T extends object & Id>({
             ))}
           </Tbody>
 
-          {showFooter ? (
+          {showFooter && (
             <Tfoot>
               {table.getFooterGroups().map((footerGroup) => (
                 <Tr key={footerGroup.id}>
@@ -285,76 +251,11 @@ export const CustomTable = <T extends object & Id>({
                 </Tr>
               ))}
             </Tfoot>
-          ) : null}
+          )}
         </TableChakra>
       </TableContainer>
 
-      {showNavigation ? (
-        <Box bg="blackAlpha.700" borderRadius="md" color="white" my={1}>
-          <Flex alignItems="center" justifyContent="flex-end" p={1} w="full">
-            <Flex alignItems="center" mr="10">
-              <Text fontSize="md">
-                página{' '}
-                <strong>
-                  {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
-                </strong>
-              </Text>
-              <Flex alignItems="center">
-                <Select
-                  maxW="160"
-                  ml={1}
-                  value={table.getState().pagination.pageSize}
-                  onChange={(e) => {
-                    table.setPageSize(Number(e.target.value));
-                  }}
-                >
-                  <option style={{ color: 'black' }} value={10}>
-                    mostrar 10
-                  </option>
-                  <option style={{ color: 'black' }} value={20}>
-                    mostrar 20
-                  </option>
-                  <option style={{ color: 'black' }} value={30}>
-                    mostrar 30
-                  </option>
-                  <option style={{ color: 'black' }} value={40}>
-                    mostrar 40
-                  </option>
-                  <option style={{ color: 'black' }} value={50}>
-                    mostrar 50
-                  </option>
-                  <option style={{ color: 'black' }} value={memoAmount}>
-                    mostrar todos
-                  </option>
-                </Select>
-              </Flex>
-            </Flex>
-            <Flex alignItems="center" justifyContent="space-between">
-              <Flex alignItems="center">
-                <PagButton
-                  isDisabled={!table.getCanPreviousPage()}
-                  onClick={() => table.previousPage()}
-                >
-                  <Icon
-                    _dark={{ color: 'gray.200' }}
-                    as={IoIosArrowBack}
-                    boxSize={4}
-                    color="gray.700"
-                  />
-                </PagButton>
-                <PagButton isDisabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
-                  <Icon
-                    _dark={{ color: 'gray.200' }}
-                    as={IoIosArrowForward}
-                    boxSize={4}
-                    color="gray.700"
-                  />
-                </PagButton>
-              </Flex>
-            </Flex>
-          </Flex>
-        </Box>
-      ) : null}
+      {showNavigation && <Navigation memoAmount={memoAmount} table={table} />}
     </Box>
   );
 };

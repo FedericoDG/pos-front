@@ -8,6 +8,8 @@ interface AppContext {
   handleScroll: (ref: MutableRefObject<HTMLElement | null>) => void;
   dispatch: Dispatch<any>;
   user: User;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
 export const appContext = createContext({} as AppContext);

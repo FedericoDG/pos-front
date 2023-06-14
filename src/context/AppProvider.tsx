@@ -7,6 +7,7 @@ import {
   useReducer,
   useRef,
 } from 'react';
+import { useDisclosure } from '@chakra-ui/react';
 
 import { sessionStorage } from '../utils';
 import { User } from '../interfaces';
@@ -24,6 +25,8 @@ interface Props {
 }
 
 export const AppProvider = ({ children }: Props) => {
+  const { isOpen, onToggle } = useDisclosure();
+
   const [user, dispatch] = useReducer(authReducer, {}, init);
 
   const top = useRef(null);
@@ -49,15 +52,17 @@ export const AppProvider = ({ children }: Props) => {
       top,
       bottom,
       handleScroll,
+      isOpen,
+      onToggle,
     }),
-    [user]
+    [isOpen, onToggle, user]
   );
 
   return <appContext.Provider value={values}>{children}</appContext.Provider>;
 };
 
 export const useMyContext = () => {
-  const { top, bottom, user, dispatch, handleScroll } = useContext(appContext);
+  const { top, bottom, user, dispatch, handleScroll, isOpen, onToggle } = useContext(appContext);
 
   const dispatchLogin = (user: User) => dispatch(loginAction(user));
 
@@ -66,5 +71,5 @@ export const useMyContext = () => {
     sessionStorage.remove('token');
   };
 
-  return { top, bottom, user, dispatchLogin, dispatchLogout, handleScroll };
+  return { top, bottom, user, dispatchLogin, dispatchLogout, handleScroll, isOpen, onToggle };
 };

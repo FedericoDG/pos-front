@@ -32,8 +32,8 @@ export const Units = () => {
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Unidades">
-      <Button colorScheme="green" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
-        Crear una Unidad
+      <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
+        Crear Unidad
       </Button>
 
       {!units ? (

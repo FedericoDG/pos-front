@@ -1,21 +1,11 @@
 import { DragHandleIcon } from '@chakra-ui/icons';
-import {
-  Badge,
-  Box,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-} from '@chakra-ui/react';
+import { Badge, Box, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
 import { TbListDetails } from 'react-icons/Tb';
 import { useNavigate } from 'react-router-dom';
 
-import { IndeterminateCheckbox } from '../';
 import { Product } from '../../../interfaces';
 
 interface Props {
@@ -30,29 +20,10 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
   const columns = useMemo<ColumnDef<Product>[]>(
     () => [
       {
-        id: 'seleccion',
-        header: ({ table }) => (
-          <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <div className="px-1">
-            <IndeterminateCheckbox
-              {...{
-                key: row.original.id,
-                checked: row.getIsSelected(),
-                disabled: !row.getCanSelect(),
-                indeterminate: row.getIsSomeSelected(),
-                onChange: row.getToggleSelectedHandler(),
-              }}
-            />
-          </div>
-        ),
+        id: 'nombre',
+        header: 'Nombre',
+        cell: (row: CellContext<Product, unknown>) => row.renderValue(),
+        accessorKey: 'name',
       },
       {
         id: 'cod',
@@ -79,9 +50,9 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
       {
         id: 'habilitado',
         header: 'Estado',
-        cell: (row: CellContext<Product, unknown>) =>
-          row.renderValue() === 'ENABLED' ? (
-            <Badge colorScheme="teal" variant="subtle">
+        cell: ({ row }: CellContext<Product, unknown>) =>
+          row.original.status === 'ENABLED' ? (
+            <Badge colorScheme="green" variant="subtle">
               {' '}
               Habilitado
             </Badge>
@@ -91,37 +62,35 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
             </Badge>
           ),
         //enableSorting: false,
-        accessorFn: (x) => x.status,
       },
       {
         id: 'stock(-)',
         header: 'Permitir stock neg.',
-        cell: (row: CellContext<Product, unknown>) =>
-          row.renderValue() === 'ENABLED' ? (
+        cell: ({ row }: CellContext<Product, unknown>) =>
+          row.original.allownegativestock === 'ENABLED' ? (
             <Badge colorScheme="red" variant="subtle">
               Permitir
             </Badge>
           ) : (
-            <Badge colorScheme="teal" variant="subtle">
+            <Badge colorScheme="green" variant="subtle">
               No Permitir
             </Badge>
           ),
-        accessorFn: (x) => x.allownegativestock,
       },
       {
         id: 'alertar',
         header: 'Alertar bajo stock',
-        cell: (row: CellContext<Product, unknown>) =>
-          row.renderValue() === 'ENABLED' ? (
-            <Text>
-              {row.row.original.lowstock} {row.row.original.unit?.code}
-            </Text>
+        cell: ({ row }: CellContext<Product, unknown>) =>
+          row.original.alertlowstock === 'ENABLED' ? (
+            <Badge colorScheme="green" variant="subtle">
+              {row.original.lowstock} {row.original.unit?.code}
+            </Badge>
           ) : (
             <Badge colorScheme="red" variant="subtle">
               No Alertar
             </Badge>
           ),
-        accessorFn: (x) => x.alertlowstock,
+        //accessorFn: (x) => x.alertlowstock,
       },
       {
         id: 'acciones',

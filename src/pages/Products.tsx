@@ -49,7 +49,7 @@ export const Products = () => {
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Productos">
-      <Button colorScheme="green" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
+      <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
         Crear Producto
       </Button>
 
@@ -63,7 +63,6 @@ export const Products = () => {
               showGlobalFilter
               showNavigation
               showPrintOption
-              showSelectButton
               amount={products.length}
               columns={columns}
               data={products}

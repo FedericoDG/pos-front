@@ -1,6 +1,19 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-import { Categories, Clients, Home, Login, ProductDetails, Products, Units } from '../pages';
+import {
+  Categories,
+  Clients,
+  GeneratePriceListReport,
+  Home,
+  Login,
+  PriceListReport,
+  ProductDetails,
+  Products,
+  Purchases,
+  Suppliers,
+  Units,
+  Warehouses,
+} from '../pages';
 
 import { PrivateRoute, PublicRoute } from './';
 
@@ -14,6 +27,14 @@ export const AppRouter = () => (
         <Route element={<Categories />} path="/panel/categorias" />
         <Route element={<Units />} path="/panel/unidades" />
         <Route element={<Clients />} path="/panel/clientes" />
+        <Route element={<Warehouses />} path="/panel/depositos" />
+        <Route element={<Suppliers />} path="/panel/proveedores" />
+        <Route
+          element={<GeneratePriceListReport />}
+          path="/panel/lista-de-precios/generar-reporte"
+        />
+        <Route element={<PriceListReport />} path="/panel/lista-de-precios/reporte" />
+        <Route element={<Purchases />} path="/panel/compras" />
         <Route element={<Navigate replace to="/panel" />} path="*" />
       </Route>
       <Route element={<PublicRoute />} path="/">

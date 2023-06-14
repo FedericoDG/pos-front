@@ -15,7 +15,7 @@ export const App = () => {
         <ChakraProvider resetCSS theme={theme}>
           <AppRouter />
         </ChakraProvider>
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
       </QueryClientProvider>
     </AppProvider>
   );

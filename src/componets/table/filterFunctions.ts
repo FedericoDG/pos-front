@@ -29,13 +29,13 @@ const contains = <TData extends Record<string, any> = {}>(
   row: Row<TData>,
   id: string,
   filterValue: string | number
-) =>
-  row
-    .getValue<string | number>(id)
-    .toString()
-    .toLowerCase()
-    .trim()
-    .includes(filterValue.toString().toLowerCase().trim());
+) => {
+  const newRow = row.getValue<string | number>(id).toString().toLowerCase().trim();
+
+  if (newRow === 'enabled' || newRow === 'disabled') return false;
+
+  return newRow.includes(filterValue.toString().toLowerCase().trim());
+};
 
 contains.autoRemove = (val: any) => !val;
 

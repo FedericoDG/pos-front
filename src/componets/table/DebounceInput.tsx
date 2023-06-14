@@ -48,9 +48,9 @@ export const DebouncedInput = ({
       <Input
         ref={inputRef}
         autoFocus
-        /*  _focus={{ bg: 'white' }}
-        _hover={{ bg: 'white' }} */
-        bg="white"
+        _dark={{ bg: 'gray.600', color: 'whitesmoke' }}
+        bg="blackAlpha.50"
+        colorScheme="brand"
         placeholder={placeholder}
         value={value}
         variant="outline"

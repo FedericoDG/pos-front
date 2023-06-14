@@ -16,7 +16,7 @@ export const IndeterminateCheckbox = ({
 
   return <Checkbox
     ref={ref}
-    colorScheme='blue'
+    colorScheme='brand'
     cursor='pointer'
     isChecked={rest.checked}
     isDisabled={rest.disabled}

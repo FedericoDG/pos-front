@@ -8,14 +8,16 @@ export const Footer = () => {
   return (
     <Flex
       alignItems="center"
-      display={{ base: 'none', md: 'block' }} // TODO
+      display={{ base: 'none', md: 'block' }}
       h="56px"
       justifyContent="center"
     >
       <Flex
+        _dark={{
+          bg: 'gray.800',
+        }}
         align="center"
         as="footer"
-        bg="white"
         flexDir={{
           base: 'column',
           sm: 'row',
@@ -26,10 +28,13 @@ export const Footer = () => {
         w="full"
       >
         <chakra.a
-          _hover={{
-            color: 'whatsapp.600',
+          _dark={{
+            color: 'whitesmoke',
           }}
-          color="whatsapp.500"
+          _hover={{
+            color: 'brand.600',
+          }}
+          color="brand.500"
           cursor="pointer"
           fontSize="xl"
           fontWeight="bold"
@@ -39,17 +44,23 @@ export const Footer = () => {
         </chakra.a>
 
         <chakra.p
-          color="brand.800"
+          _dark={{
+            color: 'whitesmoke',
+          }}
+          color="brand.700"
           py={{
             base: '2',
             sm: '0',
           }}
         >
-          Todos los derechos resarvados
+          Todos los derechos reservados
         </chakra.p>
 
         <Flex mx="-2">
           <chakra.a
+            _dark={{
+              color: 'whitesmoke',
+            }}
             _hover={{
               color: 'brand.500',
             }}
@@ -64,6 +75,9 @@ export const Footer = () => {
           </chakra.a>
 
           <chakra.a
+            _dark={{
+              color: 'whitesmoke',
+            }}
             _hover={{
               color: 'brand.500',
             }}

@@ -90,7 +90,11 @@ export const Drawer = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton color="white" />
-          <DrawerHeader bg="whatsapp.600" borderBottomWidth="1px" color="white">
+          <DrawerHeader
+            bgGradient="linear(to-r, brand.600, blue.500)"
+            borderBottomWidth="1px"
+            color="white"
+          >
             {initialValues.id ? 'Editar Cliente' : 'Crear Cliente'}
           </DrawerHeader>
           <form onSubmit={handleSubmit}>
@@ -106,6 +110,7 @@ export const Drawer = ({
                       placeholder="Juan"
                       value={values.name}
                       onChange={handleChange}
+                      onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                     />
                     {errors.name && touched.name && <ErrorMessage>{errors.name}</ErrorMessage>}
                   </Box>
@@ -242,7 +247,7 @@ export const Drawer = ({
               <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
                 Cancelar
               </Button>
-              <Button colorScheme="blue" type="submit" w="full">
+              <Button colorScheme="brand" type="submit" w="full">
                 Guardar
               </Button>
             </DrawerFooter>

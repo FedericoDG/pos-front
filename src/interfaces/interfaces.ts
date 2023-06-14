@@ -65,20 +65,43 @@ export interface Unit {
 }
 
 export interface Price {
-  id: number;
+  id?: number;
   productId: number;
   pricelistId: number;
   price: number;
-  createdAt: string;
-  updatedAt: string;
-  products: Product;
-  pricelists: Pricelists;
+  createdAt?: string;
+  updatedAt?: string;
+  products?: Product;
+  pricelists?: Pricelists;
 }
 
 export interface Pricelists {
+  id?: number;
   code: string;
   description: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PriceList {
+  price: number;
+  productId: number;
+  pricelistId: number;
+  pricelists: Pricelists;
+  products: Product;
   createdAt: string;
+  totalStock: number;
+  totalStockPosta: number;
+}
+
+export interface Warehouse {
+  id?: number;
+  code: string;
+  description: string;
+  address: string;
+  createdAt?: string;
+  updatedAt?: string;
+  stocks?: Stock[];
 }
 
 export interface Stock {
@@ -90,16 +113,8 @@ export interface Stock {
   prevdate: string;
   createdAt: string;
   updatedAt: string;
-  warehouses: Warehouses;
-}
-
-export interface Warehouses {
-  id: number;
-  code: string;
-  description: string;
-  address: string;
-  createdAt: string;
-  updatedAt: string;
+  products: Product[];
+  warehouse: Warehouse;
 }
 
 export interface Client {
@@ -115,6 +130,19 @@ export interface Client {
   address?: string;
   info?: string;
   roleId: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Supplier {
+  id?: number;
+  cuit: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  mobile?: string;
+  address?: string;
+  info?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -163,5 +191,40 @@ export interface ClientResponse {
 export interface ClientsResponse {
   body: {
     clients: Client[];
+  };
+}
+export interface PriceListsResponse {
+  body: {
+    pricelists: Pricelists[];
+  };
+}
+
+export interface WarehouseResponse {
+  body: {
+    warehouse: Warehouse;
+  };
+}
+
+export interface SupplierResponse {
+  body: {
+    supplier: Supplier;
+  };
+}
+
+export interface SuppliersResponse {
+  body: {
+    suppliers: Supplier[];
+  };
+}
+
+export interface WarehousesResponse {
+  body: {
+    warehouses: Warehouse[];
+  };
+}
+
+export interface PriceListReportResponse {
+  body: {
+    pricelists: Array<PriceList[]>;
   };
 }
