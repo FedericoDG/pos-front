@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
 import { Supplier, SupplierResponse, SuppliersResponse } from '../interfaces';
 
-const getSuppliers = () => getRequest<SuppliersResponse>('/Suppliers');
+const getSuppliers = () => getRequest<SuppliersResponse>('/suppliers');
 const getSupplier = (id: number) => getRequest<SupplierResponse>(`/suppliers/${id}`);
 const createSupplier = (supplier: Supplier) => postRequest('/suppliers/', supplier);
 const updateSupplier = (supplier: Supplier) => putRequest(`/suppliers/${supplier?.id}`, supplier);

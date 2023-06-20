@@ -168,13 +168,20 @@ export const CustomTable = <T extends object>({
       <Flex
         alignItems={{ base: 'flex-start', md: 'center' }}
         direction={{ base: 'column', md: 'row' }}
-        justifyContent={showGlobalFilter ? 'space-between' : 'flex-end'}
+        justifyContent={'flex-end'}
         py="2"
       >
-        {showGlobalFilter ? (
-          <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
-        ) : null}
         {showColumsSelector ? <ColumnSelector table={table} /> : null}
+      </Flex>
+
+      <Flex
+        alignItems={{ base: 'flex-start', md: 'center' }}
+        direction={{ base: 'column', md: 'row' }}
+        py="2"
+      >
+        {showGlobalFilter && (
+          <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
+        )}
       </Flex>
 
       <TableContainer

@@ -5,11 +5,14 @@ import { User } from '../interfaces';
 interface AppContext {
   top: MutableRefObject<null>;
   bottom: MutableRefObject<null>;
+  tableInput: MutableRefObject<any>;
   handleScroll: (ref: MutableRefObject<HTMLElement | null>) => void;
   dispatch: Dispatch<any>;
   user: User;
-  isOpen: boolean;
-  onToggle: () => void;
+  isOpenPriceList: boolean;
+  isOpenStock: boolean;
+  onTogglePriceList: () => void;
+  onToggleStock: () => void;
 }
 
 export const appContext = createContext({} as AppContext);

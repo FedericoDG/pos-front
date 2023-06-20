@@ -4,6 +4,7 @@ import { deleteRequest, getRequest, postRequest, putRequest } from '../services/
 import { Product, ProductResponse, ProductsResponse } from '../interfaces';
 
 const getProducts = () => getRequest<ProductsResponse>('/products');
+const getProductsWOStock = () => getRequest<ProductsResponse>('/products?nostock=true');
 const getProduct = (id: number) => getRequest<ProductResponse>(`/products/${id}`);
 const createProduct = (product: Product) => postRequest('/products/', product);
 const updateProduct = (product: Product) => putRequest(`/products/${product?.id}`, product);
@@ -11,6 +12,15 @@ const deleteProduct = (id: number) => deleteRequest(`/products/${id}`);
 
 export const useGetProducts = () =>
   useQuery(['products'], () => getProducts(), {
+    enabled: true,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body.products,
+  });
+
+export const useGetProductsWOStock = () =>
+  useQuery(['products'], () => getProductsWOStock(), {
     enabled: true,
     retry: 1,
     cacheTime: 1,

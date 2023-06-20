@@ -10,10 +10,12 @@ import {
   ProductDetails,
   Products,
   Purchases,
+  Stocks,
   Suppliers,
   Units,
   Warehouses,
 } from '../pages';
+import { StepperA } from '../pages/Stepper';
 
 import { PrivateRoute, PublicRoute } from './';
 
@@ -34,7 +36,9 @@ export const AppRouter = () => (
           path="/panel/lista-de-precios/generar-reporte"
         />
         <Route element={<PriceListReport />} path="/panel/lista-de-precios/reporte" />
-        <Route element={<Purchases />} path="/panel/compras" />
+        {/*  <Route element={<Purchases />} path="/panel/compras" /> */}
+        <Route element={<StepperA />} path="/panel/compras" />
+        <Route element={<Stocks />} path="/panel/stock" />
         <Route element={<Navigate replace to="/panel" />} path="*" />
       </Route>
       <Route element={<PublicRoute />} path="/">

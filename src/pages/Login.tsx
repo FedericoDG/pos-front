@@ -35,9 +35,9 @@ export const Login = () => {
   };
 
   return (
-    <Stack bg="grey.100" direction={{ base: 'column', md: 'row' }} minH="100vh">
-      <Flex align="center" flex="1" justify="center" p="8">
-        <Stack maxW="md" spacing="4" w="full">
+    <Stack direction={{ base: 'column', md: 'row' }} minH="100vh">
+      <Flex align="center" bg="gray.100" flex="1" justify="center" p="8">
+        <Stack bg="white" maxW="md" p="4" rounded="md" shadow="md" spacing="4" w="full">
           <Heading fontSize="2xl" textAlign="center">
             Acceda con su cuenta
           </Heading>

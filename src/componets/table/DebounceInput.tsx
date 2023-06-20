@@ -1,6 +1,8 @@
 import { CloseIcon, Search2Icon } from '@chakra-ui/icons';
 import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useMyContext } from '../../context';
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   value: string | number;
@@ -16,8 +18,6 @@ export const DebouncedInput = ({
   placeholder = 'Buscar...',
 }: Props) => {
   const [value, setValue] = useState(initialValue);
-
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   // setValue if any initialValue changes
   useEffect(() => {
@@ -35,18 +35,20 @@ export const DebouncedInput = ({
     };
   }, [value, onChange, debounceTime]);
 
+  const { tableInput } = useMyContext();
+
   const handleClick = () => {
     setValue('');
-    inputRef.current?.focus();
+    tableInput.current.focus();
   };
 
   return (
-    <InputGroup maxW={250} rounded="md">
+    <InputGroup rounded="md" w={300}>
       <InputLeftElement pointerEvents="none">
         <Search2Icon color="gray.400" />
       </InputLeftElement>
       <Input
-        ref={inputRef}
+        ref={tableInput}
         autoFocus
         _dark={{ bg: 'gray.600', color: 'whitesmoke' }}
         bg="blackAlpha.50"

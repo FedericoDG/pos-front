@@ -25,12 +25,14 @@ interface Props {
 }
 
 export const AppProvider = ({ children }: Props) => {
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen: isOpenPriceList, onToggle: onTogglePriceList } = useDisclosure();
+  const { isOpen: isOpenStock, onToggle: onToggleStock } = useDisclosure();
 
   const [user, dispatch] = useReducer(authReducer, {}, init);
 
   const top = useRef(null);
   const bottom = useRef(null);
+  const tableInput = useRef();
 
   useEffect(() => {
     if (!user) return;
@@ -52,17 +54,31 @@ export const AppProvider = ({ children }: Props) => {
       top,
       bottom,
       handleScroll,
-      isOpen,
-      onToggle,
+      isOpenPriceList,
+      onTogglePriceList,
+      isOpenStock,
+      onToggleStock,
+      tableInput,
     }),
-    [isOpen, onToggle, user]
+    [isOpenPriceList, isOpenStock, onTogglePriceList, onToggleStock, user]
   );
 
   return <appContext.Provider value={values}>{children}</appContext.Provider>;
 };
 
 export const useMyContext = () => {
-  const { top, bottom, user, dispatch, handleScroll, isOpen, onToggle } = useContext(appContext);
+  const {
+    top,
+    bottom,
+    user,
+    dispatch,
+    handleScroll,
+    isOpenPriceList,
+    onTogglePriceList,
+    isOpenStock,
+    onToggleStock,
+    tableInput,
+  } = useContext(appContext);
 
   const dispatchLogin = (user: User) => dispatch(loginAction(user));
 
@@ -71,5 +87,17 @@ export const useMyContext = () => {
     sessionStorage.remove('token');
   };
 
-  return { top, bottom, user, dispatchLogin, dispatchLogout, handleScroll, isOpen, onToggle };
+  return {
+    top,
+    bottom,
+    user,
+    dispatchLogin,
+    dispatchLogout,
+    handleScroll,
+    isOpenPriceList,
+    onTogglePriceList,
+    isOpenStock,
+    onToggleStock,
+    tableInput,
+  };
 };

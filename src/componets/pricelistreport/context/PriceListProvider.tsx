@@ -22,15 +22,7 @@ export const PriceListProvider = ({ children }: Props) => {
     []
   );
 
-  const {
-    goToNext,
-    goToPrevious,
-    getStatus,
-    isActiveStep,
-    isCompleteStep,
-    isIncompleteStep,
-    activeStep,
-  } = useSteps({
+  const { goToNext, goToPrevious, activeStep } = useSteps({
     index: 1,
     count: steps.length,
   });

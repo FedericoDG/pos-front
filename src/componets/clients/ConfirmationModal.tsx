@@ -34,7 +34,7 @@ export const ConfirmationModal = ({
 
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
+      <ModalOverlay backdropFilter="blur(5px) hue-rotate(90deg)" bg="blackAlpha.300" />
       <ModalContent>
         <ModalHeader>Eliminar Cliente</ModalHeader>
         <ModalCloseButton />

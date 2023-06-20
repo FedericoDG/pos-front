@@ -11,7 +11,6 @@ import {
   FormLabel,
   Input,
   Stack,
-  Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';

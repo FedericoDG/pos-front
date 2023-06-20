@@ -7,6 +7,8 @@ export * from './PriceListReport';
 export * from './ProductDetails';
 export * from './Products';
 export * from './Purchases';
+export * from './Stepper';
+export * from './Stocks';
 export * from './Suppliers';
 export * from './Units';
 export * from './Warehouses';

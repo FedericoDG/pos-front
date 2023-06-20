@@ -1,14 +1,8 @@
 import { BiCategoryAlt } from 'react-icons/bi';
 import { Box, Collapse, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsPersonVcard, BsPersonVcardFill } from 'react-icons/bs';
-import {
-  FaBalanceScale,
-  FaCubes,
-  FaFileInvoiceDollar,
-  FaHome,
-  FaMoneyCheck,
-  FaWarehouse,
-} from 'react-icons/fa';
+import { FaBalanceScale, FaCubes, FaFileInvoiceDollar, FaHome, FaWarehouse } from 'react-icons/fa';
+import { AiOutlineStock } from 'react-icons/ai';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
 import { useMyContext } from '../../context';
@@ -25,7 +19,7 @@ interface Props {
 }
 
 export const SidebarContent = (props: Props) => {
-  const { isOpen, onToggle } = useMyContext();
+  const { isOpenPriceList, onTogglePriceList, isOpenStock, onToggleStock } = useMyContext();
 
   return (
     <Box
@@ -73,14 +67,15 @@ export const SidebarContent = (props: Props) => {
         <NavItem icon={FaBalanceScale} link="/panel/unidades">
           Unidades
         </NavItem>
-        <NavItem icon={FaWarehouse} link="/panel/depositos">
-          Depósitos
-        </NavItem>
-        <NavItemDivider icon={FaFileInvoiceDollar} onClick={onToggle}>
+        <NavItemDivider icon={FaFileInvoiceDollar} onClick={onTogglePriceList}>
           Listas de Precios
-          <Icon as={MdKeyboardArrowRight} ml="auto" transform={isOpen ? 'rotate(90deg)' : ''} />
+          <Icon
+            as={MdKeyboardArrowRight}
+            ml="auto"
+            transform={isOpenPriceList ? 'rotate(90deg)' : ''}
+          />
         </NavItemDivider>
-        <Collapse in={isOpen}>
+        <Collapse in={isOpenPriceList}>
           <NavItem link="/panel/lista-de-precios/">
             <Box pl="8" py="0">
               Crear / Editar
@@ -98,9 +93,32 @@ export const SidebarContent = (props: Props) => {
         <NavItem icon={BsPersonVcardFill} link="/panel/proveedores">
           Proveedores
         </NavItem>
-        <NavItem icon={FaMoneyCheck} link="/panel/compras">
-          Compras
-        </NavItem>
+        {/*  */}
+        <NavItemDivider icon={AiOutlineStock} onClick={onToggleStock}>
+          Stock
+          <Icon
+            as={MdKeyboardArrowRight}
+            ml="auto"
+            transform={isOpenStock ? 'rotate(90deg)' : ''}
+          />
+        </NavItemDivider>
+        <Collapse in={isOpenStock}>
+          <NavItem link="/panel/stock/">
+            <Box pl="8" py="0">
+              Detalles
+            </Box>
+          </NavItem>
+          <NavItem link="/panel/compras">
+            <Box pl="8" py="0">
+              Cargar Compra
+            </Box>
+          </NavItem>
+          <NavItem link="/panel/depositos">
+            <Box pl="8" py="0">
+              Depósitos
+            </Box>
+          </NavItem>
+        </Collapse>
       </Flex>
     </Box>
   );

@@ -1,5 +1,10 @@
 import { Dispatch, createContext } from 'react';
 
+interface Step {
+  title: string;
+  description: string;
+}
+
 interface PriceListContext {
   productList: number[];
   priceListsList: number[];
@@ -11,11 +16,6 @@ interface PriceListContext {
   goToNext: () => void;
   goToPrevious: () => void;
   steps: Step[];
-}
-
-interface Step {
-  title: string;
-  description: string;
 }
 
 export const priceListContext = createContext({} as PriceListContext);

@@ -46,6 +46,7 @@ export interface Product {
   stocks?: Stock[];
   prices?: Array<Price | null>;
   priceDetails?: Array<Price[]>;
+  costs?: Cost[];
 }
 
 export interface Category {
@@ -84,6 +85,7 @@ export interface Pricelists {
 }
 
 export interface PriceList {
+  id?: number;
   price: number;
   productId: number;
   pricelistId: number;
@@ -117,6 +119,26 @@ export interface Stock {
   warehouse: Warehouse;
 }
 
+export interface Stock2 {
+  id: number;
+  productId: number;
+  warehouseId: number;
+  stock: number;
+  prevstock: number;
+  prevdate: string;
+  createdAt: string;
+  updatedAt: string;
+  products: Product;
+  warehouse: Warehouse;
+}
+
+export interface Cost {
+  price: number;
+  productId: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Client {
   id?: number;
   name: string;
@@ -137,12 +159,33 @@ export interface Client {
 export interface Supplier {
   id?: number;
   cuit: string;
-  name?: string;
+  name: string;
   email?: string;
   phone?: string;
   mobile?: string;
   address?: string;
   info?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Discharge {
+  id?: number;
+  productId: number;
+  warehouseId: number;
+  quantity: number | string;
+  info?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  products?: Product;
+  reasonId?: number;
+  reason?: Reason;
+  warehouses?: Warehouse;
+}
+
+export interface Reason {
+  id?: number;
+  reason: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -188,11 +231,13 @@ export interface ClientResponse {
     client: Client;
   };
 }
+
 export interface ClientsResponse {
   body: {
     clients: Client[];
   };
 }
+
 export interface PriceListsResponse {
   body: {
     pricelists: Pricelists[];
@@ -226,5 +271,41 @@ export interface WarehousesResponse {
 export interface PriceListReportResponse {
   body: {
     pricelists: Array<PriceList[]>;
+  };
+}
+
+export interface StocksResponse {
+  body: {
+    stocks: Stock2[];
+  };
+}
+
+export interface DischargesResponse {
+  body: {
+    discharges: Discharge[];
+  };
+}
+
+export interface DischargesResponse {
+  body: {
+    discharges: Discharge[];
+  };
+}
+
+export interface DischargeResponse {
+  body: {
+    discharge: Discharge;
+  };
+}
+
+export interface ReasonsResponse {
+  body: {
+    reasons: Reason[];
+  };
+}
+
+export interface ReasonResponse {
+  body: {
+    reason: Reason;
   };
 }
