@@ -25,8 +25,17 @@ interface Props {
 }
 
 export const AppProvider = ({ children }: Props) => {
-  const { isOpen: isOpenPriceList, onToggle: onTogglePriceList } = useDisclosure();
-  const { isOpen: isOpenStock, onToggle: onToggleStock } = useDisclosure();
+  const {
+    isOpen: isOpenProducts,
+    onToggle: onToggleProducts,
+    onClose: onCloseProducts,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenPriceList,
+    onToggle: onTogglePriceList,
+    onClose: onClosePriceList,
+  } = useDisclosure();
+  const { isOpen: isOpenStock, onToggle: onToggleStock, onClose: onCloseStock } = useDisclosure();
 
   const [user, dispatch] = useReducer(authReducer, {}, init);
 
@@ -49,18 +58,34 @@ export const AppProvider = ({ children }: Props) => {
 
   const values = useMemo(
     () => ({
-      user,
-      dispatch,
-      top,
       bottom,
+      dispatch,
       handleScroll,
       isOpenPriceList,
-      onTogglePriceList,
+      isOpenProducts,
       isOpenStock,
+      onClosePriceList,
+      onCloseProducts,
+      onCloseStock,
+      onTogglePriceList,
+      onToggleProducts,
       onToggleStock,
       tableInput,
+      top,
+      user,
     }),
-    [isOpenPriceList, isOpenStock, onTogglePriceList, onToggleStock, user]
+    [
+      isOpenPriceList,
+      isOpenProducts,
+      isOpenStock,
+      onClosePriceList,
+      onCloseProducts,
+      onCloseStock,
+      onTogglePriceList,
+      onToggleProducts,
+      onToggleStock,
+      user,
+    ]
   );
 
   return <appContext.Provider value={values}>{children}</appContext.Provider>;
@@ -68,16 +93,21 @@ export const AppProvider = ({ children }: Props) => {
 
 export const useMyContext = () => {
   const {
-    top,
     bottom,
-    user,
     dispatch,
     handleScroll,
     isOpenPriceList,
-    onTogglePriceList,
+    isOpenProducts,
     isOpenStock,
+    onClosePriceList,
+    onCloseProducts,
+    onCloseStock,
+    onTogglePriceList,
+    onToggleProducts,
     onToggleStock,
     tableInput,
+    top,
+    user,
   } = useContext(appContext);
 
   const dispatchLogin = (user: User) => dispatch(loginAction(user));
@@ -88,16 +118,21 @@ export const useMyContext = () => {
   };
 
   return {
-    top,
     bottom,
-    user,
     dispatchLogin,
     dispatchLogout,
     handleScroll,
     isOpenPriceList,
-    onTogglePriceList,
+    isOpenProducts,
     isOpenStock,
+    onClosePriceList,
+    onCloseProducts,
+    onCloseStock,
+    onTogglePriceList,
+    onToggleProducts,
     onToggleStock,
     tableInput,
+    top,
+    user,
   };
 };

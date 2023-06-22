@@ -1,20 +1,21 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
-import { ConfirmationModal, Drawer } from '../componets/products';
-import { Loading } from '../componets/common/';
-import { Product } from '../interfaces';
-import { useColumns } from '../componets/products/hooks';
-import { useGetCategories, useGetUnits, useGetProducts } from '../hooks';
+import { ConfirmationModal, Drawer } from '../componets/discharges';
+import { Loading } from '../componets/common';
+import { Purchase } from '../interfaces';
+import { useColumns } from '../componets/discharges/hooks';
+import { useGetDischarges, useGetPurchases } from '../hooks';
 
-export const Products = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
+export const Discharges = () => {
+  //const { isOpen, onOpen, onClose } = useDisclosure();
+  //const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
 
-  const resetValues: Product = useMemo(
+  /*  const resetValues: Product = useMemo(
     () => ({
       code: '',
       barcode: '',
@@ -28,32 +29,39 @@ export const Products = () => {
       lowstock: 0,
     }),
     []
-  );
+  ); */
 
-  const [initialValues, setinitialValues] = useState(resetValues);
+  // const [initialValues, setinitialValues] = useState(resetValues);
 
-  const { data: products, isFetching: isFetchingProducts } = useGetProducts();
-  const { data: categories, isFetching: isFetchingCategories } = useGetCategories();
-  const { data: units, isFetching: isFetchingUnits } = useGetUnits();
+  const navigate = useNavigate();
 
-  useEffect(() => {
+  const { data: discharges, isFetching: isFetchingDischarges } = useGetDischarges();
+
+  /*   useEffect(() => {
     if (!categories || !units) return;
 
     resetValues.categoryId = categories[0].id!;
     resetValues.unitId = units[0].id!;
-  }, [categories, resetValues, units]);
+  }, [categories, resetValues, units]); */
 
-  const isIndeterminate = isFetchingProducts || isFetchingCategories || isFetchingUnits;
+  const isIndeterminate = isFetchingDischarges;
 
-  const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
+  const { columns } = useColumns();
 
   return (
-    <DashBoard isIndeterminate={isIndeterminate} title="Productos">
-      <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
-        CREAR PRODUCTO
+    <DashBoard isIndeterminate={isIndeterminate} title="Baja de Productos">
+      <Button
+        colorScheme="brand"
+        leftIcon={<HiPlus />}
+        mb={4}
+        ml="auto"
+        size="lg"
+        onClick={() => navigate('/panel/stock/bajas/cargar')}
+      >
+        CARGAR BAJA DE PRODUCTOS
       </Button>
 
-      {!products || !categories || !units ? (
+      {!discharges ? (
         <Loading />
       ) : (
         <>
@@ -63,12 +71,12 @@ export const Products = () => {
               showGlobalFilter
               showNavigation
               showPrintOption
-              amount={products.length}
+              amount={discharges.length}
               columns={columns}
-              data={products}
+              data={discharges}
             />
           </Box>
-          <Drawer
+          {/* <Drawer
             categories={categories}
             initialValues={initialValues}
             isOpen={isOpen}
@@ -83,7 +91,7 @@ export const Products = () => {
             resetValues={resetValues}
             setinitialValues={setinitialValues}
             onClose={onCloseModal}
-          />
+          /> */}
         </>
       )}
     </DashBoard>

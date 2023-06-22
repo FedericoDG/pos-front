@@ -187,7 +187,7 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
             </Flex>
           </Flex>
           {isIndeterminate ? (
-            <Progress isIndeterminate colorScheme="brand.500" size="sm" w="full" />
+            <Progress isIndeterminate colorScheme="brand" size="sm" w="full" />
           ) : (
             <Progress bg="brand.500" size="sm" w="full" />
           )}

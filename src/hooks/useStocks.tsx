@@ -1,12 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 
-import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
-import { Unit, StocksResponse } from '../interfaces';
+import { getRequest } from '../services';
+import { StocksResponse, StockResponse } from '../interfaces';
 
 const getStocks = () => getRequest<StocksResponse>('/stocks');
-const createUnit = (unit: Unit) => postRequest('/units/', unit);
-const updateUnit = (unit: Unit) => putRequest(`/units/${unit?.id}`, unit);
-const deleteUnit = (id: number) => deleteRequest(`/units/${id}`);
+const getStock = (id: number | null) => getRequest<StockResponse>(`/stocks/${id}`);
 
 export const useGetStocks = () =>
   useQuery(['stocks', 'discharges'], () => getStocks(), {
@@ -17,41 +15,11 @@ export const useGetStocks = () =>
     select: (data) => data.body.stocks,
   });
 
-/* export const useCreateUnits = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation(createUnit, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('units');
-    },
-    onError: (error) => {
-      console.log(error);
-    },
+export const useGetStock = (id: number | null) =>
+  useQuery(['reasons', id], () => getStock(id), {
+    enabled: !!id,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body.stocks,
   });
-};
-
-export const useUpdateUnits = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation(updateUnit, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('units');
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-};
-
-export const useDeleteUnits = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation(deleteUnit, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('units');
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-}; */

@@ -137,10 +137,14 @@ export const useColumns = ({ onOpen, warehouses, setinitialValues }: Props) => {
                 isDisabled={row.original.stock <= 0}
                 onClick={() => {
                   onOpen();
-                  setinitialValues((current) => ({
-                    ...current,
-                    productId: row.original.productId,
-                  }));
+                  setinitialValues((current) => {
+                    return {
+                      ...current,
+                      productId: row.original.productId,
+                      cost: row.original.products.costs![0].price.toString(),
+                      unit: row.original.products.unit?.code!,
+                    };
+                  });
                 }}
               >
                 Cargar pérdida de stock

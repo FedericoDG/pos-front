@@ -1,5 +1,4 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
-import { HiPlus } from 'react-icons/Hi';
 import { useEffect, useMemo, useState } from 'react';
 
 import { CustomTable } from '../componets/table';
@@ -18,7 +17,9 @@ export const Stocks = () => {
       warehouseId: 1,
       productId: 1,
       reasonId: 1,
-      quantity: '0',
+      quantity: 0,
+      cost: 0,
+      unit: 'Kg.',
       info: '',
     }),
     []

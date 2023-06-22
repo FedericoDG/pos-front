@@ -6,7 +6,7 @@ import { Warehouse, WarehouseResponse, WarehousesResponse } from '../interfaces'
 
 const getWarehouses = () => getRequest<WarehousesResponse>('/warehouses');
 const getWarehousesWOStock = () => getRequest<WarehousesResponse>('/warehouses?nostock=true');
-const getWarehouse = (id: number) => getRequest<WarehouseResponse>(`/warehouses/${id}`);
+const getWarehouse = (id: number | null) => getRequest<WarehouseResponse>(`/warehouses/${id}`);
 const createWarehouse = (warehouse: Warehouse) => postRequest('/warehouses/', warehouse);
 const updateWarehouse = (warehouse: Warehouse) =>
   putRequest(`/warehouses/${warehouse?.id}`, warehouse);
@@ -30,7 +30,7 @@ export const useGetWarehousesWOStock = () =>
     select: (data) => data.body.warehouses,
   });
 
-export const useGetWarehouse = (id: number) =>
+export const useGetWarehouse = (id: number | null) =>
   useQuery(['warehouses', id], () => getWarehouse(id), {
     enabled: !!id,
     retry: 1,

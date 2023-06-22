@@ -107,7 +107,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
               <MenuList>
                 <MenuItem
                   icon={<TbListDetails />}
-                  onClick={() => navigate(`/panel/productos/${row.original.id}`)}
+                  onClick={() => navigate(`/panel/productos/detalles/${row.original.id}`)}
                 >
                   Ver Detalles
                 </MenuItem>

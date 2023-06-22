@@ -1,60 +1,99 @@
-import { Box, Stack } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { Box, Button, useDisclosure } from '@chakra-ui/react';
+import { HiPlus } from 'react-icons/Hi';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
+import { ConfirmationModal, Drawer } from '../componets/purchases';
 import { Loading } from '../componets/common';
-import {
-  SelectSupplierAndWarehouse,
-  PurchasesProvider,
-  ProductsTable,
-  Basket,
-  SelectedWarehouse,
-  SelectedSupplier,
-} from '../componets/purchases';
-import { useGetProductsWOStock, useGetSuppliers, useGetWarehousesWOStock } from '../hooks';
+import { Purchase } from '../interfaces';
+import { useColumns } from '../componets/purchases/hooks';
+import { useGetPurchases } from '../hooks';
 
 export const Purchases = () => {
-  const { data: products, isFetching: isFetchingProducts } = useGetProductsWOStock();
-  const { data: warehouses, isFetching: isFetchingWarehouses } = useGetWarehousesWOStock();
-  const { data: suppliers, isFetching: isFetchingSuppliers } = useGetSuppliers();
+  //const { isOpen, onOpen, onClose } = useDisclosure();
+  //const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
 
-  const isIndeterminate = isFetchingProducts || isFetchingSuppliers || isFetchingWarehouses;
+  /*  const resetValues: Product = useMemo(
+    () => ({
+      code: '',
+      barcode: '',
+      name: '',
+      description: '',
+      categoryId: 1,
+      unitId: 1,
+      status: 'ENABLED',
+      allownegativestock: 'DISABLED',
+      alertlowstock: 'DISABLED',
+      lowstock: 0,
+    }),
+    []
+  ); */
 
-  const [mappedSuppliers, setMappedSuppliers] = useState<SelectedSupplier[]>([]);
-  const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
+  // const [initialValues, setinitialValues] = useState(resetValues);
 
-  useEffect(() => {
-    if (!suppliers || !warehouses) return;
+  const navigate = useNavigate();
 
-    const mappedSuppliers = suppliers.map((el) => ({
-      ...el,
-      value: el.id,
-      label: `${el.cuit} - ${el.name}`,
-    }));
-    const mappedWarehouses = warehouses.map((el) => ({ ...el, value: el.id, label: el.code }));
+  const { data: purchases, isFetching: isFetchingPurchases } = useGetPurchases();
 
-    setMappedSuppliers(mappedSuppliers);
-    setMappedWarehouses(mappedWarehouses);
-  }, [products, suppliers, warehouses]);
+  /*   useEffect(() => {
+    if (!categories || !units) return;
+
+    resetValues.categoryId = categories[0].id!;
+    resetValues.unitId = units[0].id!;
+  }, [categories, resetValues, units]); */
+
+  const isIndeterminate = isFetchingPurchases;
+
+  const { columns } = useColumns();
 
   return (
-    <PurchasesProvider>
-      <DashBoard isIndeterminate={isIndeterminate} title="Compras">
-        {!products || !suppliers || !warehouses ? (
-          <Loading />
-        ) : (
-          <Box color="black" w="1080px">
-            <SelectSupplierAndWarehouse
-              mappedSuppliers={mappedSuppliers}
-              mappedWarehouses={mappedWarehouses}
+    <DashBoard isIndeterminate={isIndeterminate} title="Compras">
+      <Button
+        colorScheme="brand"
+        leftIcon={<HiPlus />}
+        mb={4}
+        ml="auto"
+        size="lg"
+        onClick={() => navigate('/panel/stock/compras/cargar')}
+      >
+        CARGAR COMPRA
+      </Button>
+
+      {!purchases ? (
+        <Loading />
+      ) : (
+        <>
+          <Box w="full">
+            <CustomTable
+              showColumsSelector
+              showGlobalFilter
+              showNavigation
+              showPrintOption
+              amount={purchases.length}
+              columns={columns}
+              data={purchases}
             />
-            <Stack alignItems="flex-start" direction="row" gap="4">
-              <ProductsTable products={products} />
-              <Basket />
-            </Stack>
           </Box>
-        )}
-      </DashBoard>
-    </PurchasesProvider>
+          {/* <Drawer
+            categories={categories}
+            initialValues={initialValues}
+            isOpen={isOpen}
+            resetValues={resetValues}
+            setinitialValues={setinitialValues}
+            units={units}
+            onClose={onClose}
+          />
+          <ConfirmationModal
+            initialValues={initialValues}
+            isOpen={isOpenModal}
+            resetValues={resetValues}
+            setinitialValues={setinitialValues}
+            onClose={onCloseModal}
+          /> */}
+        </>
+      )}
+    </DashBoard>
   );
 };

@@ -4,48 +4,41 @@ import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { formatCurrency } from '../../utils';
-import { useCreatePurchase } from '../../hooks';
+import { useCreateDischarge } from '../../hooks';
 
-import { usePurchaseContext } from '.';
+import { useDischargesContext } from './context';
 
 export const Basket = () => {
   const {
     cart,
-    driver,
     emptyCart,
     removeItem,
-    setDriver,
-    setSupplier,
-    setTransport,
     setWarehouse,
-    supplier,
     totalCart,
     totalCartItems,
-    transport,
     warehouse,
-  } = usePurchaseContext();
+    setActiveStep,
+  } = useDischargesContext();
   const queryClient = useQueryClient();
 
   const handleSubmit = () => {
-    const purchase = {
-      supplierId: supplier?.id!,
+    const discharge = {
       warehouseId: warehouse?.id!,
-      driver,
-      transport,
-      total: totalCart,
-      date: new Date(),
+      //date: new Date(),
       cart: cart.map((item) => ({
-        productId: item.id!,
+        productId: item.productId,
+        reasonId: item.reasonId,
         quantity: item.quantity,
-        price: item.price,
+        cost: item.cost,
+        info: item.info,
       })),
     };
 
-    mutate(purchase);
+    mutate(discharge);
   };
 
   const onSuccess = () => {
-    toast.success('Compra cargada', {
+    toast.success('Pérdida de Stock cargada', {
       theme: 'light',
       position: toast.POSITION.BOTTOM_CENTER,
       autoClose: 3000,
@@ -53,12 +46,10 @@ export const Basket = () => {
     });
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['products'] });
-    setSupplier(null);
     setWarehouse(null);
-    setDriver('');
-    setTransport('');
+    setActiveStep(1);
   };
-  const { mutate } = useCreatePurchase(onSuccess);
+  const { mutate } = useCreateDischarge(onSuccess);
 
   if (cart.length === 0) return null;
 
@@ -67,18 +58,18 @@ export const Basket = () => {
       <Heading color="brand.500" fontSize="28" textAlign="center">
         Lista de Productos
       </Heading>
-      <Stack maxH="432px" overflowY="auto">
+      <Stack maxH="410px" overflowY="auto">
         {cart.map((item) => {
           return (
             <Stack key={nanoid()} fontFamily="mono" fontSize={14} position="relative" py="1">
               <Box>
-                <Text fontWeight="bold">{item.name}</Text>
+                <Text fontWeight="bold">{item.products.name}</Text>
                 <Text>
-                  cantidad: {item.quantity} {item.unit?.code}
+                  cantidad: {item.quantity} {item.products.unit?.code}
                 </Text>
-                <Text>precio: {formatCurrency(item.price)}</Text>
+                <Text>precio: {formatCurrency(item.cost)}</Text>
                 <Text textDecoration="underline">
-                  subtotal: {formatCurrency(item.price * item.quantity)}
+                  subtotal: {formatCurrency(item.cost * item.quantity)}
                 </Text>
               </Box>
               <Box position="absolute" right={0} top={'50%'}>
@@ -87,7 +78,7 @@ export const Basket = () => {
                   fontSize={14}
                   pr="2"
                   variant="link"
-                  onClick={() => removeItem(item.id!)}
+                  onClick={() => removeItem(item.productId)}
                 >
                   ELIMINAR
                 </Button>
@@ -104,7 +95,7 @@ export const Basket = () => {
         productos: ({totalCartItems})
       </Text>
       <Button colorScheme="brand" variant="solid" w="full" onClick={handleSubmit}>
-        CARGAR COMPRA
+        CARGAR PÉRDIDA DE STOCK
       </Button>
     </Stack>
   );

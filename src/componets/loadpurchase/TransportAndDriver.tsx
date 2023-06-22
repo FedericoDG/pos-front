@@ -1,4 +1,5 @@
 import { Box, Stack, Alert, AlertIcon, FormLabel, Button, Input } from '@chakra-ui/react';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 import { usePurchasesContext } from '.';
 
@@ -11,7 +12,10 @@ export const TransportAndDriver = () => {
         <Button
           colorScheme="brand"
           isDisabled={!driver || !transport}
+          minW="150px"
           ml="auto"
+          rightIcon={<ArrowForwardIcon />}
+          size="lg"
           tabIndex={3}
           onClick={() => goToNext()}
         >

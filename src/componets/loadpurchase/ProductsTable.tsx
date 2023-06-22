@@ -32,7 +32,7 @@ interface Props {
   products: Product[];
 }
 
-const ProductsTable = () => {
+export const ProductsTable = () => {
   const { data: products } = useGetProductsWOStock();
   const { addItem } = usePurchasesContext();
   const { tableInput } = useMyContext();

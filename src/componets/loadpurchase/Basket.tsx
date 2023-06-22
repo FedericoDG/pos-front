@@ -69,7 +69,7 @@ export const Basket = () => {
       <Heading color="brand.500" fontSize="28" textAlign="center">
         Lista de Productos
       </Heading>
-      <Stack maxH="432px" overflowY="auto">
+      <Stack maxH="410px" overflowY="auto">
         {cart.map((item) => {
           return (
             <Stack key={nanoid()} fontFamily="mono" fontSize={14} position="relative" py="1">

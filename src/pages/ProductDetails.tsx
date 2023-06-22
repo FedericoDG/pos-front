@@ -6,43 +6,34 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Divider,
   Flex,
   Heading,
-  Icon,
   Stack,
   StackDivider,
-  Stat,
-  StatGroup,
-  StatLabel,
-  StatNumber,
   Table,
   TableContainer,
   Tbody,
   Td,
   Text,
-  Tfoot,
   Th,
   Thead,
-  Tooltip,
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
 import { FaDollarSign } from 'react-icons/fa';
 import { GoAlert } from 'react-icons/go';
-import { GrRevert } from 'react-icons/gr';
+import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import Barcode from 'react-barcode';
-import { nanoid } from 'nanoid';
 
 import { DashBoard, Loading } from '../componets/common';
 import { Drawer } from '../componets/productdetails/';
+import { formatDate } from '../utils';
 import { Price } from '../interfaces';
 import { useDeletePrice, useGetProduct } from '../hooks';
 import { useGetPriceLists } from '../hooks/';
 import formatCurrency from '../utils/formatCurrency';
-import { formatDate } from '../utils';
 
 export const ProductDetails = () => {
   const resetValues: Price = useMemo(
@@ -64,13 +55,13 @@ export const ProductDetails = () => {
 
   const { data: product, isFetching: isFetchingProduct } = useGetProduct(Number(id));
   const { data: priceList, isFetching: isFetchingPriceLists } = useGetPriceLists();
-  const { mutate: deletePrice } = useDeletePrice();
+  //const { mutate: deletePrice } = useDeletePrice();
 
   const isIndeterminate = isFetchingProduct || isFetchingPriceLists;
 
-  const handlePrint = useReactToPrint({
+  /* const handlePrint = useReactToPrint({
     content: () => barcodeRef.current,
-  });
+  }); */
 
   const getBgColor = ({
     totalStock,

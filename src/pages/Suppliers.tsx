@@ -38,7 +38,7 @@ export const Suppliers = () => {
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Proveedores">
       <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
-        Crear Producto
+        CREAR PROVEEDOR
       </Button>
 
       {!suppliers ? (

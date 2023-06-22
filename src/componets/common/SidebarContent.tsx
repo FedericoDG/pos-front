@@ -1,7 +1,6 @@
-import { BiCategoryAlt } from 'react-icons/bi';
 import { Box, Collapse, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsPersonVcard, BsPersonVcardFill } from 'react-icons/bs';
-import { FaBalanceScale, FaCubes, FaFileInvoiceDollar, FaHome, FaWarehouse } from 'react-icons/fa';
+import { FaCubes, FaFileInvoiceDollar, FaHome } from 'react-icons/fa';
 import { AiOutlineStock } from 'react-icons/ai';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
@@ -19,7 +18,17 @@ interface Props {
 }
 
 export const SidebarContent = (props: Props) => {
-  const { isOpenPriceList, onTogglePriceList, isOpenStock, onToggleStock } = useMyContext();
+  const {
+    isOpenPriceList,
+    isOpenProducts,
+    isOpenStock,
+    onTogglePriceList,
+    onToggleProducts,
+    onToggleStock,
+    onClosePriceList,
+    onCloseProducts,
+    onCloseStock,
+  } = useMyContext();
 
   return (
     <Box
@@ -58,43 +67,50 @@ export const SidebarContent = (props: Props) => {
         <NavItem icon={FaHome} link="/panel/">
           Inicio
         </NavItem>
-        <NavItem icon={FaCubes} link="/panel/productos">
+
+        {/* PRODUCTS */}
+        <NavItemDivider
+          icon={FaCubes}
+          onClick={() => {
+            onToggleProducts();
+            onClosePriceList();
+            onCloseStock();
+          }}
+        >
           Productos
-        </NavItem>
-        <NavItem icon={BiCategoryAlt} link="/panel/categorias">
-          Categorías
-        </NavItem>
-        <NavItem icon={FaBalanceScale} link="/panel/unidades">
-          Unidades
-        </NavItem>
-        <NavItemDivider icon={FaFileInvoiceDollar} onClick={onTogglePriceList}>
-          Listas de Precios
           <Icon
             as={MdKeyboardArrowRight}
             ml="auto"
-            transform={isOpenPriceList ? 'rotate(90deg)' : ''}
+            transform={isOpenProducts ? 'rotate(90deg)' : ''}
           />
         </NavItemDivider>
-        <Collapse in={isOpenPriceList}>
-          <NavItem link="/panel/lista-de-precios/">
+        <Collapse in={isOpenProducts}>
+          <NavItem link="/panel/productos/">
             <Box pl="8" py="0">
-              Crear / Editar
+              Listar
             </Box>
           </NavItem>
-          <NavItem link="/panel/lista-de-precios/generar-reporte">
+          <NavItem link="/panel/productos/categorias">
             <Box pl="8" py="0">
-              Generar Reporte
+              Categorías
+            </Box>
+          </NavItem>
+          <NavItem link="/panel/productos/unidades">
+            <Box pl="8" py="0">
+              Unidades
             </Box>
           </NavItem>
         </Collapse>
-        <NavItem icon={BsPersonVcard} link="/panel/clientes">
-          Clientes
-        </NavItem>
-        <NavItem icon={BsPersonVcardFill} link="/panel/proveedores">
-          Proveedores
-        </NavItem>
-        {/*  */}
-        <NavItemDivider icon={AiOutlineStock} onClick={onToggleStock}>
+
+        {/* STOCK */}
+        <NavItemDivider
+          icon={AiOutlineStock}
+          onClick={() => {
+            onToggleStock();
+            onCloseProducts();
+            onClosePriceList();
+          }}
+        >
           Stock
           <Icon
             as={MdKeyboardArrowRight}
@@ -105,20 +121,64 @@ export const SidebarContent = (props: Props) => {
         <Collapse in={isOpenStock}>
           <NavItem link="/panel/stock/">
             <Box pl="8" py="0">
-              Detalles
+              Listar
             </Box>
           </NavItem>
-          <NavItem link="/panel/compras">
+          <NavItem link="/panel/stock/compras">
             <Box pl="8" py="0">
-              Cargar Compra
+              Compras
             </Box>
           </NavItem>
-          <NavItem link="/panel/depositos">
+          <NavItem link="/panel/stock/bajas">
+            <Box pl="8" py="0">
+              Bajas
+            </Box>
+          </NavItem>
+          <NavItem link="/panel/stock/depositos">
             <Box pl="8" py="0">
               Depósitos
             </Box>
           </NavItem>
         </Collapse>
+
+        {/* PRICELISTS */}
+        <NavItemDivider
+          icon={FaFileInvoiceDollar}
+          onClick={() => {
+            onTogglePriceList();
+            onCloseProducts();
+            onCloseStock();
+          }}
+        >
+          Listas de Precios
+          <Icon
+            as={MdKeyboardArrowRight}
+            ml="auto"
+            transform={isOpenPriceList ? 'rotate(90deg)' : ''}
+          />
+        </NavItemDivider>
+        <Collapse in={isOpenPriceList}>
+          <NavItem link="/panel/lista-de-precios/">
+            <Box pl="8" py="0">
+              Listar
+            </Box>
+          </NavItem>
+          <NavItem link="/panel/lista-de-precios/generar-reporte">
+            <Box pl="8" py="0">
+              Generar Reporte
+            </Box>
+          </NavItem>
+        </Collapse>
+
+        {/* CLIENTS */}
+        <NavItem icon={BsPersonVcard} link="/panel/clientes">
+          Clientes
+        </NavItem>
+
+        {/* SUPPLIERS */}
+        <NavItem icon={BsPersonVcardFill} link="/panel/proveedores">
+          Proveedores
+        </NavItem>
       </Flex>
     </Box>
   );

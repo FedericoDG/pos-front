@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import {
   Box,
   Button,
@@ -11,13 +12,18 @@ import {
   Flex,
   FormLabel,
   Input,
+  InputGroup,
+  InputLeftAddon,
   Select,
   Stack,
   Textarea,
+  InputRightAddon,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { Discharge, Reason, Warehouse } from '../../interfaces';
 import { useCreateDischarge } from '../../hooks/';
@@ -46,7 +52,19 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createDischarge } = useCreateDischarge();
+  const queryClient = useQueryClient();
+
+  const onSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ['stocks', 'discharges'] });
+    toast.success('Baja de productos realizada', {
+      theme: 'light',
+      position: toast.POSITION.BOTTOM_CENTER,
+      autoClose: 3000,
+      closeOnClick: true,
+    });
+  };
+
+  const { mutate: createDischarge } = useCreateDischarge(onSuccess);
 
   const onSubmit = (values: Discharge, actions: FormikHelpers<Discharge>) => {
     const parsedValues = {
@@ -56,6 +74,7 @@ export const Drawer = ({
           productId: Number(values.productId),
           reasonId: Number(values.reasonId),
           quantity: Number(values.quantity),
+          cost: Number(values.cost),
           info: values.info,
         },
       ],
@@ -150,20 +169,44 @@ export const Drawer = ({
                   </Box>
                 </Flex>
 
-                <Box>
-                  <FormLabel htmlFor="quantity">Cantidad:</FormLabel>
-                  <Input
-                    id="quantity"
-                    name="quantity"
-                    placeholder="0"
-                    value={values.quantity}
-                    onChange={handleChange}
-                    onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                  />
-                  {errors.quantity && touched.quantity && (
-                    <ErrorMessage>{errors.quantity}</ErrorMessage>
-                  )}
-                </Box>
+                <Flex gap="4" justifyContent="space-between">
+                  <Box>
+                    <Box>
+                      <FormLabel htmlFor="quantity">Cantidad:</FormLabel>
+                      <InputGroup>
+                        <Input
+                          id="quantity"
+                          name="quantity"
+                          placeholder="0"
+                          value={values.quantity}
+                          onChange={handleChange}
+                          onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                        />
+                        <InputRightAddon children={initialValues.unit} />
+                      </InputGroup>
+                    </Box>
+                    {errors.quantity && touched.quantity && (
+                      <ErrorMessage>{errors.quantity}</ErrorMessage>
+                    )}
+                  </Box>
+                  <Box>
+                    <Box>
+                      <FormLabel htmlFor="cost">Cost:</FormLabel>
+                      <InputGroup>
+                        <InputLeftAddon children="$" />
+                        <Input
+                          id="cost"
+                          name="cost"
+                          placeholder="0"
+                          value={values.cost}
+                          onChange={handleChange}
+                          onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                        />
+                      </InputGroup>
+                    </Box>
+                    {errors.cost && touched.cost && <ErrorMessage>{errors.cost}</ErrorMessage>}
+                  </Box>
+                </Flex>
 
                 <Box>
                   <FormLabel htmlFor="info">Información extra:</FormLabel>

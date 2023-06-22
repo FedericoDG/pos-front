@@ -14,7 +14,7 @@ import {
 
 import { usePurchasesContext } from '.';
 
-export const Stepper = () => {
+export const Steps = () => {
   const { steps, activeStep } = usePurchasesContext();
 
   return (

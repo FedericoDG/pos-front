@@ -38,13 +38,9 @@ export const useGetDischarge = (id: number) =>
     select: (data) => data.body.discharge,
   });
 
-export const useCreateDischarge = () => {
-  const queryClient = useQueryClient();
-
+export const useCreateDischarge = (onSuccess: () => void) => {
   return useMutation(createDischarge, {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stocks', 'discharges'] });
-    },
+    onSuccess: onSuccess,
     onError: (error) => {
       console.log(error);
     },

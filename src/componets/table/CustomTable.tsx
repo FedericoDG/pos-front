@@ -149,7 +149,7 @@ export const CustomTable = <T extends object>({
               size="lg"
               onClick={goToPrevious}
             >
-              Anterior
+              ANTERIOR
             </Button>
             <Button
               colorScheme="brand"
@@ -159,7 +159,7 @@ export const CustomTable = <T extends object>({
               size="lg"
               onClick={() => getIds(table.getSelectedRowModel().flatRows.map((el) => el.original))}
             >
-              Siguiente
+              SIGUIENTE
             </Button>
           </Stack>
         )}

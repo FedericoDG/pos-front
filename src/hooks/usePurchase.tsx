@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
-import { postRequest } from '../services';
+import { getRequest, postRequest } from '../services';
+import { PurchaseResponse, PurchasesResponse } from '../interfaces';
 
 interface CreatePurchase {
   supplierId: number;
@@ -14,32 +15,33 @@ interface CreatePurchase {
   }[];
 }
 
+const getPurchases = () => getRequest<PurchasesResponse>('/purchases');
+const getPurchase = (id: number) => getRequest<PurchaseResponse>(`/purchases/${id}`);
 const createPurchase = (purchase: CreatePurchase) => postRequest('/purchases/', purchase);
-// const deletePrice = (id: number) => deleteRequest(`/prices/${id}`);
+
+export const useGetPurchases = () =>
+  useQuery(['products'], () => getPurchases(), {
+    enabled: true,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body.purchases,
+  });
+
+export const useGetPurchase = (id: number) =>
+  useQuery(['products', id], () => getPurchase(id), {
+    enabled: !!id,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body.purchase,
+  });
 
 export const useCreatePurchase = (onSuccess: () => any) => {
-  const queryClient = useQueryClient();
-
   return useMutation(createPurchase, {
     onSuccess,
-    /*   onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    }, */
     onError: (error) => {
       console.log(error);
     },
   });
 };
-
-/* export const useDeletePrice = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation(deletePrice, {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-}; */

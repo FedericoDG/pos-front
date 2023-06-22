@@ -174,138 +174,64 @@ export interface Discharge {
   productId: number;
   warehouseId: number;
   quantity: number | string;
+  cost: number | string;
+  unit: string;
   info?: string;
   createdAt?: string;
   updatedAt?: string;
-  products?: Product;
   reasonId?: number;
+  products?: Product;
   reason?: Reason;
   warehouses?: Warehouse;
+  user?: User;
+  dischargeDetails: DischargeDetails[];
+}
+
+export interface DischargeDetails {
+  id?: number;
+  dischargeId: number;
+  productId: number;
+  quantity: number;
+  cost: number;
+  reasonId: number;
+  info: string;
+  createdAt?: string;
+  updatedAt?: string;
+  products?: Product;
+  reason: Reason;
 }
 
 export interface Reason {
-  id?: number;
+  id: number;
   reason: string;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface ProductResponse {
-  body: {
-    product: Product;
-  };
+export interface Purchase {
+  id: number;
+  supplierId: number;
+  warehouseId: number;
+  total: number;
+  date: string;
+  driver: string;
+  transport: string;
+  userId: number;
+  createdAt: string;
+  updatedAt: string;
+  supplier?: Supplier;
+  user?: User;
+  warehouse?: Warehouse;
+  purchaseDetails?: PurchaseDetail[];
 }
 
-export interface ProductsResponse {
-  body: {
-    products: Product[];
-  };
-}
-
-export interface CategoryResponse {
-  body: {
-    category: Category;
-  };
-}
-
-export interface CategoriesResponse {
-  body: {
-    categories: Category[];
-  };
-}
-
-export interface UnitResponse {
-  body: {
-    unit: Unit;
-  };
-}
-
-export interface UnitsResponse {
-  body: {
-    units: Unit[];
-  };
-}
-
-export interface ClientResponse {
-  body: {
-    client: Client;
-  };
-}
-
-export interface ClientsResponse {
-  body: {
-    clients: Client[];
-  };
-}
-
-export interface PriceListsResponse {
-  body: {
-    pricelists: Pricelists[];
-  };
-}
-
-export interface WarehouseResponse {
-  body: {
-    warehouse: Warehouse;
-  };
-}
-
-export interface SupplierResponse {
-  body: {
-    supplier: Supplier;
-  };
-}
-
-export interface SuppliersResponse {
-  body: {
-    suppliers: Supplier[];
-  };
-}
-
-export interface WarehousesResponse {
-  body: {
-    warehouses: Warehouse[];
-  };
-}
-
-export interface PriceListReportResponse {
-  body: {
-    pricelists: Array<PriceList[]>;
-  };
-}
-
-export interface StocksResponse {
-  body: {
-    stocks: Stock2[];
-  };
-}
-
-export interface DischargesResponse {
-  body: {
-    discharges: Discharge[];
-  };
-}
-
-export interface DischargesResponse {
-  body: {
-    discharges: Discharge[];
-  };
-}
-
-export interface DischargeResponse {
-  body: {
-    discharge: Discharge;
-  };
-}
-
-export interface ReasonsResponse {
-  body: {
-    reasons: Reason[];
-  };
-}
-
-export interface ReasonResponse {
-  body: {
-    reason: Reason;
-  };
+export interface PurchaseDetail {
+  id: number;
+  purchaseId: number;
+  productId: number;
+  price: number;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+  product: Product;
 }

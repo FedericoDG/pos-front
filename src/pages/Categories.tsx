@@ -33,7 +33,7 @@ export const Categories = () => {
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Categorías">
       <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
-        Crear Categoría
+        CREAR CATEGORÍA
       </Button>
 
       {!categories ? (
