@@ -1,15 +1,15 @@
 import { Box, Stack } from '@chakra-ui/react';
 
 import { DashBoard } from '../componets/common';
-import { DischargesProvider } from '../componets/loaddischarges/context';
+import { DischargesProvider } from '../componets/load_discharges/context';
 import {
-  StepperWrapper,
   Basket,
+  Card,
   DischargesTable,
+  StepperWrapper,
   Steps,
   SupplierAndWarehouse,
-  Card,
-} from '../componets/loaddischarges';
+} from '../componets/load_discharges';
 
 export const LoadDischarges = () => {
   return (

@@ -14,20 +14,20 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  InputRightAddon,
   Select,
   Stack,
   Textarea,
-  InputRightAddon,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
+import { toast } from 'react-toastify';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 
 import { Discharge, Reason, Warehouse } from '../../interfaces';
-import { useCreateDischarge } from '../../hooks/';
 import { ErrorMessage } from '../common';
+import { useCreateDischarge } from '../../hooks/';
 
 import { schema } from './schemas';
 
@@ -43,12 +43,12 @@ interface Props {
 
 export const Drawer = ({
   initialValues,
+  isOpen,
+  onClose,
+  reasons,
   resetValues,
   setinitialValues,
   warehouses,
-  reasons,
-  isOpen,
-  onClose,
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 

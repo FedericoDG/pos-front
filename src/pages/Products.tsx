@@ -2,9 +2,9 @@ import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { useEffect, useMemo, useState } from 'react';
 
+import { ConfirmationModal, Drawer } from '../componets/products';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
-import { ConfirmationModal, Drawer } from '../componets/products';
 import { Loading } from '../componets/common/';
 import { Product } from '../interfaces';
 import { useColumns } from '../componets/products/hooks';

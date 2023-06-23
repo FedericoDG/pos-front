@@ -1,5 +1,5 @@
-import { DragHandleIcon } from '@chakra-ui/icons';
 import { Box, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
@@ -64,16 +64,12 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
               <MenuButton
                 aria-label="Options"
                 as={IconButton}
-                icon={<DragHandleIcon />}
-                variant="outline"
+                fontSize={24}
+                icon={<BsThreeDots />}
+                variant="link"
               />
               <MenuList>
-                <MenuItem
-                  icon={<TbListDetails />}
-                //onClick={() => navigate(`/panel/Supplieros/${row.original.id}`)}
-                >
-                  Ver Detalles
-                </MenuItem>
+                <MenuItem icon={<TbListDetails />}>Ver Detalles</MenuItem>
                 <MenuItem
                   icon={<FaRegEdit />}
                   onClick={() => {
@@ -102,7 +98,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         size: 80,
       },
     ],
-    [navigate, onOpen, onOpenModal, setinitialValues]
+    [onOpen, onOpenModal, setinitialValues]
   );
 
   return { columns };

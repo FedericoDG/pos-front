@@ -2,13 +2,13 @@ import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { useMemo, useState } from 'react';
 
+import { ConfirmationModal, Drawer } from '../componets/units';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { Unit } from '../interfaces';
 import { useColumns } from '../componets/units/hooks';
 import { useGetUnits } from '../hooks';
-import { ConfirmationModal, Drawer } from '../componets/units';
 
 export const Units = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

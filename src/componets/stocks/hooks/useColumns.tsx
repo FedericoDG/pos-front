@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { DragHandleIcon } from '@chakra-ui/icons';
 import { Box, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { GoAlert } from 'react-icons/go';
 import { TbListDetails } from 'react-icons/Tb';
 import { useNavigate } from 'react-router-dom';
 
-import { Stock2 } from '../../../interfaces';
-import { formatCurrency } from '../../../utils';
 import { Discharge, Warehouse } from '../../../interfaces/interfaces';
+import { formatCurrency } from '../../../utils';
+import { Stock2 } from '../../../interfaces';
 
 interface Props {
   onOpen: () => void;
@@ -19,25 +19,6 @@ interface Props {
 
 export const useColumns = ({ onOpen, warehouses, setinitialValues }: Props) => {
   const navigate = useNavigate();
-
-  /* const warehousesColumns: ColumnDef<Stock2>[] = warehouses.map((el, idx) => ({
-    id: el.code,
-    header: el.code,
-    cell: ({ row }: CellContext<Stock2, unknown>) => {
-      if (row.original.products.stocks) {
-        return (
-          <p>
-            {row.original.products.stocks[idx].stock} {row.original.products.unit?.code}
-          </p>
-        );
-      }
-    },
-    accessorFn: (x) => {
-      if (x.products.stocks) {
-        return x.products.stocks[idx].stock;
-      }
-    },
-  })); */
 
   const warehousesColumns: ColumnDef<Stock2>[] = warehouses.map((el, idx) => ({
     id: el.code,
@@ -122,13 +103,14 @@ export const useColumns = ({ onOpen, warehouses, setinitialValues }: Props) => {
             <MenuButton
               aria-label="Options"
               as={IconButton}
-              icon={<DragHandleIcon />}
-              variant="outline"
+              fontSize={24}
+              icon={<BsThreeDots />}
+              variant="link"
             />
             <MenuList>
               <MenuItem
                 icon={<TbListDetails />}
-                onClick={() => navigate(`/panel/productos/${row.original.productId}`)}
+                onClick={() => navigate(`/panel/productos/detalles/${row.original.productId}`)}
               >
                 Ver Detalles
               </MenuItem>

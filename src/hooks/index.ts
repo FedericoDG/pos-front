@@ -9,5 +9,6 @@ export * from './usePurchase';
 export * from './useReasons';
 export * from './useStocks';
 export * from './useSuppliers';
+export * from './useTransfer';
 export * from './useUnits';
 export * from './useWarehouses';

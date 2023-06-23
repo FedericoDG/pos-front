@@ -9,8 +9,8 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 import { postRequest } from '../services/';
 import { schema } from '../componets/login/schemas/';

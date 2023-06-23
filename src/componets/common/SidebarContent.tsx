@@ -1,7 +1,7 @@
+import { AiOutlineStock } from 'react-icons/ai';
 import { Box, Collapse, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsPersonVcard, BsPersonVcardFill } from 'react-icons/bs';
 import { FaCubes, FaFileInvoiceDollar, FaHome } from 'react-icons/fa';
-import { AiOutlineStock } from 'react-icons/ai';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
 import { useMyContext } from '../../context';
@@ -22,12 +22,12 @@ export const SidebarContent = (props: Props) => {
     isOpenPriceList,
     isOpenProducts,
     isOpenStock,
-    onTogglePriceList,
-    onToggleProducts,
-    onToggleStock,
     onClosePriceList,
     onCloseProducts,
     onCloseStock,
+    onTogglePriceList,
+    onToggleProducts,
+    onToggleStock,
   } = useMyContext();
 
   return (
@@ -127,6 +127,11 @@ export const SidebarContent = (props: Props) => {
           <NavItem link="/panel/stock/compras">
             <Box pl="8" py="0">
               Compras
+            </Box>
+          </NavItem>
+          <NavItem link="/panel/stock/transferencias">
+            <Box pl="8" py="0">
+              Transferencias
             </Box>
           </NavItem>
           <NavItem link="/panel/stock/bajas">

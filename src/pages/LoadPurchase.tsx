@@ -1,16 +1,16 @@
 import { Box, Stack } from '@chakra-ui/react';
 
 import { DashBoard } from '../componets/common';
-import { PurchasesProvider } from '../componets/loadpurchase/context';
+import { PurchasesProvider } from '../componets/load_purchase/context';
 import {
-  StepperWrapper,
   Basket,
+  Card,
   ProductsTable,
+  StepperWrapper,
   Steps,
   SupplierAndWarehouse,
-  Card,
   TransportAndDriver,
-} from '../componets/loadpurchase';
+} from '../componets/load_purchase';
 
 export const LoadPurchase = () => {
   return (

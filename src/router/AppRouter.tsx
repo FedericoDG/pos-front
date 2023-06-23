@@ -3,9 +3,12 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import {
   Categories,
   Clients,
-  LoadDischarges,
+  DischargeDetails,
+  Discharges,
   GeneratePriceListReport,
   Home,
+  LoadDischarges,
+  LoadProductTrans,
   LoadPurchase,
   Login,
   PriceListReport,
@@ -15,10 +18,10 @@ import {
   Purchases,
   Stocks,
   Suppliers,
+  TransferDetails,
+  Transfers,
   Units,
   Warehouses,
-  Discharges,
-  DischargeDetails,
 } from '../pages';
 
 import { PrivateRoute, PublicRoute } from './';
@@ -43,6 +46,9 @@ export const AppRouter = () => (
         <Route element={<DischargeDetails />} path="/panel/stock/bajas/detalles/:id" />
         <Route element={<LoadDischarges />} path="/panel/stock/bajas/cargar" />
         <Route element={<Warehouses />} path="/panel/stock/depositos" />
+        <Route element={<Transfers />} path="/panel/stock/transferencias" />
+        <Route element={<TransferDetails />} path="/panel/stock/transferencias/detalles/:id" />
+        <Route element={<LoadProductTrans />} path="/panel/stock/transferencias/crear" />
         <Route
           element={<GeneratePriceListReport />}
           path="/panel/lista-de-precios/generar-reporte"

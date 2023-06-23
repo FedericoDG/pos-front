@@ -18,7 +18,7 @@ export const PagButton = (props: any) => {
       px={2}
       py={0}
       rounded="lg"
-      size="md"
+      size="sm"
       {...(props.active && activeStyle)}
       {...props}
     >

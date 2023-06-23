@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom';
 import {
-  Flex,
   Button,
-  TableContainer,
+  Flex,
   Stack,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Tfoot,
@@ -12,15 +12,15 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
-import { Text } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
+import { Text } from '@chakra-ui/react';
+import { useReactToPrint } from 'react-to-print';
+import { useRef } from 'react';
 
 import { DashBoard, Loading } from '../componets/common';
-import { useGetDischarge } from '../hooks';
 import { formatCurrency, formatDate } from '../utils';
+import { useGetDischarge } from '../hooks';
 
 export const DischargeDetails = () => {
   const { id } = useParams();
@@ -40,28 +40,28 @@ export const DischargeDetails = () => {
       {!discharge ? (
         <Loading />
       ) : (
-        <>
+        <Flex
+          alignItems="center"
+          bg="white"
+          flexDir={{ base: 'column' }}
+          justifyContent="space-between"
+          p="4"
+          rounded="md"
+          shadow="md"
+          w="full"
+        >
           <Button
+            alignSelf={'flex-end'}
             colorScheme="linkedin"
             leftIcon={<ImPrinter />}
-            mb="4"
-            ml="auto"
             size="sm"
             onClick={handlePrint}
           >
             Imprimir
           </Button>
-          <Flex
-            ref={printRef}
-            alignItems="flex-start"
-            flexDir={{ base: 'column' }}
-            gap="4"
-            justifyContent="space-between"
-            pt="4"
-            w="full"
-          >
-            <Stack bg="white" rounded="md" shadow="md" w="full">
-              <TableContainer p="4" w="full">
+          <Stack ref={printRef} minW="1024px" py="8">
+            <Stack>
+              <TableContainer w="full">
                 <Table size="sm">
                   <Text as={'caption'} textAlign="left">
                     Baja de Produtos
@@ -86,7 +86,7 @@ export const DischargeDetails = () => {
                   </Tbody>
                 </Table>
               </TableContainer>
-              <TableContainer px="4" w="full">
+              <TableContainer w="full">
                 <Table size="sm">
                   <Text as={'caption'} textAlign="left">
                     Detalles de la baja
@@ -138,9 +138,9 @@ export const DischargeDetails = () => {
               </TableContainer>
             </Stack>
 
-            <Stack bg="white" rounded="md" shadow="md" w="full">
+            <Stack>
               <Stack direction="row">
-                <TableContainer p="4" w="full">
+                <TableContainer w="full">
                   <Table size="sm">
                     <Text as={'caption'} textAlign="left">
                       Depósito
@@ -167,7 +167,7 @@ export const DischargeDetails = () => {
                     </Tbody>
                   </Table>
                 </TableContainer>
-                <TableContainer p="4" w="full">
+                <TableContainer w="full">
                   <Table size="sm">
                     <Text as={'caption'} textAlign="left">
                       Usuario
@@ -199,8 +199,8 @@ export const DischargeDetails = () => {
                 </TableContainer>
               </Stack>
             </Stack>
-          </Flex>
-        </>
+          </Stack>
+        </Flex>
       )}
     </DashBoard>
   );

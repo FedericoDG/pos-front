@@ -24,10 +24,10 @@ interface Props {
 
 export const ConfirmationModal = ({
   initialValues,
-  resetValues,
-  setinitialValues,
   isOpen,
   onClose,
+  resetValues,
+  setinitialValues,
 }: Props) => {
   const { mutate } = useDeleteProduct();
 

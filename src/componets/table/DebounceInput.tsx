@@ -12,10 +12,10 @@ interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onCha
 }
 
 export const DebouncedInput = ({
-  value: initialValue,
-  onChange,
   debounceTime = 300,
+  onChange,
   placeholder = 'Buscar...',
+  value: initialValue,
 }: Props) => {
   const [value, setValue] = useState(initialValue);
 

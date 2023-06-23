@@ -3,14 +3,14 @@ import { Heading, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from 
 import { ImPrinter } from 'react-icons/im';
 import { nanoid } from 'nanoid';
 import { useEffect, useState, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
+import { useSearchParams } from 'react-router-dom';
 
 import { DashBoard, Loading } from '../componets/common';
+import { formatDate } from '../utils';
 import { PriceList } from '../interfaces';
 import { useGetPriceListsReport } from '../hooks';
 import formatCurrency from '../utils/formatCurrency';
-import { formatDate } from '../utils';
 
 export const PriceListReport = () => {
   const [searchParams] = useSearchParams();

@@ -7,9 +7,9 @@ import {
   usePriceListsColumns,
   useProductColumns,
   useWarehousesColumns,
-} from '../componets/pricelistreport/hooks';
-import { PriceListProvider } from '../componets/pricelistreport/context';
-import { StepperWrapper, Stepper, MakeRequest } from '../componets/pricelistreport';
+} from '../componets/pricelist_report/hooks';
+import { PriceListProvider } from '../componets/pricelist_report/context';
+import { StepperWrapper, Stepper, MakeRequest } from '../componets/pricelist_report';
 import { useGetPriceLists, useGetProducts, useGetWarehouses } from '../hooks';
 
 export const GeneratePriceListReport = () => {

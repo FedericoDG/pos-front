@@ -1,4 +1,3 @@
-import { useParams } from 'react-router-dom';
 import {
   Badge,
   Box,
@@ -24,14 +23,14 @@ import { FaDollarSign } from 'react-icons/fa';
 import { GoAlert } from 'react-icons/go';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import { useParams } from 'react-router-dom';
 import Barcode from 'react-barcode';
 
 import { DashBoard, Loading } from '../componets/common';
-import { Drawer } from '../componets/productdetails/';
+import { Drawer } from '../componets/product_details/';
 import { formatDate } from '../utils';
 import { Price } from '../interfaces';
-import { useDeletePrice, useGetProduct } from '../hooks';
+import { useGetProduct } from '../hooks';
 import { useGetPriceLists } from '../hooks/';
 import formatCurrency from '../utils/formatCurrency';
 
@@ -55,13 +54,8 @@ export const ProductDetails = () => {
 
   const { data: product, isFetching: isFetchingProduct } = useGetProduct(Number(id));
   const { data: priceList, isFetching: isFetchingPriceLists } = useGetPriceLists();
-  //const { mutate: deletePrice } = useDeletePrice();
 
   const isIndeterminate = isFetchingProduct || isFetchingPriceLists;
-
-  /* const handlePrint = useReactToPrint({
-    content: () => barcodeRef.current,
-  }); */
 
   const getBgColor = ({
     totalStock,

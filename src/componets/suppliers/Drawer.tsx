@@ -11,9 +11,7 @@ import {
   Flex,
   FormLabel,
   Input,
-  Select,
   Stack,
-  Switch,
   Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
@@ -36,10 +34,10 @@ interface Props {
 
 export const Drawer = ({
   initialValues,
-  resetValues,
-  setinitialValues,
   isOpen,
   onClose,
+  resetValues,
+  setinitialValues,
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 

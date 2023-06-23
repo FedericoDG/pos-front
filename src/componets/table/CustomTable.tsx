@@ -24,14 +24,14 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import './customTable.css';
 import { ArrowDownIcon, ArrowUpIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import { ImPrinter } from 'react-icons/im';
 import { useMemo, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
-import { usePriceListContext } from '../pricelistreport/context';
+import { usePriceListContext } from '../pricelist_report/context';
 
 import { Navigation } from './Navigation';
 
@@ -53,17 +53,17 @@ interface ReactTableProps<T extends object> {
 }
 
 export const CustomTable = <T extends object>({
-  data,
-  columns,
   amount,
-  showFooter = false,
-  showNavigation = false,
-  showGlobalFilter = false,
-  showColumsSelector = false,
-  showPrintOption = false,
-  showSelectButton = false,
+  columns,
+  data,
   filterFn = filterFns.contains,
   flag = '',
+  showColumsSelector = false,
+  showFooter = false,
+  showGlobalFilter = false,
+  showNavigation = false,
+  showPrintOption = false,
+  showSelectButton = false,
 }: ReactTableProps<T>) => {
   const [globalFilter, setGlobalFilter] = useState('');
 

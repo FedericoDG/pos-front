@@ -1,6 +1,6 @@
 import { Box, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
-import { DragHandleIcon } from '@chakra-ui/icons';
 import { TbListDetails } from 'react-icons/Tb';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -55,8 +55,9 @@ export const useColumns = () => {
               <MenuButton
                 aria-label="Options"
                 as={IconButton}
-                icon={<DragHandleIcon />}
-                variant="outline"
+                fontSize={24}
+                icon={<BsThreeDots />}
+                variant="link"
               />
               <MenuList>
                 <MenuItem

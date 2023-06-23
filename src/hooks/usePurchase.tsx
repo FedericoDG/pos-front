@@ -20,7 +20,7 @@ const getPurchase = (id: number) => getRequest<PurchaseResponse>(`/purchases/${i
 const createPurchase = (purchase: CreatePurchase) => postRequest('/purchases/', purchase);
 
 export const useGetPurchases = () =>
-  useQuery(['products'], () => getPurchases(), {
+  useQuery(['purchases'], () => getPurchases(), {
     enabled: true,
     retry: 1,
     cacheTime: 1,
@@ -29,7 +29,7 @@ export const useGetPurchases = () =>
   });
 
 export const useGetPurchase = (id: number) =>
-  useQuery(['products', id], () => getPurchase(id), {
+  useQuery(['purchases', id], () => getPurchase(id), {
     enabled: !!id,
     retry: 1,
     cacheTime: 1,

@@ -39,28 +39,28 @@ export const PurchaseDetails = () => {
       {!purchase ? (
         <Loading />
       ) : (
-        <>
+        <Flex
+          alignItems="center"
+          bg="white"
+          flexDir={{ base: 'column' }}
+          justifyContent="space-between"
+          p="4"
+          rounded="md"
+          shadow="md"
+          w="full"
+        >
           <Button
+            alignSelf={'flex-end'}
             colorScheme="linkedin"
             leftIcon={<ImPrinter />}
-            mb="4"
-            ml="auto"
             size="sm"
             onClick={handlePrint}
           >
             Imprimir
           </Button>
-          <Flex
-            ref={printRef}
-            alignItems="flex-start"
-            flexDir={{ base: 'column' }}
-            gap="4"
-            justifyContent="space-between"
-            pt="4"
-            w="full"
-          >
-            <Stack bg="white" rounded="md" shadow="md" w="full">
-              <TableContainer p="4" w="full">
+          <Stack ref={printRef} minW="1024px" py="8">
+            <Stack>
+              <TableContainer w="full">
                 <Table size="sm">
                   <Text as={'caption'} textAlign="left">
                     Compra
@@ -93,7 +93,7 @@ export const PurchaseDetails = () => {
                   </Tbody>
                 </Table>
               </TableContainer>
-              <TableContainer px="4" w="full">
+              <TableContainer w="full">
                 <Table size="sm">
                   <Text as={'caption'} textAlign="left">
                     Detalles de la compra
@@ -145,9 +145,9 @@ export const PurchaseDetails = () => {
               </TableContainer>
             </Stack>
 
-            <Stack bg="white" rounded="md" shadow="md" w="full">
+            <Stack>
               <Stack direction="row">
-                <TableContainer p="4" w="full">
+                <TableContainer w="full">
                   <Table size="sm">
                     <Text as={'caption'} textAlign="left">
                       Depósito
@@ -174,7 +174,7 @@ export const PurchaseDetails = () => {
                     </Tbody>
                   </Table>
                 </TableContainer>
-                <TableContainer p="4" w="full">
+                <TableContainer w="full">
                   <Table size="sm">
                     <Text as={'caption'} textAlign="left">
                       Usuario
@@ -206,7 +206,7 @@ export const PurchaseDetails = () => {
                 </TableContainer>
               </Stack>
 
-              <TableContainer px="4">
+              <TableContainer>
                 <Table size="sm">
                   <Text as={'caption'} textAlign="left">
                     Proveedor
@@ -242,8 +242,8 @@ export const PurchaseDetails = () => {
                 </Table>
               </TableContainer>
             </Stack>
-          </Flex>
-        </>
+          </Stack>
+        </Flex>
       )}
     </DashBoard>
   );

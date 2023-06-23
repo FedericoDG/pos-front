@@ -184,7 +184,7 @@ export interface Discharge {
   reason?: Reason;
   warehouses?: Warehouse;
   user?: User;
-  dischargeDetails: DischargeDetails[];
+  dischargeDetails?: DischargeDetails[];
 }
 
 export interface DischargeDetails {
@@ -234,4 +234,27 @@ export interface PurchaseDetail {
   createdAt: string;
   updatedAt: string;
   product: Product;
+}
+
+export interface Transfer {
+  id?: number;
+  warehouseOriginId: number;
+  warehouseDestinationId: number;
+  userId: number;
+  createdAt?: string;
+  updatedAt?: string;
+  user: User;
+  warehouseOrigin: Warehouse;
+  warehouseDestination: Warehouse;
+  transferDetails: TransferDetail[];
+}
+
+export interface TransferDetail {
+  id?: number;
+  transferId: number;
+  productId: number;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+  products: Product;
 }

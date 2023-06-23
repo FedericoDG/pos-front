@@ -8,8 +8,8 @@ export const Footer = () => {
   return (
     <Flex
       alignItems="center"
+      bg="white"
       display={{ base: 'none', md: 'block' }}
-      h="56px"
       justifyContent="center"
     >
       <Flex

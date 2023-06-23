@@ -1,16 +1,17 @@
 import {
-  Product,
   Category,
-  Unit,
   Client,
-  Pricelists,
-  Warehouse,
-  Supplier,
-  PriceList,
-  Stock2,
   Discharge,
-  Reason,
+  PriceList,
+  Pricelists,
+  Product,
   Purchase,
+  Reason,
+  Stock2,
+  Supplier,
+  Transfer,
+  Unit,
+  Warehouse,
 } from '.';
 
 export interface ProductResponse {
@@ -147,5 +148,17 @@ export interface PurchasesResponse {
 export interface PurchaseResponse {
   body: {
     purchase: Purchase;
+  };
+}
+
+export interface TransfersResponse {
+  body: {
+    transfers: Transfer[];
+  };
+}
+
+export interface TransferResponse {
+  body: {
+    transfer: Transfer;
   };
 }
