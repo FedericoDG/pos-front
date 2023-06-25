@@ -6,13 +6,9 @@ import { Price } from '../interfaces';
 const createPrice = (price: Price) => postRequest('/prices/', price);
 const deletePrice = (id: number) => deleteRequest(`/prices/${id}`);
 
-export const useCreatePrice = () => {
-  const queryClient = useQueryClient();
-
+export const useCreatePrice = (onSuccess: () => void) => {
   return useMutation(createPrice, {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
+    onSuccess: onSuccess,
     onError: (error) => {
       console.log(error);
     },

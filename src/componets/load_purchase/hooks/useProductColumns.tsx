@@ -3,10 +3,11 @@ import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, useMemo } from 'react';
 
 import { Product } from '../../../interfaces';
+import { CartItem } from '..';
 
 interface Props {
   onOpen: () => void;
-  setActiveProduct: Dispatch<React.SetStateAction<Product | undefined>>;
+  setActiveProduct: Dispatch<React.SetStateAction<CartItem>>;
 }
 
 export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
@@ -35,7 +36,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
               type="submit"
               variant="outline"
               onClick={() => {
-                setActiveProduct(row.original);
+                setActiveProduct({ ...row.original, quantity: 0, price: 0 });
                 onOpen();
               }}
             >

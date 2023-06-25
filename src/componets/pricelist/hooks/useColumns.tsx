@@ -4,33 +4,33 @@ import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
 
-import { Unit } from '../../../interfaces';
+import { Pricelists } from '../../../interfaces';
 
 interface Props {
   onOpen: () => void;
   onOpenModal: () => void;
-  setinitialValues: Dispatch<SetStateAction<Unit>>;
+  setinitialValues: Dispatch<SetStateAction<Pricelists>>;
 }
 
 export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => {
-  const columns = useMemo<ColumnDef<Unit>[]>(
+  const columns = useMemo<ColumnDef<Pricelists>[]>(
     () => [
       {
         id: 'codigo',
         header: 'Código',
-        cell: (row: CellContext<Unit, unknown>) => row.renderValue(),
+        cell: (row: CellContext<Pricelists, unknown>) => row.renderValue(),
         accessorKey: 'code',
       },
       {
-        id: 'nombre',
-        header: 'Nombre',
-        cell: (row: CellContext<Unit, unknown>) => row.renderValue(),
-        accessorKey: 'name',
+        id: 'descripcion',
+        header: 'Descripción',
+        cell: (row: CellContext<Pricelists, unknown>) => row.renderValue(),
+        accessorKey: 'description',
       },
       {
         id: 'acciones',
         header: 'Acciones',
-        cell: ({ row }: CellContext<Unit, unknown>) => (
+        cell: ({ row }: CellContext<Pricelists, unknown>) => (
           <Box fontFamily="IBM Plex Sans">
             <Menu placement="left-start">
               <MenuButton

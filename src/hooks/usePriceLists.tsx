@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
-import { PriceListsResponse, PriceListReportResponse } from '../interfaces';
+import { PriceListsResponse, PriceListReportResponse, Pricelists } from '../interfaces';
 
 const getPriceLists = () => getRequest<PriceListsResponse>(`/pricelists`);
 const getPriceListsReport = (
@@ -12,9 +12,10 @@ const getPriceListsReport = (
   getRequest<PriceListReportResponse>(
     `/pricelists/report?products=${products}&pricelists=${pricelists}&warehouses=${warehouses}`
   );
-/* const createCategory = (category: Category) => postRequest('/categories/', category);
-const updateCategory = (category: Category) => putRequest(`/categories/${category?.id}`, category);
-const deleteCategory = (id: number) => deleteRequest(`/categories/${id}`); */
+const createPriceList = (priceList: Pricelists) => postRequest('/pricelists/', priceList);
+const updatePriceList = (priceList: Pricelists) =>
+  putRequest(`/pricelists/${priceList?.id}`, priceList);
+const deletePriceList = (id: number) => deleteRequest(`/pricelists/${id}`);
 
 export const useGetPriceLists = () =>
   useQuery(['priceLists'], () => getPriceLists(), {
@@ -42,12 +43,12 @@ export const useGetPriceListsReport = (
     }
   );
 
-/* export const useCreateCategory = () => {
+export const useCreatePriceLists = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(createCategory, {
+  return useMutation(createPriceList, {
     onSuccess: () => {
-      queryClient.invalidateQueries('categories');
+      queryClient.invalidateQueries('priceLists');
     },
     onError: (error) => {
       console.log(error);
@@ -55,12 +56,12 @@ export const useGetPriceListsReport = (
   });
 };
 
-export const useUpdateCategory = () => {
+export const useUpdatePriceLists = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(updateCategory, {
+  return useMutation(updatePriceList, {
     onSuccess: () => {
-      queryClient.invalidateQueries('categories');
+      queryClient.invalidateQueries('priceLists');
     },
     onError: (error) => {
       console.log(error);
@@ -68,16 +69,15 @@ export const useUpdateCategory = () => {
   });
 };
 
-export const useDeleteCategory = () => {
+export const useDeletePriceLists = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(deleteCategory, {
+  return useMutation(deletePriceList, {
     onSuccess: () => {
-      queryClient.invalidateQueries('categories');
+      queryClient.invalidateQueries('priceLists');
     },
     onError: (error) => {
       console.log(error);
     },
   });
 };
- */

@@ -11,15 +11,15 @@ import {
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction } from 'react';
 
-import { Unit } from '../../interfaces';
-import { useDeleteUnits } from '../../hooks';
+import { Pricelists } from '../../interfaces';
+import { useDeletePriceLists } from '../../hooks';
 
 interface Props {
-  initialValues: Unit;
-  resetValues: Unit;
+  initialValues: Pricelists;
+  resetValues: Pricelists;
   isOpen: boolean;
   onClose: () => void;
-  setinitialValues: Dispatch<SetStateAction<Unit>>;
+  setinitialValues: Dispatch<SetStateAction<Pricelists>>;
 }
 
 export const ConfirmationModal = ({
@@ -29,13 +29,13 @@ export const ConfirmationModal = ({
   isOpen,
   onClose,
 }: Props) => {
-  const { mutate } = useDeleteUnits();
+  const { mutate } = useDeletePriceLists();
 
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay backdropFilter="blur(5px) hue-rotate(90deg)" bg="blackAlpha.300" />
       <ModalContent>
-        <ModalHeader>Eliminar una Unidad</ModalHeader>
+        <ModalHeader>Eliminar una Lista de Precio</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text fontSize="2xl">¿Confirma la eliminación?</Text>

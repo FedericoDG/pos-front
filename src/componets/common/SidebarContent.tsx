@@ -50,7 +50,7 @@ export const SidebarContent = (props: Props) => {
       zIndex="sticky"
       {...props}
     >
-      <Flex align="center" px="4" py="5">
+      <Flex align="center" px="4" py="12px">
         <Text
           _dark={{
             color: 'white',
@@ -88,6 +88,11 @@ export const SidebarContent = (props: Props) => {
           <NavItem link="/panel/productos/">
             <Box pl="8" py="0">
               Listar
+            </Box>
+          </NavItem>
+          <NavItem link="/panel/productos/costos">
+            <Box pl="8" py="0">
+              Actualizar Costos
             </Box>
           </NavItem>
           <NavItem link="/panel/productos/categorias">

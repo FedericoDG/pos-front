@@ -68,6 +68,12 @@ export interface PriceListsResponse {
   };
 }
 
+export interface PriceListResponse {
+  body: {
+    pricelist: Pricelists;
+  };
+}
+
 export interface WarehouseResponse {
   body: {
     warehouse: Warehouse;

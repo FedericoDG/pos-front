@@ -64,14 +64,14 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
         }}
         transition=".3s ease"
       >
-        <Flex alignItems="center" flexDir="column" minH="calc(100vh - 62px)">
+        <Flex alignItems="center" flexDir="column" minH="calc(100vh - 54px)">
           <Flex
             _dark={{
               bg: 'gray.800',
             }}
             align="center"
             as="header"
-            bg="white"
+            bg="brand.500"
             borderColor="brand.300"
             h="56px"
             justify="space-between"
@@ -96,25 +96,25 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
               }}
               style={{ scrollMarginTop: '2rem' }}
             >
-              <Text fontSize="xl" fontWeight="semibold">
+              <Text color="whitesmoke" fontSize="xl" fontWeight="semibold">
                 {title}
               </Text>
             </Box>
             <Flex align="center" gap="4" zIndex={999}>
-              <Icon as={FaBell} color="gray.500" cursor="pointer" fontSize="xl" />
+              <Icon as={FaBell} color="whitesmoke" cursor="pointer" fontSize="xl" />
               <Menu>
                 <MenuButton _focus={{ boxShadow: 'none' }} py={2} transition="all 0.3s">
                   <HStack>
                     <VStack alignItems="flex-start" ml="2" spacing="1px">
-                      <Text fontSize="x-small" fontWeight="bold">
+                      <Text color="whitesmoke" fontSize="x-small" fontWeight="bold">
                         {user.name.toLocaleUpperCase()} {user.lastname.toLocaleUpperCase()}
                       </Text>
-                      <Text color="brand.400" fontSize="xx-small" fontWeight="semibold">
+                      <Text color="whitesmoke" fontSize="xx-small" fontWeight="semibold">
                         {user.role.name}
                       </Text>
                     </VStack>
                     <Box>
-                      <FiChevronDown />
+                      <FiChevronDown color="whitesmoke" />
                     </Box>
                   </HStack>
                 </MenuButton>
@@ -130,11 +130,16 @@ export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
               </Menu>
             </Flex>
           </Flex>
-          {isIndeterminate ? (
-            <Progress isIndeterminate colorScheme="brand" size="sm" w="full" />
-          ) : (
-            <Progress bg="brand.500" size="sm" w="full" />
-          )}
+          <Box h="5px" w="full">
+            <Progress bg="blue.500" size="xs" w="full" />
+          </Box>
+          {/*  <Box h="5px" w="full">
+            {isIndeterminate ? (
+              <Progress isIndeterminate colorScheme="brand" size="xs" w="full" />
+            ) : (
+              <Progress bg="brand" size="xs" w="full" />
+            )}
+          </Box> */}
           <Flex
             _dark={{ color: 'black' }}
             alignItems="center"

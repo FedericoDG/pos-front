@@ -19,20 +19,23 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import { FaDollarSign } from 'react-icons/fa';
-import { GoAlert } from 'react-icons/go';
 import { nanoid } from 'nanoid';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Barcode from 'react-barcode';
 
 import { DashBoard, Loading } from '../componets/common';
-import { Drawer } from '../componets/product_details/';
+import { Drawer, DrawerCost, DrawerDischarge } from '../componets/product_details/';
 import { formatDate } from '../utils';
-import { Price } from '../interfaces';
-import { useGetProduct } from '../hooks';
+import { Discharge, Price } from '../interfaces';
+import { useGetProduct, useGetReasons, useGetWarehousesWOStock } from '../hooks';
 import { useGetPriceLists } from '../hooks/';
 import formatCurrency from '../utils/formatCurrency';
+
+interface Cost {
+  productId: number;
+  cost: number;
+}
 
 export const ProductDetails = () => {
   const resetValues: Price = useMemo(
@@ -44,9 +47,34 @@ export const ProductDetails = () => {
     []
   );
 
+  const resetValues2: Discharge = useMemo(
+    () => ({
+      warehouseId: 1,
+      productId: 1,
+      reasonId: 1,
+      quantity: 0,
+      cost: 0,
+      unit: 'Kg.',
+      info: '',
+    }),
+    []
+  );
+
+  const resetValues3: Cost = useMemo(
+    () => ({
+      productId: 0,
+      cost: 0,
+    }),
+    []
+  );
+
   const [initialValues, setinitialValues] = useState(resetValues);
+  const [initialValues2, setinitialValues2] = useState(resetValues2);
+  const [initialValues3, setinitialValues3] = useState(resetValues3);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
+  const { isOpen: isOpen3, onOpen: onOpen3, onClose: onClose3 } = useDisclosure();
 
   const barcodeRef = useRef<any | null>(null);
 
@@ -54,8 +82,11 @@ export const ProductDetails = () => {
 
   const { data: product, isFetching: isFetchingProduct } = useGetProduct(Number(id));
   const { data: priceList, isFetching: isFetchingPriceLists } = useGetPriceLists();
+  const { data: warehouses, isFetching: isFetchingWarehouses } = useGetWarehousesWOStock();
+  const { data: reasons, isFetching: isFetchingReasons } = useGetReasons();
 
-  const isIndeterminate = isFetchingProduct || isFetchingPriceLists;
+  const isIndeterminate =
+    isFetchingProduct || isFetchingPriceLists || isFetchingWarehouses || isFetchingReasons;
 
   const getBgColor = ({
     totalStock,
@@ -79,9 +110,25 @@ export const ProductDetails = () => {
     resetValues.pricelistId = priceList[0].id!;
   }, [priceList, product, resetValues]);
 
+  useEffect(() => {
+    if (!product || !warehouses || !reasons) return;
+
+    resetValues2.productId = product.id!;
+    resetValues2.warehouseId = warehouses[0].id!;
+    resetValues2.reasonId = reasons[0].id!;
+    resetValues2.cost = product.costs![0].price;
+  }, [product, reasons, resetValues2, warehouses]);
+
+  useEffect(() => {
+    if (!product) return;
+
+    resetValues3.productId = product.id!;
+    resetValues3.cost = product.costs![0].price;
+  }, [product, resetValues3]);
+
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles del Producto">
-      {!product || !priceList ? (
+      {!product || !priceList || !warehouses || !reasons ? (
         <Loading />
       ) : (
         <Flex
@@ -223,23 +270,14 @@ export const ProductDetails = () => {
                     </Table>
                   </TableContainer>
                 </Stack>
-                <Button
-                  colorScheme="brand"
-                  leftIcon={<GoAlert style={{ color: 'white' }} />}
-                  mb="5"
-                  minH="50px"
-                  ml="auto"
-                  p="2"
-                  w="210px"
-                  onClick={onOpen}
-                >
+                <Button colorScheme="brand" mb="4" ml="auto" size="sm" w="210px" onClick={onOpen2}>
                   CARGAR PERDIDA
                 </Button>
               </Stack>
             )}
 
             {product.prices?.length! > 0 && (
-              <Stack mb="5">
+              <Stack>
                 <TableContainer>
                   <Table size="sm">
                     <Thead>
@@ -266,16 +304,7 @@ export const ProductDetails = () => {
                     </Tbody>
                   </Table>
                 </TableContainer>
-                <Button
-                  colorScheme="brand"
-                  leftIcon={<FaDollarSign style={{ color: 'white' }} />}
-                  mb="5"
-                  minH="50px"
-                  ml="auto"
-                  p="2"
-                  w="210px"
-                  onClick={onOpen}
-                >
+                <Button colorScheme="brand" mb="4" ml="auto" size="sm" w="210px" onClick={onOpen}>
                   ACTUALIZAR PRECIOS
                 </Button>
 
@@ -301,15 +330,7 @@ export const ProductDetails = () => {
                     </Table>
                   </TableContainer>
                 )}
-                <Button
-                  colorScheme="brand"
-                  leftIcon={<FaDollarSign style={{ color: 'white' }} />}
-                  minH="50px"
-                  ml="auto"
-                  p="2"
-                  w="210px"
-                  onClick={onOpen}
-                >
+                <Button colorScheme="brand" ml="auto" size="sm" w="210px" onClick={onOpen3}>
                   ACTUALIZAR COSTO
                 </Button>
               </Stack>
@@ -323,6 +344,22 @@ export const ProductDetails = () => {
             resetValues={resetValues}
             setinitialValues={setinitialValues}
             onClose={onClose}
+          />
+          <DrawerDischarge
+            initialValues={initialValues2}
+            isOpen={isOpen2}
+            reasons={reasons}
+            resetValues={resetValues2}
+            setinitialValues={setinitialValues2}
+            warehouses={warehouses}
+            onClose={onClose2}
+          />
+          <DrawerCost
+            initialValues={initialValues3}
+            isOpen={isOpen3}
+            resetValues={resetValues3}
+            setinitialValues={setinitialValues3}
+            onClose={onClose3}
           />
         </Flex>
       )}

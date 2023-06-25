@@ -16,17 +16,17 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
-import { Unit } from '../../interfaces';
-import { useCreateUnits, useUpdateUnits } from '../../hooks/';
+import { Pricelists } from '../../interfaces';
+import { useCreatePriceLists, useUpdatePriceLists } from '../../hooks/';
 
 import { schema } from './schemas';
 
 interface Props {
-  initialValues: Unit;
-  resetValues: Unit;
+  initialValues: Pricelists;
+  resetValues: Pricelists;
   isOpen: boolean;
   onClose: () => void;
-  setinitialValues: Dispatch<SetStateAction<Unit>>;
+  setinitialValues: Dispatch<SetStateAction<Pricelists>>;
 }
 
 export const Drawer = ({
@@ -38,18 +38,18 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createUnit } = useCreateUnits();
-  const { mutate: updateUnit } = useUpdateUnits();
+  const { mutate: createPriceList } = useCreatePriceLists();
+  const { mutate: updatePriceList } = useUpdatePriceLists();
 
-  const onSubmit = (values: Unit, actions: FormikHelpers<Unit>) => {
+  const onSubmit = (values: Pricelists, actions: FormikHelpers<Pricelists>) => {
     const parsedValues = {
       ...values,
     };
 
     if (values?.id) {
-      updateUnit(parsedValues);
+      updatePriceList(parsedValues);
     } else {
-      createUnit(parsedValues);
+      createPriceList(parsedValues);
     }
     setinitialValues(resetValues);
     actions.resetForm();
@@ -101,7 +101,7 @@ export const Drawer = ({
                     ref={firstField}
                     id="code"
                     name="code"
-                    placeholder="Kg."
+                    placeholder="Lista-XX"
                     value={values.code}
                     onChange={handleChange}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}
@@ -109,15 +109,15 @@ export const Drawer = ({
                   {errors.code && touched.code && <div>{errors.code}</div>}
                 </Box>
                 <Box>
-                  <FormLabel htmlFor="name">Nombre:</FormLabel>
+                  <FormLabel htmlFor="description">Descripción:</FormLabel>
                   <Input
-                    id="name"
-                    name="name"
-                    placeholder="Kilogramos"
-                    value={values.name}
+                    id="description"
+                    name="description"
+                    placeholder="Otra lista de precio"
+                    value={values.description}
                     onChange={handleChange}
                   />
-                  {errors.name && touched.name && <div>{errors.name}</div>}
+                  {errors.description && touched.description && <div>{errors.description}</div>}
                 </Box>
               </Stack>
             </DrawerBody>

@@ -7,11 +7,13 @@ import {
   Discharges,
   GeneratePriceListReport,
   Home,
+  LoadCosts,
   LoadDischarges,
   LoadProductTrans,
   LoadPurchase,
   Login,
   PriceListReport,
+  PriceLists,
   ProductDetails,
   Products,
   PurchaseDetails,
@@ -37,6 +39,7 @@ export const AppRouter = () => (
         <Route element={<ProductDetails />} path="/panel/productos/detalles/:id" />
         <Route element={<Categories />} path="/panel/productos/categorias" />
         <Route element={<Units />} path="/panel/productos/unidades" />
+        <Route element={<LoadCosts />} path="/panel/productos/costos" />
         {/* STOCK */}
         <Route element={<Stocks />} path="/panel/stock" />
         <Route element={<Purchases />} path="/panel/stock/compras/" />
@@ -53,6 +56,8 @@ export const AppRouter = () => (
           element={<GeneratePriceListReport />}
           path="/panel/lista-de-precios/generar-reporte"
         />
+        {/* PRICELISTS */}
+        <Route element={<PriceLists />} path="/panel/lista-de-precios/" />
         <Route element={<PriceListReport />} path="/panel/lista-de-precios/reporte" />
         {/* CLIENTS */}
         <Route element={<Clients />} path="/panel/clientes" />

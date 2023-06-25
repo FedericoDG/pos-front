@@ -100,27 +100,6 @@ export const DischargesTable = () => {
           <ModalBody>
             <Stack spacing="14px">
               <Box>
-                <FormLabel htmlFor="quantity">Razón de la pérdida:</FormLabel>
-                <ChakraSelect
-                  id="categoryId"
-                  minW="224px"
-                  name="categoryId"
-                  value={reasons[0].id}
-                  onChange={(e) =>
-                    setActiveProduct((current) => ({
-                      ...current,
-                      reasonId: Number(e.target.value),
-                    }))
-                  }
-                >
-                  {reasons.map((reason) => (
-                    <option key={reason.id} value={reason.id}>
-                      {reason.reason}
-                    </option>
-                  ))}
-                </ChakraSelect>
-              </Box>
-              <Box>
                 <FormLabel htmlFor="quantity">Cantidad:</FormLabel>
                 <InputGroup>
                   <Input
@@ -153,6 +132,27 @@ export const DischargesTable = () => {
                     }
                   />
                 </InputGroup>
+              </Box>
+              <Box>
+                <FormLabel htmlFor="quantity">Razón de la pérdida:</FormLabel>
+                <ChakraSelect
+                  id="categoryId"
+                  minW="224px"
+                  name="categoryId"
+                  value={reasons[0].id}
+                  onChange={(e) =>
+                    setActiveProduct((current) => ({
+                      ...current,
+                      reasonId: Number(e.target.value),
+                    }))
+                  }
+                >
+                  {reasons.map((reason) => (
+                    <option key={reason.id} value={reason.id}>
+                      {reason.reason}
+                    </option>
+                  ))}
+                </ChakraSelect>
               </Box>
             </Stack>
           </ModalBody>

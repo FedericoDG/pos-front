@@ -1,6 +1,7 @@
 export * from './index';
 export * from './useCategories';
 export * from './useClients';
+export * from './useCosts';
 export * from './useDischarges';
 export * from './usePrice';
 export * from './usePriceLists';

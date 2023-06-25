@@ -26,7 +26,7 @@ export interface CartItem extends Product {
 
 interface PurchasesContext {
   activeStep: number;
-  addItem: (product: Product, quantity: number, price: number) => void;
+  addItem: (product: CartItem) => void;
   cart: CartItem[];
   driver: string;
   emptyCart: () => void;

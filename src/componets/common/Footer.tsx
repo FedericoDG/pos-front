@@ -24,7 +24,7 @@ export const Footer = () => {
         }}
         justify="space-between"
         px="6"
-        py="4"
+        py="3"
         w="full"
       >
         <chakra.a

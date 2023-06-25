@@ -1,8 +1,6 @@
 import { ReactNode, useContext, useMemo, useState } from 'react';
 import { useSteps } from '@chakra-ui/react';
 
-import { Product } from '../../../interfaces';
-
 import { CartItem, SelectedSupplier, SelectedWarehouse, purchasesContext } from '.';
 
 interface Props {
@@ -16,14 +14,14 @@ export const PurchasesProvider = ({ children }: Props) => {
   const [transport, setTransport] = useState('');
   const [driver, setDriver] = useState('');
 
-  const addItem = (product: Product, quantity: number, price: number) => {
+  const addItem = (product: CartItem) => {
     setCart((currentItems) => {
       const existingItem = currentItems.find((item) => item.id === product.id);
 
       if (existingItem) {
         const updatedItems = currentItems.map((item) => {
           if (item.id === product.id) {
-            return { ...item, quantity: item.quantity + quantity, price };
+            return { ...item, quantity: item.quantity + product.quantity, price: product.price };
           }
 
           return item;
@@ -32,7 +30,7 @@ export const PurchasesProvider = ({ children }: Props) => {
         return updatedItems;
       }
 
-      return [...currentItems, { ...product, quantity, price }];
+      return [...currentItems, { ...product }];
     });
   };
 

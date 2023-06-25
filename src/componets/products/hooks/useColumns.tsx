@@ -7,6 +7,7 @@ import { TbListDetails } from 'react-icons/Tb';
 import { useNavigate } from 'react-router-dom';
 
 import { Product } from '../../../interfaces';
+import { formatCurrency } from '../../../utils';
 
 interface Props {
   onOpen: () => void;
@@ -39,13 +40,23 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
       },
       {
         id: 'stock',
-        header: 'Stock Total',
+        header: 'Stock',
         cell: ({ row }: CellContext<Product, unknown>) => (
           <p>
             {row.original.totalStock} {row.original.unit?.code}
           </p>
         ),
         accessorFn: (x) => x.totalStock,
+      },
+      {
+        id: 'costo',
+        header: 'Costo',
+        cell: ({ row }: CellContext<Product, unknown>) => (
+          <p>
+            {formatCurrency(row.original.costs![0].price)}/{row.original.unit?.code}
+          </p>
+        ),
+        accessorFn: (x) => x.costs![0].price,
       },
       {
         id: 'habilitado',
@@ -64,7 +75,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
       },
       {
         id: 'stock(-)',
-        header: 'Permitir stock neg.',
+        header: 'Stock neg.',
         cell: ({ row }: CellContext<Product, unknown>) =>
           row.original.allownegativestock === 'ENABLED' ? (
             <Badge colorScheme="red" variant="subtle">
@@ -78,7 +89,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
       },
       {
         id: 'alertar',
-        header: 'Alertar bajo stock',
+        header: 'Stock bajo',
         cell: ({ row }: CellContext<Product, unknown>) =>
           row.original.alertlowstock === 'ENABLED' ? (
             <Badge colorScheme="green" variant="subtle">

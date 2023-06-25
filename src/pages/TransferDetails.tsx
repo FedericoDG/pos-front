@@ -35,7 +35,7 @@ export const TransferDetails = () => {
   });
 
   return (
-    <DashBoard isIndeterminate={isIndeterminate} title="Detalles de Baja de Productos">
+    <DashBoard isIndeterminate={isIndeterminate} title="Detalle de Transferencias entre Depósitos">
       {!transfer ? (
         <Loading />
       ) : (
@@ -59,11 +59,11 @@ export const TransferDetails = () => {
             Imprimir
           </Button>
           <Stack ref={printRef} minW="1024px" py="8">
-            <Stack>
-              <TableContainer w="full">
+            <Stack pb="4">
+              <TableContainer pb="4" w="full">
                 <Table size="sm">
                   <Text as={'caption'} textAlign="left">
-                    Baja de Produtos
+                    Transferencia entre Depósitos
                   </Text>
                   <Thead>
                     <Tr>
@@ -90,7 +90,7 @@ export const TransferDetails = () => {
               <TableContainer w="full">
                 <Table size="sm">
                   <Text as={'caption'} textAlign="left">
-                    Detalles de la transferenciaa
+                    Detalles de la transferencia
                   </Text>
                   <Thead>
                     <Tr>
@@ -124,7 +124,7 @@ export const TransferDetails = () => {
               </TableContainer>
             </Stack>
 
-            <Stack>
+            <Stack pb="4">
               <Stack direction="row">
                 <TableContainer w="full">
                   <Table size="sm">

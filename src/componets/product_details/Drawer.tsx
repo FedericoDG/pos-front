@@ -20,6 +20,8 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { InputGroup } from '@chakra-ui/react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { ErrorMessage } from '../common';
 import { Price, Pricelists } from '../../interfaces';
@@ -46,7 +48,19 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLSelectElement | null>(null);
 
-  const { mutate: createPrice } = useCreatePrice();
+  const queryClient = useQueryClient();
+
+  const onSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+    toast.success('Precio Actualizado', {
+      theme: 'light',
+      position: toast.POSITION.BOTTOM_CENTER,
+      autoClose: 3000,
+      closeOnClick: true,
+    });
+  };
+
+  const { mutate: createPrice } = useCreatePrice(onSuccess);
 
   const onSubmit = (values: Price, actions: FormikHelpers<Price>) => {
     const parsedValues = {

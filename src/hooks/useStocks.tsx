@@ -7,7 +7,7 @@ const getStocks = () => getRequest<StocksResponse>('/stocks');
 const getStock = (id: number | null) => getRequest<StockResponse>(`/stocks/${id}`);
 
 export const useGetStocks = () =>
-  useQuery(['stocks', 'discharges', 'transfers'], () => getStocks(), {
+  useQuery(['stocks', 'costs', 'discharges', 'transfers'], () => getStocks(), {
     enabled: true,
     retry: 1,
     cacheTime: 1,

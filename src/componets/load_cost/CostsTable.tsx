@@ -14,31 +14,31 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select as ChakraSelect,
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import { CustomTable } from '../table';
 import { useMyContext } from '../../context';
-import { useGetProductsWOStock } from '../../hooks';
+import { useGetStocks } from '../../hooks';
 
-import { useProductColumns } from './hooks/useProductColumns';
+import { useColumns } from './hooks/useColumns';
 
-import { CartItem, usePurchasesContext } from '.';
+import { CartItem, useCostsContext } from '.';
 
-export const ProductsTable = () => {
-  const { data: products } = useGetProductsWOStock();
-  const { addItem } = usePurchasesContext();
+export const CostTable = () => {
+  const { addItem } = useCostsContext();
   const { tableInput } = useMyContext();
+
+  const { data: stocks } = useGetStocks();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const cancelRef = useRef<HTMLInputElement | null>(null);
-
   const [activeProduct, setActiveProduct] = useState({} as CartItem);
 
-  const { columns } = useProductColumns({ onOpen, setActiveProduct });
+  const { columns } = useColumns({ onOpen, setActiveProduct });
 
   const handleClose = () => {
     setActiveProduct({} as CartItem);
@@ -47,63 +47,44 @@ export const ProductsTable = () => {
   };
 
   const handleAdd = () => {
-    addItem(activeProduct!);
+    addItem(activeProduct);
     handleClose();
   };
 
-  if (!products) return null;
+  if (!stocks) return null;
 
   return (
     <Box width="65%">
       <CustomTable
         showGlobalFilter
         showNavigation
-        amount={products.length}
+        amount={stocks.length}
         columns={columns}
-        data={products}
+        data={stocks}
         flag="products"
       />
 
       <Modal finalFocusRef={tableInput} isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay backdropFilter="blur(5px) hue-rotate(90deg)" bg="blackAlpha.300" />
         <ModalContent>
-          <ModalHeader>{activeProduct?.name}</ModalHeader>
+          <ModalHeader>{activeProduct?.products?.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Stack spacing="14px">
-              <Box>
-                <FormLabel htmlFor="quantity">Cantidad:</FormLabel>
-                <InputGroup>
-                  <Input
-                    ref={cancelRef}
-                    autoFocus
-                    id="quantity"
-                    name="quantity"
-                    type="number"
-                    onChange={(e) =>
-                      setActiveProduct((current) => ({
-                        ...current,
-                        quantity: Number(e.target.value),
-                      }))
-                    }
-                  />
-                  <InputRightAddon children={activeProduct?.unit?.code} />
-                </InputGroup>
-              </Box>
               <Box>
                 <FormLabel htmlFor="cost">Precio de costo:</FormLabel>
                 <InputGroup>
                   <InputLeftAddon children="$" />
                   <Input
+                    autoFocus
+                    defaultValue={activeProduct?.cost}
                     id="cost"
                     name="cost"
                     type="number"
                     onChange={(e) =>
-                      setActiveProduct((current) => ({
-                        ...current,
-                        price: Number(e.target.value),
-                      }))
+                      setActiveProduct((current) => ({ ...current, cost: Number(e.target.value) }))
                     }
+                    onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                   />
                 </InputGroup>
               </Box>
@@ -112,12 +93,7 @@ export const ProductsTable = () => {
 
           <ModalFooter>
             <Button onClick={handleClose}>Cancelar</Button>
-            <Button
-              colorScheme="brand"
-              isDisabled={!activeProduct.quantity || !activeProduct.price}
-              ml={3}
-              onClick={handleAdd}
-            >
+            <Button colorScheme="brand" ml={3} onClick={handleAdd}>
               Agregar
             </Button>
           </ModalFooter>
@@ -126,5 +102,3 @@ export const ProductsTable = () => {
     </Box>
   );
 };
-
-export default ProductsTable;
