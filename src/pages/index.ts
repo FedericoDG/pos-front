@@ -9,6 +9,7 @@ export * from './LoadDischarges';
 export * from './LoadProductTrans';
 export * from './LoadPurchase';
 export * from './Login';
+export * from './Pos';
 export * from './PriceListReport';
 export * from './PriceLists';
 export * from './ProductDetails';

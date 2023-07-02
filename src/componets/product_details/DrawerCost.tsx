@@ -56,8 +56,8 @@ export const DrawerCost = ({
     queryClient.invalidateQueries({
       queryKey: ['products'],
     });
-    toast.success('Costo actualizado', {
-      theme: 'light',
+    toast.info('Costo actualizado', {
+      theme: 'colored',
       position: toast.POSITION.BOTTOM_CENTER,
       autoClose: 3000,
       closeOnClick: true,

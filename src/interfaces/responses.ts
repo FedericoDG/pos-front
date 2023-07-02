@@ -1,4 +1,5 @@
 import {
+  CashRegister,
   Category,
   Client,
   Discharge,
@@ -71,6 +72,11 @@ export interface PriceListsResponse {
 export interface PriceListResponse {
   body: {
     pricelist: Pricelists;
+  };
+}
+export interface PriceListByWareIdResponse {
+  body: {
+    pricelist: PriceList;
   };
 }
 
@@ -166,5 +172,17 @@ export interface TransfersResponse {
 export interface TransferResponse {
   body: {
     transfer: Transfer;
+  };
+}
+
+export interface CashRegistersResponse {
+  body: {
+    cashRegisters: CashRegister[];
+  };
+}
+
+export interface CashRegisterResponse {
+  body: {
+    cashRegister: CashRegister;
   };
 }

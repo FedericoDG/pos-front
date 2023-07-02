@@ -24,8 +24,8 @@ export const Basket = () => {
   };
 
   const onSuccess = () => {
-    toast.success('Costos actualizados', {
-      theme: 'light',
+    toast.info('Costos actualizados', {
+      theme: 'colored',
       position: toast.POSITION.BOTTOM_CENTER,
       autoClose: 3000,
       closeOnClick: true,

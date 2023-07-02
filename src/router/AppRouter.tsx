@@ -12,6 +12,7 @@ import {
   LoadProductTrans,
   LoadPurchase,
   Login,
+  Pos,
   PriceListReport,
   PriceLists,
   ProductDetails,
@@ -63,6 +64,8 @@ export const AppRouter = () => (
         <Route element={<Clients />} path="/panel/clientes" />
         {/* SUPPLIERS */}
         <Route element={<Suppliers />} path="/panel/proveedores" />
+        {/* POS */}
+        <Route element={<Pos />} path="/panel/pos" />
         {/* DEFAULT */}
         <Route element={<Navigate replace to="/panel" />} path="*" />
       </Route>

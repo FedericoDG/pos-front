@@ -38,8 +38,8 @@ export const Basket = () => {
   };
 
   const onSuccess = () => {
-    toast.success('Pérdida de stock cargada', {
-      theme: 'light',
+    toast.info('Pérdida de stock cargada', {
+      theme: 'colored',
       position: toast.POSITION.BOTTOM_CENTER,
       autoClose: 3000,
       closeOnClick: true,

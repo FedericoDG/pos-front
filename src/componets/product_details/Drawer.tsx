@@ -52,8 +52,8 @@ export const Drawer = ({
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
-    toast.success('Precio Actualizado', {
-      theme: 'light',
+    toast.info('Precio Actualizado', {
+      theme: 'colored',
       position: toast.POSITION.BOTTOM_CENTER,
       autoClose: 3000,
       closeOnClick: true,

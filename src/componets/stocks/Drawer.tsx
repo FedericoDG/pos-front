@@ -56,8 +56,8 @@ export const Drawer = ({
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['stocks', 'discharges'] });
-    toast.success('Baja de productos realizada', {
-      theme: 'light',
+    toast.info('Baja de productos realizada', {
+      theme: 'colored',
       position: toast.POSITION.BOTTOM_CENTER,
       autoClose: 3000,
       closeOnClick: true,

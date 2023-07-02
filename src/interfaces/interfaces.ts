@@ -38,6 +38,8 @@ export interface Product {
   unitId: number;
   alertlowstock: string;
   lowstock: number;
+  price?: number;
+  stock?: number;
   totalStock?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -90,7 +92,7 @@ export interface PriceList {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
-  products: Product;
+  products: Product[];
   createdAt: string;
   totalStock: number;
   totalStockPosta: number;
@@ -257,4 +259,43 @@ export interface TransferDetail {
   createdAt: string;
   updatedAt: string;
   products: Product;
+}
+
+export interface CashRegister {
+  id?: number;
+  openingDate: string;
+  closingDate?: string;
+  initialBalance: number;
+  finalBalance?: number;
+  userId: number;
+  isOpen?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  user?: User;
+  cashMovements?: CashMovement[];
+}
+
+export interface CashMovement {
+  id?: number;
+  amount: number;
+  cashRegisterId: number;
+  clientId: number;
+  warehouseId: number;
+  userId: number;
+  paymentMethodId: number;
+  createdAt?: string;
+  updatedAt?: string;
+  user?: User;
+  cashMovementsDetails?: CashMovementsDetail[];
+}
+
+export interface CashMovementsDetail {
+  id?: number;
+  cashMovementId: number;
+  productId: number;
+  price: number;
+  quantity: number;
+  createdAt?: string;
+  updatedAt?: string;
+  product?: Product;
 }

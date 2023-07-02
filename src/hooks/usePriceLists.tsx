@@ -1,9 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
-import { PriceListsResponse, PriceListReportResponse, Pricelists } from '../interfaces';
+import {
+  PriceListsResponse,
+  PriceListReportResponse,
+  Pricelists,
+  PriceListByWareIdResponse,
+} from '../interfaces';
 
 const getPriceLists = () => getRequest<PriceListsResponse>(`/pricelists`);
+const getPriceListByWareId = (priceListId: number, warehouseId: number) =>
+  getRequest<PriceListByWareIdResponse>(`/pricelists/${priceListId}/${warehouseId}`);
 const getPriceListsReport = (
   products: string | null,
   pricelists: string | null,
@@ -25,6 +32,19 @@ export const useGetPriceLists = () =>
     refetchOnWindowFocus: false,
     select: (data) => data.body.pricelists,
   });
+
+export const useGetPriceListByWarehouseId = (priceListId: number, warehouseId: number) =>
+  useQuery(
+    ['priceLists', priceListId, warehouseId],
+    () => getPriceListByWareId(priceListId, warehouseId),
+    {
+      enabled: true,
+      retry: 1,
+      cacheTime: 1,
+      refetchOnWindowFocus: false,
+      select: (data) => data.body.pricelist.products,
+    }
+  );
 
 export const useGetPriceListsReport = (
   products: string | null,

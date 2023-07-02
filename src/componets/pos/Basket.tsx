@@ -1,66 +1,12 @@
 import { Box, Heading, Stack, Text, Button, Divider } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
-import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 
 import { formatCurrency } from '../../utils';
-import { useCreatePurchase } from '../../hooks';
 
-import { usePurchasesContext } from './context';
+import { usePosContext } from './context';
 
 export const Basket = () => {
-  const {
-    cart,
-    driver,
-    emptyCart,
-    removeItem,
-    setActiveStep,
-    setDriver,
-    setSupplier,
-    setTransport,
-    setWarehouse,
-    supplier,
-    totalCart,
-    totalCartItems,
-    transport,
-    warehouse,
-  } = usePurchasesContext();
-  const queryClient = useQueryClient();
-
-  const handleSubmit = () => {
-    const purchase = {
-      supplierId: supplier?.id!,
-      warehouseId: warehouse?.id!,
-      driver,
-      transport,
-      total: totalCart,
-      date: new Date(),
-      cart: cart.map((item) => ({
-        productId: item.id!,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-    };
-
-    mutate(purchase);
-  };
-
-  const onSuccess = () => {
-    toast.info('Compra cargada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_CENTER,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
-    emptyCart();
-    queryClient.invalidateQueries({ queryKey: ['products'] });
-    setSupplier(null);
-    setWarehouse(null);
-    setDriver('');
-    setTransport('');
-    setActiveStep(1);
-  };
-  const { mutate } = useCreatePurchase(onSuccess);
+  const { cart, removeItem, totalCart, totalCartItems, goToNext } = usePosContext();
 
   if (cart.length === 0) return null;
 
@@ -105,8 +51,8 @@ export const Basket = () => {
       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" textAlign="right">
         productos: ({totalCartItems})
       </Text>
-      <Button colorScheme="brand" variant="solid" w="full" onClick={handleSubmit}>
-        CARGAR COMPRA
+      <Button colorScheme="brand" variant="solid" w="full" onClick={goToNext}>
+        IR A FINALIZAR VENTA
       </Button>
     </Stack>
   );

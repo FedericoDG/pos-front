@@ -34,8 +34,8 @@ export const Basket = () => {
   };
 
   const onSuccess = () => {
-    toast.success('Transferencia de stock realizada', {
-      theme: 'light',
+    toast.info('Transferencia de stock realizada', {
+      theme: 'colored',
       position: toast.POSITION.BOTTOM_CENTER,
       autoClose: 3000,
       closeOnClick: true,

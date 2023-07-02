@@ -1,7 +1,7 @@
 import { AiOutlineStock } from 'react-icons/ai';
 import { Box, Collapse, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsPersonVcard, BsPersonVcardFill } from 'react-icons/bs';
-import { FaCubes, FaFileInvoiceDollar, FaHome } from 'react-icons/fa';
+import { FaCubes, FaFileInvoiceDollar, FaHome, FaCashRegister } from 'react-icons/fa';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
 import { useMyContext } from '../../context';
@@ -66,6 +66,10 @@ export const SidebarContent = (props: Props) => {
       <Flex aria-label="Main Navigation" as="nav" color="gray.600" direction="column" fontSize="sm">
         <NavItem icon={FaHome} link="/panel/">
           Inicio
+        </NavItem>
+
+        <NavItem icon={FaCashRegister} link="/panel/pos">
+          Punto de Venta
         </NavItem>
 
         {/* PRODUCTS */}
