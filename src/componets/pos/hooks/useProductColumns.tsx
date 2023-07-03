@@ -54,7 +54,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
               isDisabled={row.original.price! <= 0}
               size="sm"
               type="submit"
-              variant="outline"
+              variant="ghost"
               onClick={() => {
                 setActiveProduct({ ...row.original, quantity: 0, price: row.original.price! });
                 onOpen();

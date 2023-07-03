@@ -1,3 +1,5 @@
+import { CashMovement } from './interfaces';
+
 import {
   CashRegister,
   Category,
@@ -191,5 +193,17 @@ export interface CashRegisterResponse {
 export interface PaymentMethodsResponse {
   body: {
     paymentMethods: PaymentMethod[];
+  };
+}
+
+export interface CashMovementsResponse {
+  body: {
+    cashMovements: CashMovement[];
+  };
+}
+
+export interface CashMovementResponse {
+  body: {
+    cashMovement: CashMovement;
   };
 }

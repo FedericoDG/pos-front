@@ -4,23 +4,29 @@ import { toast } from 'react-toastify';
 import {
   Box,
   Button,
+  Divider,
   Flex,
   FormLabel,
+  Icon,
   Input,
+  InputGroup,
   InputLeftAddon,
+  InputRightAddon,
   Radio,
   RadioGroup,
   Select,
   Stack,
+  Text,
   Textarea,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useState } from 'react';
-import { Text, Divider, InputGroup } from '@chakra-ui/react';
+import { CgArrowsExchangeAlt } from 'react-icons/cg';
 
 import { schema } from '../categories';
-import { useGetPaymentMethods } from '../../hooks';
+import { useCreateCashMovement, useGetPaymentMethods } from '../../hooks';
 import { formatCurrency } from '../../utils';
 
 import { usePosContext } from '.';
@@ -49,6 +55,7 @@ export const FinishSale = () => {
   const [option, setOption] = useState('1');
   const [discount, setDiscount] = useState(0);
   const [recharge, setRecharge] = useState(0);
+  const [percent, setPercent] = useState(false);
 
   const initialValues: Values = {
     paymentMethodId: 1,
@@ -96,21 +103,31 @@ export const FinishSale = () => {
     }
 
     if (option === '2') {
-      sale.discount = Number(parsedValues.discount);
-      sale.recharge = 0;
+      if (percent) {
+        sale.discount = Number((totalCart * parsedValues.discount) / 100);
+        sale.recharge = 0;
+      } else {
+        sale.discount = Number(parsedValues.discount);
+        sale.recharge = 0;
+      }
     }
 
     if (option === '3') {
-      sale.recharge = Number(parsedValues.recharge);
-      sale.discount = 0;
+      if (percent) {
+        sale.recharge = Number((totalCart * parsedValues.recharge) / 100);
+        sale.discount = 0;
+      } else {
+        sale.recharge = Number(parsedValues.recharge);
+        sale.discount = 0;
+      }
     }
 
     console.log(sale);
-    //mutate(sale);
+    mutate(sale);
   };
 
   const onSuccess = () => {
-    toast.info('Compra cargada', {
+    toast.info('Venta realizada', {
       theme: 'colored',
       position: toast.POSITION.BOTTOM_CENTER,
       autoClose: 3000,
@@ -118,9 +135,10 @@ export const FinishSale = () => {
     });
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['products'] });
-    setPriceList(null);
     setWarehouse(null);
     setClient(null);
+    setPriceList(null);
+    emptyCart();
     setActiveStep(1);
   };
 
@@ -129,11 +147,10 @@ export const FinishSale = () => {
     setClient(null);
     setPriceList(null);
     emptyCart();
-    goToPrevious();
-    goToPrevious();
+    setActiveStep(1);
   };
 
-  // const { mutate } = useCreatePurchase(onSuccess);
+  const { mutate } = useCreateCashMovement(onSuccess);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -208,11 +225,15 @@ export const FinishSale = () => {
                 <>
                   <FormLabel htmlFor="discount">Descuento:</FormLabel>
                   <InputGroup>
-                    <InputLeftAddon children="$" />
+                    {percent ? (
+                      <InputLeftAddon children="%" w="48px" />
+                    ) : (
+                      <InputLeftAddon children="$" w="48px" />
+                    )}
                     <Input
-                      defaultValue={initialValues.discount!}
                       id="discount"
                       name="discount"
+                      value={discount}
                       onChange={(e) => {
                         handleChange(e);
                         setDiscount(Number(e.target.value));
@@ -220,6 +241,22 @@ export const FinishSale = () => {
                       }}
                       onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                     />
+                    <Tooltip label="Aternar entre porcentaje y valor">
+                      <InputRightAddon
+                        children={
+                          <Button
+                            onClick={() => {
+                              setPercent((current) => !current);
+                              setDiscount(0);
+                              setRecharge(0);
+                            }}
+                          >
+                            <Icon as={CgArrowsExchangeAlt} />
+                          </Button>
+                        }
+                        p="0"
+                      />
+                    </Tooltip>
                   </InputGroup>
                 </>
               )}
@@ -227,11 +264,15 @@ export const FinishSale = () => {
                 <>
                   <FormLabel htmlFor="recharge">Recargo:</FormLabel>
                   <InputGroup>
-                    <InputLeftAddon children="$" />
+                    {percent ? (
+                      <InputLeftAddon children="%" w="48px" />
+                    ) : (
+                      <InputLeftAddon children="$" w="48px" />
+                    )}
                     <Input
-                      defaultValue={initialValues.recharge!}
                       id="recharge"
                       name="recharge"
+                      value={recharge}
                       onChange={(e) => {
                         handleChange(e);
                         setRecharge(Number(e.target.value));
@@ -239,6 +280,22 @@ export const FinishSale = () => {
                       }}
                       onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                     />
+                    <Tooltip label="Aternar entre porcentaje y valor">
+                      <InputRightAddon
+                        children={
+                          <Button
+                            onClick={() => {
+                              setPercent((current) => !current);
+                              setDiscount(0);
+                              setRecharge(0);
+                            }}
+                          >
+                            <Icon as={CgArrowsExchangeAlt} />
+                          </Button>
+                        }
+                        p="0"
+                      />
+                    </Tooltip>
                   </InputGroup>
                 </>
               )}
@@ -250,20 +307,44 @@ export const FinishSale = () => {
           <Text fontSize={24} textAlign="right">
             {formatCurrency(totalCart)}
           </Text>
-          {option === '2' && (
+          {option === '2' && percent ? (
             <Text fontSize={18} textAlign="right">
-              {formatCurrency(discount * -1)}
+              {formatCurrency(((totalCart * discount) / 100) * -1)}
             </Text>
+          ) : (
+            option === '2' && (
+              <Text fontSize={18} textAlign="right">
+                {formatCurrency(discount * -1)}
+              </Text>
+            )
           )}
-          {option === '3' && (
+
+          {option === '3' && percent ? (
             <Text fontSize={18} textAlign="right">
-              {formatCurrency(recharge)}
+              {formatCurrency((totalCart * recharge) / 100)}
             </Text>
+          ) : (
+            option === '3' && (
+              <Text fontSize={18} textAlign="right">
+                {formatCurrency(recharge)}
+              </Text>
+            )
           )}
           <Divider ml="auto" w="50%" />
-          <Text fontSize={24} fontWeight="semibold" textAlign="right">
-            {formatCurrency(totalCart + recharge - discount)}
-          </Text>
+          <Flex justifyContent="space-between" ml="auto" w="50%">
+            <Text fontSize={24}>TOTAL:</Text>
+            {percent ? (
+              <Text fontSize={24} fontWeight="semibold" textAlign="right">
+                {formatCurrency(
+                  totalCart + (totalCart * recharge) / 100 - (totalCart * discount) / 100
+                )}
+              </Text>
+            ) : (
+              <Text fontSize={24} fontWeight="semibold" textAlign="right">
+                {formatCurrency(totalCart + recharge - discount)}
+              </Text>
+            )}
+          </Flex>
         </Stack>
 
         <Stack direction="row" mt="8">
