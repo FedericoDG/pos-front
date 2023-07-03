@@ -299,3 +299,11 @@ export interface CashMovementsDetail {
   updatedAt?: string;
   product?: Product;
 }
+
+export interface PaymentMethod {
+  id?: number;
+  code: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

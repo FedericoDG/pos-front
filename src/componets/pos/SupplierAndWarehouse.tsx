@@ -55,7 +55,7 @@ export const SupplierAndWarehouse = () => {
           ml="auto"
           rightIcon={<ArrowForwardIcon />}
           size="lg"
-          tabIndex={3}
+          tabIndex={4}
           onClick={() => goToNext()}
         >
           SIGUIENTE
@@ -67,8 +67,8 @@ export const SupplierAndWarehouse = () => {
           Seleccione la Lista de Precio, el Depósito y el Cliente.
         </Alert>
       </Box>
-      <Stack direction="row">
-        <Box w="full">
+      <Stack direction="row" justifyContent="space-between">
+        <Box w="49%">
           <FormLabel htmlFor="warehouse">Lista de Precio:</FormLabel>
           <Select
             autoFocus
@@ -86,7 +86,7 @@ export const SupplierAndWarehouse = () => {
             }}
           />
         </Box>
-        <Box w="full">
+        <Box w="49%">
           <FormLabel htmlFor="warehouse">Depósito:</FormLabel>
           <Select
             ref={wareRef}
@@ -104,9 +104,12 @@ export const SupplierAndWarehouse = () => {
             }}
           />
         </Box>
-        <Box w="full">
+      </Stack>
+      <Stack direction="row">
+        <Box w="49%">
           <FormLabel htmlFor="warehouse">Cliente:</FormLabel>
           <Select
+            ref={clientRef}
             autoFocus
             isClearable
             isSearchable
@@ -116,7 +119,7 @@ export const SupplierAndWarehouse = () => {
             options={mappedClients}
             placeholder="Seleccionar Cliente"
             selectedOptionColorScheme="brand"
-            tabIndex={1}
+            tabIndex={3}
             onChange={(e) => setClient(e)}
           />
         </Box>

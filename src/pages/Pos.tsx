@@ -64,7 +64,7 @@ export const Pos = () => {
   return (
     <PosProvider>
       <DashBoard isIndeterminate={isFetching} title="Punto de venta">
-        {cashRegister?.isOpen ? (
+        {isFetching || cashRegister?.isOpen ? (
           <>
             <Steps />
 

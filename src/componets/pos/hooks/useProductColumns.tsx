@@ -51,6 +51,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
           <Box fontFamily="IBM Plex Sans">
             <Button
               colorScheme="brand"
+              isDisabled={row.original.price! <= 0}
               size="sm"
               type="submit"
               variant="outline"

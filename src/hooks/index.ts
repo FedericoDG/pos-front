@@ -4,6 +4,7 @@ export * from './useCategories';
 export * from './useClients';
 export * from './useCosts';
 export * from './useDischarges';
+export * from './usePaymentMethods';
 export * from './usePrice';
 export * from './usePriceLists';
 export * from './useProducts';

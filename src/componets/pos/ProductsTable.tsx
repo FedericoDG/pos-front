@@ -5,7 +5,6 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputLeftAddon,
   InputRightAddon,
   Modal,
   ModalBody,
@@ -90,19 +89,6 @@ export const ProductsTable = () => {
                   <InputRightAddon children={activeProduct?.unit?.code} />
                 </InputGroup>
               </Box>
-              <Box>
-                <FormLabel htmlFor="price">Precio:</FormLabel>
-                <InputGroup>
-                  <InputLeftAddon children="$" />
-                  <Input
-                    disabled
-                    id="price"
-                    name="price"
-                    type="number"
-                    value={activeProduct.price}
-                  />
-                </InputGroup>
-              </Box>
             </Stack>
           </ModalBody>
 
@@ -110,7 +96,7 @@ export const ProductsTable = () => {
             <Button onClick={handleClose}>Cancelar</Button>
             <Button
               colorScheme="brand"
-              isDisabled={!activeProduct.quantity || !activeProduct.price}
+              isDisabled={!activeProduct.quantity}
               ml={3}
               onClick={handleAdd}
             >

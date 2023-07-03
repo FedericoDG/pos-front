@@ -3,6 +3,7 @@ import {
   Category,
   Client,
   Discharge,
+  PaymentMethod,
   PriceList,
   Pricelists,
   Product,
@@ -184,5 +185,11 @@ export interface CashRegistersResponse {
 export interface CashRegisterResponse {
   body: {
     cashRegister: CashRegister;
+  };
+}
+
+export interface PaymentMethodsResponse {
+  body: {
+    paymentMethods: PaymentMethod[];
   };
 }
