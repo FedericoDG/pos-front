@@ -51,7 +51,7 @@ export const SupplierAndWarehouse = () => {
         </Alert>
       </Box>
       <Stack direction="row">
-        <Box w="full">
+        <Box w="50%">
           <FormLabel htmlFor="warehouse">Depósito:</FormLabel>
           <Select
             ref={wareRef}

@@ -57,7 +57,7 @@ export const useColumns = ({ onOpen, setActiveProduct }: Props) => {
             colorScheme="brand"
             size="sm"
             type="submit"
-            variant="outline"
+            variant="ghost"
             onClick={() => {
               if (row.original.products.costs) {
                 setActiveProduct({

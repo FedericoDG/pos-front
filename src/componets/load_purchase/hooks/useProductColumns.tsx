@@ -34,7 +34,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
               colorScheme="brand"
               size="sm"
               type="submit"
-              variant="outline"
+              variant="ghost"
               onClick={() => {
                 setActiveProduct({ ...row.original, quantity: 0, price: 0 });
                 onOpen();

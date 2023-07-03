@@ -82,7 +82,7 @@ export const useColumns = ({ onOpen, warehouses, setActiveProduct }: Props) => {
             isDisabled={row.original.stock <= 0}
             size="sm"
             type="submit"
-            variant="outline"
+            variant="ghost"
             onClick={() => {
               if (row.original.products.costs) {
                 setActiveProduct({
