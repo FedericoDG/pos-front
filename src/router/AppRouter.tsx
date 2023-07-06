@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 
 import {
   CashRegisterStatus,
+  CashRegisters,
   Categories,
   Clients,
   DischargeDetails,
@@ -68,6 +69,7 @@ export const AppRouter = () => (
         {/* POS */}
         <Route element={<Pos />} path="/panel/pos" />
         {/* CASH REGISTER */}
+        <Route element={<CashRegisters />} path="/panel/caja" />
         <Route element={<CashRegisterStatus />} path="/panel/caja/estado" />
         {/* DEFAULT */}
         <Route element={<Navigate replace to="/panel" />} path="*" />

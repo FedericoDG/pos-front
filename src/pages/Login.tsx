@@ -17,9 +17,14 @@ import { schema } from '../componets/login/schemas/';
 import { sessionStorage } from '../utils';
 import { useMyContext } from '../context';
 
+interface LoginI {
+  email: string;
+  password: string;
+}
+
 export const Login = () => {
   const { dispatchLogin } = useMyContext();
-  const login = async (values: { email: string; password: string; }) => {
+  const login = async (values: LoginI) => {
     try {
       const {
         body: { user, token },

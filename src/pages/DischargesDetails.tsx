@@ -114,7 +114,7 @@ export const DischargeDetails = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {discharge.dischargeDetails?.map((item, idx) => (
+                    {discharge.dischargeDetails?.map((item) => (
                       <Tr key={nanoid()}>
                         <Td>
                           {item.quantity} {item.products?.unit?.code}

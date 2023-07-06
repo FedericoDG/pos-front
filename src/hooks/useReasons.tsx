@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
 import { Reason, ReasonResponse, ReasonsResponse } from '../interfaces';
@@ -35,7 +35,9 @@ export const useCreateReason = () => {
       queryClient.invalidateQueries('reasons');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -48,7 +50,9 @@ export const useUpdateReason = () => {
       queryClient.invalidateQueries('reasons');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -61,7 +65,9 @@ export const useDeleteReason = () => {
       queryClient.invalidateQueries('reasons');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

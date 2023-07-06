@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { getRequest, postRequest, putRequest } from '../services';
 import { Discharge, DischargeResponse, DischargesResponse } from '../interfaces';
+import { getRequest, postRequest, putRequest } from '../services';
 
 type DischargeCart = {
   productId: number;
@@ -42,7 +42,9 @@ export const useCreateDischarge = (onSuccess: () => void) => {
   return useMutation(createDischarge, {
     onSuccess: onSuccess,
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -55,7 +57,9 @@ export const useUpdateDischarge = () => {
       queryClient.invalidateQueries('discharges');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

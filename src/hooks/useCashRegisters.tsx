@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from 'react-query';
 
-import { getRequest, postRequest, putRequest } from '../services';
 import { CashRegisterResponse, CashRegistersResponse } from '../interfaces';
+import { getRequest, postRequest, putRequest } from '../services';
+import { isError } from '../utils';
 
 interface Open {
   openingDate: Date;
@@ -49,7 +50,9 @@ export const useOpenCashRegister = (onSuccess: () => void) => {
   return useMutation(openCashRegister, {
     onSuccess: onSuccess,
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -58,7 +61,9 @@ export const useCloseCashRegister = (onSuccess: () => void) => {
   return useMutation(closeCashRegister, {
     onSuccess: onSuccess,
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

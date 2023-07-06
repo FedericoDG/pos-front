@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
 import { Unit, UnitsResponse } from '../interfaces';
@@ -25,7 +25,9 @@ export const useCreateUnits = () => {
       queryClient.invalidateQueries('units');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -38,7 +40,9 @@ export const useUpdateUnits = () => {
       queryClient.invalidateQueries('units');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -51,7 +55,9 @@ export const useDeleteUnits = () => {
       queryClient.invalidateQueries('units');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

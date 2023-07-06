@@ -3,7 +3,6 @@ import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 
 import { Warehouse } from '../../../interfaces';
 
@@ -14,8 +13,6 @@ interface Props {
 }
 
 export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => {
-  const navigate = useNavigate();
-
   const columns = useMemo<ColumnDef<Warehouse>[]>(
     () => [
       {

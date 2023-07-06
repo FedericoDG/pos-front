@@ -1,4 +1,5 @@
 export * from './CashRegisterStatus';
+export * from './CashRegisters';
 export * from './Categories';
 export * from './Clients';
 export * from './Discharges';

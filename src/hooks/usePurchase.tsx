@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { isError, useMutation, useQuery } from 'react-query';
 
 import { getRequest, postRequest } from '../services';
 import { PurchaseResponse, PurchasesResponse } from '../interfaces';
@@ -41,7 +41,9 @@ export const useCreatePurchase = (onSuccess: () => any) => {
   return useMutation(createPurchase, {
     onSuccess,
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

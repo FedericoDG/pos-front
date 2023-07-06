@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
 import { CategoriesResponse, Category } from '../interfaces';
+import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
 
 const getCategories = () => getRequest<CategoriesResponse>(`/categories`);
 const createCategory = (category: Category) => postRequest('/categories/', category);
@@ -25,7 +25,9 @@ export const useCreateCategory = () => {
       queryClient.invalidateQueries('categories');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -38,7 +40,9 @@ export const useUpdateCategory = () => {
       queryClient.invalidateQueries('categories');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -51,7 +55,9 @@ export const useDeleteCategory = () => {
       queryClient.invalidateQueries('categories');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

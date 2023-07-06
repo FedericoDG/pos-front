@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
 import { Product, ProductResponse, ProductsResponse } from '../interfaces';
@@ -45,7 +45,9 @@ export const useCreateProduct = () => {
       queryClient.invalidateQueries('products');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -58,7 +60,9 @@ export const useUpdateProduct = () => {
       queryClient.invalidateQueries('products');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -71,7 +75,9 @@ export const useDeleteProduct = () => {
       queryClient.invalidateQueries('products');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

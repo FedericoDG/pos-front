@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { isError, useMutation, useQuery } from 'react-query';
 
 import { getRequest, postRequest } from '../services';
 import { TransferResponse, TransfersResponse } from '../interfaces';
@@ -38,7 +38,9 @@ export const useCreateTransfer = (onSuccess: () => any) => {
   return useMutation(createTransfer, {
     onSuccess,
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

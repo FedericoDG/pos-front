@@ -6,7 +6,6 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
-  InputRightAddon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,11 +13,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select as ChakraSelect,
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useRef, useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { CustomTable } from '../table';
 import { useMyContext } from '../../context';

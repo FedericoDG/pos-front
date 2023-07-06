@@ -109,7 +109,7 @@ export const TransferDetails = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {transfer.transferDetails?.map((item, idx) => (
+                    {transfer.transferDetails?.map((item) => (
                       <Tr key={nanoid()}>
                         <Td>
                           {item.quantity} {item.products?.unit?.code}

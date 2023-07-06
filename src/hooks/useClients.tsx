@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
 import { Client, ClientResponse, ClientsResponse } from '../interfaces';
+import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
 
 const getClients = () => getRequest<ClientsResponse>('/clients');
 const getClient = (id: number) => getRequest<ClientResponse>(`/clients/${id}`);
@@ -35,7 +35,9 @@ export const useCreateClient = () => {
       queryClient.invalidateQueries('clients');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -48,7 +50,9 @@ export const useUpdateClient = () => {
       queryClient.invalidateQueries('clients');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -61,7 +65,9 @@ export const useDeleteClient = () => {
       queryClient.invalidateQueries('clients');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

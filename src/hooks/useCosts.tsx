@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { isError, useMutation } from 'react-query';
 
 import { postRequest } from '../services';
 
@@ -14,7 +14,9 @@ export const useCreateCost = (onSuccess: () => any) => {
   return useMutation(createCost, {
     onSuccess,
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

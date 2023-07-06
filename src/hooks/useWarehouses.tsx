@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
@@ -47,7 +47,9 @@ export const useCreateWarehouse = () => {
       queryClient.invalidateQueries('warehouses');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -60,7 +62,9 @@ export const useUpdateWarehose = () => {
       queryClient.invalidateQueries('warehouses');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -79,7 +83,6 @@ export const useDeleteWarehose = () => {
         autoClose: 3000,
         closeOnClick: true,
       });
-      console.log(error);
     },
   });
 };

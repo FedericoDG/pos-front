@@ -33,7 +33,7 @@ interface Props {
   isIndeterminate: boolean;
 }
 
-export const DashBoard = ({ children, title, isIndeterminate }: Props) => {
+export const DashBoard = ({ children, title }: Props) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { dispatchLogout, top, user } = useMyContext();
   const navigate = useNavigate();

@@ -95,6 +95,11 @@ export const SidebarContent = (props: Props) => {
           />
         </NavItemDivider>
         <Collapse in={isOpenCashRegister}>
+          <NavItem link="/panel/caja">
+            <Box pl="8" py="0">
+              Listar
+            </Box>
+          </NavItem>
           <NavItem link="/panel/caja/estado">
             <Box pl="8" py="0">
               Estado

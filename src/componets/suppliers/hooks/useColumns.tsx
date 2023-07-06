@@ -4,7 +4,6 @@ import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
 import { TbListDetails } from 'react-icons/Tb';
-import { useNavigate } from 'react-router-dom';
 
 import { Supplier } from '../../../interfaces';
 
@@ -15,8 +14,6 @@ interface Props {
 }
 
 export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => {
-  const navigate = useNavigate();
-
   const columns = useMemo<ColumnDef<Supplier>[]>(
     () => [
       {

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
 import {
@@ -71,7 +71,9 @@ export const useCreatePriceLists = () => {
       queryClient.invalidateQueries('priceLists');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -84,7 +86,9 @@ export const useUpdatePriceLists = () => {
       queryClient.invalidateQueries('priceLists');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -97,7 +101,9 @@ export const useDeletePriceLists = () => {
       queryClient.invalidateQueries('priceLists');
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

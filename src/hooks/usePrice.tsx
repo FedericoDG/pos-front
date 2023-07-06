@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from 'react-query';
+import { isError, useMutation, useQueryClient } from 'react-query';
 
 import { deleteRequest, postRequest } from '../services';
 import { Price } from '../interfaces';
@@ -10,7 +10,9 @@ export const useCreatePrice = (onSuccess: () => void) => {
   return useMutation(createPrice, {
     onSuccess: onSuccess,
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };
@@ -23,7 +25,9 @@ export const useDeletePrice = () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

@@ -22,7 +22,6 @@ import { toast } from 'react-toastify';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
 
-import { Discharge } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useCreateCost } from '../../hooks';
 

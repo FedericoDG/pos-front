@@ -1,7 +1,7 @@
-import { useMutation, useQuery } from 'react-query';
+import { isError, useMutation, useQuery } from 'react-query';
 
-import { getRequest, postRequest } from '../services';
 import { CashMovementResponse, CashMovementsResponse } from '../interfaces';
+import { getRequest, postRequest } from '../services';
 
 interface Sale {
   clientId: number;
@@ -15,6 +15,7 @@ interface Sale {
     price: number;
   }[];
 }
+
 const getCashMovements = () => getRequest<CashMovementsResponse>('/cashmovements');
 const getCashMovement = (id: number) => getRequest<CashMovementResponse>(`/cashmovements/${id}`);
 const createCashMovement = (sale: Sale) => postRequest('/cashmovements/', sale);
@@ -41,7 +42,9 @@ export const useCreateCashMovement = (onSuccess: () => void) => {
   return useMutation(createCashMovement, {
     onSuccess: onSuccess,
     onError: (error) => {
-      console.log(error);
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
     },
   });
 };

@@ -73,7 +73,6 @@ export const FinishSale = () => {
     setWarehouse,
     warehouse,
     setPriceList,
-    goToPrevious,
     totalCart,
   } = usePosContext();
 
@@ -122,7 +121,6 @@ export const FinishSale = () => {
       }
     }
 
-    console.log(sale);
     mutate(sale);
   };
 
