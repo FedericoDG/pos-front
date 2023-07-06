@@ -40,11 +40,7 @@ export const useColumns2 = () => {
         id: 'cierre',
         header: 'Cierre',
         cell: ({ row }: CellContext<CashRegister, unknown>) =>
-          row.original.isOpen ? (
-            <p>sin datos</p>
-          ) : (
-            <p>{formatDateAndHour(row.original.closingDate)}</p>
-          ),
+          row.original.isOpen ? <p> </p> : <p>{formatDateAndHour(row.original.closingDate)}</p>,
         accessorFn: (x) => x.closingDate,
       },
       {

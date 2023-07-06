@@ -40,8 +40,8 @@ export const useColumns = () => {
         id: 'cierre',
         header: 'Cierre',
         cell: ({ row }: CellContext<CashRegister, unknown>) =>
-          row.original.isOpen ? (
-            <p>sin datos</p>
+          !row.original.closingDate ? (
+            <p> </p>
           ) : (
             <p>{formatDateAndHour(row.original.closingDate)}</p>
           ),

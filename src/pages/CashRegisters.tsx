@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
-import { useColumns } from '../componets/cash_register_status/hooks';
+import { useColumns } from '../componets/cash_registers/hooks';
 import { useChasRegisters } from '../hooks';
 
 export const CashRegisters = () => {
@@ -21,6 +21,7 @@ export const CashRegisters = () => {
         <Box w="full">
           <CustomTable
             showColumsSelector
+            showNavigation
             showPrintOption
             amount={cashRegisters.length}
             columns={columns}
