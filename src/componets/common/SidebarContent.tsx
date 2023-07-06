@@ -1,7 +1,8 @@
 import { AiOutlineStock } from 'react-icons/ai';
 import { Box, Collapse, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsPersonVcard, BsPersonVcardFill } from 'react-icons/bs';
-import { FaCubes, FaFileInvoiceDollar, FaHome, FaCashRegister } from 'react-icons/fa';
+import { MdPointOfSale } from 'react-icons/md';
+import { FaDollarSign, FaCubes, FaFileInvoiceDollar, FaHome } from 'react-icons/fa';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
 import { useMyContext } from '../../context';
@@ -19,12 +20,15 @@ interface Props {
 
 export const SidebarContent = (props: Props) => {
   const {
+    isOpenCashRegister,
     isOpenPriceList,
     isOpenProducts,
     isOpenStock,
+    onCloseCashRegister,
     onClosePriceList,
     onCloseProducts,
     onCloseStock,
+    onToggleCashRegister,
     onTogglePriceList,
     onToggleProducts,
     onToggleStock,
@@ -68,15 +72,42 @@ export const SidebarContent = (props: Props) => {
           Inicio
         </NavItem>
 
-        <NavItem icon={FaCashRegister} link="/panel/pos">
+        {/* POS */}
+        <NavItem icon={MdPointOfSale} link="/panel/pos">
           Punto de Venta
         </NavItem>
+
+        {/* CASH REGISTER */}
+        <NavItemDivider
+          icon={FaDollarSign}
+          onClick={() => {
+            onToggleCashRegister();
+            onCloseStock();
+            onCloseProducts();
+            onClosePriceList();
+          }}
+        >
+          Caja
+          <Icon
+            as={MdKeyboardArrowRight}
+            ml="auto"
+            transform={isOpenCashRegister ? 'rotate(90deg)' : ''}
+          />
+        </NavItemDivider>
+        <Collapse in={isOpenCashRegister}>
+          <NavItem link="/panel/caja/estado">
+            <Box pl="8" py="0">
+              Estado
+            </Box>
+          </NavItem>
+        </Collapse>
 
         {/* PRODUCTS */}
         <NavItemDivider
           icon={FaCubes}
           onClick={() => {
             onToggleProducts();
+            onCloseCashRegister();
             onClosePriceList();
             onCloseStock();
           }}
@@ -116,6 +147,7 @@ export const SidebarContent = (props: Props) => {
           icon={AiOutlineStock}
           onClick={() => {
             onToggleStock();
+            onCloseCashRegister();
             onCloseProducts();
             onClosePriceList();
           }}
@@ -160,6 +192,7 @@ export const SidebarContent = (props: Props) => {
           icon={FaFileInvoiceDollar}
           onClick={() => {
             onTogglePriceList();
+            onCloseCashRegister();
             onCloseProducts();
             onCloseStock();
           }}

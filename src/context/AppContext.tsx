@@ -6,13 +6,16 @@ interface AppContext {
   bottom: MutableRefObject<null>;
   dispatch: Dispatch<any>;
   handleScroll: (ref: MutableRefObject<HTMLElement | null>) => void;
+  isOpenCashRegister: boolean;
   isOpenPriceList: boolean;
   isOpenProducts: boolean;
   isOpenStock: boolean;
   onClosePriceList: () => void;
+  onCloseCashRegister: () => void;
   onCloseProducts: () => void;
   onCloseStock: () => void;
   onTogglePriceList: () => void;
+  onToggleCashRegister: () => void;
   onToggleProducts: () => void;
   onToggleStock: () => void;
   tableInput: MutableRefObject<any>;

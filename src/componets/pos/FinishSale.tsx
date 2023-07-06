@@ -175,6 +175,7 @@ export const FinishSale = () => {
             <Box w="50%">
               <FormLabel htmlFor="paymentMethodId">Forma de Pago:</FormLabel>
               <Select
+                autoFocus
                 defaultValue={initialValues.paymentMethodId}
                 id="paymentMethodId"
                 minW="224px"

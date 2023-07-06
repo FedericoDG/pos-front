@@ -1,3 +1,4 @@
+export * from './CashRegisterStatus';
 export * from './Categories';
 export * from './Clients';
 export * from './Discharges';

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from 'react-query';
 
-import { getRequest, postRequest } from '../services';
+import { getRequest, postRequest, putRequest } from '../services';
 import { CashRegisterResponse, CashRegistersResponse } from '../interfaces';
 
 interface Open {
@@ -16,7 +16,7 @@ const getCashRegisters = () => getRequest<CashRegistersResponse>('/cashregisters
 const getCashRegister = (id: number) => getRequest<CashRegisterResponse>(`/cashregisters/${id}`);
 const getCashRegisterStatus = () => getRequest<CashRegisterResponse>(`/cashregisters/status`);
 const openCashRegister = (open: Open) => postRequest('/cashregisters/', open);
-const closeCashRegister = (close: Close) => postRequest('/cashregisters/', close);
+const closeCashRegister = (close: Close) => putRequest('/cashregisters/', close);
 
 export const useChasRegisters = () =>
   useQuery(['cashRegisters'], () => getCashRegisters(), {
