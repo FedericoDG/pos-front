@@ -22,7 +22,7 @@ export const useColumns2 = () => {
               CERRADA
             </Badge>
           ) : (
-            <Badge colorScheme="green" variant="subtle">
+            <Badge colorScheme="green" px="2" py="1" rounded="md" variant="subtle">
               ABIERTA
             </Badge>
           ),

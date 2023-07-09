@@ -22,7 +22,7 @@ export const useColumns = () => {
               CERRADA
             </Badge>
           ) : (
-            <Badge colorScheme="green" variant="subtle">
+            <Badge colorScheme="green" px="2" py="1" rounded="md" variant="subtle">
               ABIERTA
             </Badge>
           ),
@@ -86,7 +86,7 @@ export const useColumns = () => {
               <MenuList>
                 <MenuItem
                   icon={<TbListDetails />}
-                  onClick={() => navigate(`/panel/CashRegisteros/${row.original.id}`)}
+                  onClick={() => navigate(`/panel/caja/detalles/${row.original.id}`)}
                 >
                   Ver Detalles
                 </MenuItem>

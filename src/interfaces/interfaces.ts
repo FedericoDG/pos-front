@@ -266,7 +266,7 @@ export interface CashRegister {
   openingDate: string;
   closingDate?: string;
   initialBalance: number;
-  finalBalance?: number;
+  finalBalance: number;
   userId: number;
   isOpen?: boolean;
   createdAt?: string;

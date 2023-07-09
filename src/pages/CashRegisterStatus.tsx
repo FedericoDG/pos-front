@@ -78,7 +78,6 @@ export const CashRegisterStatus = () => {
   const isIndeterminate = isFetchingCashRegister;
 
   const { columns } = useColumns();
-  const { columns: columns2 } = useColumns2();
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Caja - Estado">
@@ -98,15 +97,6 @@ export const CashRegisterStatus = () => {
               >
                 ABRIR CAJA
               </Button>
-              <Box w="full">
-                <CustomTable
-                  showColumsSelector
-                  showPrintOption
-                  amount={[cashRegister].length}
-                  columns={columns2}
-                  data={[cashRegister]}
-                />
-              </Box>
             </>
           ) : (
             <>
