@@ -189,10 +189,10 @@ export const DischargeDetails = () => {
                       <Tr>
                         <Td>{discharge.user?.lastname}</Td>
                         <Td>{discharge.user?.name}</Td>
-                        {discharge.user?.role.name === 'USER' && <Td>USUARIO</Td>}
-                        {discharge.user?.role.name === 'SELLER' && <Td>VENDEDOR</Td>}
-                        {discharge.user?.role.name === 'ADMIN' && <Td>ADMINISTRADOR</Td>}
-                        {discharge.user?.role.name === 'SUPERADMIN' && <Td>SUPER</Td>}
+                        {discharge.user?.role?.name! === 'USER' && <Td>USUARIO</Td>}
+                        {discharge.user?.role?.name! === 'SELLER' && <Td>VENDEDOR</Td>}
+                        {discharge.user?.role?.name! === 'ADMIN' && <Td>ADMINISTRADOR</Td>}
+                        {discharge.user?.role?.name! === 'SUPERADMIN' && <Td>SUPER</Td>}
                       </Tr>
                     </Tbody>
                   </Table>

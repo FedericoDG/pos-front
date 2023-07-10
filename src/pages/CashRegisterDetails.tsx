@@ -152,10 +152,10 @@ export const CashRegisterDetails = () => {
                     <Tr>
                       <Td>{cashRegister.user?.lastname}</Td>
                       <Td>{cashRegister.user?.name}</Td>
-                      {cashRegister.user?.role.name === 'USER' && <Td>USUARIO</Td>}
-                      {cashRegister.user?.role.name === 'SELLER' && <Td>VENDEDOR</Td>}
-                      {cashRegister.user?.role.name === 'ADMIN' && <Td>ADMINISTRADOR</Td>}
-                      {cashRegister.user?.role.name === 'SUPERADMIN' && <Td>SUPER</Td>}
+                      {cashRegister.user?.role?.name! === 'USER' && <Td>USUARIO</Td>}
+                      {cashRegister.user?.role?.name! === 'SELLER' && <Td>VENDEDOR</Td>}
+                      {cashRegister.user?.role?.name! === 'ADMIN' && <Td>ADMINISTRADOR</Td>}
+                      {cashRegister.user?.role?.name! === 'SUPERADMIN' && <Td>SUPER</Td>}
                     </Tr>
                   </Tbody>
                 </Table>

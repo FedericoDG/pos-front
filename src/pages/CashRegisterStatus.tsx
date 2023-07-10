@@ -25,7 +25,7 @@ import { toast } from 'react-toastify';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
-import { useColumns, useColumns2 } from '../componets/cash_register_status/hooks';
+import { useColumns } from '../componets/cash_register_status/hooks';
 import { useCashRegisterStatus, useCloseCashRegister, useOpenCashRegister } from '../hooks';
 
 export const CashRegisterStatus = () => {

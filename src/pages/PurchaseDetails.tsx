@@ -196,10 +196,10 @@ export const PurchaseDetails = () => {
                       <Tr>
                         <Td>{purchase.user?.lastname}</Td>
                         <Td>{purchase.user?.name}</Td>
-                        {purchase.user?.role.name === 'USER' && <Td>USUARIO</Td>}
-                        {purchase.user?.role.name === 'SELLER' && <Td>VENDEDOR</Td>}
-                        {purchase.user?.role.name === 'ADMIN' && <Td>ADMINISTRADOR</Td>}
-                        {purchase.user?.role.name === 'SUPERADMIN' && <Td>SUPER</Td>}
+                        {purchase.user?.role?.name === 'USER' && <Td>USUARIO</Td>}
+                        {purchase.user?.role?.name === 'SELLER' && <Td>VENDEDOR</Td>}
+                        {purchase.user?.role?.name === 'ADMIN' && <Td>ADMINISTRADOR</Td>}
+                        {purchase.user?.role?.name === 'SUPERADMIN' && <Td>SUPER</Td>}
                       </Tr>
                     </Tbody>
                   </Table>

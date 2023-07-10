@@ -1,4 +1,4 @@
-import { CashMovement } from './interfaces';
+import { CashMovement, Role, User } from './interfaces';
 
 import {
   CashRegister,
@@ -205,5 +205,29 @@ export interface CashMovementsResponse {
 export interface CashMovementResponse {
   body: {
     cashMovement: CashMovement;
+  };
+}
+
+export interface UserResponse {
+  body: {
+    user: User;
+  };
+}
+
+export interface UsersResponse {
+  body: {
+    users: User[];
+  };
+}
+
+export interface RoleResponse {
+  body: {
+    role: Role;
+  };
+}
+
+export interface RolesResponse {
+  body: {
+    roles: Role[];
   };
 }

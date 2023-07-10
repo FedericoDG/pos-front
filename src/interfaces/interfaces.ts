@@ -11,13 +11,15 @@ export interface Actions {
 }
 
 export interface User {
-  id: number;
+  id?: number;
   name: string;
   lastname: string;
   email: string;
   roleId: number;
-  logged: boolean;
-  role: Role;
+  logged?: boolean;
+  password?: string;
+  password2?: string;
+  role?: Role;
 }
 
 export interface Role {

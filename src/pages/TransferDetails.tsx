@@ -206,10 +206,10 @@ export const TransferDetails = () => {
                       <Tr>
                         <Td>{transfer.user?.lastname}</Td>
                         <Td>{transfer.user?.name}</Td>
-                        {transfer.user?.role.name === 'USER' && <Td>USUARIO</Td>}
-                        {transfer.user?.role.name === 'SELLER' && <Td>VENDEDOR</Td>}
-                        {transfer.user?.role.name === 'ADMIN' && <Td>ADMINISTRADOR</Td>}
-                        {transfer.user?.role.name === 'SUPERADMIN' && <Td>SUPER</Td>}
+                        {transfer.user?.role?.name === 'USER' && <Td>USUARIO</Td>}
+                        {transfer.user?.role?.name === 'SELLER' && <Td>VENDEDOR</Td>}
+                        {transfer.user?.role?.name === 'ADMIN' && <Td>ADMINISTRADOR</Td>}
+                        {transfer.user?.role?.name === 'SUPERADMIN' && <Td>SUPER</Td>}
                       </Tr>
                     </Tbody>
                   </Table>
