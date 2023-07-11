@@ -60,7 +60,7 @@ export const Users = () => {
             initialValues={initialValues}
             isOpen={isOpen}
             resetValues={resetValues}
-            roles={roles}
+            roles={roles.filter((user) => user.name !== 'CLIENT')}
             setinitialValues={setinitialValues}
             onClose={onClose}
           />

@@ -6,7 +6,6 @@ import { getRequest, postRequest } from '../services';
 interface Sale {
   clientId: number;
   warehouseId: number;
-  paymentMethodId: number;
   discount?: number;
   recharge?: number;
   cart: {
@@ -14,6 +13,11 @@ interface Sale {
     quantity: number;
     price: number;
   }[];
+  payments: {
+    amount: number;
+    paymentMethodId: number;
+  }[];
+  info: string;
 }
 
 const getCashMovements = () => getRequest<CashMovementsResponse>('/cashmovements');

@@ -81,6 +81,13 @@ export const Drawer = ({
     onClose();
   };
 
+  const role = (role: string) => {
+    if (role === 'SUPERADMIN') return 'Súper Administrador';
+    if (role === 'ADMIN') return 'Administrador';
+    if (role === 'SELLER') return 'Vendedor';
+    if (role === 'USER') return 'Usuario';
+  };
+
   return (
     <>
       <ChakraDrawer
@@ -144,7 +151,7 @@ export const Drawer = ({
                     >
                       {roles.map((unit) => (
                         <option key={unit.name} value={unit.id}>
-                          {unit.name}
+                          {role(unit.name)}
                         </option>
                       ))}
                     </Select>

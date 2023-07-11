@@ -61,6 +61,7 @@ export const SupplierAndWarehouse = () => {
             name="warehouse"
             options={mappedWarehouses}
             placeholder="Seleccionar Depósito"
+            selectedOptionColorScheme="brand"
             tabIndex={2}
             onChange={(e) => setWarehouse(e)}
           />
