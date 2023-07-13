@@ -27,6 +27,7 @@ import {
   TransferDetails,
   Transfers,
   Units,
+  UserProfile,
   Users,
   Warehouses,
 } from '../pages';
@@ -76,6 +77,7 @@ export const AppRouter = () => (
         <Route element={<CashRegisterDetails />} path="/panel/caja/detalles/:id" />
         {/* USERS */}
         <Route element={<Users />} path="/panel/usuarios" />
+        <Route element={<UserProfile />} path="/panel/usuarios/perfil" />
         {/* DEFAULT */}
         <Route element={<Navigate replace to="/panel" />} path="*" />
       </Route>

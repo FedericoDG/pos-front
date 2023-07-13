@@ -3,8 +3,6 @@ import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
-import { TbListDetails } from 'react-icons/Tb';
-import { useNavigate } from 'react-router-dom';
 
 import { User } from '../../../interfaces';
 
@@ -15,7 +13,12 @@ interface Props {
 }
 
 export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => {
-  const navigate = useNavigate();
+  const role = (role: string) => {
+    if (role === 'SUPERADMIN') return 'Súper Administrador';
+    if (role === 'ADMIN') return 'Administrador';
+    if (role === 'SELLER') return 'Vendedor';
+    if (role === 'USER') return 'Usuario';
+  };
 
   const columns = useMemo<ColumnDef<User>[]>(
     () => [
@@ -40,7 +43,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
       {
         id: 'rol',
         header: 'Rol',
-        cell: (row: CellContext<User, unknown>) => row.renderValue(),
+        cell: ({ row }: CellContext<User, unknown>) => role(row.original.role?.name!),
         accessorFn: (x) => x.role?.name,
       },
       {

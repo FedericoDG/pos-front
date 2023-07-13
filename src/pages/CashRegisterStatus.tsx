@@ -38,7 +38,7 @@ export const CashRegisterStatus = () => {
   const onSuccess = () => {
     toast.info('Caja abierta', {
       theme: 'colored',
-      position: toast.POSITION.BOTTOM_CENTER,
+      position: toast.POSITION.BOTTOM_LEFT,
       autoClose: 3000,
       closeOnClick: true,
     });
@@ -52,7 +52,7 @@ export const CashRegisterStatus = () => {
   const onSuccessClose = () => {
     toast.info('Caja cerrada', {
       theme: 'colored',
-      position: toast.POSITION.BOTTOM_CENTER,
+      position: toast.POSITION.BOTTOM_LEFT,
       autoClose: 3000,
       closeOnClick: true,
     });

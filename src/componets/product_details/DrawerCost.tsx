@@ -57,7 +57,7 @@ export const DrawerCost = ({
     });
     toast.info('Costo actualizado', {
       theme: 'colored',
-      position: toast.POSITION.BOTTOM_CENTER,
+      position: toast.POSITION.BOTTOM_LEFT,
       autoClose: 3000,
       closeOnClick: true,
     });

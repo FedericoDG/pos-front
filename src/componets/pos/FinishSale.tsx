@@ -134,20 +134,19 @@ export const FinishSale = () => {
     if (totalCart !== sale.payments.reduce((acc, el) => acc + el.amount, 0)) {
       toast.error('El monto de la venta es distinto al de los pagos', {
         theme: 'colored',
-        position: toast.POSITION.BOTTOM_CENTER,
+        position: toast.POSITION.BOTTOM_LEFT,
         autoClose: 5000,
         closeOnClick: true,
       });
     } else {
       mutate(sale);
-      console.log(sale);
     }
   };
 
   const onSuccess = () => {
     toast.info('Venta realizada', {
       theme: 'colored',
-      position: toast.POSITION.BOTTOM_CENTER,
+      position: toast.POSITION.BOTTOM_LEFT,
       autoClose: 3000,
       closeOnClick: true,
     });

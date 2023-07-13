@@ -7,6 +7,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuDivider,
@@ -22,6 +23,7 @@ import { FaBell } from 'react-icons/fa';
 import { FiChevronDown, FiMenu } from 'react-icons/fi';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { NavLink as RouterLink } from 'react-router-dom';
 
 import { useMyContext } from '../../context';
 
@@ -41,6 +43,13 @@ export const DashBoard = ({ children, title }: Props) => {
   const logout = () => {
     dispatchLogout();
     navigate('/');
+  };
+
+  const role = (role: string) => {
+    if (role === 'SUPERADMIN') return 'Súper Administrador';
+    if (role === 'ADMIN') return 'Administrador';
+    if (role === 'SELLER') return 'Vendedor';
+    if (role === 'USER') return 'Usuario';
   };
 
   return (
@@ -110,7 +119,7 @@ export const DashBoard = ({ children, title }: Props) => {
                         {user.name.toLocaleUpperCase()} {user.lastname.toLocaleUpperCase()}
                       </Text>
                       <Text color="whitesmoke" fontSize="xx-small" fontWeight="semibold">
-                        {user.role.name}
+                        {role(user.role?.name!)}
                       </Text>
                     </VStack>
                     <Box>
@@ -122,7 +131,15 @@ export const DashBoard = ({ children, title }: Props) => {
                   bg={useColorModeValue('white', 'gray.700')}
                   borderColor={useColorModeValue('gray.200', 'gray.600')}
                 >
-                  <MenuItem>Perfil</MenuItem>
+                  <Link
+                    _hover={{ textDecoration: 'none' }}
+                    as={RouterLink}
+                    color="inherit"
+                    cursor="pointer"
+                    to="/panel/usuarios/perfil"
+                  >
+                    <MenuItem>Perfil</MenuItem>
+                  </Link>
                   <MenuItem>Configuración</MenuItem>
                   <MenuDivider />
                   <MenuItem onClick={logout}>Salir</MenuItem>

@@ -276,20 +276,7 @@ export interface CashRegister {
   user?: User;
   cashMovements?: CashMovement[];
 }
-/* 
-"id": 1,
-                "subtotal": 6705,
-                "discount": 0,
-                "recharge": 0,
-                "total": 6705,
-                "cashRegisterId": 1,
-                "clientId": 1,
-                "warehouseId": 1,
-                "userId": 3,
-                "paymentMethodId": 1,
-                "createdAt": "2023-07-03T02:50:52.306Z",
-                "updatedAt": "2023-07-03T02:50:52.306Z",
-*/
+
 export interface CashMovement {
   id?: number;
   subtotal: number;
@@ -301,6 +288,7 @@ export interface CashMovement {
   warehouseId: number;
   userId: number;
   paymentMethodId: number;
+  info: string;
   createdAt?: string;
   updatedAt?: string;
   client?: Client;
@@ -308,6 +296,7 @@ export interface CashMovement {
   warehouse?: Warehouse;
   paymentMethod?: PaymentMethod;
   cashMovementsDetails?: CashMovementsDetail[];
+  paymentMethodDetails?: PaymentMethodDetails[];
 }
 
 export interface CashMovementsDetail {
@@ -327,4 +316,14 @@ export interface PaymentMethod {
   description: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PaymentMethodDetails {
+  id?: number;
+  cashMovementId: number;
+  amount: number;
+  paymentMethodId: number;
+  createdAt: number;
+  updatedAt: number;
+  paymentMethod: PaymentMethod;
 }

@@ -357,13 +357,13 @@ export const CashRegisterDetails = () => {
                                             <Td border="none" w="150px">
                                               {detail.quantity} {detail.product?.unit!.code}
                                             </Td>
-                                            <Td border="none" w="150px">
+                                            <Td border="none" w="231px">
                                               {formatCurrency(detail.price)}
                                             </Td>
-                                            <Td border="none" w="362px">
+                                            <Td border="none" w="341px">
                                               {detail.product?.name}
                                             </Td>
-                                            <Td isNumeric border="none" w="181px">
+                                            <Td isNumeric border="none" w="121px">
                                               {formatCurrency(detail.price * detail.quantity)}
                                             </Td>
                                           </Tr>
@@ -373,6 +373,72 @@ export const CashRegisterDetails = () => {
                                   </TableContainer>
                                 </Td>
                               </Tr>
+
+                              <Tr>
+                                <Td colSpan={5} px="0">
+                                  <TableContainer w="843px">
+                                    <Table size="sm">
+                                      <Thead>
+                                        <Tr>
+                                          <Th
+                                            borderBottomWidth="1"
+                                            borderColor="black"
+                                            borderStyle="solid"
+                                            colSpan={4}
+                                            color="black"
+                                            w="843px"
+                                          >
+                                            Forma de Pago
+                                          </Th>
+                                        </Tr>
+                                      </Thead>
+                                      <Tbody>
+                                        {movement.paymentMethodDetails?.map((detail) => (
+                                          <Tr key={nanoid()}>
+                                            <Td border="none" w="150px">
+                                              {formatCurrency(detail.amount)}
+                                            </Td>
+                                            <Td border="none" w="693px">
+                                              {detail.paymentMethod.code}
+                                            </Td>
+                                          </Tr>
+                                        ))}
+                                      </Tbody>
+                                    </Table>
+                                  </TableContainer>
+                                </Td>
+                              </Tr>
+                              {movement.info !== '' && (
+                                <Tr>
+                                  <Td colSpan={5} px="0">
+                                    <TableContainer w="843px">
+                                      <Table size="sm">
+                                        <Thead>
+                                          <Tr>
+                                            <Th
+                                              borderBottomWidth="1"
+                                              borderColor="black"
+                                              borderStyle="solid"
+                                              colSpan={4}
+                                              color="black"
+                                              w="843px"
+                                            >
+                                              Información extra
+                                            </Th>
+                                          </Tr>
+                                        </Thead>
+                                        <Tbody>
+                                          <Tr>
+                                            <Td border="none" w="843px">
+                                              {movement.info}
+                                            </Td>
+                                          </Tr>
+                                        </Tbody>
+                                      </Table>
+                                    </TableContainer>
+                                  </Td>
+                                </Tr>
+                              )}
                             </>
                           )}
                         </React.Fragment>

@@ -3,10 +3,17 @@ import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 import { User, UserResponse, UsersResponse } from '../interfaces';
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services';
 
+interface ResetPassword {
+  id: number;
+  password: string;
+}
+
 const getUsers = () => getRequest<UsersResponse>('/users');
 const getUser = (id: number) => getRequest<UserResponse>(`/users/${id}`);
 const createUser = (user: User) => postRequest('/users/', user);
 const updateUser = (user: User) => putRequest(`/users/${user?.id}`, user);
+const updateUserPassword = (pass: ResetPassword) =>
+  putRequest(`/users/resetpassword/${pass.id}`, { password: pass.password });
 const deleteUser = (id: number) => deleteRequest(`/users/${id}`);
 
 export const useGetUsers = () =>
@@ -49,6 +56,17 @@ export const useUpdateUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries('users');
     },
+    onError: (error) => {
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
+    },
+  });
+};
+
+export const useUpdateUserPassword = (onSuccess: () => void) => {
+  return useMutation(updateUserPassword, {
+    onSuccess,
     onError: (error) => {
       if (isError(error)) {
         throw new Error(error.message);

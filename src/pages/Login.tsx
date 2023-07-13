@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'react-toastify';
 
 import { postRequest } from '../services/';
 import { schema } from '../componets/login/schemas/';
@@ -35,6 +36,12 @@ export const Login = () => {
 
       dispatchLogin(user);
     } catch (error: any) {
+      toast.error('Usuario o contraseña inválida', {
+        theme: 'colored',
+        position: toast.POSITION.BOTTOM_LEFT,
+        autoClose: 3000,
+        closeOnClick: true,
+      });
       throw new Error(error);
     }
   };

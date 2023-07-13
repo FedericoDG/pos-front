@@ -58,7 +58,7 @@ export const Drawer = ({
     queryClient.invalidateQueries({ queryKey: ['stocks', 'discharges'] });
     toast.info('Baja de productos realizada', {
       theme: 'colored',
-      position: toast.POSITION.BOTTOM_CENTER,
+      position: toast.POSITION.BOTTOM_LEFT,
       autoClose: 3000,
       closeOnClick: true,
     });
