@@ -1,17 +1,31 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { Box, Stack, Alert, AlertIcon, FormLabel, Button, Input } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 import { usePurchasesContext } from '.';
 
 export const TransportAndDriver = () => {
-  const { goToNext, setTransport, setDriver, driver, transport } = usePurchasesContext();
+  const { goToNext, setTransport, setDriver } = usePurchasesContext();
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return goToNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [goToNext]);
 
   return (
     <Stack bg="white" mb="4" p="4" rounded="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"
-          isDisabled={!driver || !transport}
           minW="150px"
           ml="auto"
           rightIcon={<ArrowForwardIcon />}

@@ -2,6 +2,7 @@ import { Box, Heading, Stack, Text, Button, Divider } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
+import { useCallback, useEffect } from 'react';
 
 import { useCreateTransfer } from '../../hooks';
 
@@ -14,24 +15,12 @@ export const Basket = () => {
     removeItem,
     setActiveStep,
     setWarehouse,
+    setWarehouse2,
     totalCartItems,
     warehouse,
     warehouse2,
   } = useProductTransContext();
   const queryClient = useQueryClient();
-
-  const handleSubmit = () => {
-    const transfers = {
-      warehouseOriginId: warehouse?.id!,
-      warehouseDestinationId: warehouse2?.id!,
-      cart: cart.map((item) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-      })),
-    };
-
-    mutate(transfers);
-  };
 
   const onSuccess = () => {
     toast.info('Transferencia de stock realizada', {
@@ -43,10 +32,38 @@ export const Basket = () => {
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['stocks'] });
     setWarehouse(null);
+    setWarehouse2(null);
     setActiveStep(1);
   };
 
   const { mutate } = useCreateTransfer(onSuccess);
+
+  const handleSubmit = useCallback(() => {
+    const transfers = {
+      warehouseOriginId: warehouse?.id!,
+      warehouseDestinationId: warehouse2?.id!,
+      cart: cart.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })),
+    };
+
+    mutate(transfers);
+  }, [cart, mutate, warehouse?.id, warehouse2?.id]);
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return handleSubmit();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [handleSubmit]);
 
   if (cart.length === 0) return null;
 
@@ -85,7 +102,7 @@ export const Basket = () => {
         productos: ({totalCartItems})
       </Text>
       <Button colorScheme="brand" variant="solid" w="full" onClick={handleSubmit}>
-        TRANSFERRIR STOCK
+        TRANFERIR STOCK
       </Button>
     </Stack>
   );

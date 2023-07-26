@@ -7,7 +7,7 @@ import { MdPointOfSale } from 'react-icons/md';
 
 import { useMyContext } from '../../context';
 
-import { NavItem, NavItemDivider } from '.';
+import { NavItem, NavItemDivider, NavItemNewTab } from '.';
 
 interface Props {
   borderRight?: string;
@@ -73,9 +73,9 @@ export const SidebarContent = (props: Props) => {
         </NavItem>
 
         {/* POS */}
-        <NavItem icon={MdPointOfSale} link="/panel/pos">
+        <NavItemNewTab icon={MdPointOfSale} link="/panel/pos">
           Punto de Venta
-        </NavItem>
+        </NavItemNewTab>
 
         {/* CASH REGISTER */}
         <NavItemDivider

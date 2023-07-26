@@ -1,5 +1,6 @@
 import { Box, Heading, Stack, Text, Button, Divider } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
+import { useEffect } from 'react';
 
 import { formatCurrency } from '../../utils';
 
@@ -7,6 +8,20 @@ import { usePosContext } from './context';
 
 export const Basket = () => {
   const { cart, removeItem, totalCart, totalCartItems, goToNext } = usePosContext();
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return goToNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [goToNext]);
 
   if (cart.length === 0) return null;
 

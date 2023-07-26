@@ -1,6 +1,6 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import { User } from '../interfaces';
 import { ConfirmationModal, Drawer } from '../componets/users';
@@ -34,6 +34,20 @@ export const Users = () => {
   const isIndeterminate = isFetchingUsers || isFetchingRoles;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return onOpen();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [onOpen]);
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Usuarios">

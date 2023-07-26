@@ -20,9 +20,9 @@ import {
   Textarea,
   Tooltip,
 } from '@chakra-ui/react';
-import { FieldArray, useFormik, FormikProvider, FormikHelpers } from 'formik';
+import { FieldArray, useFormik, FormikProvider, useFormikContext } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CgArrowsExchangeAlt } from 'react-icons/cg';
 import { BsPlusCircle } from 'react-icons/bs';
 import { FaRegTrashAlt } from 'react-icons/fa';
@@ -34,11 +34,16 @@ import { formatCurrency } from '../../utils';
 
 import { usePosContext } from '.';
 
+interface Payment {
+  amount: string;
+  paymentMethodId: string;
+}
+
 interface Values {
   discount: number | null;
   recharge: number | null;
   info: string;
-  payments: { amount: string; paymentMethodId: string; }[];
+  payments: Payment[];
 }
 
 interface Sale {
@@ -58,11 +63,31 @@ interface Sale {
   info: string;
 }
 
+const AutoSubmit = () => {
+  const { values, submitForm } = useFormikContext();
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return submitForm();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [values, submitForm]);
+
+  return null;
+};
+
 export const FinishSale = () => {
   const [option, setOption] = useState('1');
   const [discount, setDiscount] = useState(0);
   const [recharge, setRecharge] = useState(0);
-  const [percent, setPercent] = useState(false);
+  const [percent, setPercent] = useState(true);
 
   const {
     cart,
@@ -85,7 +110,7 @@ export const FinishSale = () => {
 
   const queryClient = useQueryClient();
 
-  const onSubmit = (values: Values, actions: FormikHelpers<Values>) => {
+  const onSubmit = (values: Values) => {
     const parsedValues = {
       discount: Number(values.discount),
       recharge: Number(values.recharge),
@@ -178,7 +203,7 @@ export const FinishSale = () => {
     onSubmit,
   });
 
-  const { handleSubmit, handleChange, values, errors, touched } = formik;
+  const { handleSubmit, handleChange, values, errors } = formik;
 
   const { data: paymentMethods } = useGetPaymentMethods();
 
@@ -312,9 +337,9 @@ export const FinishSale = () => {
                             }}
                             onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                           />
-                          <Tooltip label="Aternar entre porcentaje y valor">
-                            <InputRightAddon
-                              children={
+                          <InputRightAddon
+                            children={
+                              <Tooltip label="Aternar entre porcentaje y valor">
                                 <Button
                                   onClick={() => {
                                     setPercent((current) => !current);
@@ -324,10 +349,10 @@ export const FinishSale = () => {
                                 >
                                   <Icon as={CgArrowsExchangeAlt} />
                                 </Button>
-                              }
-                              p="0"
-                            />
-                          </Tooltip>
+                              </Tooltip>
+                            }
+                            p="0"
+                          />
                         </InputGroup>
                       </>
                     )}
@@ -439,6 +464,7 @@ export const FinishSale = () => {
               CARGAR VENTA
             </Button>
           </Stack>
+          <AutoSubmit />
         </form>
       </FormikProvider>
     </Stack>

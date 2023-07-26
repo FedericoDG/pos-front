@@ -93,7 +93,7 @@ export const CashRegisterDetails = () => {
   };
 
   return (
-    <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Compra">
+    <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
       {!cashRegister ? (
         <Loading />
       ) : (
@@ -169,16 +169,28 @@ export const CashRegisterDetails = () => {
                   <Thead>
                     <Tr>
                       <Th bg="gray.700" color="white">
-                        Fecha Apertura
+                        Apertura
                       </Th>
                       <Th bg="gray.700" color="white">
-                        Fecha Cierre
+                        Cierre
                       </Th>
-                      <Th isNumeric bg="gray.700" color="white">
+                      <Th isNumeric bg="gray.700" color="white" fontSize={12}>
                         Saldo Inicial
                       </Th>
-                      <Th isNumeric bg="gray.700" color="white">
-                        Ventas
+                      <Th isNumeric bg="gray.700" color="white" fontSize={12}>
+                        Efectivo
+                      </Th>
+                      <Th isNumeric bg="gray.700" color="white" fontSize={12}>
+                        Débito
+                      </Th>
+                      <Th isNumeric bg="gray.700" color="white" fontSize={12}>
+                        Crédito
+                      </Th>
+                      <Th isNumeric bg="gray.700" color="white" fontSize={12}>
+                        Transferencia
+                      </Th>
+                      <Th isNumeric bg="gray.700" color="white" fontSize={12}>
+                        MercadoPago
                       </Th>
                       <Th isNumeric bg="gray.700" color="white">
                         Total a Rendir
@@ -191,11 +203,23 @@ export const CashRegisterDetails = () => {
                       <Td>
                         {cashRegister.closingDate ? formatDate(cashRegister.closingDate) : ''}
                       </Td>
-                      <Td isNumeric color="#4a5568" fontSize={16} fontWeight="bold">
+                      <Td isNumeric color="#4a5568" fontSize={12} fontWeight="semibold">
                         {formatCurrency(cashRegister.initialBalance)}
                       </Td>
-                      <Td isNumeric color="#4a5568" fontSize={16} fontWeight="bold">
-                        {formatCurrency(cashRegister.finalBalance)}
+                      <Td isNumeric color="#4a5568" fontSize={12} fontWeight="semibold">
+                        {formatCurrency(cashRegister.cash)}
+                      </Td>
+                      <Td isNumeric color="#4a5568" fontSize={12} fontWeight="semibold">
+                        {formatCurrency(cashRegister.debit)}
+                      </Td>
+                      <Td isNumeric color="#4a5568" fontSize={12} fontWeight="semibold">
+                        {formatCurrency(cashRegister.credit)}
+                      </Td>
+                      <Td isNumeric color="#4a5568" fontSize={12} fontWeight="semibold">
+                        {formatCurrency(cashRegister.transfer)}
+                      </Td>
+                      <Td isNumeric color="#4a5568" fontSize={12} fontWeight="semibold">
+                        {formatCurrency(cashRegister.mercadoPago)}
                       </Td>
                       <Td isNumeric color="#4a5568" fontSize={16} fontWeight="bold">
                         {formatCurrency(cashRegister.initialBalance + cashRegister.finalBalance)}

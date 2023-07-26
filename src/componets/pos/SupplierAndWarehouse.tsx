@@ -43,6 +43,20 @@ export const SupplierAndWarehouse = () => {
   const { goToNext, client, warehouse, setClient, setWarehouse, priceList, setPriceList } =
     usePosContext();
 
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return goToNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [goToNext]);
+
   if (!clients || !warehouses) return <Loading />;
 
   return (

@@ -1,5 +1,6 @@
 import { Box, Button } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { CustomTable } from '../componets/table';
@@ -16,6 +17,20 @@ export const Purchases = () => {
   const isIndeterminate = isFetchingPurchases;
 
   const { columns } = useColumns();
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return navigate('/panel/stock/compras/cargar');
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [navigate]);
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Compras">

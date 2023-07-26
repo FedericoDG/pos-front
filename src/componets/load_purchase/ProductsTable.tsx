@@ -1,7 +1,10 @@
 /* eslint-disable react/no-children-prop */
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
+  Fade,
   FormLabel,
   Input,
   InputGroup,
@@ -64,7 +67,7 @@ export const ProductsTable = () => {
         flag="products"
       />
 
-      <Modal finalFocusRef={tableInput} isOpen={isOpen} onClose={handleClose}>
+      <Modal finalFocusRef={tableInput} isOpen={isOpen} size="lg" onClose={handleClose}>
         <ModalOverlay backdropFilter="blur(5px) hue-rotate(90deg)" bg="blackAlpha.300" />
         <ModalContent>
           <ModalHeader>{activeProduct?.name}</ModalHeader>
@@ -98,6 +101,7 @@ export const ProductsTable = () => {
                     id="cost"
                     name="cost"
                     type="number"
+                    value={activeProduct.price}
                     onChange={(e) =>
                       setActiveProduct((current) => ({
                         ...current,
@@ -108,13 +112,21 @@ export const ProductsTable = () => {
                 </InputGroup>
               </Box>
             </Stack>
+            {activeProduct.price <= 0 && (
+              <Stack mt="4">
+                <Alert status="warning">
+                  <AlertIcon />
+                  Si no proporciona un precio, éste no se actualizará.
+                </Alert>
+              </Stack>
+            )}
           </ModalBody>
 
           <ModalFooter>
             <Button onClick={handleClose}>Cancelar</Button>
             <Button
               colorScheme="brand"
-              isDisabled={!activeProduct.quantity || !activeProduct.price}
+              isDisabled={!activeProduct.quantity || activeProduct.price < 0}
               ml={3}
               onClick={handleAdd}
             >

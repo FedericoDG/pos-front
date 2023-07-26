@@ -17,7 +17,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 
@@ -60,6 +60,20 @@ export const Pos = () => {
   const openCashRegister = () => {
     mutate({ initialBalance, openingDate: new Date() });
   };
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return onOpen();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [onOpen]);
 
   return (
     <PosProvider>

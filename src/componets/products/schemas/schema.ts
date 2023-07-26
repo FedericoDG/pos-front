@@ -13,7 +13,8 @@ export const schema = z.object({
     .string({ required_error: 'El Código de Barra es requerido' })
     .regex(/^[0-9]+$/, 'Sólo se aceptan números')
     .min(13, 'Debe tener 13 dígitos')
-    .max(13, 'Debe tener 13 dígitos'),
+    .max(13, 'Debe tener 13 dígitos')
+    .optional(),
   description: z.string().optional(),
   unitId: z.preprocess((val) => Number(val), z.number()),
   categoryId: z.preprocess((val) => Number(val), z.number()),

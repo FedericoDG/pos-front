@@ -2,6 +2,7 @@ import { Box, Heading, Stack, Text, Button, Divider } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
+import { useEffect, useCallback } from 'react';
 
 import { formatCurrency } from '../../utils';
 import { useCreateCost } from '../../hooks';
@@ -10,18 +11,8 @@ import { useCostsContext } from './context';
 
 export const Basket = () => {
   const { cart, emptyCart, removeItem, totalCartItems } = useCostsContext();
+
   const queryClient = useQueryClient();
-
-  const handleSubmit = () => {
-    const newCosts = {
-      cart: cart.map((item) => ({
-        productId: item.productId,
-        price: item.cost,
-      })),
-    };
-
-    mutate(newCosts);
-  };
 
   const onSuccess = () => {
     toast.info('Costos actualizados', {
@@ -33,7 +24,32 @@ export const Basket = () => {
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['stocks', 'costs', 'discharges', 'transfers'] });
   };
+
   const { mutate } = useCreateCost(onSuccess);
+  const handleSubmit = useCallback(() => {
+    const newCosts = {
+      cart: cart.map((item) => ({
+        productId: item.productId,
+        price: item.cost,
+      })),
+    };
+
+    mutate(newCosts);
+  }, [cart, mutate]);
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return handleSubmit();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [handleSubmit]);
 
   if (cart.length === 0) return null;
 

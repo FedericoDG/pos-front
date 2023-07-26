@@ -76,7 +76,7 @@ export const useDeleteWarehose = () => {
     onSuccess: () => {
       queryClient.invalidateQueries('warehouses');
     },
-    onError: (error) => {
+    onError: (_error) => {
       toast.error('Error al intentar eliminar el Depósito', {
         theme: 'colored',
         position: toast.POSITION.BOTTOM_LEFT,

@@ -143,7 +143,11 @@ export const ProductDetails = () => {
               <CardHeader>
                 <Box alignItems="center" display="flex" justifyContent="space-between">
                   <Heading size="md">{product.name.toUpperCase()}</Heading>
-                  <Barcode ref={barcodeRef} height={50} value={product.barcode} width={2} />
+                  <Box h="92px" w="266px">
+                    {product.barcode && (
+                      <Barcode ref={barcodeRef} height={50} value={product.barcode} width={2} />
+                    )}
+                  </Box>
                 </Box>
                 <Stack direction={{ base: 'column', md: 'row' }} justifyContent="flex-end" mt="2">
                   <Badge colorScheme={product.status === 'ENABLED' ? 'green' : 'red'}>
@@ -276,17 +280,44 @@ export const ProductDetails = () => {
               </Stack>
             )}
 
-            {product.prices?.length! > 0 && (
-              <Stack>
+            <Stack>
+              <TableContainer>
+                <Table size="sm">
+                  <Thead>
+                    <Tr>
+                      <Th bg="gray.700" color="whitesmoke">
+                        PRECIO
+                      </Th>
+                      <Th bg="gray.700" color="whitesmoke">
+                        LISTA DE PRECIO
+                      </Th>
+                      <Th bg="gray.700" color="whitesmoke">
+                        FECHA
+                      </Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {product.prices!.map((item) => (
+                      <Tr key={nanoid()}>
+                        <Td fontWeight="semibold">{formatCurrency(item?.price! || 0)}</Td>
+                        <Td>{item?.pricelists?.code}</Td>
+                        <Td w="180px">{formatDate(item?.createdAt)}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+              <Button colorScheme="brand" mb="4" ml="auto" size="sm" w="210px" onClick={onOpen}>
+                ACTUALIZAR PRECIOS
+              </Button>
+
+              {product.costs && (
                 <TableContainer>
                   <Table size="sm">
                     <Thead>
                       <Tr>
                         <Th bg="gray.700" color="whitesmoke">
-                          PRECIO
-                        </Th>
-                        <Th bg="gray.700" color="whitesmoke">
-                          LISTA DE PRECIO
+                          COSTO
                         </Th>
                         <Th bg="gray.700" color="whitesmoke">
                           FECHA
@@ -294,47 +325,18 @@ export const ProductDetails = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {product.prices!.map((item) => (
-                        <Tr key={nanoid()}>
-                          <Td fontWeight="semibold">{formatCurrency(item?.price! || 0)}</Td>
-                          <Td>{item?.pricelists?.code}</Td>
-                          <Td w="180px">{formatDate(item?.createdAt)}</Td>
-                        </Tr>
-                      ))}
+                      <Tr key={nanoid()}>
+                        <Td fontWeight="semibold">{formatCurrency(product.costs[0].price)}</Td>
+                        <Td w="180px">{formatDate(product.costs[0].createdAt)}</Td>
+                      </Tr>
                     </Tbody>
                   </Table>
                 </TableContainer>
-                <Button colorScheme="brand" mb="4" ml="auto" size="sm" w="210px" onClick={onOpen}>
-                  ACTUALIZAR PRECIOS
-                </Button>
-
-                {product.costs && (
-                  <TableContainer>
-                    <Table size="sm">
-                      <Thead>
-                        <Tr>
-                          <Th bg="gray.700" color="whitesmoke">
-                            COSTO
-                          </Th>
-                          <Th bg="gray.700" color="whitesmoke">
-                            FECHA
-                          </Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        <Tr key={nanoid()}>
-                          <Td fontWeight="semibold">{formatCurrency(product.costs[0].price)}</Td>
-                          <Td w="180px">{formatDate(product.costs[0].createdAt)}</Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                )}
-                <Button colorScheme="brand" ml="auto" size="sm" w="210px" onClick={onOpen3}>
-                  ACTUALIZAR COSTO
-                </Button>
-              </Stack>
-            )}
+              )}
+              <Button colorScheme="brand" ml="auto" size="sm" w="210px" onClick={onOpen3}>
+                ACTUALIZAR COSTO
+              </Button>
+            </Stack>
           </Stack>
 
           <Drawer

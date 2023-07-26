@@ -1,6 +1,6 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import { Category } from '../interfaces';
 import { ConfirmationModal, Drawer } from '../componets/categories';
@@ -29,6 +29,20 @@ export const Categories = () => {
   const isIndeterminate = isFetchingCategories;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return onOpen();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [onOpen]);
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Categorías">

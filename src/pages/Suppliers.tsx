@@ -1,6 +1,6 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import { ConfirmationModal, Drawer } from '../componets/suppliers';
 import { CustomTable } from '../componets/table';
@@ -34,6 +34,20 @@ export const Suppliers = () => {
   const isIndeterminate = isFetchingSuppliers;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return onOpen();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [onOpen]);
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Proveedores">

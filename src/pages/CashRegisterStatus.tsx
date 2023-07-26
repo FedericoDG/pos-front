@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { AiOutlineClose } from 'react-icons/ai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
@@ -78,6 +78,20 @@ export const CashRegisterStatus = () => {
   const isIndeterminate = isFetchingCashRegister;
 
   const { columns } = useColumns();
+
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return onOpen();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [onOpen]);
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Caja - Estado">

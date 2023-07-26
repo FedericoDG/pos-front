@@ -26,6 +26,20 @@ export const SupplierAndWarehouse = () => {
 
   const { goToNext, warehouse, setWarehouse } = useDischargesContext();
 
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return goToNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [goToNext]);
+
   if (!warehouses) return <Loading />;
 
   return (
@@ -55,6 +69,7 @@ export const SupplierAndWarehouse = () => {
           <FormLabel htmlFor="warehouse">Depósito:</FormLabel>
           <Select
             ref={wareRef}
+            autoFocus
             isClearable
             isSearchable
             colorScheme="brand"

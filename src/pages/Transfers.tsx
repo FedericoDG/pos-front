@@ -1,5 +1,6 @@
 import { Box, Button } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { CustomTable } from '../componets/table';
@@ -17,6 +18,20 @@ export const Transfers = () => {
 
   const { columns } = useColumns();
 
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return navigate('/panel/stock/transferencias/crear');
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [navigate]);
+
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Transferencia de stock">
       <Button
@@ -27,7 +42,7 @@ export const Transfers = () => {
         size="lg"
         onClick={() => navigate('/panel/stock/transferencias/crear')}
       >
-        TRANSFERRIR STOCK
+        TRANFERIR STOCK
       </Button>
 
       {!transfers ? (

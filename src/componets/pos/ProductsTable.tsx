@@ -78,6 +78,7 @@ export const ProductsTable = () => {
                     autoFocus
                     id="quantity"
                     name="quantity"
+                    tabIndex={1}
                     type="number"
                     onChange={(e) =>
                       setActiveProduct((current) => ({
@@ -93,11 +94,14 @@ export const ProductsTable = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button onClick={handleClose}>Cancelar</Button>
+            <Button tabIndex={3} onClick={handleClose}>
+              Cancelar
+            </Button>
             <Button
               colorScheme="brand"
               isDisabled={!activeProduct.quantity}
               ml={3}
+              tabIndex={2}
               onClick={handleAdd}
             >
               Agregar

@@ -94,7 +94,7 @@ export interface PriceList {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
-  products: Product;
+  products: Product[];
   createdAt: string;
   totalStock: number;
   totalStockPosta: number;
@@ -273,6 +273,11 @@ export interface CashRegister {
   isOpen?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  cash: number;
+  debit: number;
+  credit: number;
+  transfer: number;
+  mercadoPago: number;
   user?: User;
   cashMovements?: CashMovement[];
 }

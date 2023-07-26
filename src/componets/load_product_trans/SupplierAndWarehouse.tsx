@@ -34,6 +34,20 @@ export const SupplierAndWarehouse = () => {
     setMappedWarehouses2(mappedWarehouses2);
   }, [mappedWarehouses, warehouse?.id, warehouses]);
 
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return goToNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [goToNext]);
+
   const wareRef =
     useRef<SelectInstance<SelectedWarehouse, false, GroupBase<SelectedWarehouse>>>(null);
 
@@ -66,6 +80,7 @@ export const SupplierAndWarehouse = () => {
           <FormLabel htmlFor="warehouse">Depósito de Origen:</FormLabel>
           <Select
             ref={wareRef}
+            autoFocus
             isClearable
             isSearchable
             colorScheme="brand"

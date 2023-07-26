@@ -1,6 +1,7 @@
 import { Box, Heading, Stack, Text, Button, Divider } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { toast } from 'react-toastify';
+import { useCallback, useEffect } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { formatCurrency } from '../../utils';
@@ -21,7 +22,22 @@ export const Basket = () => {
   } = useDischargesContext();
   const queryClient = useQueryClient();
 
-  const handleSubmit = () => {
+  const onSuccess = () => {
+    toast.info('Pérdida de stock cargada', {
+      theme: 'colored',
+      position: toast.POSITION.BOTTOM_LEFT,
+      autoClose: 3000,
+      closeOnClick: true,
+    });
+    emptyCart();
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+    setWarehouse(null);
+    setActiveStep(1);
+  };
+
+  const { mutate } = useCreateDischarge(onSuccess);
+
+  const handleSubmit = useCallback(() => {
     const discharge = {
       warehouseId: warehouse?.id!,
       //date: new Date(),
@@ -35,21 +51,21 @@ export const Basket = () => {
     };
 
     mutate(discharge);
-  };
+  }, [cart, mutate, warehouse?.id]);
 
-  const onSuccess = () => {
-    toast.info('Pérdida de stock cargada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
-    emptyCart();
-    queryClient.invalidateQueries({ queryKey: ['products'] });
-    setWarehouse(null);
-    setActiveStep(1);
-  };
-  const { mutate } = useCreateDischarge(onSuccess);
+  useEffect(() => {
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return handleSubmit();
+      }
+    };
+
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [handleSubmit]);
 
   if (cart.length === 0) return null;
 

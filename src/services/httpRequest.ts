@@ -17,7 +17,7 @@ const httpRequest = <T>(
     headers,
   };
 
-  const token = window.sessionStorage.getItem('token') || null;
+  const token = window.localStorage.getItem('token') || null;
 
   if (typeof token === 'string') {
     const parsedToken = JSON.parse(token);

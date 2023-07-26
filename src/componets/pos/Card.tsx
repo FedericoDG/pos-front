@@ -1,9 +1,47 @@
-import { Stack, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  FormLabel,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { Select } from 'chakra-react-select';
+import { useEffect, useState } from 'react';
 
-import { usePosContext } from '.';
+import { Loading } from '../common';
+import { useGetClients } from '../../hooks';
+
+import { SelectedClient, usePosContext } from '.';
 
 export const Card = () => {
-  const { client, warehouse, priceList } = usePosContext();
+  const { client, warehouse, priceList, setClient } = usePosContext();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
+
+  const { data: clients } = useGetClients();
+
+  useEffect(() => {
+    if (!clients) return;
+
+    const mappedClients = clients.map((el) => ({
+      ...el,
+      value: el.id,
+      label: `${el.document} - ${el.name} ${el.lastname}`,
+    }));
+
+    setMappedClients(mappedClients);
+  }, [clients]);
+
+  if (!clients) return <Loading />;
 
   return (
     <Stack
@@ -73,7 +111,45 @@ export const Card = () => {
           <Text fontWeight="semibold">APELLIDO:</Text>
           <Text>{client?.lastname}</Text>
         </Stack>
+        <Stack direction="row" justifyContent="flex-end" w="full">
+          <Button size="xs" onClick={onOpen}>
+            CAMBIAR
+          </Button>
+        </Stack>
       </Stack>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modificar Cliente</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack direction="row">
+              <Box w="full">
+                <FormLabel htmlFor="warehouse">Cliente:</FormLabel>
+                <Select
+                  autoFocus
+                  isSearchable
+                  colorScheme="brand"
+                  isDisabled={!priceList?.value || !warehouse?.value}
+                  name="client"
+                  options={mappedClients}
+                  placeholder="Seleccionar Cliente"
+                  selectedOptionColorScheme="brand"
+                  value={client}
+                  onChange={(e) => setClient(e)}
+                />
+              </Box>
+            </Stack>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="brand" onClick={onClose}>
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Stack>
   );
 };
