@@ -5,10 +5,12 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useGetWarehousesWOStock, useGetClients, useGetPriceLists } from '../../hooks';
 import { Loading } from '../common';
+import { useMyContext } from '../../context';
 
 import { SelectedClient, SelectedPriceList, SelectedWarehouse, usePosContext } from '.';
 
 export const SupplierAndWarehouse = () => {
+  const { user } = useMyContext();
   const { data: warehouses } = useGetWarehousesWOStock();
   const { data: clients } = useGetClients();
   const { data: priceLists } = useGetPriceLists();
@@ -16,6 +18,9 @@ export const SupplierAndWarehouse = () => {
   const [mappedPriceLists, setMappedPriceLists] = useState<SelectedPriceList[]>([]);
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
+
+  const { goToNext, client, warehouse, setClient, setWarehouse, priceList, setPriceList } =
+    usePosContext();
 
   useEffect(() => {
     if (!priceLists || !clients || !warehouses) return;
@@ -28,20 +33,29 @@ export const SupplierAndWarehouse = () => {
 
     const mappedPriceLists = priceLists.map((el) => ({ ...el, value: el.id, label: el.code }));
 
-    const mappedWarehouses = warehouses.map((el) => ({ ...el, value: el.id, label: el.code }));
+    if (user.roleId === 4) {
+      const mappedWarehouses = warehouses
+        .filter((el) => el.user?.id === user.id)
+        .map((el) => ({ ...el, value: el.id, label: el.code }));
+
+      //setMappedWarehouses(mappedWarehouses);
+      setWarehouse(mappedWarehouses[0]);
+    } else {
+      const mappedWarehouses = warehouses
+        .filter((el) => el.driver === 0)
+        .map((el) => ({ ...el, value: el.id, label: el.code }));
+
+      setMappedWarehouses(mappedWarehouses);
+    }
 
     setMappedPriceLists(mappedPriceLists);
     setMappedClients(mappedClients);
-    setMappedWarehouses(mappedWarehouses);
-  }, [clients, warehouses, priceLists]);
+  }, [clients, warehouses, priceLists, user.roleId, user.id, setWarehouse]);
 
   const wareRef =
     useRef<SelectInstance<SelectedWarehouse, false, GroupBase<SelectedWarehouse>>>(null);
 
   const clientRef = useRef<SelectInstance<SelectedClient, false, GroupBase<SelectedClient>>>(null);
-
-  const { goToNext, client, warehouse, setClient, setWarehouse, priceList, setPriceList } =
-    usePosContext();
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -100,27 +114,29 @@ export const SupplierAndWarehouse = () => {
             }}
           />
         </Box>
-        <Box w="49%">
-          <FormLabel htmlFor="warehouse">Depósito:</FormLabel>
-          <Select
-            ref={wareRef}
-            isClearable
-            isSearchable
-            colorScheme="brand"
-            isDisabled={!priceList?.value}
-            name="warehouse"
-            options={mappedWarehouses}
-            placeholder="Seleccionar Depósito"
-            selectedOptionColorScheme="brand"
-            tabIndex={2}
-            onChange={(e) => setWarehouse(e)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') clientRef.current?.focus();
-            }}
-          />
-        </Box>
+        {user.id !== 4 && (
+          <Box w="49%">
+            <FormLabel htmlFor="warehouse">Depósito:</FormLabel>
+            <Select
+              ref={wareRef}
+              isClearable
+              isSearchable
+              colorScheme="brand"
+              isDisabled={!priceList?.value}
+              name="warehouse"
+              options={mappedWarehouses}
+              placeholder="Seleccionar Depósito"
+              selectedOptionColorScheme="brand"
+              tabIndex={2}
+              onChange={(e) => setWarehouse(e)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') clientRef.current?.focus();
+              }}
+            />
+          </Box>
+        )}
       </Stack>
-      <Stack direction="row">
+      <Stack w="full">
         <Box w="49%">
           <FormLabel htmlFor="warehouse">Cliente:</FormLabel>
           <Select

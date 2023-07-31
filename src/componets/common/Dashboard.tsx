@@ -49,6 +49,7 @@ export const DashBoard = ({ children, title }: Props) => {
     if (role === 'SUPERADMIN') return 'Súper Administrador';
     if (role === 'ADMIN') return 'Administrador';
     if (role === 'SELLER') return 'Vendedor';
+    if (role === 'DRIVER') return 'Chofer';
     if (role === 'USER') return 'Usuario';
   };
 
@@ -147,8 +148,8 @@ export const DashBoard = ({ children, title }: Props) => {
               </Menu>
             </Flex>
           </Flex>
-          <Box h="5px" w="full">
-            <Progress bg="blue.500" size="xs" w="full" />
+          <Box h="6px" w="full">
+            <Progress bg="blue.500" h="6px" w="full" />
           </Box>
           {/*  <Box h="5px" w="full">
             {isIndeterminate ? (

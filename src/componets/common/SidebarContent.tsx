@@ -2,6 +2,7 @@ import { AiOutlineStock } from 'react-icons/ai';
 import { Box, Collapse, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsPersonVcard, BsPersonVcardFill } from 'react-icons/bs';
 import { FaDollarSign, FaCubes, FaFileInvoiceDollar, FaHome, FaUserFriends } from 'react-icons/fa';
+import { GiCarWheel } from 'react-icons/gi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { MdPointOfSale } from 'react-icons/md';
 
@@ -221,6 +222,11 @@ export const SidebarContent = (props: Props) => {
             </Box>
           </NavItem>
         </Collapse>
+
+        {/* DRIVERS */}
+        <NavItem icon={GiCarWheel} link="/panel/choferes">
+          Choferes
+        </NavItem>
 
         {/* CLIENTS */}
         <NavItem icon={BsPersonVcard} link="/panel/clientes">

@@ -98,10 +98,10 @@ export const ProductsTable = () => {
                 <InputGroup>
                   <InputLeftAddon children="$" />
                   <Input
+                    defaultValue={activeProduct.price}
                     id="cost"
                     name="cost"
                     type="number"
-                    value={activeProduct.price}
                     onChange={(e) =>
                       setActiveProduct((current) => ({
                         ...current,
@@ -112,14 +112,13 @@ export const ProductsTable = () => {
                 </InputGroup>
               </Box>
             </Stack>
-            {activeProduct.price <= 0 && (
-              <Stack mt="4">
-                <Alert status="warning">
-                  <AlertIcon />
-                  Si no proporciona un precio, éste no se actualizará.
-                </Alert>
-              </Stack>
-            )}
+
+            <Stack mt="4">
+              <Alert status="warning">
+                <AlertIcon />
+                Si no proporciona un precio, éste no se actualizará.
+              </Alert>
+            </Stack>
           </ModalBody>
 
           <ModalFooter>

@@ -105,9 +105,13 @@ export interface Warehouse {
   code: string;
   description: string;
   address: string;
+  password?: string;
+  password2?: string;
+  driver: number;
   createdAt?: string;
   updatedAt?: string;
   stocks?: Stock[];
+  user?: User;
 }
 
 export interface Stock {

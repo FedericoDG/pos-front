@@ -8,6 +8,8 @@ import {
   Clients,
   DischargeDetails,
   Discharges,
+  DriverDetails,
+  Drivers,
   GeneratePriceListReport,
   Home,
   LoadCosts,
@@ -69,6 +71,9 @@ export const AppRouter = () => (
         <Route element={<Clients />} path="/panel/clientes" />
         {/* SUPPLIERS */}
         <Route element={<Suppliers />} path="/panel/proveedores" />
+        {/* DRIVERS */}
+        <Route element={<Drivers />} path="/panel/choferes" />
+        <Route element={<DriverDetails />} path="/panel/choferes/detalles/:id" />
         {/* POS */}
         <Route element={<Pos />} path="/panel/pos" />
         {/* CASH REGISTER */}

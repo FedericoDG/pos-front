@@ -123,7 +123,7 @@ export const DrawerCost = ({
               <Stack spacing="14px">
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
-                    <FormLabel htmlFor="cost">Costsdfdssdf:</FormLabel>
+                    <FormLabel htmlFor="cost">Costo:</FormLabel>
                     <InputGroup>
                       <InputLeftAddon children="$" />
                       <Input

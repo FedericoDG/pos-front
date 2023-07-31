@@ -5,6 +5,8 @@ export * from './Categories';
 export * from './Clients';
 export * from './Discharges';
 export * from './DischargesDetails';
+export * from './DriveDetails';
+export * from './Drivers';
 export * from './GeneratePriceListReport';
 export * from './Home';
 export * from './LoadCost';

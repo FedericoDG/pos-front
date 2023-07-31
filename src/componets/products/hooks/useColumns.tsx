@@ -64,7 +64,6 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         cell: ({ row }: CellContext<Product, unknown>) =>
           row.original.status === 'ENABLED' ? (
             <Badge colorScheme="green" variant="subtle">
-              {' '}
               Habilitado
             </Badge>
           ) : (

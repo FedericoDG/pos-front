@@ -19,7 +19,9 @@ export const SupplierAndWarehouse = () => {
   useEffect(() => {
     if (!warehouses) return;
 
-    const mappedWarehouses = warehouses.map((el) => ({ ...el, value: el.id, label: el.code }));
+    const mappedWarehouses = warehouses
+      .map((el) => ({ ...el, value: el.id, label: el.code }))
+      .filter((el) => el.driver !== 1);
 
     setMappedWarehouses(mappedWarehouses);
   }, [warehouses]);

@@ -19,6 +19,7 @@ export const Warehouses = () => {
       code: '',
       address: '',
       description: '',
+      driver: 0,
     }),
     []
   );
@@ -63,7 +64,7 @@ export const Warehouses = () => {
               showPrintOption
               amount={warehouses.length}
               columns={columns}
-              data={warehouses}
+              data={warehouses.filter((el) => el.driver === 0)}
             />
           </Box>
           <Drawer

@@ -35,7 +35,7 @@ export const Stocks = () => {
   useEffect(() => {
     if (!warehouses) return;
 
-    setWare(warehouses);
+    setWare(warehouses.filter((el) => el.driver === 0));
   }, [warehouses]);
 
   useEffect(() => {

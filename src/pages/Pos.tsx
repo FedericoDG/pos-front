@@ -62,7 +62,7 @@ export const Pos = () => {
   };
 
   useEffect(() => {
-    const handleUserKeyPress = (e: KeyboardEvent) => {
+    const handleUserKeyPress = (e: KeyboardEvent): void => {
       if (e.key === 'F9') {
         return onOpen();
       }

@@ -82,6 +82,23 @@ export const useColumns = () => {
         accessorFn: (x) => x.user?.lastname,
       },
       {
+        id: 'rol',
+        header: 'Rol',
+        cell: ({ row }: CellContext<CashRegister, unknown>) =>
+          row.original.user?.role?.name === 'SUPERADMIN' ? (
+            <p>Súper Admin</p>
+          ) : row.original.user?.role?.name === 'ADMIN' ? (
+            <p>ADMIN</p>
+          ) : row.original.user?.role?.name === 'SELLER' ? (
+            <p>Vendedor</p>
+          ) : row.original.user?.role?.name === 'DRIVER' ? (
+            <p>Chofer</p>
+          ) : (
+            <p>Usuario</p>
+          ),
+        accessorFn: (x) => x.user?.role?.name,
+      },
+      {
         id: 'acciones',
         header: 'Acciones',
         cell: ({ row }: CellContext<CashRegister, unknown>) => (

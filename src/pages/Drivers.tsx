@@ -2,36 +2,42 @@ import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { useMemo, useState, useEffect } from 'react';
 
-import { User } from '../interfaces';
-import { ConfirmationModal, Drawer } from '../componets/users';
+import { ConfirmationModal, Drawer } from '../componets/drivers';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
-import { useColumns } from '../componets/users/hooks';
-import { useGetUsers, useGetRoles } from '../hooks';
+import { useColumns } from '../componets/drivers/hooks';
+import { useGetWarehouses } from '../hooks';
+import { Warehouse } from '../interfaces';
 
-export const Users = () => {
+export const Drivers = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure();
 
-  const resetValues: User = useMemo(
+  const resetValues: Warehouse = useMemo(
     () => ({
-      name: '',
-      lastname: '',
-      email: '',
+      code: '',
+      address: '',
+      description: '',
+      driver: 1,
+      //
+      user: {
+        roleId: 4,
+        lastname: '',
+        name: '',
+        email: '',
+      },
       password: '',
       password2: '',
-      roleId: 3,
     }),
     []
   );
 
   const [initialValues, setinitialValues] = useState(resetValues);
 
-  const { data: users, isFetching: isFetchingUsers } = useGetUsers();
-  const { data: roles, isFetching: isFetchingRoles } = useGetRoles();
+  const { data: warehouses, isFetching: isFetchingWarehouses } = useGetWarehouses();
 
-  const isIndeterminate = isFetchingUsers || isFetchingRoles;
+  const isIndeterminate = isFetchingWarehouses;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
@@ -50,31 +56,30 @@ export const Users = () => {
   }, [onOpen]);
 
   return (
-    <DashBoard isIndeterminate={isIndeterminate} title="Usuarios">
+    <DashBoard isIndeterminate={isIndeterminate} title="Choferes">
       <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
-        CREAR USUARIO
+        CREAR CHOFER
       </Button>
 
-      {!users || !roles ? (
+      {!warehouses ? (
         <Loading />
       ) : (
         <>
-          <Box w="full">
+          <Box maxW="full" w="full">
             <CustomTable
               showColumsSelector
               showGlobalFilter
               showNavigation
               showPrintOption
-              amount={users.length}
+              amount={warehouses.length}
               columns={columns}
-              data={users.filter((el) => el.role?.id !== 4)}
+              data={warehouses.filter((el) => el.driver === 1)}
             />
           </Box>
           <Drawer
             initialValues={initialValues}
             isOpen={isOpen}
             resetValues={resetValues}
-            roles={roles.filter((user) => user.name !== 'CLIENT' && user.name !== 'DRIVER')}
             setinitialValues={setinitialValues}
             onClose={onClose}
           />

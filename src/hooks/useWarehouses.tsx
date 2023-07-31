@@ -4,11 +4,22 @@ import { toast } from 'react-toastify';
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
 import { Warehouse, WarehouseResponse, WarehousesResponse } from '../interfaces';
 
+interface Driver {
+  id?: number;
+  code: string;
+  driver: number;
+  description: string;
+  name: string | undefined;
+  lastname: string | undefined;
+  email: string | undefined;
+  password: string | undefined;
+}
+
 const getWarehouses = () => getRequest<WarehousesResponse>('/warehouses');
 const getWarehousesWOStock = () => getRequest<WarehousesResponse>('/warehouses?nostock=true');
 const getWarehouse = (id: number | null) => getRequest<WarehouseResponse>(`/warehouses/${id}`);
-const createWarehouse = (warehouse: Warehouse) => postRequest('/warehouses/', warehouse);
-const updateWarehouse = (warehouse: Warehouse) =>
+const createWarehouse = (warehouse: Warehouse | Driver) => postRequest('/warehouses/', warehouse);
+const updateWarehouse = (warehouse: Warehouse | Driver) =>
   putRequest(`/warehouses/${warehouse?.id}`, warehouse);
 const deleteWarehouse = (id: number) => deleteRequest(`/warehouses/${id}`);
 
