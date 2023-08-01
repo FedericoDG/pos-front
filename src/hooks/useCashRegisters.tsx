@@ -16,6 +16,8 @@ interface Close {
 const getCashRegisters = () => getRequest<CashRegistersResponse>('/cashregisters');
 const getCashRegister = (id: number) => getRequest<CashRegisterResponse>(`/cashregisters/${id}`);
 const getCashRegisterStatus = () => getRequest<CashRegisterResponse>(`/cashregisters/status`);
+const getCashRegisterStatusByUserId = (id: number) =>
+  getRequest<CashRegisterResponse>(`/cashregisters/statusByUserId/${id}`);
 const openCashRegister = (open: Open) => postRequest('/cashregisters/', open);
 const closeCashRegister = (close: Close) => putRequest('/cashregisters/', close);
 
@@ -39,6 +41,15 @@ export const useCashRegister = (id: number) =>
 
 export const useCashRegisterStatus = () =>
   useQuery(['cashRegisters'], () => getCashRegisterStatus(), {
+    enabled: true,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body.cashRegister,
+  });
+
+export const useCashRegisterStatusByUserId = (id: number) =>
+  useQuery(['cashRegisters', id], () => getCashRegisterStatusByUserId(id), {
     enabled: true,
     retry: 1,
     cacheTime: 1,

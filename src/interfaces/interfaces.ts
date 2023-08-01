@@ -123,7 +123,7 @@ export interface Stock {
   prevdate: string;
   createdAt: string;
   updatedAt: string;
-  products: Product[];
+  products: Product; // OJO Products[]
   warehouse: Warehouse;
 }
 
