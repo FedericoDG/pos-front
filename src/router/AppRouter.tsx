@@ -6,6 +6,7 @@ import {
   CashRegisters,
   Categories,
   Clients,
+  CloseCashRegister,
   DischargeDetails,
   Discharges,
   DriverDetails,
@@ -80,6 +81,7 @@ export const AppRouter = () => (
         <Route element={<CashRegisters />} path="/panel/caja" />
         <Route element={<CashRegisterStatus />} path="/panel/caja/estado" />
         <Route element={<CashRegisterDetails />} path="/panel/caja/detalles/:id" />
+        <Route element={<CloseCashRegister />} path="/panel/caja/detalles/:id/cerrar" />
         {/* USERS */}
         <Route element={<Users />} path="/panel/usuarios" />
         <Route element={<UserProfile />} path="/panel/usuarios/perfil" />

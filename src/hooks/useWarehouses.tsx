@@ -18,6 +18,8 @@ interface Driver {
 const getWarehouses = () => getRequest<WarehousesResponse>('/warehouses');
 const getWarehousesWOStock = () => getRequest<WarehousesResponse>('/warehouses?nostock=true');
 const getWarehouse = (id: number | null) => getRequest<WarehouseResponse>(`/warehouses/${id}`);
+const getWarehouseByUserId = (id: number | null) =>
+  getRequest<WarehouseResponse>(`/warehouses/user/${id}`);
 const createWarehouse = (warehouse: Warehouse | Driver) => postRequest('/warehouses/', warehouse);
 const updateWarehouse = (warehouse: Warehouse | Driver) =>
   putRequest(`/warehouses/${warehouse?.id}`, warehouse);
@@ -43,6 +45,15 @@ export const useGetWarehousesWOStock = () =>
 
 export const useGetWarehouse = (id: number | null) =>
   useQuery(['warehouses', id], () => getWarehouse(id), {
+    enabled: !!id,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body.warehouse,
+  });
+
+export const useGetWarehouseByUserId = (id: number | null) =>
+  useQuery(['warehouses', id], () => getWarehouseByUserId(id), {
     enabled: !!id,
     retry: 1,
     cacheTime: 1,

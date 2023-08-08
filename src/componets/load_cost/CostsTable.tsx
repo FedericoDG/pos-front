@@ -78,6 +78,7 @@ export const CostTable = () => {
                     defaultValue={activeProduct?.cost}
                     id="cost"
                     name="cost"
+                    tabIndex={1}
                     type="number"
                     onChange={(e) =>
                       setActiveProduct((current) => ({ ...current, cost: Number(e.target.value) }))
@@ -90,8 +91,10 @@ export const CostTable = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button onClick={handleClose}>Cancelar</Button>
-            <Button colorScheme="brand" ml={3} onClick={handleAdd}>
+            <Button tabIndex={3} onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button colorScheme="brand" ml={3} tabIndex={2} onClick={handleAdd}>
               Agregar
             </Button>
           </ModalFooter>

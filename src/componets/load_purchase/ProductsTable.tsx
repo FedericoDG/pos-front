@@ -81,6 +81,7 @@ export const ProductsTable = () => {
                     autoFocus
                     id="quantity"
                     name="quantity"
+                    tabIndex={1}
                     type="number"
                     onChange={(e) =>
                       setActiveProduct((current) => ({
@@ -100,6 +101,7 @@ export const ProductsTable = () => {
                     defaultValue={activeProduct.price}
                     id="cost"
                     name="cost"
+                    tabIndex={2}
                     type="number"
                     onChange={(e) =>
                       setActiveProduct((current) => ({
@@ -121,11 +123,14 @@ export const ProductsTable = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button onClick={handleClose}>Cancelar</Button>
+            <Button tabIndex={4} onClick={handleClose}>
+              Cancelar
+            </Button>
             <Button
               colorScheme="brand"
               isDisabled={!activeProduct.quantity || activeProduct.price < 0}
               ml={3}
+              tabIndex={3}
               onClick={handleAdd}
             >
               Agregar

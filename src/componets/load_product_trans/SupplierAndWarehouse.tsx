@@ -1,5 +1,14 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { Box, Stack, Alert, AlertIcon, FormLabel, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Stack,
+  Alert,
+  AlertIcon,
+  FormLabel,
+  Button,
+  FormControl,
+  Switch,
+} from '@chakra-ui/react';
 import { GroupBase, Select, SelectInstance } from 'chakra-react-select';
 import { useEffect, useRef, useState } from 'react';
 
@@ -16,6 +25,8 @@ export const SupplierAndWarehouse = () => {
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
   const [mappedWarehouses2, setMappedWarehouses2] = useState<SelectedWarehouse[]>([]);
 
+  const [enabledFilter, setEnabledFilter] = useState<boolean>(false);
+
   useEffect(() => {
     if (!warehouses) return;
 
@@ -29,12 +40,20 @@ export const SupplierAndWarehouse = () => {
   useEffect(() => {
     if (!warehouses || !mappedWarehouses) return;
 
-    const mappedWarehouses2 = warehouses
-      .map((el) => ({ ...el, value: el.id, label: el.code }))
-      .filter((el) => el.id !== warehouse?.id);
+    if (enabledFilter) {
+      const mappedWarehouses2 = warehouses
+        .map((el) => ({ ...el, value: el.id, label: el.code }))
+        .filter((el) => el.id !== warehouse?.id && el.driver === 1);
 
-    setMappedWarehouses2(mappedWarehouses2);
-  }, [mappedWarehouses, warehouse?.id, warehouses]);
+      setMappedWarehouses2(mappedWarehouses2);
+    } else {
+      const mappedWarehouses2 = warehouses
+        .map((el) => ({ ...el, value: el.id, label: el.code }))
+        .filter((el) => el.id !== warehouse?.id && el.driver !== 1);
+
+      setMappedWarehouses2(mappedWarehouses2);
+    }
+  }, [enabledFilter, mappedWarehouses, warehouse?.id, warehouses]);
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -74,9 +93,22 @@ export const SupplierAndWarehouse = () => {
       <Box w="full">
         <Alert status="info">
           <AlertIcon />
-          Seleccione los Depósitos de Origen y Destino.
+          {enabledFilter
+            ? 'Seleccione el Depósito de Origen y el Chofer de Destino.'
+            : 'Seleccione los Depósitos de Origen y Destino.'}
         </Alert>
       </Box>
+      <FormControl alignItems="center" display="flex" my="2">
+        <Switch
+          colorScheme="brand"
+          defaultChecked={enabledFilter}
+          id="drivers"
+          onChange={(e) => setEnabledFilter(e.target.checked)}
+        />
+        <FormLabel htmlFor="drivers" mb="0" ml="2">
+          Choferes
+        </FormLabel>
+      </FormControl>
       <Stack direction="row">
         <Box w="full">
           <FormLabel htmlFor="warehouse">Depósito de Origen:</FormLabel>
@@ -96,7 +128,9 @@ export const SupplierAndWarehouse = () => {
           />
         </Box>
         <Box w="full">
-          <FormLabel htmlFor="warehouse">Depósito de Destino:</FormLabel>
+          <FormLabel htmlFor="warehouse">
+            {enabledFilter ? 'Chofer de Destino' : 'Depósito de Destino'}:
+          </FormLabel>
           <Select
             ref={wareRef}
             isClearable
@@ -105,7 +139,7 @@ export const SupplierAndWarehouse = () => {
             isDisabled={!warehouse?.id}
             name="warehouse"
             options={mappedWarehouses2}
-            placeholder="Seleccionar Depósito"
+            placeholder={enabledFilter ? 'Seleccionar Chofer' : 'Seleccionar Depósito'}
             selectedOptionColorScheme="brand"
             tabIndex={2}
             onChange={(e) => setWarehouse2(e)}

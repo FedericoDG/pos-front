@@ -95,7 +95,7 @@ export const SupplierAndWarehouse = () => {
           Seleccione la Lista de Precio, el Depósito y el Cliente.
         </Alert>
       </Box>
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
         <Box w="49%">
           <FormLabel htmlFor="warehouse">Lista de Precio:</FormLabel>
           <Select
@@ -135,8 +135,6 @@ export const SupplierAndWarehouse = () => {
             />
           </Box>
         )}
-      </Stack>
-      <Stack w="full">
         <Box w="49%">
           <FormLabel htmlFor="warehouse">Cliente:</FormLabel>
           <Select

@@ -107,6 +107,7 @@ export const DischargesTable = () => {
                     autoFocus
                     id="quantity"
                     name="quantity"
+                    tabIndex={1}
                     type="number"
                     onChange={(e) =>
                       setActiveProduct((current) => ({
@@ -126,6 +127,7 @@ export const DischargesTable = () => {
                     defaultValue={activeProduct?.cost}
                     id="cost"
                     name="cost"
+                    tabIndex={2}
                     type="number"
                     onChange={(e) =>
                       setActiveProduct((current) => ({ ...current, cost: Number(e.target.value) }))
@@ -139,6 +141,7 @@ export const DischargesTable = () => {
                   id="categoryId"
                   minW="224px"
                   name="categoryId"
+                  tabIndex={3}
                   value={reasons[0].id}
                   onChange={(e) =>
                     setActiveProduct((current) => ({
@@ -158,8 +161,16 @@ export const DischargesTable = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button onClick={handleClose}>Cancelar</Button>
-            <Button colorScheme="brand" isDisabled={!quantity || !cost} ml={3} onClick={handleAdd}>
+            <Button tabIndex={5} onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button
+              colorScheme="brand"
+              isDisabled={!quantity || !cost}
+              ml={3}
+              tabIndex={4}
+              onClick={handleAdd}
+            >
               Agregar
             </Button>
           </ModalFooter>

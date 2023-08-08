@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
   InputGroup,
+  InputLeftAddon,
   InputRightAddon,
   Modal,
   ModalBody,
@@ -13,6 +14,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select as ChakraSelect,
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -25,12 +27,12 @@ import { useGetReasons, useGetStock, useGetWarehouse } from '../../hooks';
 
 import { useColumns } from './hooks/useColumns';
 
-import { CartItem, useProductTransContext } from '.';
+import { CartItem, useDischargesContext } from '.';
 
 export const DischargesTable = () => {
   const [ware, setWare] = useState<Warehouse[]>([]);
   const [warehouseId, setWarehouseId] = useState<number | null>(null);
-  const { addItem, warehouse } = useProductTransContext();
+  const { addItem, warehouse } = useDischargesContext();
   const { tableInput } = useMyContext();
 
   const { data: stocks } = useGetStock(warehouseId);
@@ -53,12 +55,14 @@ export const DischargesTable = () => {
 
   const [activeProduct, setActiveProduct] = useState({} as CartItem);
   const [quantity, setQuantity] = useState<number | null>(null);
+  const [cost, setCost] = useState<number | null>(null);
 
   const { data: reasons } = useGetReasons();
 
   useEffect(() => {
     if (!activeProduct) return;
 
+    setCost(activeProduct.cost);
     setQuantity(activeProduct.quantity);
   }, [activeProduct]);
 
@@ -82,9 +86,9 @@ export const DischargesTable = () => {
       <CustomTable
         showGlobalFilter
         showNavigation
-        amount={stocks.length}
+        amount={stocks.filter((el) => el.stock > 0).length}
         columns={columns}
-        data={stocks}
+        data={stocks.filter((el) => el.stock > 0)}
         flag="products"
       />
 
@@ -115,18 +119,56 @@ export const DischargesTable = () => {
                   <InputRightAddon children={activeProduct?.products?.unit?.code} />
                 </InputGroup>
               </Box>
+              <Box>
+                <FormLabel htmlFor="cost">Precio de costo:</FormLabel>
+                <InputGroup>
+                  <InputLeftAddon children="$" />
+                  <Input
+                    defaultValue={activeProduct?.cost}
+                    id="cost"
+                    name="cost"
+                    tabIndex={2}
+                    type="number"
+                    onChange={(e) =>
+                      setActiveProduct((current) => ({ ...current, cost: Number(e.target.value) }))
+                    }
+                  />
+                </InputGroup>
+              </Box>
+              <Box>
+                <FormLabel htmlFor="quantity">Razón de la pérdida:</FormLabel>
+                <ChakraSelect
+                  id="categoryId"
+                  minW="224px"
+                  name="categoryId"
+                  tabIndex={3}
+                  value={reasons[0].id}
+                  onChange={(e) =>
+                    setActiveProduct((current) => ({
+                      ...current,
+                      reasonId: Number(e.target.value),
+                    }))
+                  }
+                >
+                  {reasons.map((reason) => (
+                    <option key={reason.id} value={reason.id}>
+                      {reason.reason}
+                    </option>
+                  ))}
+                </ChakraSelect>
+              </Box>
             </Stack>
           </ModalBody>
 
           <ModalFooter>
-            <Button tabIndex={3} onClick={handleClose}>
+            <Button tabIndex={5} onClick={handleClose}>
               Cancelar
             </Button>
             <Button
               colorScheme="brand"
-              isDisabled={!quantity}
+              isDisabled={!quantity || !cost}
               ml={3}
-              tabIndex={2}
+              tabIndex={4}
               onClick={handleAdd}
             >
               Agregar

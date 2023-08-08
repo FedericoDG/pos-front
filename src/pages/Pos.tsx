@@ -132,6 +132,7 @@ export const Pos = () => {
                           autoFocus
                           id="initialBalance"
                           name="initialBalance"
+                          tabIndex={1}
                           type="number"
                           value={initialBalance}
                           onChange={(e) => setInitialBalance(Number(e.target.value))}
@@ -143,11 +144,14 @@ export const Pos = () => {
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button onClick={onClose}>Cancelar</Button>
+                  <Button tabIndex={3} onClick={onClose}>
+                    Cancelar
+                  </Button>
                   <Button
                     colorScheme="brand"
                     isDisabled={!initialBalance}
                     ml={3}
+                    tabIndex={2}
                     onClick={openCashRegister}
                   >
                     Agregar

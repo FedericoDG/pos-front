@@ -27,8 +27,11 @@ import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/cash_register_status/hooks';
 import { useCashRegisterStatus, useCloseCashRegister, useOpenCashRegister } from '../hooks';
+import { useMyContext } from '../context';
 
 export const CashRegisterStatus = () => {
+  const { user } = useMyContext();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [initialBalance, setInitialBalance] = useState(0);
@@ -114,16 +117,18 @@ export const CashRegisterStatus = () => {
             </>
           ) : (
             <>
-              <Button
-                colorScheme="brand"
-                leftIcon={<AiOutlineClose />}
-                mb={4}
-                ml="auto"
-                size="lg"
-                onClick={closeCashRegister}
-              >
-                CERRAR CAJA
-              </Button>
+              {user.role?.name !== 'DRIVER' && (
+                <Button
+                  colorScheme="brand"
+                  leftIcon={<AiOutlineClose />}
+                  mb={4}
+                  ml="auto"
+                  size="lg"
+                  onClick={closeCashRegister}
+                >
+                  CERRAR CAJA
+                </Button>
+              )}
               <Box w="full">
                 <CustomTable
                   showColumsSelector
@@ -151,6 +156,7 @@ export const CashRegisterStatus = () => {
                         autoFocus
                         id="initialBalance"
                         name="initialBalance"
+                        tabIndex={1}
                         type="number"
                         value={initialBalance}
                         onChange={(e) => setInitialBalance(Number(e.target.value))}
@@ -162,11 +168,14 @@ export const CashRegisterStatus = () => {
               </ModalBody>
 
               <ModalFooter>
-                <Button onClick={onClose}>Cancelar</Button>
+                <Button tabIndex={3} onClick={onClose}>
+                  Cancelar
+                </Button>
                 <Button
                   colorScheme="brand"
                   isDisabled={!initialBalance}
                   ml={3}
+                  tabIndex={2}
                   onClick={openCashRegister}
                 >
                   Agregar

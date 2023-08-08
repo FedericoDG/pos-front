@@ -13,6 +13,21 @@ interface Close {
   closingDate: Date;
 }
 
+interface cartItem {
+  productId: number;
+  quantity: number;
+  cost: number;
+  reasonId: number;
+  info: string;
+}
+
+interface Close2 extends Close {
+  userId: number;
+  warehouseId: number;
+  cart: cartItem[];
+  warehouseDestinationId: number;
+}
+
 const getCashRegisters = () => getRequest<CashRegistersResponse>('/cashregisters');
 const getCashRegister = (id: number) => getRequest<CashRegisterResponse>(`/cashregisters/${id}`);
 const getCashRegisterStatus = () => getRequest<CashRegisterResponse>(`/cashregisters/status`);
@@ -20,6 +35,8 @@ const getCashRegisterStatusByUserId = (id: number) =>
   getRequest<CashRegisterResponse>(`/cashregisters/statusByUserId/${id}`);
 const openCashRegister = (open: Open) => postRequest('/cashregisters/', open);
 const closeCashRegister = (close: Close) => putRequest('/cashregisters/', close);
+const closeCashRegisterById = (close: Close2) =>
+  putRequest(`/cashregisters/${close.userId}`, close);
 
 export const useChasRegisters = () =>
   useQuery(['cashRegisters'], () => getCashRegisters(), {
@@ -70,6 +87,17 @@ export const useOpenCashRegister = (onSuccess: () => void) => {
 
 export const useCloseCashRegister = (onSuccess: () => void) => {
   return useMutation(closeCashRegister, {
+    onSuccess: onSuccess,
+    onError: (error) => {
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
+    },
+  });
+};
+
+export const useCloseCashRegisterById = (onSuccess: () => void) => {
+  return useMutation(closeCashRegisterById, {
     onSuccess: onSuccess,
     onError: (error) => {
       if (isError(error)) {

@@ -118,6 +118,15 @@ export const useColumns = () => {
                 >
                   Ver Detalles
                 </MenuItem>
+                {row.original.closingDate === null &&
+                  row.original.user?.role?.name === 'DRIVER' && (
+                    <MenuItem
+                      icon={<TbListDetails />}
+                      onClick={() => navigate(`/panel/caja/detalles/${row.original.userId}/cerrar`)}
+                    >
+                      Cerrar Caja
+                    </MenuItem>
+                  )}
               </MenuList>
             </Menu>
           </Box>

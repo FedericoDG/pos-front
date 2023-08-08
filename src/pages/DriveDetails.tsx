@@ -18,7 +18,7 @@ import { useRef } from 'react';
 import { nanoid } from 'nanoid';
 
 import { DashBoard, Loading } from '../componets/common';
-import { useCashRegisterStatusByUserId, useGetWarehouse } from '../hooks';
+import { useGetWarehouse } from '../hooks';
 
 export const DriverDetails = () => {
   const { id } = useParams();
@@ -26,11 +26,8 @@ export const DriverDetails = () => {
   const printRef = useRef<any | null>(null);
 
   const { data: driver, isFetching: isFetchingDriver } = useGetWarehouse(Number(id));
-  const { data: cashRegister, isFetching: isFetchingCashRegister } = useCashRegisterStatusByUserId(
-    driver?.user?.id!
-  );
 
-  const isIndeterminate = isFetchingDriver || isFetchingCashRegister;
+  const isIndeterminate = isFetchingDriver;
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -96,7 +93,7 @@ export const DriverDetails = () => {
             </Stack>
 
             <Stack direction="row">
-              <TableContainer w="49%">
+              <TableContainer w="50%">
                 <Table size="sm">
                   <Text as={'caption'} textAlign="left">
                     Stock
@@ -130,7 +127,7 @@ export const DriverDetails = () => {
                 </Table>
               </TableContainer>
 
-              <TableContainer w="49%">
+              <TableContainer w="50%">
                 <Table size="sm">
                   <Text as={'caption'} color="transparent" textAlign="left">
                     {'.'}
