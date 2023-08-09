@@ -1,9 +1,9 @@
 import { Box, Button } from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
-import { Dispatch, useMemo } from 'react';
+import { Dispatch, useMemo, useCallback } from 'react';
 
 import { Product } from '../../../interfaces';
-import { CartItem } from '..';
+import { CartItem, usePosContext } from '..';
 import { formatCurrency } from '../../../utils';
 
 interface Props {
@@ -12,6 +12,35 @@ interface Props {
 }
 
 export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
+  const { cart } = usePosContext();
+
+  const isDisabled = useCallback(
+    (product: Product) => {
+      const productExist = cart.find((el: Product) => el.id === product.id);
+
+      if (productExist?.quantity === product.stock) {
+        return true;
+      }
+
+      return false;
+    },
+    [cart]
+  );
+
+  const stock = useCallback(
+    (product: Product) => {
+      const productExist = cart.find((el: Product) => el.id === product.id);
+
+      if (productExist) {
+        //return Math.max(product?.stock! - (productExist.quantity! || 0), 0);
+        return product?.stock! - (productExist.quantity! || 0);
+      }
+
+      return product.stock;
+    },
+    [cart]
+  );
+
   const columns = useMemo<ColumnDef<Product>[]>(
     () => [
       {
@@ -31,10 +60,16 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
         header: 'Stock',
         cell: ({ row }: CellContext<Product, unknown>) => (
           <p>
-            {row.original.stock} {row.original.unit?.code}
+            {stock(row.original)} {row.original.unit?.code}
           </p>
         ),
-        accessorKey: 'stock',
+        accessorFn: (stock) => stock,
+      },
+      {
+        id: 'permitir_stock_neg',
+        header: 'Perm. Stock Neg.',
+        cell: ({ row }: CellContext<Product, unknown>) => <p>{row.original.allownegativestock}</p>,
+        accessorFn: (stock) => stock,
       },
       {
         id: 'precio',
@@ -51,7 +86,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
           <Box fontFamily="IBM Plex Sans">
             <Button
               colorScheme="brand"
-              isDisabled={row.original.price! <= 0}
+              isDisabled={row.original.price! <= 0 || isDisabled(row.original!)}
               size="sm"
               type="submit"
               variant="ghost"
@@ -69,7 +104,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
         },
       },
     ],
-    [onOpen, setActiveProduct]
+    [isDisabled, onOpen, setActiveProduct]
   );
 
   return { columns };

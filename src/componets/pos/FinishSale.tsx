@@ -192,7 +192,7 @@ export const FinishSale = () => {
     setActiveStep(1);
   };
 
-  const { mutate } = useCreateCashMovement(onSuccess);
+  const { mutate, isLoading } = useCreateCashMovement(onSuccess);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -460,7 +460,13 @@ export const FinishSale = () => {
             <Button mr={3} type="reset" variant="outline" w="full" onClick={onReset}>
               CANCELAR
             </Button>
-            <Button colorScheme="brand" type="submit" w="full">
+            <Button
+              colorScheme="brand"
+              isLoading={isLoading}
+              loadingText="CARGANDO VENTA"
+              type="submit"
+              w="full"
+            >
               CARGAR VENTA
             </Button>
           </Stack>

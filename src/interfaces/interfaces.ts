@@ -94,7 +94,7 @@ export interface PriceList {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
-  products: Product; // OJO []
+  products: Product[];
   createdAt: string;
   totalStock: number;
   totalStockPosta: number;

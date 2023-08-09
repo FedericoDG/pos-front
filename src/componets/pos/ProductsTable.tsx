@@ -1,19 +1,19 @@
 /* eslint-disable react/no-children-prop */
 import {
   Box,
-  Button,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightAddon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
+  // Button,
+  // FormLabel,
+  // Input,
+  // InputGroup,
+  // InputRightAddon,
+  // Modal,
+  // ModalBody,
+  // ModalCloseButton,
+  // ModalContent,
+  // ModalFooter,
+  // ModalHeader,
+  // ModalOverlay,
+  // Stack,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
@@ -24,7 +24,7 @@ import { useGetPriceListByWarehouseId } from '../../hooks';
 
 import { useProductColumns } from './hooks/useProductColumns';
 
-import { CartItem, usePosContext } from '.';
+import { CartItem, Modal, usePosContext } from '.';
 
 export const ProductsTable = () => {
   const { addItem, priceList, warehouse } = usePosContext();
@@ -45,10 +45,10 @@ export const ProductsTable = () => {
     tableInput.current.select();
   };
 
-  const handleAdd = () => {
+  /* const handleAdd = () => {
     addItem(activeProduct!);
     handleClose();
-  };
+  }; */
 
   if (!products) return null;
 
@@ -63,7 +63,15 @@ export const ProductsTable = () => {
         flag="products"
       />
 
-      <Modal finalFocusRef={tableInput} isOpen={isOpen} onClose={handleClose}>
+      <Modal
+        activeProduct={activeProduct}
+        cancelRef={cancelRef}
+        handleClose={handleClose}
+        isOpen={isOpen}
+        setActiveProduct={setActiveProduct}
+        tableInput={tableInput}
+      />
+      {/*  <Modal finalFocusRef={tableInput} isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay backdropFilter="blur(5px) hue-rotate(90deg)" bg="blackAlpha.300" />
         <ModalContent>
           <ModalHeader>{activeProduct?.name}</ModalHeader>
@@ -108,7 +116,7 @@ export const ProductsTable = () => {
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </Box>
   );
 };
