@@ -16,6 +16,8 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
 
   const isDisabled = useCallback(
     (product: Product) => {
+      if (product.allownegativestock === 'ENABLED') return false;
+
       const productExist = cart.find((el: Product) => el.id === product.id);
 
       if (productExist?.quantity === product.stock) {
