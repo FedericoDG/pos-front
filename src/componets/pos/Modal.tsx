@@ -69,7 +69,9 @@ export const Modal = ({
       quantity: z.preprocess(
         (val) => Number(val),
         z
-          .number()
+          .number({
+            invalid_type_error: 'Sólo se permiten números'
+          })
           .min(1, 'Minimo: 1')
           .max(
             activeProduct.allownegativestock === 'DISABLED'
@@ -111,7 +113,6 @@ export const Modal = ({
                     id="quantity"
                     name="quantity"
                     tabIndex={1}
-                    type="number"
                     value={values.quantity}
                     onChange={(e) => {
                       handleChange(e);

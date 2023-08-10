@@ -78,13 +78,21 @@ export const Modal = ({
       quantity: z.preprocess(
         (val) => Number(val),
         z
-          .number()
+          .number({
+            invalid_type_error: 'Sólo se permiten números'
+          })
           .min(1, 'Minimo: 1')
           .max(
             activeProduct.stock! - (cart.find((el) => el.id === activeProduct.id)?.quantity! || 0),
             `Máximo: ${activeProduct.stock! - (cart.find((el) => el.id === activeProduct.id)?.quantity! || 0)
             }`
           )
+      ),
+      cost: z.preprocess(
+        (val) => Number(val),
+        z.number({
+          invalid_type_error: 'Sólo se permiten números'
+        }).nonnegative('El costo no puede ser menor a 0')
       ),
     });
 
@@ -117,7 +125,6 @@ export const Modal = ({
                     id="quantity"
                     name="quantity"
                     tabIndex={1}
-                    type="number"
                     value={values.quantity}
                     onChange={handleChange}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}
@@ -136,12 +143,15 @@ export const Modal = ({
                     id="cost"
                     name="cost"
                     tabIndex={2}
-                    type="number"
+                    //type="number"
                     value={values.cost}
                     onChange={handleChange}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                   />
                 </InputGroup>
+                {errors.cost && touched.cost && (
+                  <ErrorMessage>{errors.cost}</ErrorMessage>
+                )}
               </Box>
               <Box>
                 <FormLabel htmlFor="reasonId">Razón de la pérdida:</FormLabel>

@@ -2,31 +2,29 @@
 /* eslint-disable react/no-children-prop */
 import {
   Box,
-  Modal as ChakraModal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Select as ChakraSelect,
-  Stack,
-  FormLabel,
-  InputGroup,
-  Input,
-  InputRightAddon,
-  InputLeftAddon,
-  ModalFooter,
   Button,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightAddon,
+  Modal as ChakraModal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
 } from '@chakra-ui/react';
-import { MutableRefObject, Dispatch, SetStateAction } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { z } from 'zod';
 
-import { Reason } from '../../interfaces';
 import { ErrorMessage } from '../common';
 
-import { CartItem, useDischargesContext } from '.';
+import { CartItem } from '.';
+import { useProductTransContext } from '.';
 
 interface Props {
   activeProduct: CartItem;
@@ -35,28 +33,24 @@ interface Props {
   isOpen: boolean;
   handleClose: () => void;
   setActiveProduct: Dispatch<SetStateAction<CartItem>>;
-  reasons: Reason[];
 }
 
 interface Values {
   quantity: number;
-  cost: number;
-  reasonId: number;
 }
 
 export const Modal = ({
   activeProduct,
-  cancelRef,
-  handleClose,
-  isOpen,
-  reasons,
-  setActiveProduct,
   tableInput,
+  cancelRef,
+  isOpen,
+  handleClose,
+  setActiveProduct,
 }: Props) => {
-  const { addItem, cart } = useDischargesContext();
+  const { addItem, cart } = useProductTransContext();
 
   const onSubmit = (values: Values, actions: FormikHelpers<Values>) => {
-    addItem({ ...activeProduct, quantity: Number(values.quantity), cost: Number(values.cost) });
+    addItem({ ...activeProduct!, quantity: values.quantity });
     setActiveProduct({} as CartItem);
     actions.resetForm();
     handleClose();
@@ -69,8 +63,6 @@ export const Modal = ({
 
   const initialValues = {
     quantity: 0,
-    cost: activeProduct.cost || 0,
-    reasonId: reasons[0].id,
   };
 
   const schema = () =>
@@ -87,12 +79,6 @@ export const Modal = ({
             `Máximo: ${activeProduct.stock! - (cart.find((el) => el.id === activeProduct.id)?.quantity! || 0)
             }`
           )
-      ),
-      cost: z.preprocess(
-        (val) => Number(val),
-        z.number({
-          invalid_type_error: 'Sólo se permiten números'
-        }).nonnegative('El costo no puede ser menor a 0')
       ),
     });
 
@@ -126,7 +112,9 @@ export const Modal = ({
                     name="quantity"
                     tabIndex={1}
                     value={values.quantity}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                   />
                   <InputRightAddon children={activeProduct?.products?.unit?.code} />
@@ -135,48 +123,14 @@ export const Modal = ({
                   <ErrorMessage>{errors.quantity}</ErrorMessage>
                 )}
               </Box>
-              <Box>
-                <FormLabel htmlFor="cost">Precio de costo:</FormLabel>
-                <InputGroup>
-                  <InputLeftAddon children="$" />
-                  <Input
-                    id="cost"
-                    name="cost"
-                    tabIndex={2}
-                    value={values.cost}
-                    onChange={handleChange}
-                    onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                  />
-                </InputGroup>
-                {errors.cost && touched.cost && (
-                  <ErrorMessage>{errors.cost}</ErrorMessage>
-                )}
-              </Box>
-              <Box>
-                <FormLabel htmlFor="reasonId">Razón de la pérdida:</FormLabel>
-                <ChakraSelect
-                  id="reasonId"
-                  minW="224px"
-                  name="reasonId"
-                  tabIndex={3}
-                  value={values.reasonId}
-                  onChange={handleChange}
-                >
-                  {reasons.map((reason) => (
-                    <option key={reason.id} value={reason.id}>
-                      {reason.reason}
-                    </option>
-                  ))}
-                </ChakraSelect>
-              </Box>
             </Stack>
           </ModalBody>
 
           <ModalFooter>
-            <Button tabIndex={5} type="reset" onClick={onClose}>
+            <Button tabIndex={3} type="reset" onClick={onClose}>
               Cancelar
             </Button>
-            <Button colorScheme="brand" ml={3} tabIndex={4} type="submit">
+            <Button colorScheme="brand" ml={3} tabIndex={2} type="submit">
               Agregar
             </Button>
           </ModalFooter>

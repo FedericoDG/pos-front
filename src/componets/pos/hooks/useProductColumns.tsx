@@ -65,12 +65,12 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
         ),
         accessorFn: (stock) => stock,
       },
-      {
+      /*   {
         id: 'permitir_stock_neg',
         header: 'Perm. Stock Neg.',
         cell: ({ row }: CellContext<Product, unknown>) => <p>{row.original.allownegativestock}</p>,
         accessorFn: (stock) => stock,
-      },
+      }, */
       {
         id: 'precio',
         header: 'Precio',

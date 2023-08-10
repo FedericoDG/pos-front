@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button } from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
-import { Dispatch, SetStateAction, useMemo } from 'react';
+import { Dispatch, SetStateAction, useMemo, useCallback } from 'react';
 
-import { CartItem } from '..';
+import { CartItem, useProductTransContext } from '..';
 import { formatCurrency } from '../../../utils';
-import { Stock2, Warehouse } from '../../../interfaces/interfaces';
+import { Product, Stock2, Warehouse } from '../../../interfaces/interfaces';
 
 interface Props {
   onOpen: () => void;
@@ -14,6 +14,32 @@ interface Props {
 }
 
 export const useColumns = ({ onOpen, warehouses, setActiveProduct }: Props) => {
+  const { cart } = useProductTransContext();
+
+  const isDisabled = useCallback(
+    (product: Stock2) => {
+      const productExist = cart.find((el: CartItem) => el.id === product.id);
+
+      if (productExist?.quantity === product.stock) return true;
+
+      return false;
+    },
+    [cart]
+  );
+
+  const stock = useCallback(
+    (product: Product, num: number) => {
+      const productExist = cart.find((el: CartItem) => el.productId === product.id);
+
+      if (productExist) {
+        return num - (productExist.quantity! || 0);
+      }
+
+      return product.stocks![0].stock;
+    },
+    [cart]
+  );
+
   const warehousesColumns: ColumnDef<Stock2>[] = warehouses.map((el, idx) => ({
     id: el.code,
     header: el.code,
@@ -22,7 +48,8 @@ export const useColumns = ({ onOpen, warehouses, setActiveProduct }: Props) => {
         if (row.original.products.stocks[idx]) {
           return (
             <p>
-              {row.original.products.stocks[idx].stock} {row.original.products.unit?.code}
+              {stock(row.original.products, row.original.products.stocks[idx].stock)}{' '}
+              {row.original.products.unit?.code}
             </p>
           );
         } else {
@@ -79,7 +106,7 @@ export const useColumns = ({ onOpen, warehouses, setActiveProduct }: Props) => {
         <Box fontFamily="IBM Plex Sans">
           <Button
             colorScheme="brand"
-            isDisabled={row.original.stock <= 0}
+            isDisabled={row.original.stock <= 0 || isDisabled(row.original!)}
             size="sm"
             type="submit"
             variant="ghost"
@@ -107,7 +134,7 @@ export const useColumns = ({ onOpen, warehouses, setActiveProduct }: Props) => {
 
   const columns = useMemo(
     () => [...originalCols, ...warehousesColumns, ...lastCols],
-    [originalCols]
+    [originalCols, isDisabled]
   );
 
   return { columns };

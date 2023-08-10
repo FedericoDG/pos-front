@@ -1,4 +1,3 @@
-/* eslint-disable react/no-children-prop */
 import { Box, useDisclosure } from '@chakra-ui/react';
 import { useRef, useState, useEffect } from 'react';
 
