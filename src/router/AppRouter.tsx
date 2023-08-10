@@ -29,11 +29,13 @@ import {
   Suppliers,
   TransferDetails,
   Transfers,
+  TransfersDriver,
   Units,
   UserProfile,
   Users,
   Warehouses,
 } from '../pages';
+import { LoadProductTransDriver } from '../pages/LoadProductTransDriver';
 
 import { PrivateRoute, PublicRoute } from './';
 
@@ -61,6 +63,11 @@ export const AppRouter = () => (
         <Route element={<Transfers />} path="/panel/stock/transferencias" />
         <Route element={<TransferDetails />} path="/panel/stock/transferencias/detalles/:id" />
         <Route element={<LoadProductTrans />} path="/panel/stock/transferencias/crear" />
+        <Route element={<TransfersDriver />} path="/panel/stock/transferencias-choferes" />
+        <Route
+          element={<LoadProductTransDriver />}
+          path="/panel/stock/transferencias-choferes/crear"
+        />
         <Route
           element={<GeneratePriceListReport />}
           path="/panel/lista-de-precios/generar-reporte"

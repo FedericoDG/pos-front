@@ -9,7 +9,7 @@ import { Loading } from '../componets/common';
 import { useColumns } from '../componets/transfers/hooks';
 import { useGetTransfers } from '../hooks';
 
-export const Transfers = () => {
+export const TransfersDriver = () => {
   const navigate = useNavigate();
 
   const { data: transfers, isFetching: isFetchingTransfers } = useGetTransfers();
@@ -21,7 +21,7 @@ export const Transfers = () => {
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'F9') {
-        return navigate('/panel/stock/transferencias/crear');
+        return navigate('/panel/stock/transferencias-choferes/crear');
       }
     };
 
@@ -33,14 +33,14 @@ export const Transfers = () => {
   }, [navigate]);
 
   return (
-    <DashBoard isIndeterminate={isIndeterminate} title="Transferencia de stock">
+    <DashBoard isIndeterminate={isIndeterminate} title="Transferencia de stock a chofer">
       <Button
         colorScheme="brand"
         leftIcon={<HiPlus />}
         mb={4}
         ml="auto"
         size="lg"
-        onClick={() => navigate('/panel/stock/transferencias/crear')}
+        onClick={() => navigate('/panel/stock/transferencias-choferes/crear')}
       >
         TRANFERIR STOCK
       </Button>
@@ -55,9 +55,9 @@ export const Transfers = () => {
               showGlobalFilter
               showNavigation
               showPrintOption
-              amount={transfers.filter((el) => el.warehouseDestination.driver === 0).length}
+              amount={transfers.filter((el) => el.warehouseDestination.driver === 1).length}
               columns={columns}
-              data={transfers.filter((el) => el.warehouseDestination.driver === 0)}
+              data={transfers.filter((el) => el.warehouseDestination.driver === 1)}
             />
           </Box>
         </>

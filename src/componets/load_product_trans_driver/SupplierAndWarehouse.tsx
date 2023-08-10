@@ -25,7 +25,7 @@ export const SupplierAndWarehouse = () => {
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
   const [mappedWarehouses2, setMappedWarehouses2] = useState<SelectedWarehouse[]>([]);
 
-  const [enabledFilter, setEnabledFilter] = useState<boolean>(false);
+  const [enabledFilter, setEnabledFilter] = useState<boolean>(true);
 
   useEffect(() => {
     if (!warehouses) return;

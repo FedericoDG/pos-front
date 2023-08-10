@@ -181,6 +181,11 @@ export const SidebarContent = (props: Props) => {
               Transferencias
             </Box>
           </NavItem>
+          <NavItem link="/panel/stock/transferencias-choferes">
+            <Box pl="8" py="0">
+              Transferencias Choferes
+            </Box>
+          </NavItem>
           <NavItem link="/panel/stock/bajas">
             <Box pl="8" py="0">
               Bajas
