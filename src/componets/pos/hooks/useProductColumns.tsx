@@ -20,9 +20,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
 
       const productExist = cart.find((el: Product) => el.id === product.id);
 
-      if (productExist?.quantity === product.stock) {
-        return true;
-      }
+      if (productExist?.quantity === product.stock) return true;
 
       return false;
     },
@@ -106,7 +104,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
         },
       },
     ],
-    [isDisabled, onOpen, setActiveProduct]
+    [isDisabled, onOpen, setActiveProduct, stock]
   );
 
   return { columns };

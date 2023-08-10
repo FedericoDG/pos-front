@@ -1,23 +1,5 @@
 /* eslint-disable react/no-children-prop */
-import {
-  Box,
-  Button,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  InputRightAddon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select as ChakraSelect,
-  Stack,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Box, useDisclosure } from '@chakra-ui/react';
 import { useRef, useState, useEffect } from 'react';
 
 import { CustomTable } from '../table';
@@ -27,12 +9,13 @@ import { useGetReasons, useGetStock, useGetWarehouse } from '../../hooks';
 
 import { useColumns } from './hooks/useColumns';
 
+import { Modal } from '.';
 import { CartItem, useDischargesContext } from '.';
 
 export const DischargesTable = () => {
   const [ware, setWare] = useState<Warehouse[]>([]);
   const [warehouseId, setWarehouseId] = useState<number | null>(null);
-  const { addItem, warehouse } = useDischargesContext();
+  const { warehouse } = useDischargesContext();
   const { tableInput } = useMyContext();
 
   const { data: stocks } = useGetStock(warehouseId);
@@ -54,17 +37,8 @@ export const DischargesTable = () => {
   const cancelRef = useRef<HTMLInputElement | null>(null);
 
   const [activeProduct, setActiveProduct] = useState({} as CartItem);
-  const [quantity, setQuantity] = useState<number | null>(null);
-  const [cost, setCost] = useState<number | null>(null);
 
   const { data: reasons } = useGetReasons();
-
-  useEffect(() => {
-    if (!activeProduct) return;
-
-    setCost(activeProduct.cost);
-    setQuantity(activeProduct.quantity);
-  }, [activeProduct]);
 
   const { columns } = useColumns({ onOpen, warehouses: ware, setActiveProduct });
 
@@ -74,11 +48,6 @@ export const DischargesTable = () => {
     tableInput.current.select();
   };
 
-  const handleAdd = () => {
-    addItem(activeProduct);
-    handleClose();
-  };
-
   if (!stocks || !reasons) return null;
 
   return (
@@ -86,96 +55,20 @@ export const DischargesTable = () => {
       <CustomTable
         showGlobalFilter
         showNavigation
-        amount={stocks.length}
+        amount={stocks.filter((el) => el.stock > 0).length}
         columns={columns}
-        data={stocks}
+        data={stocks.filter((el) => el.stock > 0)}
         flag="products"
       />
-
-      <Modal finalFocusRef={tableInput} isOpen={isOpen} onClose={handleClose}>
-        <ModalOverlay backdropFilter="blur(5px) hue-rotate(90deg)" bg="blackAlpha.300" />
-        <ModalContent>
-          <ModalHeader>{activeProduct?.products?.name}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Stack spacing="14px">
-              <Box>
-                <FormLabel htmlFor="quantity">Cantidad:</FormLabel>
-                <InputGroup>
-                  <Input
-                    ref={cancelRef}
-                    autoFocus
-                    id="quantity"
-                    name="quantity"
-                    tabIndex={1}
-                    type="number"
-                    onChange={(e) =>
-                      setActiveProduct((current) => ({
-                        ...current,
-                        quantity: Number(e.target.value),
-                      }))
-                    }
-                  />
-                  <InputRightAddon children={activeProduct?.products?.unit?.code} />
-                </InputGroup>
-              </Box>
-              <Box>
-                <FormLabel htmlFor="cost">Precio de costo:</FormLabel>
-                <InputGroup>
-                  <InputLeftAddon children="$" />
-                  <Input
-                    defaultValue={activeProduct?.cost}
-                    id="cost"
-                    name="cost"
-                    tabIndex={2}
-                    type="number"
-                    onChange={(e) =>
-                      setActiveProduct((current) => ({ ...current, cost: Number(e.target.value) }))
-                    }
-                  />
-                </InputGroup>
-              </Box>
-              <Box>
-                <FormLabel htmlFor="quantity">Razón de la pérdida:</FormLabel>
-                <ChakraSelect
-                  id="categoryId"
-                  minW="224px"
-                  name="categoryId"
-                  tabIndex={3}
-                  value={reasons[0].id}
-                  onChange={(e) =>
-                    setActiveProduct((current) => ({
-                      ...current,
-                      reasonId: Number(e.target.value),
-                    }))
-                  }
-                >
-                  {reasons.map((reason) => (
-                    <option key={reason.id} value={reason.id}>
-                      {reason.reason}
-                    </option>
-                  ))}
-                </ChakraSelect>
-              </Box>
-            </Stack>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button tabIndex={5} onClick={handleClose}>
-              Cancelar
-            </Button>
-            <Button
-              colorScheme="brand"
-              isDisabled={!quantity || !cost}
-              ml={3}
-              tabIndex={4}
-              onClick={handleAdd}
-            >
-              Agregar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <Modal
+        activeProduct={activeProduct}
+        cancelRef={cancelRef}
+        handleClose={handleClose}
+        isOpen={isOpen}
+        reasons={reasons.map((el) => ({ ...el, id: Number(el.id) }))}
+        setActiveProduct={setActiveProduct}
+        tableInput={tableInput}
+      />
     </Box>
   );
 };

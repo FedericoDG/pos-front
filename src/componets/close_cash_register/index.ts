@@ -2,6 +2,7 @@ export * from './Basket';
 export * from './Card';
 export * from './DischargesTable';
 export * from './Finish';
+export * from './Modal';
 export * from './StepperWrapper';
 export * from './Steps';
 export * from './SupplierAndWarehouse';

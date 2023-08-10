@@ -82,9 +82,9 @@ export const DischargesTable = () => {
       <CustomTable
         showGlobalFilter
         showNavigation
-        amount={stocks.length}
+        amount={stocks.filter((el) => el.stock > 0).length}
         columns={columns}
-        data={stocks}
+        data={stocks.filter((el) => el.stock > 0)}
         flag="products"
       />
 
