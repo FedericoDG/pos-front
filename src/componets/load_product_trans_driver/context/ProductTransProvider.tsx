@@ -31,7 +31,7 @@ export const ProductTransProvider = ({ children }: Props) => {
         return updatedItems;
       }
 
-      return [...currentItems, { ...product }];
+      return [{ ...product }, ...currentItems];
     });
   };
 

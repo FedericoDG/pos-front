@@ -50,7 +50,7 @@ export const Modal = ({
   const { addItem, cart } = useProductTransContext();
 
   const onSubmit = (values: Values, actions: FormikHelpers<Values>) => {
-    addItem({ ...activeProduct!, quantity: values.quantity });
+    addItem({ ...activeProduct!, quantity: Number(values.quantity) });
     setActiveProduct({} as CartItem);
     actions.resetForm();
     handleClose();

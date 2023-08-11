@@ -41,7 +41,7 @@ export const useGetPriceListByWarehouseId = (priceListId: number, warehouseId: n
       enabled: true,
       retry: 1,
       cacheTime: 1,
-      refetchOnWindowFocus: true,
+      refetchOnWindowFocus: false,
       select: (data) => data.body.pricelist.products,
     }
   );

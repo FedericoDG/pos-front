@@ -33,7 +33,7 @@ export const DischargesProvider = ({ children }: Props) => {
         return updatedItems;
       }
 
-      return [...currentItems, { ...product }];
+      return [{ ...product }, ...currentItems];
     });
   };
 
