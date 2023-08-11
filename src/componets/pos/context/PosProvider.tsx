@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useMemo, useState } from 'react';
+import { ReactNode, useContext, useMemo, useState, useCallback } from 'react';
 import { useSteps } from '@chakra-ui/react';
 
 import { CartItem, SelectedClient, SelectedWarehouse, SelectedPriceList, posContext } from '.';
@@ -13,6 +13,24 @@ export const PosProvider = ({ children }: Props) => {
   const [warehouse, setWarehouse] = useState<SelectedWarehouse | null>({} as SelectedWarehouse);
   const [priceList, setPriceList] = useState<SelectedPriceList | null>({} as SelectedPriceList);
 
+  const updateCartWithError = useCallback(
+    (error: number[]) => {
+      const updatedCart = cart.map((item) => {
+        if (error.includes(item.id!)) {
+          return {
+            ...item,
+            error: true,
+          };
+        }
+
+        return item;
+      });
+
+      setCart(updatedCart);
+    },
+    [cart]
+  );
+
   const addItem = (product: CartItem) => {
     setCart((currentItems) => {
       const existingItem = currentItems.find((item) => item.id === product.id);
@@ -20,7 +38,11 @@ export const PosProvider = ({ children }: Props) => {
       if (existingItem) {
         const updatedItems = currentItems.map((item) => {
           if (item.id === product.id) {
-            return { ...item, quantity: item.quantity + product.quantity, price: product.price };
+            return {
+              ...item,
+              quantity: Number(item.quantity) + Number(product.quantity),
+              price: Number(product.price),
+            };
           }
 
           return item;
@@ -29,7 +51,7 @@ export const PosProvider = ({ children }: Props) => {
         return updatedItems;
       }
 
-      return [...currentItems, { ...product }];
+      return [{ ...product }, ...currentItems];
     });
   };
 
@@ -81,6 +103,7 @@ export const PosProvider = ({ children }: Props) => {
       setClient,
       priceList,
       setPriceList,
+      updateCartWithError,
     }),
     [
       activeStep,
@@ -94,6 +117,7 @@ export const PosProvider = ({ children }: Props) => {
       totalCart,
       totalCartItems,
       warehouse,
+      updateCartWithError,
     ]
   );
 
@@ -119,6 +143,7 @@ export const usePosContext = () => {
     setClient,
     priceList,
     setPriceList,
+    updateCartWithError,
   } = useContext(posContext);
 
   return {
@@ -139,5 +164,6 @@ export const usePosContext = () => {
     setClient,
     priceList,
     setPriceList,
+    updateCartWithError,
   };
 };

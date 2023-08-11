@@ -3,16 +3,24 @@ import { isError, useMutation, useQuery } from 'react-query';
 import { CashMovementResponse, CashMovementsResponse } from '../interfaces';
 import { getRequest, postRequest } from '../services';
 
+interface CartItem {
+  productId: number;
+  quantity: number;
+  price: number;
+  allow: boolean;
+}
+
+interface CheckCart {
+  cart: CartItem[];
+  warehouseId: number;
+}
+
 interface Sale {
   clientId: number;
   warehouseId: number;
   discount?: number;
   recharge?: number;
-  cart: {
-    productId: number;
-    quantity: number;
-    price: number;
-  }[];
+  cart: CartItem[];
   payments: {
     amount: number;
     paymentMethodId: number;
@@ -23,6 +31,7 @@ interface Sale {
 const getCashMovements = () => getRequest<CashMovementsResponse>('/cashmovements');
 const getCashMovement = (id: number) => getRequest<CashMovementResponse>(`/cashmovements/${id}`);
 const createCashMovement = (sale: Sale) => postRequest('/cashmovements/', sale);
+const checkCart = (data: CheckCart) => postRequest('/cashmovements/check-cart/', data);
 
 export const useGetCashMovements = () =>
   useQuery(['clients'], () => getCashMovements(), {
@@ -42,9 +51,26 @@ export const useGetCashMovement = (id: number) =>
     select: (data) => data.body.cashMovement,
   });
 
-export const useCreateCashMovement = (onSuccess: () => void) => {
+interface Body {
+  response: {
+    data: {
+      body: {
+        error: number[];
+      };
+    };
+  };
+}
+
+export const useCreateCashMovement = (onSuccess: () => void, cb: (error: number[]) => void) => {
   return useMutation(createCashMovement, {
     onSuccess: onSuccess,
+    onError: (error: Body) => cb(error.response.data.body.error),
+  });
+};
+
+export const useCheckCart = (cb: (error: number[]) => void) => {
+  return useMutation(checkCart, {
+    onSuccess: (res) => cb(res?.body?.error),
     onError: (error) => {
       if (isError(error)) {
         throw new Error(error.message);

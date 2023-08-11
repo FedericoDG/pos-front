@@ -24,7 +24,6 @@ import { useQueryClient } from 'react-query';
 import { DashBoard } from '../componets/common';
 import { PosProvider } from '../componets/pos/context';
 import {
-  Basket,
   Card,
   FinishSale,
   ProductsTable,
@@ -90,10 +89,7 @@ export const Pos = () => {
               <StepperWrapper step={2}>
                 <Stack>
                   <Card />
-                  <Stack alignItems="flex-start" direction="row">
-                    <ProductsTable />
-                    <Basket />
-                  </Stack>
+                  <ProductsTable />
                 </Stack>
               </StepperWrapper>
 

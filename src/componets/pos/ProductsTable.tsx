@@ -1,4 +1,4 @@
-import { Box, useDisclosure } from '@chakra-ui/react';
+import { Box, Stack, useDisclosure } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 
 import { CustomTable } from '../table';
@@ -7,11 +7,11 @@ import { useGetPriceListByWarehouseId } from '../../hooks';
 
 import { useProductColumns } from './hooks/useProductColumns';
 
-import { CartItem, Modal, usePosContext } from '.';
+import { Basket, CartItem, Modal, usePosContext } from '.';
 
 export const ProductsTable = () => {
   const { priceList, warehouse } = usePosContext();
-  const { data: products } = useGetPriceListByWarehouseId(priceList?.id!, warehouse?.id!);
+  const { data: products, refetch } = useGetPriceListByWarehouseId(priceList?.id!, warehouse?.id!);
   const { tableInput } = useMyContext();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,25 +31,28 @@ export const ProductsTable = () => {
   if (!products) return null;
 
   return (
-    <Box width="65%">
-      <CustomTable
-        showGlobalFilter
-        showNavigation
-        amount={products.length}
-        columns={columns}
-        data={products}
-        flag="products"
-      />
+    <Stack alignItems="flex-start" direction="row">
+      <Box width="65%">
+        <CustomTable
+          showGlobalFilter
+          showNavigation
+          amount={products.length}
+          columns={columns}
+          data={products}
+          flag="products"
+        />
 
-      <Modal
-        activeProduct={activeProduct}
-        cancelRef={cancelRef}
-        handleClose={handleClose}
-        isOpen={isOpen}
-        setActiveProduct={setActiveProduct}
-        tableInput={tableInput}
-      />
-    </Box>
+        <Modal
+          activeProduct={activeProduct}
+          cancelRef={cancelRef}
+          handleClose={handleClose}
+          isOpen={isOpen}
+          setActiveProduct={setActiveProduct}
+          tableInput={tableInput}
+        />
+      </Box>
+      <Basket refetch={refetch} />
+    </Stack>
   );
 };
 

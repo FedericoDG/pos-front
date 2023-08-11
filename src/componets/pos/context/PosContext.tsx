@@ -25,11 +25,14 @@ export interface SelectedPriceList extends Pricelists {
 export interface CartItem extends Product {
   price: number;
   quantity: number;
+  error: boolean;
+  allow: boolean;
 }
 
 interface PosContext {
   activeStep: number;
   addItem: (product: CartItem) => void;
+  updateCartWithError: (arr: number[]) => void;
   cart: CartItem[];
   client: SelectedClient | null;
   emptyCart: () => void;

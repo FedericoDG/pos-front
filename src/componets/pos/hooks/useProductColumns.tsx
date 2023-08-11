@@ -20,7 +20,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
 
       const productExist = cart.find((el: Product) => el.id === product.id);
 
-      if (productExist?.quantity === product.stock) return true;
+      if (productExist?.quantity! >= product.stock!) return true;
 
       return false;
     },
@@ -32,7 +32,8 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
       const productExist = cart.find((el: Product) => el.id === product.id);
 
       if (productExist) {
-        //return Math.max(product?.stock! - (productExist.quantity! || 0), 0);
+        if (productExist.error) return product.stock;
+
         return product?.stock! - (productExist.quantity! || 0);
       }
 
@@ -91,7 +92,13 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
               type="submit"
               variant="ghost"
               onClick={() => {
-                setActiveProduct({ ...row.original, quantity: 0, price: row.original.price! });
+                setActiveProduct({
+                  ...row.original,
+                  quantity: 0,
+                  price: row.original.price!,
+                  error: false,
+                  allow: row.original.allownegativestock === 'ENABLE' ? true : false,
+                });
                 onOpen();
               }}
             >

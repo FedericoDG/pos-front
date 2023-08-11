@@ -55,6 +55,7 @@ interface Sale {
     productId: number;
     quantity: number;
     price: number;
+    allow: boolean;
   }[];
   payments: {
     amount: number;
@@ -99,6 +100,8 @@ export const FinishSale = () => {
     warehouse,
     setPriceList,
     totalCart,
+    goToPrevious,
+    updateCartWithError,
   } = usePosContext();
 
   const initialValues: Values = {
@@ -110,7 +113,7 @@ export const FinishSale = () => {
 
   const queryClient = useQueryClient();
 
-  const onSubmit = (values: Values) => {
+  const onSubmit = async (values: Values) => {
     const parsedValues = {
       discount: Number(values.discount),
       recharge: Number(values.recharge),
@@ -121,8 +124,9 @@ export const FinishSale = () => {
       warehouseId: Number(warehouse?.id!),
       cart: cart.map((item) => ({
         productId: item.id!,
-        quantity: item.quantity,
+        quantity: Number(item.quantity),
         price: item.price,
+        allow: item.allownegativestock === 'ENABLED' ? true : false,
       })),
       payments: values.payments.map((item) => ({
         amount: Number(item.amount),
@@ -164,7 +168,7 @@ export const FinishSale = () => {
         closeOnClick: true,
       });
     } else {
-      mutate(sale);
+      mutateAsync(sale);
     }
   };
 
@@ -192,7 +196,20 @@ export const FinishSale = () => {
     setActiveStep(1);
   };
 
-  const { mutate, isLoading } = useCreateCashMovement(onSuccess);
+  const cb = (error: number[]) => {
+    if (error.length > 0) {
+      updateCartWithError(error);
+      goToPrevious();
+      toast.error('No hay suficiente stock en algunos productos', {
+        theme: 'colored',
+        position: toast.POSITION.BOTTOM_LEFT,
+        autoClose: 5000,
+        closeOnClick: true,
+      });
+    }
+  };
+
+  const { mutateAsync, isLoading } = useCreateCashMovement(onSuccess, cb);
 
   const formik = useFormik({
     enableReinitialize: true,
