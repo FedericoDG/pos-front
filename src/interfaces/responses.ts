@@ -1,4 +1,4 @@
-import { CashMovement, Role, User } from './interfaces';
+import { CashMovement, ExtendedUser, Role, User } from './interfaces';
 
 import {
   CashRegister,
@@ -216,7 +216,7 @@ export interface UserResponse {
 
 export interface UsersResponse {
   body: {
-    users: User[];
+    users: ExtendedUser[];
   };
 }
 

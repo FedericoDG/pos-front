@@ -18,7 +18,7 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
-import { Role, User } from '../../interfaces';
+import { Client, Pricelists, Role, User, Warehouse } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useCreateUser, useUpdateUser } from '../../hooks/';
 
@@ -31,6 +31,9 @@ interface Props {
   resetValues: User;
   roles: Role[];
   setinitialValues: Dispatch<SetStateAction<User>>;
+  clients: Client[];
+  warehouses: Warehouse[];
+  priceLists: Pricelists[];
 }
 
 export const Drawer = ({
@@ -40,6 +43,9 @@ export const Drawer = ({
   resetValues,
   roles,
   setinitialValues,
+  clients,
+  priceLists,
+  warehouses,
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
@@ -49,8 +55,18 @@ export const Drawer = ({
   const onSubmit = (values: User, actions: FormikHelpers<User>) => {
     const { password2, ...rest } = values;
 
+    const toUpdate = {
+      ...rest,
+      userPreferences: {
+        clientId: Number(values.userPreferences?.clientId),
+        warehouseId: Number(values.userPreferences?.warehouseId),
+        priceListId: Number(values.userPreferences?.priceListId),
+      },
+    };
+
     if (values?.id) {
-      updateUser(rest);
+      // updateUser(rest);
+      console.log(toUpdate);
     } else {
       createUser(rest);
     }
@@ -172,6 +188,76 @@ export const Drawer = ({
                     {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
                   </Box>
                 </Flex>
+
+                <FormLabel htmlFor="roleId">Rol:</FormLabel>
+                <Select
+                  id="roleId"
+                  minW="224px"
+                  name="roleId"
+                  value={initialValues.role?.id}
+                  onChange={handleChange}
+                >
+                  {roles.map((unit) => (
+                    <option key={unit.name} value={unit.id}>
+                      {role(unit.name)}
+                    </option>
+                  ))}
+                </Select>
+                {errors.roleId && touched.roleId && <ErrorMessage>{errors.roleId}</ErrorMessage>}
+
+                {initialValues.id && initialValues.role?.name === 'SELLER' && (
+                  <>
+                    <Flex gap="4" justifyContent="space-between">
+                      <Box>
+                        <FormLabel htmlFor="warehouseId">Depósito Predeterminado:</FormLabel>
+                        <Select
+                          id="warehouseId"
+                          minW="224px"
+                          name="userPreferences.warehouseId"
+                          value={initialValues.userPreferences?.warehouseId}
+                          onChange={handleChange}
+                        >
+                          {warehouses.map((warehouse) => (
+                            <option key={warehouse.code} value={warehouse.id}>
+                              {warehouse.code}
+                            </option>
+                          ))}
+                        </Select>
+                      </Box>
+                      <Box>
+                        <FormLabel htmlFor="priceListId">Lista Predeterminada:</FormLabel>
+                        <Select
+                          id="priceListId"
+                          minW="224px"
+                          name="userPreferences.priceListId"
+                          value={initialValues.userPreferences?.priceListId}
+                          onChange={handleChange}
+                        >
+                          {priceLists.map((priceList) => (
+                            <option key={priceList.code} value={priceList.id}>
+                              {priceList.code}
+                            </option>
+                          ))}
+                        </Select>
+                      </Box>
+                    </Flex>
+                    <Box>
+                      <FormLabel htmlFor="clientId">Cliente Predeterminado:</FormLabel>
+                      <Select
+                        id="clientId"
+                        name="userPreferences.clientId"
+                        value={initialValues.userPreferences?.clientId}
+                        onChange={handleChange}
+                      >
+                        {clients.map((client) => (
+                          <option key={client.document} value={client.id}>
+                            {client.document} - {client.lastname} {client.name}
+                          </option>
+                        ))}
+                      </Select>
+                    </Box>
+                  </>
+                )}
 
                 {!initialValues.id && (
                   <Flex gap="4" justifyContent="space-between">

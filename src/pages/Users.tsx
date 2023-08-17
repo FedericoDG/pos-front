@@ -8,7 +8,13 @@ import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/users/hooks';
-import { useGetUsers, useGetRoles } from '../hooks';
+import {
+  useGetUsers,
+  useGetRoles,
+  useGetWarehousesWOStock,
+  useGetPriceLists,
+  useGetClients,
+} from '../hooks';
 
 export const Users = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,6 +28,11 @@ export const Users = () => {
       password: '',
       password2: '',
       roleId: 3,
+      userPreferences: {
+        clientId: 1,
+        priceListId: 1,
+        warehouseId: 1,
+      },
     }),
     []
   );
@@ -30,8 +41,16 @@ export const Users = () => {
 
   const { data: users, isFetching: isFetchingUsers } = useGetUsers();
   const { data: roles, isFetching: isFetchingRoles } = useGetRoles();
+  const { data: warehouses, isFetching: isFetchingWarehouses } = useGetWarehousesWOStock();
+  const { data: priceLists, isFetching: isFetchingPriceLists } = useGetPriceLists();
+  const { data: clients, isFetching: isFetchingClients } = useGetClients();
 
-  const isIndeterminate = isFetchingUsers || isFetchingRoles;
+  const isIndeterminate =
+    isFetchingUsers ||
+    isFetchingRoles ||
+    isFetchingWarehouses ||
+    isFetchingPriceLists ||
+    isFetchingClients;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
@@ -55,7 +74,7 @@ export const Users = () => {
         CREAR USUARIO
       </Button>
 
-      {!users || !roles ? (
+      {!users || !roles || !priceLists || !warehouses || !clients ? (
         <Loading />
       ) : (
         <>
@@ -71,11 +90,14 @@ export const Users = () => {
             />
           </Box>
           <Drawer
+            clients={clients}
             initialValues={initialValues}
             isOpen={isOpen}
+            priceLists={priceLists}
             resetValues={resetValues}
             roles={roles.filter((user) => user.name !== 'CLIENT' && user.name !== 'DRIVER')}
             setinitialValues={setinitialValues}
+            warehouses={warehouses.filter((el) => el.driver === 0)}
             onClose={onClose}
           />
           <ConfirmationModal

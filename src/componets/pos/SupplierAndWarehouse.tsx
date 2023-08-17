@@ -31,15 +31,18 @@ export const SupplierAndWarehouse = () => {
       label: `${el.document} - ${el.name} ${el.lastname}`,
     }));
 
+    setMappedClients(mappedClients);
+
     const mappedPriceLists = priceLists.map((el) => ({ ...el, value: el.id, label: el.code }));
+
+    setMappedPriceLists(mappedPriceLists);
 
     if (user.roleId === 4) {
       const mappedWarehouses = warehouses
-        .filter((el) => el.user?.id === user.id)
+        .filter((el) => el.driver === 1)
         .map((el) => ({ ...el, value: el.id, label: el.code }));
 
-      //setMappedWarehouses(mappedWarehouses);
-      setWarehouse(mappedWarehouses[0]);
+      setMappedWarehouses(mappedWarehouses);
     } else {
       const mappedWarehouses = warehouses
         .filter((el) => el.driver === 0)
@@ -47,10 +50,37 @@ export const SupplierAndWarehouse = () => {
 
       setMappedWarehouses(mappedWarehouses);
     }
+  }, [clients, priceLists, user.roleId, warehouses]);
 
-    setMappedPriceLists(mappedPriceLists);
-    setMappedClients(mappedClients);
-  }, [clients, warehouses, priceLists, user.roleId, user.id, setWarehouse]);
+  useEffect(() => {
+    if (mappedPriceLists.length < 1 || mappedClients.length < 1 || mappedWarehouses.length < 1)
+      return;
+
+    setClient(mappedClients.find((el) => el.id === user.userPreferences?.clientId)!);
+    setPriceList(mappedPriceLists.find((el) => el.id === user.userPreferences?.priceListId)!);
+
+    if (user.roleId === 4) {
+      setWarehouse(mappedWarehouses.find((el) => el.user?.id === user.id)!);
+    } else {
+      setWarehouse(mappedWarehouses.find((el) => el.id === user.userPreferences?.warehouseId)!);
+    }
+  }, [
+    mappedClients,
+    mappedClients.length,
+    mappedPriceLists,
+    mappedPriceLists.length,
+    mappedWarehouses,
+    mappedWarehouses.length,
+    setClient,
+    setPriceList,
+    setWarehouse,
+    user.id,
+    user.roleId,
+    user.userPreferences?.clientId,
+    user.userPreferences?.priceListId,
+    user.userPreferences?.warehouseId,
+    warehouses,
+  ]);
 
   const wareRef =
     useRef<SelectInstance<SelectedWarehouse, false, GroupBase<SelectedWarehouse>>>(null);
@@ -71,7 +101,7 @@ export const SupplierAndWarehouse = () => {
     };
   }, [goToNext]);
 
-  if (!clients || !warehouses) return <Loading />;
+  if (!clients || !warehouses || !priceLists) return <Loading />;
 
   return (
     <Stack bg="white" mb="4" p="4" rounded="md" w="full">
@@ -97,17 +127,18 @@ export const SupplierAndWarehouse = () => {
       </Box>
       <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
         <Box w="49%">
-          <FormLabel htmlFor="warehouse">Lista de Precio:</FormLabel>
+          <FormLabel htmlFor="priceList">Lista de Precio:</FormLabel>
           <Select
             autoFocus
             isClearable
             isSearchable
             colorScheme="brand"
-            name="supplier"
+            id="priceList"
             options={mappedPriceLists}
             placeholder="Seleccionar Lista de Precio"
             selectedOptionColorScheme="brand"
             tabIndex={1}
+            value={priceList}
             onChange={(e) => setPriceList(e)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') wareRef.current?.focus();
@@ -122,12 +153,13 @@ export const SupplierAndWarehouse = () => {
               isClearable
               isSearchable
               colorScheme="brand"
+              id="warehouse"
               isDisabled={!priceList?.value}
-              name="warehouse"
               options={mappedWarehouses}
               placeholder="Seleccionar Depósito"
               selectedOptionColorScheme="brand"
               tabIndex={2}
+              value={warehouse}
               onChange={(e) => setWarehouse(e)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') clientRef.current?.focus();
@@ -136,19 +168,20 @@ export const SupplierAndWarehouse = () => {
           </Box>
         )}
         <Box w="49%">
-          <FormLabel htmlFor="warehouse">Cliente:</FormLabel>
+          <FormLabel htmlFor="client">Cliente:</FormLabel>
           <Select
             ref={clientRef}
             autoFocus
             isClearable
             isSearchable
             colorScheme="brand"
+            id="client"
             isDisabled={!priceList?.value || !warehouse?.value}
-            name="client"
             options={mappedClients}
             placeholder="Seleccionar Cliente"
             selectedOptionColorScheme="brand"
             tabIndex={3}
+            value={client}
             onChange={(e) => setClient(e)}
           />
         </Box>

@@ -20,6 +20,13 @@ export interface User {
   password?: string;
   password2?: string;
   role?: Role;
+  userPreferences?: UserPreferences;
+}
+
+export interface UserPreferences {
+  clientId: number;
+  priceListId: number;
+  warehouseId: number;
 }
 
 export interface Role {
