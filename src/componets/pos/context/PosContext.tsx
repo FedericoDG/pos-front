@@ -25,6 +25,7 @@ export interface SelectedPriceList extends Pricelists {
 export interface CartItem extends Product {
   price: number;
   quantity: number;
+  tax: number;
   error: boolean;
   allow: boolean;
 }

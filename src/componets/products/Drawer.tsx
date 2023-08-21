@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
-import { Category, Product, Unit } from '../../interfaces';
+import { Category, IVACondition, Product, Unit } from '../../interfaces';
 import { useCreateProduct, useUpdateProduct } from '../../hooks/';
 import { ErrorMessage } from '../common';
 
@@ -31,6 +31,7 @@ interface Props {
   resetValues: Product;
   categories: Category[];
   units: Unit[];
+  ivaConditions: IVACondition[];
   isOpen: boolean;
   onClose: () => void;
   setinitialValues: Dispatch<SetStateAction<Product>>;
@@ -42,15 +43,16 @@ export const Drawer = ({
   setinitialValues,
   categories,
   units,
+  ivaConditions,
   isOpen,
   onClose,
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createProduct } = useCreateProduct();
-  const { mutate: updateProduct } = useUpdateProduct();
+  const { mutateAsync: createProduct, isLoading: isLoadingCreate } = useCreateProduct();
+  const { mutateAsync: updateProduct, isLoading: isLoadingUpdate } = useUpdateProduct();
 
-  const onSubmit = (values: Product, actions: FormikHelpers<Product>) => {
+  const onSubmit = async (values: Product, actions: FormikHelpers<Product>) => {
     const parsedValues = {
       ...values,
       status: !values.status || values.status === 'DISABLED' ? 'DISABLED' : 'ENABLED',
@@ -60,19 +62,25 @@ export const Drawer = ({
           : 'ENABLED',
       categoryId: Number(values.categoryId),
       unitId: Number(values.unitId),
+      ivaConditionId: Number(values.ivaConditionId),
       alertlowstock:
         !values.alertlowstock || values.alertlowstock === 'DISABLED' ? 'DISABLED' : 'ENABLED',
       lowstock: Number(values.lowstock),
     };
 
     if (values?.id) {
-      updateProduct(parsedValues);
+      await updateProduct(parsedValues).finally(() => {
+        setinitialValues(resetValues);
+        actions.resetForm();
+        onClose();
+      });
     } else {
-      createProduct(parsedValues);
+      createProduct(parsedValues).finally(() => {
+        setinitialValues(resetValues);
+        actions.resetForm();
+        onClose();
+      });
     }
-    setinitialValues(resetValues);
-    actions.resetForm();
-    onClose();
   };
 
   const close = () => {
@@ -114,7 +122,7 @@ export const Drawer = ({
           </DrawerHeader>
           <form onSubmit={handleSubmit}>
             <DrawerBody>
-              <Stack spacing="14px">
+              <Stack spacing="8px">
                 <Box>
                   <FormLabel htmlFor="name">Nombre:</FormLabel>
                   <Input
@@ -133,10 +141,10 @@ export const Drawer = ({
                   <Box>
                     <FormLabel htmlFor="unitId">Unidad:</FormLabel>
                     <Select
+                      defaultValue={initialValues.unitId}
                       id="unitId"
                       minW="224px"
                       name="unitId"
-                      value={initialValues.unit?.id}
                       onChange={handleChange}
                     >
                       {units.map((unit) => (
@@ -153,10 +161,10 @@ export const Drawer = ({
                   <Box>
                     <FormLabel htmlFor="categoryId">Categoría:</FormLabel>
                     <Select
+                      defaultValue={initialValues.categoryId}
                       id="categoryId"
                       minW="224px"
                       name="categoryId"
-                      value={initialValues.category?.id}
                       onChange={handleChange}
                     >
                       {categories.map((category) => (
@@ -167,6 +175,28 @@ export const Drawer = ({
                     </Select>
                     {errors.categoryId && touched.categoryId && (
                       <ErrorMessage>{errors.categoryId}</ErrorMessage>
+                    )}
+                  </Box>
+                </Flex>
+
+                <Flex gap="4" justifyContent="space-between">
+                  <Box>
+                    <FormLabel htmlFor="ivaConditionId">Condición IVA:</FormLabel>
+                    <Select
+                      defaultValue={initialValues.ivaConditionId}
+                      id="ivaConditionId"
+                      minW="224px"
+                      name="ivaConditionId"
+                      onChange={handleChange}
+                    >
+                      {ivaConditions.map((condition) => (
+                        <option key={condition.code} value={condition.id}>
+                          {condition.description}
+                        </option>
+                      ))}
+                    </Select>
+                    {errors.ivaConditionId && touched.ivaConditionId && (
+                      <ErrorMessage>{errors.ivaConditionId}</ErrorMessage>
                     )}
                   </Box>
                 </Flex>
@@ -218,7 +248,7 @@ export const Drawer = ({
                       defaultChecked={initialValues.status === 'ENABLED'}
                       id="status"
                       name="status"
-                      size="lg"
+                      size="md"
                       onChange={handleChange}
                     />
                   </Box>
@@ -230,7 +260,7 @@ export const Drawer = ({
                       defaultChecked={initialValues.allownegativestock === 'ENABLED'}
                       id="allownegativestock"
                       name="allownegativestock"
-                      size="lg"
+                      size="md"
                       onChange={handleChange}
                     />
                   </Box>
@@ -244,7 +274,7 @@ export const Drawer = ({
                       defaultChecked={initialValues.alertlowstock === 'ENABLED'}
                       id="alertlowstock"
                       name="alertlowstock"
-                      size="lg"
+                      size="md"
                       onChange={handleChange}
                     />
                   </Box>
@@ -258,6 +288,7 @@ export const Drawer = ({
                       placeholder="20"
                       value={values.lowstock}
                       onChange={handleChange}
+                      onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                     />
                   </Box>
                 </Flex>
@@ -268,7 +299,13 @@ export const Drawer = ({
               <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
                 Cancelar
               </Button>
-              <Button colorScheme="brand" type="submit" w="full">
+              <Button
+                colorScheme="brand"
+                isLoading={isLoadingCreate || isLoadingUpdate}
+                loadingText="Guardando"
+                type="submit"
+                w="full"
+              >
                 Guardar
               </Button>
             </DrawerFooter>

@@ -45,6 +45,7 @@ export interface Product {
   description: string;
   categoryId: number;
   unitId: number;
+  ivaConditionId: number;
   alertlowstock: string;
   lowstock: number;
   price?: number;
@@ -58,6 +59,7 @@ export interface Product {
   prices?: Array<Price | null>;
   priceDetails?: Array<Price[]>;
   costs?: Cost[];
+  ivaCondition?: IVACondition;
 }
 
 export interface Category {
@@ -158,6 +160,7 @@ export interface Client {
   id?: number;
   name: string;
   lastname: string;
+  identificationId: number;
   document: string;
   email: string;
   password: string;
@@ -169,6 +172,7 @@ export interface Client {
   roleId: number;
   createdAt?: string;
   updatedAt?: string;
+  identification?: Identification;
 }
 
 export interface Supplier {
@@ -342,4 +346,29 @@ export interface PaymentMethodDetails {
   createdAt: number;
   updatedAt: number;
   paymentMethod: PaymentMethod;
+}
+
+export interface InvoceType {
+  id: number;
+  code: string;
+  description: string;
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+export interface IVACondition {
+  id?: number;
+  code: string;
+  tax: number;
+  description: string;
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+export interface Identification {
+  id?: number;
+  code: string;
+  description: string;
+  createdAt?: number;
+  updatedAt?: number;
 }

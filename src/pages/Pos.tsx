@@ -21,7 +21,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 
-import { DashBoard } from '../componets/common';
+import { DashBoard, Loading } from '../componets/common';
 import { PosProvider } from '../componets/pos/context';
 import {
   Card,
@@ -77,7 +77,9 @@ export const Pos = () => {
   return (
     <PosProvider>
       <DashBoard isIndeterminate={isFetching} title="Punto de venta">
-        {cashRegister?.isOpen ? (
+        {!cashRegister ? (
+          <Loading />
+        ) : cashRegister?.isOpen ? (
           <>
             <Steps />
 

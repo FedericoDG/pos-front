@@ -11,6 +11,7 @@ import {
   Flex,
   FormLabel,
   Input,
+  Select,
   Stack,
   Textarea,
 } from '@chakra-ui/react';
@@ -18,7 +19,7 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
-import { Client } from '../../interfaces';
+import { Client, Identification } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useCreateClient, useUpdateClient } from '../../hooks/';
 
@@ -26,6 +27,7 @@ import { schema, schema2 } from './schemas';
 
 interface Props {
   initialValues: Client;
+  identifications: Identification[];
   resetValues: Client;
   isOpen: boolean;
   onClose: () => void;
@@ -34,6 +36,7 @@ interface Props {
 
 export const Drawer = ({
   initialValues,
+  identifications,
   resetValues,
   setinitialValues,
   isOpen,
@@ -41,20 +44,30 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createClient } = useCreateClient();
-  const { mutate: updateClient } = useUpdateClient();
+  const { mutateAsync: createClient, isLoading: isLoadingCreate } = useCreateClient();
+  const { mutateAsync: updateClient, isLoading: isLoadingUpdate } = useUpdateClient();
 
-  const onSubmit = (values: Client, actions: FormikHelpers<Client>) => {
+  const onSubmit = async (values: Client, actions: FormikHelpers<Client>) => {
     const { password2, ...rest } = values;
 
+    const parsedValues = {
+      ...rest,
+      identificationId: Number(values.identificationId),
+    };
+
     if (values?.id) {
-      updateClient(rest);
+      updateClient(parsedValues).finally(() => {
+        setinitialValues(resetValues);
+        actions.resetForm();
+        onClose();
+      });
     } else {
-      createClient(rest);
+      createClient(parsedValues).finally(() => {
+        setinitialValues(resetValues);
+        actions.resetForm();
+        onClose();
+      });
     }
-    setinitialValues(resetValues);
-    actions.resetForm();
-    onClose();
   };
 
   const formik = useFormik({
@@ -131,7 +144,26 @@ export const Drawer = ({
 
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
-                    <FormLabel htmlFor="document">DNI:</FormLabel>
+                    <FormLabel htmlFor="identificationId">Condición IVA:</FormLabel>
+                    <Select
+                      defaultValue={initialValues.identificationId}
+                      id="identificationId"
+                      minW="224px"
+                      name="identificationId"
+                      onChange={handleChange}
+                    >
+                      {identifications.map((identification) => (
+                        <option key={identification.code} value={identification.id}>
+                          {identification.code} - {identification.description}
+                        </option>
+                      ))}
+                    </Select>
+                    {errors.identificationId && touched.identificationId && (
+                      <ErrorMessage>{errors.identificationId}</ErrorMessage>
+                    )}
+                  </Box>
+                  <Box>
+                    <FormLabel htmlFor="document">Número:</FormLabel>
                     <Input
                       id="document"
                       name="document"
@@ -144,6 +176,9 @@ export const Drawer = ({
                       <ErrorMessage>{errors.document}</ErrorMessage>
                     )}
                   </Box>
+                </Flex>
+
+                <Flex gap="4" justifyContent="space-between">
                   <Box>
                     <FormLabel htmlFor="email">Email:</FormLabel>
                     <Input
@@ -247,7 +282,13 @@ export const Drawer = ({
               <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
                 Cancelar
               </Button>
-              <Button colorScheme="brand" type="submit" w="full">
+              <Button
+                colorScheme="brand"
+                isLoading={isLoadingCreate || isLoadingUpdate}
+                loadingText="Guardando"
+                type="submit"
+                w="full"
+              >
                 Guardar
               </Button>
             </DrawerFooter>

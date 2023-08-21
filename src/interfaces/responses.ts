@@ -1,20 +1,24 @@
-import { CashMovement, ExtendedUser, Role, User } from './interfaces';
-
 import {
+  CashMovement,
   CashRegister,
   Category,
   Client,
   Discharge,
+  IVACondition,
+  Identification,
+  InvoceType,
   PaymentMethod,
   PriceList,
   Pricelists,
   Product,
   Purchase,
   Reason,
+  Role,
   Stock2,
   Supplier,
   Transfer,
   Unit,
+  User,
   Warehouse,
 } from '.';
 
@@ -216,7 +220,7 @@ export interface UserResponse {
 
 export interface UsersResponse {
   body: {
-    users: ExtendedUser[];
+    users: User[];
   };
 }
 
@@ -229,5 +233,23 @@ export interface RoleResponse {
 export interface RolesResponse {
   body: {
     roles: Role[];
+  };
+}
+
+export interface IVAConditionResponse {
+  body: {
+    ivaConditions: IVACondition[];
+  };
+}
+
+export interface IdentificationsResponse {
+  body: {
+    identifications: Identification[];
+  };
+}
+
+export interface InvoceTypesResponse {
+  body: {
+    invoceTypes: InvoceType[];
   };
 }

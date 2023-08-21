@@ -9,6 +9,7 @@ import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/clients/hooks';
 import { useGetClients } from '../hooks';
+import { useGetIdentifications } from '../hooks/useIdentifications';
 
 export const Clients = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,6 +28,7 @@ export const Clients = () => {
       address: '',
       info: '',
       roleId: 5,
+      identificationId: 35,
     }),
     []
   );
@@ -34,8 +36,9 @@ export const Clients = () => {
   const [initialValues, setinitialValues] = useState(resetValues);
 
   const { data: clients, isFetching: isFetchingClients } = useGetClients();
+  const { data: identifications, isFetching: isFetchingIdentifications } = useGetIdentifications();
 
-  const isIndeterminate = isFetchingClients;
+  const isIndeterminate = isFetchingClients || isFetchingIdentifications;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
@@ -59,7 +62,7 @@ export const Clients = () => {
         CREAR CLIENTE
       </Button>
 
-      {!clients ? (
+      {!clients || !identifications ? (
         <Loading />
       ) : (
         <>
@@ -75,6 +78,7 @@ export const Clients = () => {
             />
           </Box>
           <Drawer
+            identifications={identifications}
             initialValues={initialValues}
             isOpen={isOpen}
             resetValues={resetValues}

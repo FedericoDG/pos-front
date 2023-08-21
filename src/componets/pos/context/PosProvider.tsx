@@ -64,7 +64,7 @@ export const PosProvider = ({ children }: Props) => {
   };
 
   const totalCart = useMemo(
-    () => cart.reduce((acc, item) => acc + item.quantity * item.price, 0),
+    () => cart.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax), 0),
     [cart]
   );
 

@@ -8,7 +8,7 @@ import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common/';
 import { Product } from '../interfaces';
 import { useColumns } from '../componets/products/hooks';
-import { useGetCategories, useGetUnits, useGetProducts } from '../hooks';
+import { useGetCategories, useGetUnits, useGetProducts, useGetIvaConditions } from '../hooks';
 
 export const Products = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,6 +22,7 @@ export const Products = () => {
       description: '',
       categoryId: 1,
       unitId: 1,
+      ivaConditionId: 1,
       status: 'ENABLED',
       allownegativestock: 'DISABLED',
       alertlowstock: 'DISABLED',
@@ -35,15 +36,18 @@ export const Products = () => {
   const { data: products, isFetching: isFetchingProducts } = useGetProducts();
   const { data: categories, isFetching: isFetchingCategories } = useGetCategories();
   const { data: units, isFetching: isFetchingUnits } = useGetUnits();
+  const { data: ivaConditions, isFetching: isFetchingIVAConditions } = useGetIvaConditions();
 
   useEffect(() => {
-    if (!categories || !units) return;
+    if (!categories || !units || !ivaConditions) return;
 
     resetValues.categoryId = categories[0].id!;
     resetValues.unitId = units[0].id!;
-  }, [categories, resetValues, units]);
+    resetValues.ivaConditionId = ivaConditions[5].id!;
+  }, [categories, ivaConditions, resetValues, units]);
 
-  const isIndeterminate = isFetchingProducts || isFetchingCategories || isFetchingUnits;
+  const isIndeterminate =
+    isFetchingProducts || isFetchingCategories || isFetchingUnits || isFetchingIVAConditions;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
@@ -67,7 +71,7 @@ export const Products = () => {
         CREAR PRODUCTO
       </Button>
 
-      {!products || !categories || !units ? (
+      {!products || !categories || !units || !ivaConditions ? (
         <Loading />
       ) : (
         <>
@@ -86,6 +90,7 @@ export const Products = () => {
             categories={categories}
             initialValues={initialValues}
             isOpen={isOpen}
+            ivaConditions={ivaConditions}
             resetValues={resetValues}
             setinitialValues={setinitialValues}
             units={units}

@@ -32,8 +32,14 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         accessorKey: 'lastname',
       },
       {
-        id: 'dni',
-        header: 'DNI',
+        id: 'identificacion',
+        header: 'Identificación',
+        cell: (row: CellContext<Client, unknown>) => row.renderValue(),
+        accessorFn: (x) => x.identification?.description,
+      },
+      {
+        id: 'id_numero',
+        header: 'Número',
         cell: (row: CellContext<Client, unknown>) => row.renderValue(),
         accessorKey: 'document',
       },

@@ -65,10 +65,9 @@ export const Drawer = ({
     };
 
     if (values?.id) {
-      // updateUser(rest);
-      console.log(toUpdate);
+      updateUser(toUpdate);
     } else {
-      createUser(rest);
+      createUser(toUpdate);
     }
     setinitialValues(resetValues);
     actions.resetForm();
@@ -159,10 +158,10 @@ export const Drawer = ({
                   <Box>
                     <FormLabel htmlFor="roleId">Rol:</FormLabel>
                     <Select
+                      defaultValue={initialValues.role?.id}
                       id="roleId"
                       minW="224px"
                       name="roleId"
-                      value={initialValues.role?.id}
                       onChange={handleChange}
                     >
                       {roles.map((unit) => (
@@ -189,32 +188,16 @@ export const Drawer = ({
                   </Box>
                 </Flex>
 
-                <FormLabel htmlFor="roleId">Rol:</FormLabel>
-                <Select
-                  id="roleId"
-                  minW="224px"
-                  name="roleId"
-                  value={initialValues.role?.id}
-                  onChange={handleChange}
-                >
-                  {roles.map((unit) => (
-                    <option key={unit.name} value={unit.id}>
-                      {role(unit.name)}
-                    </option>
-                  ))}
-                </Select>
-                {errors.roleId && touched.roleId && <ErrorMessage>{errors.roleId}</ErrorMessage>}
-
-                {initialValues.id && initialValues.role?.name === 'SELLER' && (
+                {initialValues.id && (
                   <>
-                    <Flex gap="4" justifyContent="space-between">
+                    <Flex gap="4" justifyContent="space-between" mt="6">
                       <Box>
                         <FormLabel htmlFor="warehouseId">Depósito Predeterminado:</FormLabel>
                         <Select
+                          defaultValue={initialValues.userPreferences?.warehouseId}
                           id="warehouseId"
                           minW="224px"
                           name="userPreferences.warehouseId"
-                          value={initialValues.userPreferences?.warehouseId}
                           onChange={handleChange}
                         >
                           {warehouses.map((warehouse) => (
@@ -227,10 +210,10 @@ export const Drawer = ({
                       <Box>
                         <FormLabel htmlFor="priceListId">Lista Predeterminada:</FormLabel>
                         <Select
+                          defaultValue={initialValues.userPreferences?.priceListId}
                           id="priceListId"
                           minW="224px"
                           name="userPreferences.priceListId"
-                          value={initialValues.userPreferences?.priceListId}
                           onChange={handleChange}
                         >
                           {priceLists.map((priceList) => (
@@ -244,14 +227,20 @@ export const Drawer = ({
                     <Box>
                       <FormLabel htmlFor="clientId">Cliente Predeterminado:</FormLabel>
                       <Select
+                        defaultValue={initialValues.userPreferences?.clientId}
+                        fontSize={12}
                         id="clientId"
                         name="userPreferences.clientId"
-                        value={initialValues.userPreferences?.clientId}
                         onChange={handleChange}
                       >
                         {clients.map((client) => (
-                          <option key={client.document} value={client.id}>
-                            {client.document} - {client.lastname} {client.name}
+                          <option
+                            key={client.document}
+                            style={{ fontSize: '12px' }}
+                            value={client.id}
+                          >
+                            {client.identification?.description} {client.document} -{' '}
+                            {client.lastname} {client.name}
                           </option>
                         ))}
                       </Select>
