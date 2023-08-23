@@ -25,7 +25,7 @@ export const SupplierAndWarehouse = () => {
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
   const [mappedWarehouses2, setMappedWarehouses2] = useState<SelectedWarehouse[]>([]);
 
-  const [enabledFilter, setEnabledFilter] = useState<boolean>(true);
+  const [enabledFilter] = useState<boolean>(true);
 
   useEffect(() => {
     if (!warehouses) return;
@@ -75,7 +75,7 @@ export const SupplierAndWarehouse = () => {
   if (!warehouses) return <Loading />;
 
   return (
-    <Stack bg="white" mb="4" p="4" rounded="md" w="full">
+    <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"

@@ -83,7 +83,7 @@ export const Pos = () => {
           <>
             <Steps />
 
-            <Box w="1080px">
+            <Box w="full">
               <StepperWrapper step={1}>
                 <SupplierAndWarehouse />
               </StepperWrapper>

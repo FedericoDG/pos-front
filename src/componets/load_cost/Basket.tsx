@@ -54,7 +54,7 @@ export const Basket = () => {
   if (cart.length === 0) return null;
 
   return (
-    <Stack bg="white" p="4" rounded="md" shadow="md" w="35%">
+    <Stack bg="white" border="1px solid whitesmoke" mt="4" p="4" rounded="md" w="35%">
       <Heading color="brand.500" fontSize="28" textAlign="center">
         Lista de Productos
       </Heading>

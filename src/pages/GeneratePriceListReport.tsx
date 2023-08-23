@@ -31,7 +31,7 @@ export const GeneratePriceListReport = () => {
         {!products || !priceLists || !warehouses ? (
           <Loading />
         ) : (
-          <Box w="1080px">
+          <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <StepperWrapper step={1}>
               <CustomTable
                 showGlobalFilter

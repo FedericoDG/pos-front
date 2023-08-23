@@ -61,7 +61,10 @@ interface Body {
   };
 }
 
-export const useCreateCashMovement = (onSuccess: () => void, cb: (error: number[]) => void) => {
+export const useCreateCashMovement = (
+  onSuccess: (res: any) => void,
+  cb: (error: number[]) => void
+) => {
   return useMutation(createCashMovement, {
     onSuccess: onSuccess,
     onError: (error: Body) => cb(error.response.data.body.error),

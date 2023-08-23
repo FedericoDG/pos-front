@@ -56,7 +56,7 @@ export const ProductsTable = () => {
   if (!products) return null;
 
   return (
-    <Box width="65%">
+    <Box width="64%">
       <CustomTable
         showGlobalFilter
         showNavigation

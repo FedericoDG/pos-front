@@ -17,14 +17,21 @@ export const CloseCashRegister = () => {
     <DischargesProvider>
       <DashBoard isIndeterminate={false} title="Cerrar Caja">
         <Steps />
-        <Box w="1080px">
+        <Box w="full">
           <StepperWrapper step={1}>
             <SupplierAndWarehouse />
           </StepperWrapper>
           <StepperWrapper step={2}>
             <Stack>
               <Card />
-              <Stack alignItems="flex-start" direction="row">
+              <Stack
+                alignItems="flex-start"
+                bg="white"
+                direction="row"
+                p="4"
+                rounded="md"
+                shadow="md"
+              >
                 <DischargesTable />
                 <Basket />
               </Stack>

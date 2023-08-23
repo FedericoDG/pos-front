@@ -13,5 +13,5 @@ export const StepperWrapper = ({ children, step }: Props) => {
 
   if (activeStep !== step) return null;
 
-  return <Box>{children}</Box>;
+  return <Box w="full">{children}</Box>;
 };

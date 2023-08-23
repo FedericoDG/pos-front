@@ -24,7 +24,6 @@ export const UserProfile = () => {
           bg="white"
           gap={8}
           justifyContent="space-between"
-          maxW="1024px"
           p={50}
           rounded="md"
           shadow="md"

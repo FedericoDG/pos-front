@@ -56,7 +56,7 @@ export const Warehouses = () => {
         <Loading />
       ) : (
         <>
-          <Box maxW="800px" w="full">
+          <Box bg="white" maxW="800px" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
               showGlobalFilter

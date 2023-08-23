@@ -19,6 +19,7 @@ import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 import { Category } from '../../interfaces';
 import { useCreateCategory, useUpdateCategory } from '../../hooks/';
+import { ErrorMessage } from '../common';
 
 import { schema } from './schemas';
 
@@ -107,7 +108,7 @@ export const Drawer = ({
                     onChange={handleChange}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                   />
-                  {errors.name && touched.name && <div>{errors.name}</div>}
+                  {errors.name && touched.name && <ErrorMessage>{errors.name}</ErrorMessage>}
                 </Box>
                 <Box>
                   <FormLabel htmlFor="description">Descripción:</FormLabel>

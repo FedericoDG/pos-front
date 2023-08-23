@@ -8,6 +8,7 @@ export * from './useDischarges';
 export * from './useGetIVAConditions';
 export * from './useIdentifications';
 export * from './useInvoceTypes';
+export * from './useOtherTributes';
 export * from './usePaymentMethods';
 export * from './usePrice';
 export * from './usePriceLists';

@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-children-prop */
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import {
+  AbsoluteCenter,
   Box,
   Button,
   Divider,
@@ -28,14 +29,17 @@ import { CgArrowsExchangeAlt } from 'react-icons/cg';
 import { BsPlusCircle } from 'react-icons/bs';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { Select as ReactSelect } from 'chakra-react-select';
+import { Heading } from '@chakra-ui/react';
+import { nanoid } from 'nanoid';
+import { useNavigate } from 'react-router-dom';
 
 import { ErrorMessage, Loading } from '../common';
-import { schema } from '../categories';
-import { useCreateCashMovement, useGetPaymentMethods } from '../../hooks';
+import { useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods } from '../../hooks';
 import { formatCurrency } from '../../utils';
 import { useGetInvoceTypes } from '../../hooks/';
 import { InvoceType } from '../../interfaces/interfaces';
 
+import { schema } from '.';
 import { usePosContext } from '.';
 
 interface Payment {
@@ -43,11 +47,17 @@ interface Payment {
   paymentMethodId: string;
 }
 
+interface OtherTribute {
+  amount: string;
+  otherTributeId: string;
+}
+
 interface Values {
   discount: number | null;
   recharge: number | null;
   info: string;
   payments: Payment[];
+  otherTributes?: OtherTribute[];
   invoceType?: {
     id: number;
     description: string;
@@ -70,6 +80,10 @@ interface Sale {
   payments: {
     amount: number;
     paymentMethodId: number;
+  }[];
+  otherTributes: {
+    amount: number;
+    otherTributeId: number;
   }[];
   info: string;
 }
@@ -105,18 +119,21 @@ export const FinishSale = () => {
   const [recharge, setRecharge] = useState('0');
   const [percent, setPercent] = useState(true);
 
+  const navigate = useNavigate();
+
   const {
     cart,
     client,
     emptyCart,
+    goToPrevious,
     setActiveStep,
     setClient,
-    setWarehouse,
-    warehouse,
     setPriceList,
+    setWarehouse,
     totalCart,
-    goToPrevious,
+    totalCartItems,
     updateCartWithError,
+    warehouse,
   } = usePosContext();
 
   const initialValues: Values = {
@@ -149,6 +166,10 @@ export const FinishSale = () => {
         amount: Number(item.amount),
         paymentMethodId: Number(item.paymentMethodId),
       })),
+      otherTributes: values?.otherTributes?.filter(el => Number(el.amount) > 0).map((item) => ({
+        amount: Number(item.amount),
+        otherTributeId: Number(item.otherTributeId),
+      })) || [],
       info: values.info,
     };
 
@@ -185,18 +206,24 @@ export const FinishSale = () => {
         closeOnClick: true,
       });
     } else {
-      console.log(sale);
-      // mutateAsync(sale);
+      mutateAsync(sale);
     }
   };
 
-  const onSuccess = () => {
-    toast.info('Venta realizada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+  const onSuccess = (res: any) => {
+    toast.info(
+      <Box>
+        <Text>Venta Realizada</Text>
+        <Button display='block' ml="auto" variant='solid' onClick={() => navigate(`/panel/caja/detalles/${3}`)}>Ver Factura</Button>
+      </Box>,
+      {
+        theme: 'light',
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 5000,
+        closeOnClick: true,
+        pauseOnHover: true,
+      }
+    );
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['products'] });
     setWarehouse(null);
@@ -242,6 +269,7 @@ export const FinishSale = () => {
 
   const { data: paymentMethods } = useGetPaymentMethods();
   const { data: invoceTypes } = useGetInvoceTypes();
+  const { data: otherTributes } = useGetOtherTributes();
 
   const [mappedInvoceTypes, setMappedInvoceTypes] = useState<SelectedInvoceType[]>([]);
 
@@ -257,18 +285,24 @@ export const FinishSale = () => {
     setMappedInvoceTypes(mappedInvoceTypes);
   }, [invoceTypes]);
 
-
   return (
     <Stack bg="white" p="4" rounded="md" shadow="md">
+      <ToastContainer />
       {
-        !paymentMethods || !invoceTypes ? <Loading /> : (
+        !paymentMethods || !invoceTypes || !otherTributes ? <Loading /> : (
           <FormikProvider value={formik}>
             <form onSubmit={handleSubmit}>
               <Stack spacing="14px">
                 <Flex gap="8" justifyContent="space-between">
-                  <Stack w="50%">
-                    <Box w="full">
-                      <FormLabel htmlFor="invoceTypeId">Tipo de Comprobante:</FormLabel>
+
+                  <Stack w="64%">
+                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
+                      <Box position='relative' px="4" py='8'>
+                        <Divider />
+                        <AbsoluteCenter bg='white' px="2">
+                          <FormLabel htmlFor="invoceTypeId">Tipo de Comprobante</FormLabel>
+                        </AbsoluteCenter>
+                      </Box>
                       <ReactSelect
                         autoFocus
                         isClearable
@@ -279,7 +313,6 @@ export const FinishSale = () => {
                         options={mappedInvoceTypes}
                         placeholder="Seleccionar..."
                         selectedOptionColorScheme="brand"
-                        tabIndex={1}
                         value={
                           mappedInvoceTypes
                             ? mappedInvoceTypes.find((option) => option.id === values.invoceType?.id)
@@ -292,63 +325,68 @@ export const FinishSale = () => {
                       {typeof errors.invoceType === 'string' && (
                         <ErrorMessage>{errors.invoceType}</ErrorMessage>
                       )}
-                    </Box>
-                    <Box w="full">
+                    </Stack>
+
+                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
+                      <Box position='relative' px="4" py='8'>
+                        <Divider />
+                        <AbsoluteCenter bg='white' px="2">
+                          <FormLabel htmlFor="payments">Forma de Pago</FormLabel>
+                        </AbsoluteCenter>
+                      </Box>
                       <FieldArray
                         name="payments"
                         render={(arrayHelpers) => (
                           <Stack w="full">
-                            {values.payments.map((_friend, index) => (
-                              <Stack key={index} alignItems="flex-end" direction="row" w="full">
-                                {/* <Field name={`friends[${index}].name`} /> */}
-                                <Box w={values.payments.length > 1 ? '44%' : '50%'}>
-                                  <FormLabel htmlFor={`payments[${index}].amount`}>Importe:</FormLabel>
-                                  <Input
-                                    defaultValue={
-                                      values.payments.length === 1
-                                        ? Math.round((totalCart + Number.EPSILON) * 100) / 100
-                                        : Math.round(
-                                          (Number(values.payments[index].amount) + Number.EPSILON) *
-                                          100
-                                        ) / 100
-                                    }
-                                    id={`payments[${index}].amount`}
-                                    name={`payments[${index}].amount`}
-                                    tabIndex={2}
-                                    onChange={handleChange}
-                                    onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                                  />
-                                  {typeof errors.payments === 'string' && (
-                                    <ErrorMessage>{errors.payments}</ErrorMessage>
-                                  )}
-                                </Box>
-
-                                <Box w={values.payments.length > 1 ? '44%' : '50%'}>
-                                  <FormLabel htmlFor={`payments.${index}.paymentMethodId`}>
-                                    Forma de Pago:
-                                  </FormLabel>
-                                  <Select
-                                    id={`payments.${index}.paymentMethodId`}
-                                    minW="224px"
-                                    name={`payments.${index}.paymentMethodId`}
-                                    tabIndex={3}
-                                    onChange={handleChange}
-                                  >
-                                    {paymentMethods.map((method) => (
-                                      <option key={method.code} value={method.id}>
-                                        {method.code}
-                                      </option>
-                                    ))}
-                                  </Select>
-                                </Box>
-                                {index >= 1 && index === values.payments.length - 1 && (
-                                  <Box w="9%">
-                                    <Button onClick={() => arrayHelpers.remove(index)}>
-                                      <Icon as={FaRegTrashAlt} color="brand" m="0 auto" />
-                                    </Button>
+                            {values.payments.map((_, index) => (
+                              <Stack key={index} w="full">
+                                <Stack alignItems="flex-end" direction="row" w="full">
+                                  <Box w={'29%'}>
+                                    <Input
+                                      defaultValue={
+                                        values.payments.length === 1
+                                          ? Math.round((totalCart + Number.EPSILON) * 100) / 100
+                                          : Math.round(
+                                            (Number(values.payments[index].amount) + Number.EPSILON) *
+                                            100
+                                          ) / 100
+                                      }
+                                      id={`payments[${index}].amount`}
+                                      name={`payments[${index}].amount`}
+                                      placeholder='importe'
+                                      onChange={handleChange}
+                                      onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                    />
+                                    {typeof errors.payments === 'string' && (
+                                      <ErrorMessage>{errors.payments}</ErrorMessage>
+                                    )}
                                   </Box>
+
+                                  <Box w={values.payments.length === index + 1 && index !== 0 ? '59%' : '70%'}>
+                                    <Select
+                                      id={`payments.${index}.paymentMethodId`}
+                                      minW="224px"
+                                      name={`payments.${index}.paymentMethodId`}
+                                      onChange={handleChange}
+                                    >
+                                      {paymentMethods.map((method) => (
+                                        <option key={method.code} value={method.id}>
+                                          {method.code}
+                                        </option>
+                                      ))}
+                                    </Select>
+                                  </Box>
+                                  {index >= 1 && index === values.payments.length - 1 && (
+                                    <Button flex={1} onClick={() => arrayHelpers.remove(index)}>
+                                      <Icon as={FaRegTrashAlt} color="brand" ml="0 auto" />
+                                    </Button>
+                                  )}
+                                </Stack>
+                                {typeof errors.payments === 'object' && (
+                                  <ErrorMessage>El importe del pago debe ser mayor a 0</ErrorMessage>
                                 )}
                               </Stack>
+
                             ))}
 
                             <Button
@@ -374,203 +412,338 @@ export const FinishSale = () => {
                           </Stack>
                         )}
                       />
-                    </Box>
-                  </Stack>
-                  <Stack w="50%">
-                    <Box>
-                      <FormLabel htmlFor="option">Descuento/Recargo:</FormLabel>
-                      <RadioGroup
-                        defaultValue={option}
-                        name="option"
-                        py={2}
-                        onChange={(e) => {
-                          setOption(e);
-                          setDiscount('0');
-                          setRecharge('0');
-                          formik.setFieldValue('discharge', '0');
-                          formik.setFieldValue('recharge', '0');
-                        }}
-                      >
-                        <Stack direction="row" gap="8">
-                          <Radio tabIndex={4} value="1">No aplicar</Radio>
-                          <Radio tabIndex={5} value="2">Aplicar Descuento</Radio>
-                          <Radio tabIndex={6} value="3">Aplicar Recargo</Radio>
-                        </Stack>
-                      </RadioGroup>
-                    </Box>
+                    </Stack>
 
-                    <Flex gap="8" justifyContent="space-between">
-                      <Box w="full">
-                        {option === '2' && (
-                          <>
-                            <FormLabel htmlFor="discount">Descuento:</FormLabel>
-                            <InputGroup>
-                              {percent ? (
-                                <InputLeftAddon children="%" w="48px" />
-                              ) : (
-                                <InputLeftAddon children="$" w="48px" />
-                              )}
-                              <Input
-                                id="discount"
-                                name="discount"
-                                tabIndex={7}
-                                value={discount}
-                                onChange={(e) => {
-                                  handleChange(e);
-                                  setDiscount(e.target.value);
-                                  setRecharge('0');
-                                }}
-                                onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                              />
-                              <InputRightAddon
-                                children={
-                                  <Tooltip label="Aternar entre porcentaje y valor">
-                                    <Button
-                                      tabIndex={8}
-                                      onClick={() => {
-                                        setPercent((current) => !current);
-                                        setDiscount('0');
-                                        setRecharge('0');
-                                      }}
+                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
+                      <Box position='relative' px="4" py='8'>
+                        <Divider />
+                        <AbsoluteCenter bg='white' px="2">
+                          <FormLabel htmlFor="otherTributes">Otros Tributos</FormLabel>
+                        </AbsoluteCenter>
+                      </Box>
+                      <FieldArray
+                        name="otherTributes"
+                        render={(arrayHelpers) => (
+                          <Stack w="full">
+                            {values?.otherTributes?.map((_, index) => (
+                              <Stack key={index} w='full' >
+                                <Stack alignItems="flex-end" direction="row" w="full">
+                                  <Box w='29%'>
+                                    <Input
+                                      defaultValue={0}
+                                      id={`otherTributes[${index}].amount`}
+                                      name={`otherTributes[${index}].amount`}
+                                      onChange={handleChange}
+                                      onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                    />
+                                  </Box>
+
+                                  <Box w='59%'>
+                                    <Select
+                                      id={`otherTributes.${index}.otherTributeId`}
+                                      minW="224px"
+                                      name={`otherTributes.${index}.otherTributeId`}
+                                      onChange={handleChange}
+
                                     >
-                                      <Icon as={CgArrowsExchangeAlt} />
-                                    </Button>
-                                  </Tooltip>
-                                }
-                                p="0"
-                              />
-                            </InputGroup>
-                            {errors.discount && touched.discount && (
-                              <ErrorMessage>{errors.discount}</ErrorMessage>
-                            )}
-                          </>
+                                      {otherTributes.map((tribute) => (
+                                        <option key={tribute.code} value={tribute.id}>
+                                          {tribute.code} - {tribute.description}
+                                        </option>
+                                      ))}
+                                    </Select>
+                                  </Box>
+                                  <Button flex={1} onClick={() => arrayHelpers.remove(index)}>
+                                    <Icon as={FaRegTrashAlt} color="brand" m="0 auto" />
+                                  </Button>
+                                </Stack>
+                                {Array.isArray(errors.otherTributes) && (
+                                  <ErrorMessage>{errors.otherTributes[index]['amount']}</ErrorMessage>
+                                )}
+                              </Stack>
+
+                            ))}
+
+                            <Button
+                              colorScheme="brand"
+                              isDisabled={values.otherTributes?.some(el => Number(el.amount) <= 0)}
+                              size="md"
+                              variant="outline"
+                              onClick={() => {
+                                arrayHelpers.push({
+                                  amount: 0,
+                                  otherTributeId: '1',
+                                });
+                              }}
+                            >
+                              <Icon as={BsPlusCircle} color="brand" mr="2" />
+                              Tributo
+                            </Button>
+                          </Stack>
                         )}
-                        {option === '3' && (
-                          <>
-                            <FormLabel htmlFor="recharge">Recargo:</FormLabel>
-                            <InputGroup>
-                              {percent ? (
-                                <InputLeftAddon children="%" w="48px" />
-                              ) : (
-                                <InputLeftAddon children="$" w="48px" />
-                              )}
-                              <Input
-                                id="recharge"
-                                name="recharge"
-                                tabIndex={9}
-                                value={recharge}
-                                onChange={(e) => {
-                                  handleChange(e);
-                                  setRecharge(e.target.value);
-                                  setDiscount('0');
-                                }}
-                                onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                              />
-                              <Tooltip label="Aternar entre porcentaje y valor">
+                      />
+                    </Stack>
+
+                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
+                      <Box position='relative' px="4" py='8'>
+                        <Divider />
+                        <AbsoluteCenter bg='white' px="2">
+                          <FormLabel htmlFor="option">Descuento/Recargo:</FormLabel>
+                        </AbsoluteCenter>
+                      </Box>
+                      <Box>
+                        <RadioGroup
+                          defaultValue={option}
+                          name="option"
+                          py={2}
+                          onChange={(e) => {
+                            setOption(e);
+                            setDiscount('0');
+                            setRecharge('0');
+                            formik.setFieldValue('discharge', '0');
+                            formik.setFieldValue('recharge', '0');
+                          }}
+                        >
+                          <Stack direction="row" gap="8">
+                            <Radio value="1">No aplicar</Radio>
+                            <Radio value="2">Aplicar Descuento</Radio>
+                            <Radio value="3">Aplicar Recargo</Radio>
+                          </Stack>
+                        </RadioGroup>
+                      </Box>
+
+                      {
+                        option !== "1" &&
+                        <Flex gap="8" justifyContent="space-between" >
+                          {option === '2' && (
+                            <Box w="full">
+                              <FormLabel htmlFor="discount">Descuento:</FormLabel>
+                              <InputGroup>
+                                {percent ? (
+                                  <InputLeftAddon children="%" w="48px" />
+                                ) : (
+                                  <InputLeftAddon children="$" w="48px" />
+                                )}
+                                <Input
+                                  id="discount"
+                                  name="discount"
+                                  value={discount}
+                                  onChange={(e) => {
+                                    handleChange(e);
+                                    setDiscount(e.target.value);
+                                    setRecharge('0');
+                                  }}
+                                  onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                />
                                 <InputRightAddon
                                   children={
-                                    <Button
-                                      tabIndex={10}
-                                      onClick={() => {
-                                        setPercent((current) => !current);
-                                        setDiscount('0');
-                                        setRecharge('0');
-                                      }}
-                                    >
-                                      <Icon as={CgArrowsExchangeAlt} />
-                                    </Button>
+                                    <Tooltip label="Aternar entre porcentaje y valor">
+                                      <Button
+                                        onClick={() => {
+                                          setPercent((current) => !current);
+                                          setDiscount('0');
+                                          setRecharge('0');
+                                        }}
+                                      >
+                                        <Icon as={CgArrowsExchangeAlt} />
+                                      </Button>
+                                    </Tooltip>
                                   }
                                   p="0"
                                 />
-                              </Tooltip>
-                            </InputGroup>
-                            {errors.recharge && touched.recharge && (
-                              <ErrorMessage>{errors.recharge}</ErrorMessage>
-                            )}
-                          </>
-                        )}
-                      </Box>
-                    </Flex>
+                              </InputGroup>
+                              {errors.discount && touched.discount && (
+                                <ErrorMessage>{errors.discount}</ErrorMessage>
+                              )}
+                            </Box>
+                          )}
+                          {option === '3' && (
+                            <Box w="full">
+                              <FormLabel htmlFor="recharge">Recargo:</FormLabel>
+                              <InputGroup>
+                                {percent ? (
+                                  <InputLeftAddon children="%" w="48px" />
+                                ) : (
+                                  <InputLeftAddon children="$" w="48px" />
+                                )}
+                                <Input
+                                  id="recharge"
+                                  name="recharge"
+                                  value={recharge}
+                                  onChange={(e) => {
+                                    handleChange(e);
+                                    setRecharge(e.target.value);
+                                    setDiscount('0');
+                                  }}
+                                  onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                />
+                                <Tooltip label="Aternar entre porcentaje y valor">
+                                  <InputRightAddon
+                                    children={
+                                      <Button
+                                        onClick={() => {
+                                          setPercent((current) => !current);
+                                          setDiscount('0');
+                                          setRecharge('0');
+                                        }}
+                                      >
+                                        <Icon as={CgArrowsExchangeAlt} />
+                                      </Button>
+                                    }
+                                    p="0"
+                                  />
+                                </Tooltip>
+                              </InputGroup>
+                              {errors.recharge && touched.recharge && (
+                                <ErrorMessage>{errors.recharge}</ErrorMessage>
+                              )}
+                            </Box>
+                          )}
+                        </Flex>
+                      }
+                    </Stack>
 
-                    <Box>
-                      <FormLabel htmlFor="info">Información extra:</FormLabel>
-                      <Textarea
-                        defaultValue={initialValues.info}
-                        id="info"
-                        name="info"
-                        placeholder="Info extra..."
-                        tabIndex={11}
-                        onChange={handleChange}
-                      />
-                    </Box>
+                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
+                      <Box position='relative' px="4" py='8'>
+                        <Divider />
+                        <AbsoluteCenter bg='white' px="2">
+                          <FormLabel htmlFor="info">Información extra:</FormLabel>
+                        </AbsoluteCenter>
+                      </Box>
+                      <Box>
+                        <Textarea
+                          defaultValue={initialValues.info}
+                          id="info"
+                          name="info"
+                          placeholder="Info extra..."
+                          onChange={handleChange}
+                        />
+                      </Box>
+                    </Stack>
+
+                    <Stack bg='gray.800' color='whitesmoke' pb="4" px="4" rounded='md' w="full">
+                      <Text fontSize={24} textAlign="right">
+                        {formatCurrency(totalCart)}
+                      </Text>
+                      {option === '2' && percent ? (
+                        <Text fontSize={18} textAlign="right">
+                          {formatCurrency(((totalCart * Number(discount)) / 100) * -1 || 0)}
+                        </Text>
+                      ) : (
+                        option === '2' && (
+                          <Text fontSize={18} textAlign="right">
+                            {formatCurrency(Number(discount) * -1 || 0)}
+                          </Text>
+                        )
+                      )}
+
+                      {option === '3' && percent ? (
+                        <Text fontSize={18} textAlign="right">
+                          {formatCurrency((totalCart * Number(recharge)) / 100 || 0)}
+                        </Text>
+                      ) : (
+                        option === '3' && (
+                          <Text fontSize={18} textAlign="right">
+                            {formatCurrency(Number(recharge) || 0)}
+                          </Text>
+                        )
+                      )}
+                      {
+                        values.otherTributes?.filter(el => Number(el.amount) > 0).length && values.otherTributes?.filter(el => Number(el.amount) > 0).length > 0 && (
+                          <Text fontSize={18} textAlign="right">
+                            {formatCurrency(values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0))}
+                          </Text>
+                        )
+                      }
+                      <Divider ml="auto" w="50%" />
+                      <Flex justifyContent="space-between" ml="auto" w="50%">
+                        <Text fontSize={24}>TOTAL:</Text>
+                        {percent && values.otherTributes?.length ? (
+                          <Text fontSize={24} fontWeight="semibold" textAlign="right">
+                            {!isNaN(totalCart + (totalCart * Number(recharge)) / 100 - (totalCart * Number(discount)) / 100) ? formatCurrency(
+                              totalCart + (totalCart * Number(recharge)) / 100 - (totalCart * Number(discount)) / 100 + values.otherTributes.reduce((acc, el) => acc + Number(el.amount), 0)
+                            ) : 'ERROR'}
+                          </Text>
+                        ) : (
+                          <Text fontSize={24} fontWeight="semibold" textAlign="right">
+                            {!isNaN(totalCart + Number(recharge) - Number(discount)) ? formatCurrency(totalCart + Number(recharge) - Number(discount) + (values?.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)) : 'ERROR'}
+                          </Text>
+                        )}
+                      </Flex>
+                    </Stack>
+
+                    <Stack direction="row" mt="4">
+                      <Button mr={3} type="reset" variant="outline" w="full" onClick={onReset}>
+                        CANCELAR
+                      </Button>
+                      <Button
+                        colorScheme="brand"
+                        isLoading={isLoading}
+                        loadingText="CARGANDO VENTA"
+                        type="submit"
+                        w="full"
+                      >
+                        CARGAR VENTA
+                      </Button>
+                    </Stack>
+
+                  </Stack>
+
+                  <Stack w="35%">
+                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
+                      <Heading color="brand.500" fontSize="28" pt="2" textAlign="center">
+                        Lista de Productos
+                      </Heading>
+                      <Stack maxH="818px" overflowY="auto">
+                        {cart.map((item) => {
+                          return (
+                            <Stack key={nanoid()} fontFamily="mono" fontSize={14} position="relative" py="1">
+                              <Box px="2">
+                                <Stack
+                                  alignItems="center"
+                                  bg={item.error ? 'red.500' : 'blackAlpha.700'}
+                                  direction="row"
+                                  justifyContent="space-between"
+                                  px="2"
+                                  rounded="md"
+                                >
+                                  <Text color={item.error ? 'white' : 'whitesmoke'} fontWeight="bold">
+                                    {item.name}
+                                  </Text>
+                                </Stack>
+                                <Text px="2">
+                                  cantidad: {item.quantity} {item.unit?.code}
+                                </Text>
+                                <Text px="2">precio: {formatCurrency(item.price)}</Text>
+                                <Text px="2">
+                                  iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}%)
+                                </Text>
+                                <Text px="2" textDecoration="underline">
+                                  subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                                </Text>
+                              </Box>
+                            </Stack>
+                          );
+                        })}
+                      </Stack>
+                      <Divider />
+                      <Text fontFamily="mono" fontSize="xl" fontWeight="bold" px="2" textAlign="right">
+                        {formatCurrency(totalCart)}
+                      </Text>
+                      <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">
+                        productos: ({totalCartItems})
+                      </Text>
+                    </Stack>
                   </Stack>
                 </Flex>
               </Stack>
 
-              <Stack p="4">
-                <Text fontSize={24} textAlign="right">
-                  {formatCurrency(totalCart)}
-                </Text>
-                {option === '2' && percent ? (
-                  <Text fontSize={18} textAlign="right">
-                    {formatCurrency(((totalCart * Number(discount)) / 100) * -1 || 0)}
-                  </Text>
-                ) : (
-                  option === '2' && (
-                    <Text fontSize={18} textAlign="right">
-                      {formatCurrency(Number(discount) * -1 || 0)}
-                    </Text>
-                  )
-                )}
 
-                {option === '3' && percent ? (
-                  <Text fontSize={18} textAlign="right">
-                    {formatCurrency((totalCart * Number(recharge)) / 100 || 0)}
-                  </Text>
-                ) : (
-                  option === '3' && (
-                    <Text fontSize={18} textAlign="right">
-                      {formatCurrency(Number(recharge) || 0)}
-                    </Text>
-                  )
-                )}
-                <Divider ml="auto" w="50%" />
-                <Flex justifyContent="space-between" ml="auto" w="50%">
-                  <Text fontSize={24}>TOTAL:</Text>
-                  {percent ? (
-                    <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                      {!isNaN(totalCart + (totalCart * Number(recharge)) / 100 - (totalCart * Number(discount)) / 100) ? formatCurrency(
-                        totalCart + (totalCart * Number(recharge)) / 100 - (totalCart * Number(discount)) / 100
-                      ) : 'ERROR'}
-                    </Text>
-                  ) : (
-                    <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                      {!isNaN(totalCart + Number(recharge) - Number(discount)) ? formatCurrency(totalCart + Number(recharge) - Number(discount)) : 'ERROR'}
-                    </Text>
-                  )}
-                </Flex>
-              </Stack>
-
-              <Stack direction="row" mt="8">
-                <Button mr={3} tabIndex={13} type="reset" variant="outline" w="full" onClick={onReset}>
-                  CANCELAR
-                </Button>
-                <Button
-                  colorScheme="brand"
-                  isLoading={isLoading}
-                  loadingText="CARGANDO VENTA"
-                  tabIndex={12}
-                  type="submit"
-                  w="full"
-                >
-                  CARGAR VENTA
-                </Button>
-              </Stack>
               <AutoSubmit />
             </form>
-          </FormikProvider>
+          </FormikProvider >
         )
       }
-    </Stack>
+    </Stack >
   );
 };

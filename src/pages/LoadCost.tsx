@@ -8,7 +8,7 @@ export const LoadCosts = () => {
   return (
     <CostsProvider>
       <DashBoard isIndeterminate={false} title="Actualizar Costos">
-        <Box w="1080px">
+        <Box bg="white" p="4" rounded="md" shadow="md" w="full">
           <Stack>
             <Stack alignItems="flex-start" direction="row">
               <CostTable />

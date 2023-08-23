@@ -49,7 +49,7 @@ export const Transfers = () => {
         <Loading />
       ) : (
         <>
-          <Box w="full">
+          <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
               showGlobalFilter

@@ -7,6 +7,7 @@ import {
   IVACondition,
   Identification,
   InvoceType,
+  OtherTribute,
   PaymentMethod,
   PriceList,
   Pricelists,
@@ -251,5 +252,11 @@ export interface IdentificationsResponse {
 export interface InvoceTypesResponse {
   body: {
     invoceTypes: InvoceType[];
+  };
+}
+
+export interface OtherTributesResponse {
+  body: {
+    otherTributes: OtherTribute[];
   };
 }

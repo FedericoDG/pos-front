@@ -25,7 +25,7 @@ export const Stepper = () => {
       p="4"
       rounded="md"
       shadow="md"
-      w="1080px"
+      w="full"
     >
       <ChakraStepper colorScheme="brand" index={activeStep} size="lg" w="full">
         {steps.map((step, index) => (

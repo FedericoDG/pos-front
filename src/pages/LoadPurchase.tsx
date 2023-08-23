@@ -18,7 +18,7 @@ export const LoadPurchase = () => {
       <DashBoard isIndeterminate={false} title="Cargar Compra">
         <Steps />
 
-        <Box w="1080px">
+        <Box w="full">
           <StepperWrapper step={1}>
             <SupplierAndWarehouse />
           </StepperWrapper>
@@ -30,7 +30,14 @@ export const LoadPurchase = () => {
           <StepperWrapper step={3}>
             <Stack>
               <Card />
-              <Stack alignItems="flex-start" direction="row">
+              <Stack
+                alignItems="flex-start"
+                bg="white"
+                direction="row"
+                p="4"
+                rounded="md"
+                shadow="md"
+              >
                 <ProductsTable />
                 <Basket />
               </Stack>

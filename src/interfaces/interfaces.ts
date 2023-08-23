@@ -372,3 +372,12 @@ export interface Identification {
   createdAt?: number;
   updatedAt?: number;
 }
+
+export interface OtherTribute {
+  id?: number;
+  code: string;
+  description: string;
+  observation: string;
+  createdAt?: number;
+  updatedAt?: number;
+}

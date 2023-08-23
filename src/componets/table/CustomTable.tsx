@@ -131,7 +131,7 @@ export const CustomTable = <T extends object>({
   };
 
   return (
-    <Box _dark={{ bg: 'gray.700' }} bg="white" mb={20} p="4" rounded="md" shadow="md" w="full">
+    <Box _dark={{ bg: 'gray.700' }} bg="white" w="full">
       <Flex gap="1" justifyContent="flex-end">
         {showPrintOption && (
           <Button colorScheme="linkedin" leftIcon={<ImPrinter />} size="sm" onClick={handlePrint}>

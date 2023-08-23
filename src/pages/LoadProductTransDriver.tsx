@@ -16,14 +16,21 @@ export const LoadProductTransDriver = () => {
     <ProductTransProvider>
       <DashBoard isIndeterminate={false} title="Transferencia entre depósito y chofer">
         <Steps />
-        <Box w="1080px">
+        <Box w="full">
           <StepperWrapper step={1}>
             <SupplierAndWarehouse />
           </StepperWrapper>
           <StepperWrapper step={2}>
             <Stack>
               <Card />
-              <Stack alignItems="flex-start" direction="row">
+              <Stack
+                alignItems="flex-start"
+                bg="white"
+                direction="row"
+                p="4"
+                rounded="md"
+                shadow="md"
+              >
                 <DischargesTable />
                 <Basket />
               </Stack>

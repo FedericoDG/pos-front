@@ -22,7 +22,7 @@ export const TransportAndDriver = () => {
   }, [goToNext]);
 
   return (
-    <Stack bg="white" mb="4" p="4" rounded="md" w="full">
+    <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"

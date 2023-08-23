@@ -62,7 +62,7 @@ export const Basket = ({ refetch }: Props) => {
   if (cart.length === 0) return null;
 
   return (
-    <Stack bg="white" rounded="md" shadow="md" w="35%">
+    <Stack bg="white" border="1px solid whitesmoke" pb="4" px="4" rounded="md" w="35%">
       <Heading color="brand.500" fontSize="28" pt="2" textAlign="center">
         Lista de Productos
       </Heading>

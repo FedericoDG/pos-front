@@ -25,7 +25,7 @@ export const SupplierAndWarehouse = () => {
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
   const [mappedWarehouses2, setMappedWarehouses2] = useState<SelectedWarehouse[]>([]);
 
-  const [enabledFilter, setEnabledFilter] = useState<boolean>(false);
+  const [enabledFilter] = useState<boolean>(false);
 
   useEffect(() => {
     if (!warehouses) return;
@@ -75,7 +75,7 @@ export const SupplierAndWarehouse = () => {
   if (!warehouses) return <Loading />;
 
   return (
-    <Stack bg="white" mb="4" p="4" rounded="md" w="full">
+    <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"
@@ -98,17 +98,6 @@ export const SupplierAndWarehouse = () => {
             : 'Seleccione los Depósitos de Origen y Destino.'}
         </Alert>
       </Box>
-      {/* <FormControl alignItems="center" display="flex" my="2">
-        <Switch
-          colorScheme="brand"
-          defaultChecked={enabledFilter}
-          id="drivers"
-          onChange={(e) => setEnabledFilter(e.target.checked)}
-        />
-        <FormLabel htmlFor="drivers" mb="0" ml="2">
-          Choferes
-        </FormLabel>
-      </FormControl> */}
       <Stack direction="row">
         <Box w="full">
           <FormLabel htmlFor="warehouse">Depósito de Origen:</FormLabel>

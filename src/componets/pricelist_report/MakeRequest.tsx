@@ -14,8 +14,6 @@ export const MakeRequest = () => {
       bg="white"
       justifyContent="center"
       p="5"
-      rounded="md"
-      shadow="md"
       w="full"
     >
       <Button

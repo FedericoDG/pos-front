@@ -11,6 +11,7 @@ export const Card = () => {
       bg="white"
       direction="row"
       justifyContent="space-between"
+      mb="2"
       p="4"
       rounded="md"
       shadow="md"

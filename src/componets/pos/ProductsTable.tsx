@@ -31,8 +31,8 @@ export const ProductsTable = () => {
   if (!products) return null;
 
   return (
-    <Stack alignItems="flex-start" direction="row">
-      <Box width="65%">
+    <Stack alignItems="flex-start" bg="white" direction="row" p="4" rounded="md" shadow="md">
+      <Box width="64%">
         <CustomTable
           showGlobalFilter
           showNavigation
