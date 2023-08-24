@@ -57,7 +57,15 @@ export const Drivers = () => {
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Choferes">
-      <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
+      <Button
+        colorScheme="brand"
+        leftIcon={<HiPlus />}
+        mb={4}
+        ml="auto"
+        shadow="lg"
+        size="lg"
+        onClick={onOpen}
+      >
         CREAR CHOFER
       </Button>
 

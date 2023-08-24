@@ -39,6 +39,7 @@ export const Purchases = () => {
         leftIcon={<HiPlus />}
         mb={4}
         ml="auto"
+        shadow="lg"
         size="lg"
         onClick={() => navigate('/panel/stock/compras/cargar')}
       >

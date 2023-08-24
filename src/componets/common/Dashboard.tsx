@@ -167,6 +167,8 @@ export const DashBoard = ({ children, title }: Props) => {
             mb={4}
             p={4}
             pb={0}
+            //style={{ scrollbarGutter: 'stable', overflow: 'hidden' }}
+            // style={{ scrollbarGutter: 'stable both-edges', overflow: 'hidden' }}
             w="full"
             zIndex={1}
           >

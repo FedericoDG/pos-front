@@ -58,7 +58,15 @@ export const Clients = () => {
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Clientes">
-      <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
+      <Button
+        colorScheme="brand"
+        leftIcon={<HiPlus />}
+        mb={4}
+        ml="auto"
+        shadow="lg"
+        size="lg"
+        onClick={onOpen}
+      >
         CREAR CLIENTE
       </Button>
 

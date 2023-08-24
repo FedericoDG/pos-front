@@ -32,6 +32,7 @@ import { Select as ReactSelect } from 'chakra-react-select';
 import { Heading } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 import { ErrorMessage, Loading } from '../common';
 import { useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods } from '../../hooks';
@@ -293,8 +294,18 @@ export const FinishSale = () => {
           <FormikProvider value={formik}>
             <form onSubmit={handleSubmit}>
               <Stack spacing="14px">
-                <Flex gap="8" justifyContent="space-between">
+                <Button
+                  colorScheme="brand"
+                  leftIcon={<ArrowBackIcon />}
+                  minW="150px"
+                  mr="auto"
+                  size="lg"
+                  onClick={() => goToPrevious()}
+                >
+                  VOLVER
+                </Button>
 
+                <Flex gap="8" justifyContent="space-between">
                   <Stack w="64%">
                     <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
                       <Box position='relative' px="4" py='8'>
@@ -342,21 +353,24 @@ export const FinishSale = () => {
                               <Stack key={index} w="full">
                                 <Stack alignItems="flex-end" direction="row" w="full">
                                   <Box w={'29%'}>
-                                    <Input
-                                      defaultValue={
-                                        values.payments.length === 1
-                                          ? Math.round((totalCart + Number.EPSILON) * 100) / 100
-                                          : Math.round(
-                                            (Number(values.payments[index].amount) + Number.EPSILON) *
-                                            100
-                                          ) / 100
-                                      }
-                                      id={`payments[${index}].amount`}
-                                      name={`payments[${index}].amount`}
-                                      placeholder='importe'
-                                      onChange={handleChange}
-                                      onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                                    />
+                                    <InputGroup>
+                                      <InputLeftAddon children="$" />
+                                      <Input
+                                        defaultValue={
+                                          values.payments.length === 1
+                                            ? Math.round((totalCart + Number.EPSILON) * 100) / 100
+                                            : Math.round(
+                                              (Number(values.payments[index].amount) + Number.EPSILON) *
+                                              100
+                                            ) / 100
+                                        }
+                                        id={`payments[${index}].amount`}
+                                        name={`payments[${index}].amount`}
+                                        placeholder='importe'
+                                        onChange={handleChange}
+                                        onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                      />
+                                    </InputGroup>
                                     {typeof errors.payments === 'string' && (
                                       <ErrorMessage>{errors.payments}</ErrorMessage>
                                     )}
@@ -429,13 +443,16 @@ export const FinishSale = () => {
                               <Stack key={index} w='full' >
                                 <Stack alignItems="flex-end" direction="row" w="full">
                                   <Box w='29%'>
-                                    <Input
-                                      defaultValue={0}
-                                      id={`otherTributes[${index}].amount`}
-                                      name={`otherTributes[${index}].amount`}
-                                      onChange={handleChange}
-                                      onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                                    />
+                                    <InputGroup>
+                                      <InputLeftAddon children="$" />
+                                      <Input
+                                        defaultValue={0}
+                                        id={`otherTributes[${index}].amount`}
+                                        name={`otherTributes[${index}].amount`}
+                                        onChange={handleChange}
+                                        onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                      />
+                                    </InputGroup>
                                   </Box>
 
                                   <Box w='59%'>
@@ -626,33 +643,58 @@ export const FinishSale = () => {
                         {formatCurrency(totalCart)}
                       </Text>
                       {option === '2' && percent ? (
-                        <Text fontSize={18} textAlign="right">
-                          {formatCurrency(((totalCart * Number(discount)) / 100) * -1 || 0)}
-                        </Text>
+                        <Stack direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            (Descuento)ss
+                          </Text>
+                          <Text fontSize={18} textAlign="right" w="20%">
+                            {formatCurrency(((totalCart * Number(discount)) / 100) * -1 || 0)}
+                          </Text>
+                        </Stack>
                       ) : (
                         option === '2' && (
-                          <Text fontSize={18} textAlign="right">
-                            {formatCurrency(Number(discount) * -1 || 0)}
-                          </Text>
+                          <Stack direction='row' justifyContent="flex-end" w="full">
+                            <Text textAlign="right" w="80%" >
+                              (Descuento)
+                            </Text>
+                            <Text fontSize={18} textAlign="right" w="20%">
+                              {formatCurrency(Number(discount) * -1 || 0)}
+                            </Text>
+                          </Stack>
                         )
                       )}
 
                       {option === '3' && percent ? (
-                        <Text fontSize={18} textAlign="right">
-                          {formatCurrency((totalCart * Number(recharge)) / 100 || 0)}
-                        </Text>
+                        <Stack direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            (Recargo)
+                          </Text>
+                          <Text fontSize={18} textAlign="right" w="20%">
+                            {formatCurrency((totalCart * Number(recharge)) / 100 || 0)}
+                          </Text>
+                        </Stack>
                       ) : (
                         option === '3' && (
-                          <Text fontSize={18} textAlign="right">
-                            {formatCurrency(Number(recharge) || 0)}
-                          </Text>
+                          <Stack direction='row' justifyContent="flex-end" w="full">
+                            <Text textAlign="right" w="80%" >
+                              (Recargo)
+                            </Text>
+                            <Text fontSize={18} textAlign="right" w="20%">
+                              {formatCurrency(Number(recharge) || 0)}
+                            </Text>
+                          </Stack>
                         )
                       )}
                       {
                         values.otherTributes?.filter(el => Number(el.amount) > 0).length && values.otherTributes?.filter(el => Number(el.amount) > 0).length > 0 && (
-                          <Text fontSize={18} textAlign="right">
-                            {formatCurrency(values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0))}
-                          </Text>
+                          <Stack direction='row' justifyContent="flex-end" w="full">
+                            <Text textAlign="right" w="80%" >
+                              (Otros Impuestos)
+                            </Text>
+                            <Text fontSize={18} textAlign="right" w="20%">
+                              {formatCurrency(values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0))}
+                            </Text>
+                          </Stack>
                         )
                       }
                       <Divider ml="auto" w="50%" />

@@ -9,7 +9,7 @@ interface Props<T extends object> {
 }
 
 export const Navigation = <T extends object>({ table, memoAmount }: Props<T>) => (
-  <Box bg="gray.700" borderRadius="md" color="white" my={1}>
+  <Box bg="brand.700" borderRadius="md" color="white" my={1}>
     <Flex alignItems="center" justifyContent="flex-end" p={1} w="full">
       <Flex alignItems="center" mr="10">
         <Text fontSize="md">

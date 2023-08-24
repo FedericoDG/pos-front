@@ -39,6 +39,7 @@ export const Discharges = () => {
         leftIcon={<HiPlus />}
         mb={4}
         ml="auto"
+        shadow="lg"
         size="lg"
         onClick={() => navigate('/panel/stock/bajas/cargar')}
       >

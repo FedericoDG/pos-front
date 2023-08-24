@@ -142,7 +142,10 @@ export const ProductDetails = () => {
             <Card shadow="md">
               <CardHeader>
                 <Box alignItems="center" display="flex" justifyContent="space-between">
-                  <Heading size="md">{product.name.toUpperCase()}</Heading>
+                  <Stack>
+                    <Heading size="md">{product.name.toUpperCase()}</Heading>
+                    <Text fontSize="md">iva: {product.ivaCondition?.description!}</Text>
+                  </Stack>
                   <Box h="92px" w="266px">
                     {product.barcode && (
                       <Barcode ref={barcodeRef} height={50} value={product.barcode} width={2} />
@@ -229,7 +232,7 @@ export const ProductDetails = () => {
                     <Table size="sm">
                       <Thead>
                         <Tr>
-                          <Th bg="gray.700" color="whitesmoke">
+                          <Th isNumeric bg="gray.700" color="whitesmoke">
                             STOCK TOTAL
                           </Th>
                         </Tr>
@@ -237,6 +240,7 @@ export const ProductDetails = () => {
                       <Tbody>
                         <Tr>
                           <Td
+                            isNumeric
                             bg={getBgColor({
                               totalStock: product.totalStock!,
                               alertNeg: product.alertlowstock,
@@ -256,7 +260,7 @@ export const ProductDetails = () => {
                           <Th bg="gray.700" color="whitesmoke">
                             DEPÓSITO
                           </Th>
-                          <Th bg="gray.700" color="whitesmoke">
+                          <Th isNumeric bg="gray.700" color="whitesmoke">
                             STOCK
                           </Th>
                         </Tr>
@@ -265,7 +269,7 @@ export const ProductDetails = () => {
                         {product.stocks.map((item) => (
                           <Tr key={nanoid()}>
                             <Td>{item.warehouse.code}</Td>
-                            <Td>
+                            <Td isNumeric>
                               {item.stock} {product.unit?.code}
                             </Td>
                           </Tr>
@@ -286,22 +290,32 @@ export const ProductDetails = () => {
                   <Thead>
                     <Tr>
                       <Th bg="gray.700" color="whitesmoke">
-                        PRECIO
-                      </Th>
-                      <Th bg="gray.700" color="whitesmoke">
                         LISTA DE PRECIO
                       </Th>
                       <Th bg="gray.700" color="whitesmoke">
                         FECHA
+                      </Th>
+                      <Th isNumeric bg="gray.700" color="whitesmoke">
+                        PRECIO
+                      </Th>
+                      <Th isNumeric bg="gray.700" color="whitesmoke">
+                        PRECIO CON IVA
                       </Th>
                     </Tr>
                   </Thead>
                   <Tbody>
                     {product.prices!.map((item) => (
                       <Tr key={nanoid()}>
-                        <Td fontWeight="semibold">{formatCurrency(item?.price! || 0)}</Td>
                         <Td>{item?.pricelists?.code}</Td>
                         <Td w="180px">{formatDate(item?.createdAt)}</Td>
+                        <Td isNumeric fontWeight="semibold">
+                          {formatCurrency(item?.price! || 0)}
+                        </Td>
+                        <Td isNumeric fontWeight="semibold">
+                          {formatCurrency(
+                            item?.price! + item?.price! * product.ivaCondition?.tax! || 0
+                          )}
+                        </Td>
                       </Tr>
                     ))}
                   </Tbody>
@@ -317,17 +331,19 @@ export const ProductDetails = () => {
                     <Thead>
                       <Tr>
                         <Th bg="gray.700" color="whitesmoke">
-                          COSTO
-                        </Th>
-                        <Th bg="gray.700" color="whitesmoke">
                           FECHA
+                        </Th>
+                        <Th isNumeric bg="gray.700" color="whitesmoke">
+                          COSTO
                         </Th>
                       </Tr>
                     </Thead>
                     <Tbody>
                       <Tr key={nanoid()}>
-                        <Td fontWeight="semibold">{formatCurrency(product.costs[0].price)}</Td>
                         <Td w="180px">{formatDate(product.costs[0].createdAt)}</Td>
+                        <Td isNumeric fontWeight="semibold">
+                          {formatCurrency(product.costs[0].price)}
+                        </Td>
                       </Tr>
                     </Tbody>
                   </Table>

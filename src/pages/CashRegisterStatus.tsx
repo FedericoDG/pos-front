@@ -109,6 +109,7 @@ export const CashRegisterStatus = () => {
                 leftIcon={<HiPlus />}
                 mb={4}
                 ml="auto"
+                shadow="lg"
                 size="lg"
                 onClick={onOpen}
               >
@@ -123,6 +124,7 @@ export const CashRegisterStatus = () => {
                   leftIcon={<AiOutlineClose />}
                   mb={4}
                   ml="auto"
+                  shadow="lg"
                   size="lg"
                   onClick={closeCashRegister}
                 >

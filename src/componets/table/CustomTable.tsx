@@ -203,7 +203,7 @@ export const CustomTable = <T extends object>({
                   return (
                     <Th
                       key={header.id}
-                      bg="gray.700"
+                      bg="brand.700"
                       colSpan={header.colSpan}
                       color="whitesmoke"
                       px="1"

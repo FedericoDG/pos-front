@@ -39,6 +39,7 @@ export const Transfers = () => {
         leftIcon={<HiPlus />}
         mb={4}
         ml="auto"
+        shadow="lg"
         size="lg"
         onClick={() => navigate('/panel/stock/transferencias/crear')}
       >

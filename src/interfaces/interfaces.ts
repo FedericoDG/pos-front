@@ -288,11 +288,15 @@ export interface CashRegister {
   isOpen?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  total: number;
   cash: number;
   debit: number;
   credit: number;
   transfer: number;
   mercadoPago: number;
+  discounts: number;
+  recharges: number;
+  otherTributes: number;
   user?: User;
   cashMovements?: CashMovement[];
 }
@@ -302,6 +306,7 @@ export interface CashMovement {
   subtotal: number;
   discount: number;
   recharge: number;
+  otherTributes: number;
   total: number;
   cashRegisterId: number;
   clientId: number;
@@ -317,6 +322,7 @@ export interface CashMovement {
   paymentMethod?: PaymentMethod;
   cashMovementsDetails?: CashMovementsDetail[];
   paymentMethodDetails?: PaymentMethodDetails[];
+  otherTributesDetails?: OtherTributeDetails[];
 }
 
 export interface CashMovementsDetail {
@@ -380,4 +386,14 @@ export interface OtherTribute {
   observation: string;
   createdAt?: number;
   updatedAt?: number;
+}
+
+export interface OtherTributeDetails {
+  id?: number;
+  cashMovementId: number;
+  amount: number;
+  otherTributeId: number;
+  createdAt?: number;
+  updatedAt?: number;
+  otherTribute?: OtherTribute;
 }

@@ -12,13 +12,13 @@ import {
   Flex,
   FormLabel,
   Input,
-  InputLeftElement,
+  InputLeftAddon,
   Select,
   Stack,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
-import { InputGroup } from '@chakra-ui/react';
+import { InputGroup, AlertIcon, Alert, Text } from '@chakra-ui/react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
@@ -112,6 +112,12 @@ export const Drawer = ({
           >
             Actualizar Precio
           </DrawerHeader>
+          <Alert status="warning">
+            <AlertIcon />
+            <Text>
+              Los precios deben ser <span style={{ fontWeight: 'bold' }}>SIN IVA</span>
+            </Text>
+          </Alert>
           <form onSubmit={handleSubmit}>
             <DrawerBody>
               <Stack spacing="14px">
@@ -140,24 +146,17 @@ export const Drawer = ({
                 <Box>
                   <FormLabel htmlFor="price">Precio:</FormLabel>
                   <InputGroup>
-                    <InputLeftElement
-                      children="$"
-                      color="gray.500"
-                      fontSize="1.25rem"
-                      pointerEvents="none"
-                      pt="6px"
-                    />
+                    <InputLeftAddon children="$" />
                     <Input
                       id="price"
                       name="price"
                       placeholder="20"
-                      size="lg"
                       value={values.price}
                       onChange={handleChange}
                       onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                     />
-                    {errors.price && touched.price && <ErrorMessage>{errors.price}</ErrorMessage>}
                   </InputGroup>
+                  {errors.price && touched.price && <ErrorMessage>{errors.price}</ErrorMessage>}
                 </Box>
               </Stack>
             </DrawerBody>

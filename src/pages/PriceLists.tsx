@@ -32,7 +32,15 @@ export const PriceLists = () => {
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Listas de Precios">
-      <Button colorScheme="brand" leftIcon={<HiPlus />} mb={4} ml="auto" size="lg" onClick={onOpen}>
+      <Button
+        colorScheme="brand"
+        leftIcon={<HiPlus />}
+        mb={4}
+        ml="auto"
+        shadow="lg"
+        size="lg"
+        onClick={onOpen}
+      >
         CREAR LISTA DE PRECIOS
       </Button>
 

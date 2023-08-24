@@ -10,7 +10,7 @@ import { useProductColumns } from './hooks/useProductColumns';
 import { Basket, CartItem, Modal, usePosContext } from '.';
 
 export const ProductsTable = () => {
-  const { priceList, warehouse } = usePosContext();
+  const { priceList, warehouse, cart } = usePosContext();
   const { data: products, refetch } = useGetPriceListByWarehouseId(priceList?.id!, warehouse?.id!);
   const { tableInput } = useMyContext();
 
@@ -31,7 +31,14 @@ export const ProductsTable = () => {
   if (!products) return null;
 
   return (
-    <Stack alignItems="flex-start" bg="white" direction="row" p="4" rounded="md" shadow="md">
+    <Stack
+      alignItems={cart.length === 0 ? 'center' : 'flex-start'}
+      bg="white"
+      direction="row"
+      p="4"
+      rounded="md"
+      shadow="md"
+    >
       <Box width="64%">
         <CustomTable
           showGlobalFilter

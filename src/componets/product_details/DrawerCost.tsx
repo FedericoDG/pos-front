@@ -136,8 +136,8 @@ export const DrawerCost = ({
                         onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                       />
                     </InputGroup>
+                    {errors.cost && touched.cost && <ErrorMessage>{errors.cost}</ErrorMessage>}
                   </Box>
-                  {errors.cost && touched.cost && <ErrorMessage>{errors.cost}</ErrorMessage>}
                 </Flex>
               </Stack>
             </DrawerBody>
