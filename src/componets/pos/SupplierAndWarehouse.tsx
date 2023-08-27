@@ -1,5 +1,14 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { Box, Stack, Alert, AlertIcon, FormLabel, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Stack,
+  Alert,
+  AlertIcon,
+  FormLabel,
+  Button,
+  FormControl,
+  Switch,
+} from '@chakra-ui/react';
 import { GroupBase, Select, SelectInstance } from 'chakra-react-select';
 import { useEffect, useRef, useState } from 'react';
 
@@ -19,8 +28,17 @@ export const SupplierAndWarehouse = () => {
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
 
-  const { goToNext, client, warehouse, setClient, setWarehouse, priceList, setPriceList } =
-    usePosContext();
+  const {
+    client,
+    goToNext,
+    iva,
+    priceList,
+    setClient,
+    setIva,
+    setPriceList,
+    setWarehouse,
+    warehouse,
+  } = usePosContext();
 
   useEffect(() => {
     if (!priceLists || !clients || !warehouses) return;
@@ -56,7 +74,12 @@ export const SupplierAndWarehouse = () => {
     if (mappedPriceLists.length < 1 || mappedClients.length < 1 || mappedWarehouses.length < 1)
       return;
 
-    setClient(mappedClients.find((el) => el.id === user.userPreferences?.clientId)!);
+    if (!iva) {
+      setClient(mappedClients.filter((el) => el.document === 'xxxxxxxx')[0]);
+    } else {
+      setClient(mappedClients.find((el) => el.id === user.userPreferences?.clientId)!);
+    }
+
     setPriceList(mappedPriceLists.find((el) => el.id === user.userPreferences?.priceListId)!);
 
     if (user.roleId === 4) {
@@ -65,6 +88,7 @@ export const SupplierAndWarehouse = () => {
       setWarehouse(mappedWarehouses.find((el) => el.id === user.userPreferences?.warehouseId)!);
     }
   }, [
+    iva,
     mappedClients,
     mappedClients.length,
     mappedPriceLists,
@@ -113,7 +137,7 @@ export const SupplierAndWarehouse = () => {
           ml="auto"
           rightIcon={<ArrowForwardIcon />}
           size="lg"
-          tabIndex={4}
+          tabIndex={5}
           onClick={() => goToNext()}
         >
           SIGUIENTE
@@ -124,6 +148,19 @@ export const SupplierAndWarehouse = () => {
           <AlertIcon />
           Seleccione la Lista de Precio, el Depósito y el Cliente.
         </Alert>
+        <FormControl alignItems="center" display="flex" mt={4}>
+          <FormLabel htmlFor="iva" m="0" mr="2" py="4">
+            IVA:
+          </FormLabel>
+          <Switch
+            colorScheme="brand"
+            id="iva"
+            isChecked={iva}
+            size="lg"
+            tabIndex={4}
+            onChange={() => setIva((current) => !current)}
+          />
+        </FormControl>
       </Box>
       <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
         <Box w="49%">
@@ -176,7 +213,7 @@ export const SupplierAndWarehouse = () => {
             isSearchable
             colorScheme="brand"
             id="client"
-            isDisabled={!priceList?.value || !warehouse?.value}
+            isDisabled={!priceList?.value || !warehouse?.value || !iva}
             options={mappedClients}
             placeholder="Seleccionar Cliente"
             selectedOptionColorScheme="brand"

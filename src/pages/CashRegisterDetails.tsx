@@ -23,6 +23,7 @@ import { useReactToPrint } from 'react-to-print';
 import React, { useEffect, useRef, useState } from 'react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { AiOutlineClose } from 'react-icons/ai';
+import { toast } from 'react-toastify';
 
 import { DashBoard, Loading } from '../componets/common';
 import { formatCurrency, formatDate, formatDateAndHour } from '../utils';
@@ -99,13 +100,24 @@ export const CashRegisterDetails = () => {
 
   const navigate = useNavigate();
 
+  const onSuccessClose = () => {
+    toast.info('Caja cerrada', {
+      theme: 'colored',
+      position: toast.POSITION.BOTTOM_LEFT,
+      autoClose: 3000,
+      closeOnClick: true,
+    });
+
+    navigate('/panel/caja');
+  };
+
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
       {!cashRegister ? (
         <Loading />
       ) : (
         <>
-          {user?.role?.name! !== 'DRIVER' && cashRegister.closingDate === null && (
+          {user?.role?.name! !== 'DRIVER' && cashRegister.closingDate === null && cashRegister.user?.role?.name === "DRIVER" && (
             <Button
               colorScheme="brand"
               leftIcon={<AiOutlineClose />}
@@ -117,6 +129,18 @@ export const CashRegisterDetails = () => {
               CERRAR CAJA
             </Button>
           )}
+          {/*  {user?.role?.name! !== 'DRIVER' && cashRegister.closingDate === null && cashRegister.user?.role?.name !== "DRIVER" && (
+            <Button
+              colorScheme="brand"
+              leftIcon={<AiOutlineClose />}
+              mb={4}
+              ml="auto"
+              size="lg"
+              onClick={() => console.log('CLICK')}
+            >
+              CERRAR CAJA de otro que no sea un chofer (no funciona)
+            </Button>
+          )} */}
           <Flex
             alignItems="center"
             bg="white"
@@ -199,7 +223,7 @@ export const CashRegisterDetails = () => {
                           Saldo Inicial
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
-                          Ventas
+                          Ventas Brutas
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
                           Descuentos
@@ -225,7 +249,7 @@ export const CashRegisterDetails = () => {
                           {formatCurrency(cashRegister.initialBalance)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
-                          {formatCurrency(cashRegister.total)}
+                          {formatCurrency(cashRegister.sales + cashRegister.discounts - cashRegister.recharges - cashRegister.otherTributes)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
                           {formatCurrency(cashRegister.discounts)}
@@ -237,7 +261,7 @@ export const CashRegisterDetails = () => {
                           {formatCurrency(cashRegister.otherTributes)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontSize={16} fontWeight="bold">
-                          {formatCurrency(cashRegister.total + cashRegister.initialBalance)}
+                          {formatCurrency(cashRegister.finalBalance + cashRegister.initialBalance)}
                         </Td>
                       </Tr>
                     </Tbody>
@@ -247,7 +271,7 @@ export const CashRegisterDetails = () => {
                 <TableContainer w="full">
                   <Table size="sm" w="full">
                     <Text as={'caption'} textAlign="left">
-                      Ventas
+                      Forma de Pago
                     </Text>
                     <Thead>
                       <Tr>
@@ -256,7 +280,7 @@ export const CashRegisterDetails = () => {
                         <Th isNumeric bg="gray.700" color="white">Crédito</Th>
                         <Th isNumeric bg="gray.700" color="white">Transferencia</Th>
                         <Th isNumeric bg="gray.700" color="white">Mercado Pago</Th>
-                        <Th isNumeric bg="gray.700" color="white">Total Ventas</Th>
+                        <Th isNumeric bg="gray.700" color="white">Total</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -277,7 +301,7 @@ export const CashRegisterDetails = () => {
                           {formatCurrency(cashRegister.mercadoPago)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
-                          {formatCurrency(cashRegister.total)}
+                          {formatCurrency(cashRegister.sales)}
                         </Td>
                       </Tr>
                     </Tbody>
@@ -341,6 +365,11 @@ export const CashRegisterDetails = () => {
 
                             {algo.find((el) => el.id === movement.id)?.open && (
                               <>
+                                <Tr className='no-print'>
+                                  <Td borderWidth={0} colSpan={7} textAlign='right'>
+                                    <Button size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/${movement.id}`)}>Ver Comprobante</Button>
+                                  </Td>
+                                </Tr>
                                 <Tr>
                                   <Td colSpan={5} px="0">
                                     <TableContainer w="843px">
@@ -447,12 +476,36 @@ export const CashRegisterDetails = () => {
                                                 <Td border="none" w="131px">
                                                   {formatCurrency(detail.price)}
                                                 </Td>
-                                                <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w="100px">
-                                                  {`${formatTwoDigits(detail.product?.ivaCondition?.tax! * 100)}%`}
-                                                </Td>
-                                                <Td isNumeric border="none" w="121px">
-                                                  {formatCurrency(detail.price * detail.quantity * (1 + detail.product?.ivaCondition?.tax!))}
-                                                </Td>
+                                                {
+                                                  movement.iva ?
+                                                    (
+                                                      <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w="100px">
+                                                        {`${formatTwoDigits(detail.product?.ivaCondition?.tax! * 100)}%`}
+                                                      </Td>
+
+                                                    ) :
+                                                    (
+                                                      <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w="100px">
+                                                        {`${formatTwoDigits(0)}%`}
+                                                      </Td>
+
+                                                    )
+                                                }
+                                                {
+                                                  movement.iva ?
+                                                    (
+
+                                                      <Td isNumeric border="none" w="121px">
+                                                        {formatCurrency(detail.price * detail.quantity * (1 + detail.product?.ivaCondition?.tax!))}
+                                                      </Td>
+                                                    ) :
+                                                    (
+                                                      <Td isNumeric border="none" w="121px">
+                                                        {formatCurrency(detail.price * detail.quantity)}
+                                                      </Td>
+
+                                                    )
+                                                }
                                               </Tr>
                                             );
                                           })}
@@ -509,7 +562,7 @@ export const CashRegisterDetails = () => {
                                                 color="black"
                                                 w="843px"
                                               >
-                                                Descuentos
+                                                Recargos
                                               </Th>
                                             </Tr>
                                           </Thead>
@@ -525,41 +578,44 @@ export const CashRegisterDetails = () => {
                                     </Td>
                                   </Tr>)
                                 }
+                                {
+                                  movement.otherTributes > 0 &&
 
-                                <Tr>
-                                  <Td colSpan={5} px="0">
-                                    <TableContainer w="843px">
-                                      <Table size="sm">
-                                        <Thead>
-                                          <Tr>
-                                            <Th
-                                              borderBottomWidth="1"
-                                              borderColor="black"
-                                              borderStyle="solid"
-                                              colSpan={4}
-                                              color="black"
-                                              w="843px"
-                                            >
-                                              Otros Impuestos
-                                            </Th>
-                                          </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                          {movement.otherTributesDetails?.map((detail) => (
-                                            <Tr key={nanoid()}>
-                                              <Td border="none" w="150px">
-                                                {formatCurrency(detail.amount)}
-                                              </Td>
-                                              <Td border="none" w="693px">
-                                                {detail.otherTribute?.description}
-                                              </Td>
+                                  <Tr>
+                                    <Td colSpan={5} px="0">
+                                      <TableContainer w="843px">
+                                        <Table size="sm">
+                                          <Thead>
+                                            <Tr>
+                                              <Th
+                                                borderBottomWidth="1"
+                                                borderColor="black"
+                                                borderStyle="solid"
+                                                colSpan={4}
+                                                color="black"
+                                                w="843px"
+                                              >
+                                                Otros Impuestos
+                                              </Th>
                                             </Tr>
-                                          ))}
-                                        </Tbody>
-                                      </Table>
-                                    </TableContainer>
-                                  </Td>
-                                </Tr>
+                                          </Thead>
+                                          <Tbody>
+                                            {movement.otherTributesDetails?.map((detail) => (
+                                              <Tr key={nanoid()}>
+                                                <Td border="none" w="150px">
+                                                  {formatCurrency(detail.amount)}
+                                                </Td>
+                                                <Td border="none" w="693px">
+                                                  {detail.otherTribute?.description}
+                                                </Td>
+                                              </Tr>
+                                            ))}
+                                          </Tbody>
+                                        </Table>
+                                      </TableContainer>
+                                    </Td>
+                                  </Tr>
+                                }
 
                                 <Tr>
                                   <Td colSpan={5} px="0">
@@ -634,8 +690,20 @@ export const CashRegisterDetails = () => {
                       </Tbody>
                       <Tfoot>
                         <Tr>
-                          <Th isNumeric colSpan={7} fontSize={16} p="2">
-                            {formatCurrency(cashRegister.total)}
+                          <Th isNumeric colSpan={3} fontSize={14} >
+                            {formatCurrency(cashRegister.sales + cashRegister.discounts - cashRegister.recharges - cashRegister.otherTributes)}
+                          </Th>
+                          <Th isNumeric fontSize={14} >
+                            {formatCurrency(cashRegister.discounts)}
+                          </Th>
+                          <Th isNumeric fontSize={14} >
+                            {formatCurrency(cashRegister.recharges)}
+                          </Th>
+                          <Th isNumeric fontSize={14} >
+                            {formatCurrency(cashRegister.otherTributes)}
+                          </Th>
+                          <Th isNumeric colSpan={7} fontSize={16} >
+                            {formatCurrency(cashRegister.sales)}
                           </Th>
                         </Tr>
                       </Tfoot>

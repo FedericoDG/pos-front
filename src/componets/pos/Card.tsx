@@ -10,11 +10,10 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { TableContainer, Table, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react';
 
 import { Loading } from '../common';
@@ -22,8 +21,12 @@ import { useGetClients } from '../../hooks';
 
 import { SelectedClient, usePosContext } from '.';
 
-export const Card = () => {
-  const { client, warehouse, priceList, setClient } = usePosContext();
+interface Props {
+  disableBtn: boolean;
+}
+
+export const Card: FC<Props> = ({ disableBtn }) => {
+  const { client, warehouse, priceList, setClient, iva } = usePosContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
@@ -143,6 +146,7 @@ export const Card = () => {
                 <Button
                   colorScheme="brand"
                   display="block"
+                  isDisabled={disableBtn || !iva}
                   ml="auto"
                   size="xs"
                   variant={'solid'}

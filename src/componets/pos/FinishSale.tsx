@@ -10,6 +10,7 @@ import {
   Flex,
   FormLabel,
   Icon,
+  Heading,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -24,15 +25,16 @@ import {
 } from '@chakra-ui/react';
 import { FieldArray, useFormik, FormikProvider, useFormikContext } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { CgArrowsExchangeAlt } from 'react-icons/cg';
 import { BsPlusCircle } from 'react-icons/bs';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { Select as ReactSelect } from 'chakra-react-select';
-import { Heading } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { FiAlertTriangle } from 'react-icons/fi';
+import { AiFillLock, AiFillUnlock } from 'react-icons/ai';
 
 import { ErrorMessage, Loading } from '../common';
 import { useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods } from '../../hooks';
@@ -57,7 +59,7 @@ interface Values {
   discount: number | null;
   recharge: number | null;
   info: string;
-  payments: Payment[];
+  payments?: Payment[];
   otherTributes?: OtherTribute[];
   invoceType?: {
     id: number;
@@ -67,6 +69,7 @@ interface Values {
 }
 
 interface Sale {
+  iva: boolean;
   clientId: number;
   warehouseId: number;
   discount?: number;
@@ -119,6 +122,12 @@ export const FinishSale = () => {
   const [discount, setDiscount] = useState('0');
   const [recharge, setRecharge] = useState('0');
   const [percent, setPercent] = useState(true);
+  const [initialValues, setInitialValues] = useState<Values>({
+    discount: 0,
+    recharge: 0,
+    info: '',
+    //payments: [{ amount: totalCart.toString(), paymentMethodId: '1' }],
+  });
 
   const navigate = useNavigate();
 
@@ -127,6 +136,7 @@ export const FinishSale = () => {
     client,
     emptyCart,
     goToPrevious,
+    iva,
     setActiveStep,
     setClient,
     setPriceList,
@@ -137,12 +147,12 @@ export const FinishSale = () => {
     warehouse,
   } = usePosContext();
 
-  const initialValues: Values = {
+  /* const initialValues: Values = {
     discount: 0,
     recharge: 0,
     info: '',
-    payments: [{ amount: totalCart.toString(), paymentMethodId: '1' }],
-  };
+    //payments: [{ amount: totalCart.toString(), paymentMethodId: '1' }],
+  }; */
 
   const queryClient = useQueryClient();
 
@@ -153,6 +163,7 @@ export const FinishSale = () => {
     };
 
     const sale: Sale = {
+      iva: true,
       clientId: Number(client?.id!),
       warehouseId: Number(warehouse?.id!),
       cart: cart.map((item) => ({
@@ -163,16 +174,20 @@ export const FinishSale = () => {
         allow: item.allownegativestock === 'ENABLED' ? true : false,
       })),
       invoceTypeId: values.invoceType?.id!,
-      payments: values.payments.map((item) => ({
+      payments: values?.payments?.map((item) => ({
         amount: Number(item.amount),
         paymentMethodId: Number(item.paymentMethodId),
-      })),
+      })) || [],
       otherTributes: values?.otherTributes?.filter(el => Number(el.amount) > 0).map((item) => ({
         amount: Number(item.amount),
         otherTributeId: Number(item.otherTributeId),
       })) || [],
       info: values.info,
     };
+
+    if (!iva) {
+      sale.iva = false;
+    }
 
     if (option === '1') {
       sale.discount = 0;
@@ -199,7 +214,7 @@ export const FinishSale = () => {
       }
     }
 
-    if (totalCart !== sale.payments.reduce((acc, el) => acc + el.amount, 0)) {
+    if (Math.round(totalCart + sale.recharge! - sale.discount! + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
       toast.error('El monto de la venta es distinto al de los pagos', {
         theme: 'colored',
         position: toast.POSITION.BOTTOM_LEFT,
@@ -215,7 +230,7 @@ export const FinishSale = () => {
     toast.info(
       <Box>
         <Text>Venta Realizada</Text>
-        <Button display='block' ml="auto" variant='solid' onClick={() => navigate(`/panel/caja/detalles/${3}`)}>Ver Factura</Button>
+        <Button display='block' ml="auto" variant='solid' onClick={() => navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`)}>Ver Factura</Button>
       </Box>,
       {
         theme: 'light',
@@ -225,6 +240,7 @@ export const FinishSale = () => {
         pauseOnHover: true,
       }
     );
+
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['products'] });
     setWarehouse(null);
@@ -277,14 +293,57 @@ export const FinishSale = () => {
   useEffect(() => {
     if (!invoceTypes) return;
 
-    const mappedInvoceTypes = invoceTypes.map((el) => ({
-      ...el,
-      value: el.id,
-      label: `${el.code} - ${el.description}`,
-    }));
+    if (!iva) {
+      const mappedInvoceTypes = invoceTypes.filter(el => el.code === '555').map((el) => ({
+        ...el,
+        value: el.id,
+        label: `${el.code} - ${el.description}`,
+      }));
 
-    setMappedInvoceTypes(mappedInvoceTypes);
-  }, [invoceTypes]);
+      setMappedInvoceTypes(mappedInvoceTypes);
+
+    } else {
+      const mappedInvoceTypes = invoceTypes.map((el) => ({
+        ...el,
+        value: el.id,
+        label: `${el.code} - ${el.description}`,
+      }));
+
+      setMappedInvoceTypes(mappedInvoceTypes);
+    }
+  }, [invoceTypes, iva]);
+
+  useEffect(() => {
+    if (!invoceTypes || mappedInvoceTypes.length < 1) return;
+
+    if (!iva) {
+      setInitialValues(current => ({
+        ...current,
+        invoceType: mappedInvoceTypes[0]
+      }));
+    }
+  }, [invoceTypes, iva, mappedInvoceTypes]);
+
+  const totalCarttotalShoppingCart = useCallback((values: any) =>
+    Math.round(
+      (Number.EPSILON
+        + totalCart
+        - Number(discount)
+        + Number(recharge)
+        + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0)
+      )
+      * 100) / 100, [discount, recharge, totalCart]);
+
+
+  const totalCarttotalShoppingCartPercentage = useCallback((values: any) =>
+    Math.round(
+      (Number.EPSILON
+        + totalCart
+        - totalCart * Number(discount) / 100
+        + totalCart * Number(recharge) / 100
+        + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0)
+      )
+      * 100) / 100, [discount, recharge, totalCart]);
 
   return (
     <Stack bg="white" p="4" rounded="md" shadow="md">
@@ -306,11 +365,13 @@ export const FinishSale = () => {
                 </Button>
 
                 <Flex gap="8" justifyContent="space-between">
-                  <Stack w="64%">
-                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
+                  <Stack gap={8} w="64%">
+
+                    <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
+                      <Icon as={FiAlertTriangle} boxSize={6} color={'red.500'} display={values.invoceType ? 'none' : 'block'} pos='absolute' right={1} top={1} />
                       <Box position='relative' px="4" py='8'>
                         <Divider />
-                        <AbsoluteCenter bg='white' px="2">
+                        <AbsoluteCenter bg="white" px="2">
                           <FormLabel htmlFor="invoceTypeId">Tipo de Comprobante</FormLabel>
                         </AbsoluteCenter>
                       </Box>
@@ -320,14 +381,18 @@ export const FinishSale = () => {
                         isSearchable
                         colorScheme="brand"
                         id="invoceTypeId"
+                        isDisabled={!iva}
                         name="invoceType"
                         options={mappedInvoceTypes}
                         placeholder="Seleccionar..."
                         selectedOptionColorScheme="brand"
                         value={
-                          mappedInvoceTypes
-                            ? mappedInvoceTypes.find((option) => option.id === values.invoceType?.id)
-                            : ''
+                          !iva ?
+                            mappedInvoceTypes[0]
+                            :
+                            mappedInvoceTypes
+                              ? mappedInvoceTypes.find((option) => option.id === values.invoceType?.id)
+                              : ''
                         }
                         onChange={(selectedOption) => {
                           formik.setFieldValue('invoceType', selectedOption);
@@ -338,170 +403,9 @@ export const FinishSale = () => {
                       )}
                     </Stack>
 
-                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
-                      <Box position='relative' px="4" py='8'>
-                        <Divider />
-                        <AbsoluteCenter bg='white' px="2">
-                          <FormLabel htmlFor="payments">Forma de Pago</FormLabel>
-                        </AbsoluteCenter>
-                      </Box>
-                      <FieldArray
-                        name="payments"
-                        render={(arrayHelpers) => (
-                          <Stack w="full">
-                            {values.payments.map((_, index) => (
-                              <Stack key={index} w="full">
-                                <Stack alignItems="flex-end" direction="row" w="full">
-                                  <Box w={'29%'}>
-                                    <InputGroup>
-                                      <InputLeftAddon children="$" />
-                                      <Input
-                                        defaultValue={
-                                          values.payments.length === 1
-                                            ? Math.round((totalCart + Number.EPSILON) * 100) / 100
-                                            : Math.round(
-                                              (Number(values.payments[index].amount) + Number.EPSILON) *
-                                              100
-                                            ) / 100
-                                        }
-                                        id={`payments[${index}].amount`}
-                                        name={`payments[${index}].amount`}
-                                        placeholder='importe'
-                                        onChange={handleChange}
-                                        onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                                      />
-                                    </InputGroup>
-                                    {typeof errors.payments === 'string' && (
-                                      <ErrorMessage>{errors.payments}</ErrorMessage>
-                                    )}
-                                  </Box>
-
-                                  <Box w={values.payments.length === index + 1 && index !== 0 ? '59%' : '70%'}>
-                                    <Select
-                                      id={`payments.${index}.paymentMethodId`}
-                                      minW="224px"
-                                      name={`payments.${index}.paymentMethodId`}
-                                      onChange={handleChange}
-                                    >
-                                      {paymentMethods.map((method) => (
-                                        <option key={method.code} value={method.id}>
-                                          {method.code}
-                                        </option>
-                                      ))}
-                                    </Select>
-                                  </Box>
-                                  {index >= 1 && index === values.payments.length - 1 && (
-                                    <Button flex={1} onClick={() => arrayHelpers.remove(index)}>
-                                      <Icon as={FaRegTrashAlt} color="brand" ml="0 auto" />
-                                    </Button>
-                                  )}
-                                </Stack>
-                                {typeof errors.payments === 'object' && (
-                                  <ErrorMessage>El importe del pago debe ser mayor a 0</ErrorMessage>
-                                )}
-                              </Stack>
-
-                            ))}
-
-                            <Button
-                              colorScheme="brand"
-                              isDisabled={
-                                totalCart ===
-                                values.payments.reduce((acc, el) => acc + Number(el.amount), 0)
-                              }
-                              size="md"
-                              variant="outline"
-                              onClick={() => {
-                                arrayHelpers.push({
-                                  amount:
-                                    totalCart -
-                                    values.payments.reduce((acc, el) => acc + Number(el.amount), 0),
-                                  paymentMethodId: '1',
-                                });
-                              }}
-                            >
-                              <Icon as={BsPlusCircle} color="brand" mr="2" />
-                              Forma de Pago
-                            </Button>
-                          </Stack>
-                        )}
-                      />
-                    </Stack>
-
-                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
-                      <Box position='relative' px="4" py='8'>
-                        <Divider />
-                        <AbsoluteCenter bg='white' px="2">
-                          <FormLabel htmlFor="otherTributes">Otros Tributos</FormLabel>
-                        </AbsoluteCenter>
-                      </Box>
-                      <FieldArray
-                        name="otherTributes"
-                        render={(arrayHelpers) => (
-                          <Stack w="full">
-                            {values?.otherTributes?.map((_, index) => (
-                              <Stack key={index} w='full' >
-                                <Stack alignItems="flex-end" direction="row" w="full">
-                                  <Box w='29%'>
-                                    <InputGroup>
-                                      <InputLeftAddon children="$" />
-                                      <Input
-                                        defaultValue={0}
-                                        id={`otherTributes[${index}].amount`}
-                                        name={`otherTributes[${index}].amount`}
-                                        onChange={handleChange}
-                                        onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                                      />
-                                    </InputGroup>
-                                  </Box>
-
-                                  <Box w='59%'>
-                                    <Select
-                                      id={`otherTributes.${index}.otherTributeId`}
-                                      minW="224px"
-                                      name={`otherTributes.${index}.otherTributeId`}
-                                      onChange={handleChange}
-
-                                    >
-                                      {otherTributes.map((tribute) => (
-                                        <option key={tribute.code} value={tribute.id}>
-                                          {tribute.code} - {tribute.description}
-                                        </option>
-                                      ))}
-                                    </Select>
-                                  </Box>
-                                  <Button flex={1} onClick={() => arrayHelpers.remove(index)}>
-                                    <Icon as={FaRegTrashAlt} color="brand" m="0 auto" />
-                                  </Button>
-                                </Stack>
-                                {Array.isArray(errors.otherTributes) && (
-                                  <ErrorMessage>{errors.otherTributes[index]['amount']}</ErrorMessage>
-                                )}
-                              </Stack>
-
-                            ))}
-
-                            <Button
-                              colorScheme="brand"
-                              isDisabled={values.otherTributes?.some(el => Number(el.amount) <= 0)}
-                              size="md"
-                              variant="outline"
-                              onClick={() => {
-                                arrayHelpers.push({
-                                  amount: 0,
-                                  otherTributeId: '1',
-                                });
-                              }}
-                            >
-                              <Icon as={BsPlusCircle} color="brand" mr="2" />
-                              Tributo
-                            </Button>
-                          </Stack>
-                        )}
-                      />
-                    </Stack>
-
-                    <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
+                    <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
+                      <Icon as={AiFillLock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'block' : 'none'} pos='absolute' right={1} top={1} />
+                      <Icon as={AiFillUnlock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />
                       <Box position='relative' px="4" py='8'>
                         <Divider />
                         <AbsoluteCenter bg='white' px="2">
@@ -522,9 +426,9 @@ export const FinishSale = () => {
                           }}
                         >
                           <Stack direction="row" gap="8">
-                            <Radio value="1">No aplicar</Radio>
-                            <Radio value="2">Aplicar Descuento</Radio>
-                            <Radio value="3">Aplicar Recargo</Radio>
+                            <Radio isDisabled={(values.payments && values.payments?.length > 0)} value="1">No aplicar</Radio>
+                            <Radio isDisabled={(values.payments && values.payments?.length > 0)} value="2">Aplicar Descuento</Radio>
+                            <Radio isDisabled={(values.payments && values.payments?.length > 0)} value="3">Aplicar Recargo</Radio>
                           </Stack>
                         </RadioGroup>
                       </Box>
@@ -543,6 +447,7 @@ export const FinishSale = () => {
                                 )}
                                 <Input
                                   id="discount"
+                                  isDisabled={(values.payments && values.payments?.length > 0)}
                                   name="discount"
                                   value={discount}
                                   onChange={(e) => {
@@ -556,6 +461,7 @@ export const FinishSale = () => {
                                   children={
                                     <Tooltip label="Aternar entre porcentaje y valor">
                                       <Button
+                                        isDisabled={(values.payments && values.payments?.length > 0)}
                                         onClick={() => {
                                           setPercent((current) => !current);
                                           setDiscount('0');
@@ -585,6 +491,7 @@ export const FinishSale = () => {
                                 )}
                                 <Input
                                   id="recharge"
+                                  isDisabled={(values.payments && values.payments?.length > 0)}
                                   name="recharge"
                                   value={recharge}
                                   onChange={(e) => {
@@ -598,6 +505,7 @@ export const FinishSale = () => {
                                   <InputRightAddon
                                     children={
                                       <Button
+                                        isDisabled={(values.payments && values.payments?.length > 0)}
                                         onClick={() => {
                                           setPercent((current) => !current);
                                           setDiscount('0');
@@ -618,6 +526,193 @@ export const FinishSale = () => {
                           )}
                         </Flex>
                       }
+                    </Stack>
+
+                    <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
+                      <Icon as={AiFillLock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'block' : 'none'} pos='absolute' right={1} top={1} />
+                      <Icon as={AiFillUnlock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />
+                      <Box position='relative' px="4" py='8'>
+                        <Divider />
+                        <AbsoluteCenter bg='white' px="2">
+                          <FormLabel htmlFor="otherTributes">Otros Tributos</FormLabel>
+                        </AbsoluteCenter>
+                      </Box>
+                      <FieldArray
+                        name="otherTributes"
+                        render={(arrayHelpers) => (
+                          <Stack w="full">
+                            {values?.otherTributes?.map((_, index) => (
+                              <Stack key={index} w='full' >
+                                <Stack alignItems="flex-end" direction="row" w="full">
+                                  <Box w='29%'>
+                                    <InputGroup>
+                                      <InputLeftAddon children="$" />
+                                      <Input
+                                        defaultValue={0}
+                                        id={`otherTributes[${index}].amount`}
+                                        isDisabled={(values.payments && values.payments?.length > 0)}
+                                        name={`otherTributes[${index}].amount`}
+                                        onChange={handleChange}
+                                        onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                      />
+                                    </InputGroup>
+                                  </Box>
+
+                                  <Box w='59%'>
+                                    <Select
+                                      id={`otherTributes.${index}.otherTributeId`}
+                                      isDisabled={(values.payments && values.payments?.length > 0)}
+                                      minW="224px"
+                                      name={`otherTributes.${index}.otherTributeId`}
+                                      onChange={handleChange}
+
+                                    >
+                                      {otherTributes.map((tribute) => (
+                                        <option key={tribute.code} value={tribute.id}>
+                                          {tribute.code} - {tribute.description}
+                                        </option>
+                                      ))}
+                                    </Select>
+                                  </Box>
+                                  <Button flex={1} isDisabled={(values.payments && values.payments?.length > 0)} onClick={() => arrayHelpers.remove(index)}>
+                                    <Icon as={FaRegTrashAlt} color="brand" m="0 auto" />
+                                  </Button>
+                                </Stack>
+                                {Array.isArray(errors.otherTributes) && (
+                                  <ErrorMessage>{errors.otherTributes[index]['amount']}</ErrorMessage>
+                                )}
+                              </Stack>
+
+                            ))}
+
+                            <Button
+                              colorScheme="brand"
+                              isDisabled={values.otherTributes?.some(el => Number(el.amount) <= 0) || (values.payments && values.payments?.length > 0)}
+                              size="md"
+                              variant="outline"
+                              onClick={() => {
+                                arrayHelpers.push({
+                                  amount: 0,
+                                  otherTributeId: '1',
+                                });
+                              }}
+                            >
+                              <Icon as={BsPlusCircle} color="brand" mr="2" />
+                              Tributo
+                            </Button>
+                          </Stack>
+                        )}
+                      />
+                    </Stack>
+
+                    <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
+                      <Icon as={FiAlertTriangle} boxSize={6} color={'red.500'} display={values.payments?.length && values.payments?.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />
+                      <Box position='relative' px="4" py='8'>
+                        <Divider />
+                        <AbsoluteCenter px="2">
+                          <FormLabel htmlFor="payments">Forma de Pago</FormLabel>
+                        </AbsoluteCenter>
+                      </Box>
+
+                      <FieldArray
+                        name="payments"
+                        render={(arrayHelpers) => (
+                          <Stack w="full">
+                            {values.payments?.map((_, index) => (
+                              <Stack key={index} w="full">
+                                <Stack alignItems="flex-end" direction="row" w="full">
+                                  <Box w={'29%'}>
+                                    <InputGroup>
+                                      <InputLeftAddon children="$" />
+                                      <Input
+                                        defaultValue={
+                                          values.payments?.length === 1
+                                            ? percent
+                                              ?
+                                              totalCarttotalShoppingCartPercentage(values)
+                                              :
+                                              totalCarttotalShoppingCart(values)
+                                            : values.payments &&
+                                              percent ?
+                                              Math.round(
+                                                (Number(values.payments[index].amount)) * 100) / 100
+                                              : values.payments &&
+                                              Math.round((Number(values.payments[index].amount)) * 100) / 100
+                                        }
+                                        id={`payments[${index}].amount`}
+                                        name={`payments[${index}].amount`}
+                                        placeholder='importe'
+                                        onChange={handleChange}
+                                        onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                      />
+                                    </InputGroup>
+                                  </Box>
+
+                                  <Box w='59%'>
+                                    <Select
+                                      id={`payments.${index}.paymentMethodId`}
+                                      minW="224px"
+                                      name={`payments.${index}.paymentMethodId`}
+                                      onChange={handleChange}
+                                    >
+                                      {paymentMethods.map((method) => (
+                                        <option key={method.code} value={method.id}>
+                                          {method.code}
+                                        </option>
+                                      ))}
+                                    </Select>
+                                  </Box>
+                                  <Button flex={1} onClick={() => arrayHelpers.remove(index)}>
+                                    <Icon as={FaRegTrashAlt} color="brand" ml="0 auto" />
+                                  </Button>
+                                </Stack>
+                                {Array.isArray(errors.payments) && (
+                                  <ErrorMessage>{errors.payments[index]['amount']}</ErrorMessage>
+                                )}
+                              </Stack>
+
+                            ))}
+
+
+                            <Button
+                              colorScheme="brand"
+                              isDisabled={
+                                percent ?
+                                  totalCarttotalShoppingCartPercentage(values)
+                                  <= (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)
+                                  :
+                                  totalCarttotalShoppingCart(values)
+                                  <= (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)
+                              }
+                              size="md"
+                              variant="outline"
+                              onClick={() => {
+                                if (percent) {
+                                  arrayHelpers.push({
+                                    amount:
+                                      totalCarttotalShoppingCartPercentage(values)
+                                      - (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0),
+                                    paymentMethodId: '1',
+                                  });
+                                } else {
+                                  arrayHelpers.push({
+                                    amount:
+                                      totalCarttotalShoppingCart(values)
+                                      - (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0),
+                                    paymentMethodId: '1',
+                                  });
+                                }
+                              }}
+                            >
+                              <Icon as={BsPlusCircle} color="brand" mr="2" />
+                              Forma de Pago
+                            </Button>
+                          </Stack>
+                        )}
+                      />
+                      {typeof errors.payments === 'string' && (
+                        <ErrorMessage>{errors.payments}</ErrorMessage>
+                      )}
                     </Stack>
 
                     <Stack border="1px solid whitesmoke" pb="4" px="4" rounded='md' w="full">
@@ -645,7 +740,7 @@ export const FinishSale = () => {
                       {option === '2' && percent ? (
                         <Stack direction='row' justifyContent="flex-end" w="full">
                           <Text textAlign="right" w="80%" >
-                            (Descuento)ss
+                            (Descuento)
                           </Text>
                           <Text fontSize={18} textAlign="right" w="20%">
                             {formatCurrency(((totalCart * Number(discount)) / 100) * -1 || 0)}
@@ -700,15 +795,15 @@ export const FinishSale = () => {
                       <Divider ml="auto" w="50%" />
                       <Flex justifyContent="space-between" ml="auto" w="50%">
                         <Text fontSize={24}>TOTAL:</Text>
-                        {percent && values.otherTributes?.length ? (
+                        {percent ? (
                           <Text fontSize={24} fontWeight="semibold" textAlign="right">
                             {!isNaN(totalCart + (totalCart * Number(recharge)) / 100 - (totalCart * Number(discount)) / 100) ? formatCurrency(
-                              totalCart + (totalCart * Number(recharge)) / 100 - (totalCart * Number(discount)) / 100 + values.otherTributes.reduce((acc, el) => acc + Number(el.amount), 0)
+                              totalCarttotalShoppingCartPercentage(values)
                             ) : 'ERROR'}
                           </Text>
                         ) : (
                           <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                            {!isNaN(totalCart + Number(recharge) - Number(discount)) ? formatCurrency(totalCart + Number(recharge) - Number(discount) + (values?.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)) : 'ERROR'}
+                            {!isNaN(totalCart + Number(recharge) - Number(discount)) ? formatCurrency(totalCarttotalShoppingCart(values)) : 'ERROR'}
                           </Text>
                         )}
                       </Flex>
@@ -757,9 +852,12 @@ export const FinishSale = () => {
                                   cantidad: {item.quantity} {item.unit?.code}
                                 </Text>
                                 <Text px="2">precio: {formatCurrency(item.price)}</Text>
-                                <Text px="2">
-                                  iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}%)
-                                </Text>
+                                {
+                                  iva &&
+                                  <Text px="2">
+                                    iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}%)
+                                  </Text>
+                                }
                                 <Text px="2" textDecoration="underline">
                                   subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
                                 </Text>

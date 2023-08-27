@@ -289,6 +289,7 @@ export interface CashRegister {
   createdAt?: string;
   updatedAt?: string;
   total: number;
+  sales: number;
   cash: number;
   debit: number;
   credit: number;
@@ -313,6 +314,7 @@ export interface CashMovement {
   warehouseId: number;
   userId: number;
   paymentMethodId: number;
+  iva: boolean;
   info: string;
   createdAt?: string;
   updatedAt?: string;
@@ -320,6 +322,7 @@ export interface CashMovement {
   user?: User;
   warehouse?: Warehouse;
   paymentMethod?: PaymentMethod;
+  cashMovementDetails?: CashMovementsDetail[];
   cashMovementsDetails?: CashMovementsDetail[];
   paymentMethodDetails?: PaymentMethodDetails[];
   otherTributesDetails?: OtherTributeDetails[];
@@ -329,6 +332,7 @@ export interface CashMovementsDetail {
   id?: number;
   cashMovementId: number;
   productId: number;
+  tax: number;
   price: number;
   quantity: number;
   createdAt?: string;

@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 
 import {
   CashRegisterDetails,
-  CashRegisterStatus,
   CashRegisters,
+  CashRegisterStatus,
   Categories,
   Clients,
   CloseCashRegister,
@@ -16,6 +16,7 @@ import {
   LoadCosts,
   LoadDischarges,
   LoadProductTrans,
+  LoadProductTransDriver,
   LoadPurchase,
   Login,
   Pos,
@@ -25,6 +26,7 @@ import {
   Products,
   PurchaseDetails,
   Purchases,
+  SaleDetails,
   Stocks,
   Suppliers,
   TransferDetails,
@@ -35,7 +37,6 @@ import {
   Users,
   Warehouses,
 } from '../pages';
-import { LoadProductTransDriver } from '../pages/LoadProductTransDriver';
 
 import { PrivateRoute, PublicRoute } from './';
 
@@ -89,6 +90,7 @@ export const AppRouter = () => (
         <Route element={<CashRegisterStatus />} path="/panel/caja/estado" />
         <Route element={<CashRegisterDetails />} path="/panel/caja/detalles/:id" />
         <Route element={<CloseCashRegister />} path="/panel/caja/detalles/:id/cerrar" />
+        <Route element={<SaleDetails />} path="/panel/caja/detalles/venta/:id" />
         {/* USERS */}
         <Route element={<Users />} path="/panel/usuarios" />
         <Route element={<UserProfile />} path="/panel/usuarios/perfil" />

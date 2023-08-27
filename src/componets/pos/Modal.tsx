@@ -22,6 +22,7 @@ import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { z } from 'zod';
 
 import { ErrorMessage } from '../common';
+import { useMyContext } from '../../context/AppProvider';
 
 import { CartItem, usePosContext } from '.';
 
@@ -46,10 +47,15 @@ export const Modal = ({
   cancelRef,
   setActiveProduct,
 }: Props) => {
-  const { addItem, cart } = usePosContext();
+  const { addItem, cart, iva } = usePosContext();
+  const { user } = useMyContext();
 
   const onSubmit = (values: Values, actions: FormikHelpers<Values>) => {
-    addItem({ ...activeProduct!, quantity: values.quantity, error: false, tax: Number(activeProduct.ivaCondition?.tax) });
+    if (iva) {
+      addItem({ ...activeProduct!, quantity: values.quantity, error: false, tax: Number(activeProduct.ivaCondition?.tax) });
+    } else {
+      addItem({ ...activeProduct!, quantity: values.quantity, error: false, tax: 0 });
+    }
     setActiveProduct({} as CartItem);
     actions.resetForm();
     handleClose();
@@ -74,7 +80,7 @@ export const Modal = ({
           })
           .min(1, 'Minimo: 1')
           .max(
-            activeProduct.allownegativestock === 'DISABLED'
+            activeProduct.allownegativestock === 'DISABLED' || user.role?.name === 'DRIVER'
               ? activeProduct.stock! -
               (cart.find((el) => el.id === activeProduct.id)?.quantity! || 0)
               : 999999,

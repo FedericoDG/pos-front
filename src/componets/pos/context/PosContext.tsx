@@ -33,21 +33,23 @@ export interface CartItem extends Product {
 interface PosContext {
   activeStep: number;
   addItem: (product: CartItem) => void;
-  updateCartWithError: (arr: number[]) => void;
   cart: CartItem[];
   client: SelectedClient | null;
   emptyCart: () => void;
   goToNext: () => void;
   goToPrevious: () => void;
+  iva: boolean;
   priceList: SelectedPriceList | null;
   removeItem: (id: number) => void;
   setActiveStep: (index: number) => void;
   setClient: Dispatch<SetStateAction<SelectedClient | null>>;
+  setIva: Dispatch<SetStateAction<boolean>>;
   setPriceList: Dispatch<SetStateAction<SelectedPriceList | null>>;
   setWarehouse: Dispatch<SetStateAction<SelectedWarehouse | null>>;
   steps: Step[];
   totalCart: number;
   totalCartItems: number;
+  updateCartWithError: (arr: number[]) => void;
   warehouse: SelectedWarehouse | null;
 }
 

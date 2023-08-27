@@ -16,8 +16,16 @@ interface Props {
 }
 
 export const Basket = ({ refetch }: Props) => {
-  const { cart, removeItem, totalCart, totalCartItems, goToNext, warehouse, updateCartWithError } =
-    usePosContext();
+  const {
+    cart,
+    removeItem,
+    totalCart,
+    totalCartItems,
+    goToNext,
+    warehouse,
+    updateCartWithError,
+    iva,
+  } = usePosContext();
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -85,11 +93,10 @@ export const Basket = ({ refetch }: Props) => {
                   <Box px="2">
                     <Stack
                       alignItems="center"
-                      bg={item.error ? 'red.500' : 'blackAlpha.700'}
+                      bg={item.error ? 'red.500' : 'brand.700'}
                       direction="row"
                       justifyContent="space-between"
                       px="2"
-                      rounded="md"
                     >
                       <Text color={item.error ? 'white' : 'whitesmoke'} fontWeight="bold">
                         {item.name}
@@ -100,10 +107,13 @@ export const Basket = ({ refetch }: Props) => {
                       cantidad: {item.quantity} {item.unit?.code}
                     </Text>
                     <Text px="2">precio: {formatCurrency(item.price)}</Text>
-                    <Text px="2">
-                      iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}
-                      %)
-                    </Text>
+                    {iva && (
+                      <Text px="2">
+                        iva: {formatCurrency(item.price * item.quantity * item.tax)} (
+                        {item.tax * 100}
+                        %)
+                      </Text>
+                    )}
                     <Text px="2" textDecoration="underline">
                       subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
                     </Text>

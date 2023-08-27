@@ -90,14 +90,14 @@ export const Pos = () => {
 
               <StepperWrapper step={2}>
                 <Stack>
-                  <Card />
+                  <Card disableBtn={false} />
                   <ProductsTable />
                 </Stack>
               </StepperWrapper>
 
               <StepperWrapper step={3}>
                 <Stack>
-                  <Card />
+                  <Card disableBtn={true} />
                   <FinishSale />
                 </Stack>
               </StepperWrapper>
