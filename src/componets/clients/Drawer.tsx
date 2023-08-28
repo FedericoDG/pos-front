@@ -48,10 +48,10 @@ export const Drawer = ({
   const { mutateAsync: updateClient, isLoading: isLoadingUpdate } = useUpdateClient();
 
   const onSubmit = async (values: Client, actions: FormikHelpers<Client>) => {
-    const { password2, ...rest } = values;
+    delete values.password2;
 
     const parsedValues = {
-      ...rest,
+      ...values,
       identificationId: Number(values.identificationId),
     };
 

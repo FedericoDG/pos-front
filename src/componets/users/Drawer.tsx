@@ -53,10 +53,10 @@ export const Drawer = ({
   const { mutate: updateUser } = useUpdateUser();
 
   const onSubmit = (values: User, actions: FormikHelpers<User>) => {
-    const { password2, ...rest } = values;
+    delete values.password2;
 
     const toUpdate = {
-      ...rest,
+      ...values,
       userPreferences: {
         clientId: Number(values.userPreferences?.clientId),
         warehouseId: Number(values.userPreferences?.warehouseId),

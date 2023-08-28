@@ -1,4 +1,5 @@
-import { Stack, Text } from '@chakra-ui/react';
+import { Icon, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { BsArrowRight } from 'react-icons/bs';
 
 import { usePurchasesContext } from '.';
 
@@ -17,54 +18,86 @@ export const Card = () => {
       shadow="md"
       w="full"
     >
-      <Stack
-        bg="gray.700"
-        color="whitesmoke"
-        fontSize="md"
-        lineHeight="1"
-        p="2"
-        rounded="md"
-        w="420px"
-      >
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">CUIT:</Text>
-          <Text>{supplier?.cuit}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">NOMBRE:</Text>
-          <Text>{supplier?.name}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">TELÉFONO:</Text>
-          <Text>{supplier?.phone}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">CELULAR:</Text>
-          <Text>{supplier?.mobile}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">EMAIL:</Text>
-          <Text>{supplier?.email}</Text>
-        </Stack>
-      </Stack>
-      <Stack
-        bg="gray.700"
-        color="whitesmoke"
-        fontSize="md"
-        lineHeight="1"
-        p="2"
-        rounded="md"
-        w="420px"
-      >
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">DEPÓSITO:</Text>
-          <Text>{warehouse?.code}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">DESCRIPCIÓN:</Text>
-          <Text>{warehouse?.description}</Text>
-        </Stack>
-      </Stack>
+      <TableContainer alignItems="flex-start" display={'flex'} gap={8} w="full">
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th
+                bg="brand.500"
+                borderBottomWidth="1"
+                borderColor="black"
+                borderStyle="solid"
+                colSpan={2}
+                color="white"
+                h={30}
+              >
+                Proveedor
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td borderBottomWidth="0" fontSize={18}>
+                {supplier?.cuit}
+              </Td>
+            </Tr>
+            <Tr>
+              <Td borderBottomWidth="0" borderColor="brand.500">
+                {supplier?.name}
+              </Td>
+            </Tr>
+            {supplier?.phone && (
+              <Tr>
+                <Td borderBottomWidth="0" borderColor="brand.500">
+                  {supplier?.phone}
+                </Td>
+              </Tr>
+            )}
+            {supplier?.mobile && (
+              <Tr>
+                <Td borderBottomWidth="0" borderColor="brand.500">
+                  {supplier?.mobile}
+                </Td>
+              </Tr>
+            )}
+            {supplier?.email && (
+              <Tr>
+                <Td borderColor="brand.500">{supplier?.email}</Td>
+              </Tr>
+            )}
+          </Tbody>
+        </Table>
+
+        <Icon alignSelf={'center'} as={BsArrowRight} boxSize={14} color="brand.500" />
+
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th
+                bg="brand.500"
+                borderBottomWidth="1"
+                borderColor="black"
+                borderStyle="solid"
+                colSpan={2}
+                color="white"
+                h={30}
+              >
+                Depósito
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td borderBottomWidth="0" fontSize={18}>
+                {warehouse?.code}
+              </Td>
+            </Tr>
+            <Tr>
+              <Td borderColor="brand.500">{warehouse?.description}</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Stack>
   );
 };

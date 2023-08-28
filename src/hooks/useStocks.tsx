@@ -16,7 +16,7 @@ export const useGetStocks = () =>
   });
 
 export const useGetStock = (id: number | null) =>
-  useQuery(['reasons', id], () => getStock(id), {
+  useQuery(['stocks', id], () => getStock(id), {
     enabled: !!id,
     retry: 1,
     cacheTime: 1,

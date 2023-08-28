@@ -1,4 +1,4 @@
-import { Stack, Text } from '@chakra-ui/react';
+import { Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 
 import { useDischargesContext } from '.';
 
@@ -16,24 +16,35 @@ export const Card = () => {
       shadow="md"
       w="full"
     >
-      <Stack
-        bg="gray.700"
-        color="whitesmoke"
-        fontSize="md"
-        lineHeight="1"
-        p="2"
-        rounded="md"
-        w="420px"
-      >
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">DEPÓSITO:</Text>
-          <Text>{warehouse?.code}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">DESCRIPCIÓN:</Text>
-          <Text>{warehouse?.description}</Text>
-        </Stack>
-      </Stack>
+      <TableContainer alignItems="flex-start" display={'flex'} gap={8} w="50%">
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th
+                bg="brand.500"
+                borderBottomWidth="1"
+                borderColor="black"
+                borderStyle="solid"
+                colSpan={2}
+                color="white"
+                h={30}
+              >
+                Depósito
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td borderBottomWidth="0" fontSize={18}>
+                {warehouse?.code}
+              </Td>
+            </Tr>
+            <Tr>
+              <Td borderColor="brand.500">{warehouse?.description}</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Stack>
   );
 };

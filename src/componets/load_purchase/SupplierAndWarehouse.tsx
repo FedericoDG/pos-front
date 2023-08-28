@@ -24,7 +24,10 @@ export const SupplierAndWarehouse = () => {
       value: el.id,
       label: `${el.cuit} - ${el.name}`,
     }));
-    const mappedWarehouses = warehouses.map((el) => ({ ...el, value: el.id, label: el.code }));
+
+    const mappedWarehouses = warehouses
+      .filter((el) => el.driver === 0)
+      .map((el) => ({ ...el, value: el.id, label: el.code }));
 
     setMappedSuppliers(mappedSuppliers);
     setMappedWarehouses(mappedWarehouses);

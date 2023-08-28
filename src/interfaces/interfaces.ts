@@ -103,7 +103,7 @@ export interface PriceList {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
-  products: Product[];
+  products: Product; // OJO
   createdAt: string;
   totalStock: number;
   totalStockPosta: number;

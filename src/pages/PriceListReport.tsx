@@ -399,6 +399,7 @@ export const PriceListReport = () => {
                       </Box>
                     );
                   })}
+                  <div style={{ breakAfter: 'page' }} />
                 </Box>
               );
             })}

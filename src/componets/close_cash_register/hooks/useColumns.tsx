@@ -85,12 +85,7 @@ export const useColumns = ({ onOpen, warehouses, setActiveProduct }: Props) => {
       header: 'Costo',
       cell: ({ row }: CellContext<Stock2, unknown>) => {
         if (row.original.products.costs) {
-          return (
-            <p>
-              {formatCurrency(row.original.products.costs[0].price)}
-              {row.original.products.unit?.code}
-            </p>
-          );
+          return <p>{formatCurrency(row.original.products.costs[0].price)}</p>;
         }
       },
       accessorFn: (x) => {

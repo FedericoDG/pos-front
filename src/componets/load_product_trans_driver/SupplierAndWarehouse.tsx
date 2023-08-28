@@ -1,14 +1,5 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Stack,
-  Alert,
-  AlertIcon,
-  FormLabel,
-  Button,
-  FormControl,
-  Switch,
-} from '@chakra-ui/react';
+import { Box, Stack, Alert, AlertIcon, FormLabel, Button } from '@chakra-ui/react';
 import { GroupBase, Select, SelectInstance } from 'chakra-react-select';
 import { useEffect, useRef, useState } from 'react';
 

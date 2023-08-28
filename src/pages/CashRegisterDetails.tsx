@@ -23,7 +23,6 @@ import { useReactToPrint } from 'react-to-print';
 import React, { useEffect, useRef, useState } from 'react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { AiOutlineClose } from 'react-icons/ai';
-import { toast } from 'react-toastify';
 
 import { DashBoard, Loading } from '../componets/common';
 import { formatCurrency, formatDate, formatDateAndHour } from '../utils';
@@ -100,16 +99,16 @@ export const CashRegisterDetails = () => {
 
   const navigate = useNavigate();
 
-  const onSuccessClose = () => {
-    toast.info('Caja cerrada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
-
-    navigate('/panel/caja');
-  };
+  /*   const onSuccessClose = () => {
+      toast.info('Caja cerrada', {
+        theme: 'colored',
+        position: toast.POSITION.BOTTOM_LEFT,
+        autoClose: 3000,
+        closeOnClick: true,
+      });
+  
+      navigate('/panel/caja');
+    }; */
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
