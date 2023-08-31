@@ -321,8 +321,21 @@ export const FinishSale = () => {
         ...current,
         invoceType: mappedInvoceTypes[0]
       }));
+    } else {
+      if (client?.ivaTypeId === 1) {
+        setInitialValues(current => ({
+          ...current,
+          invoceType: mappedInvoceTypes[0]
+        }));
+      }
+      else {
+        setInitialValues(current => ({
+          ...current,
+          invoceType: mappedInvoceTypes[1]
+        }));
+      }
     }
-  }, [invoceTypes, iva, mappedInvoceTypes]);
+  }, [client?.ivaTypeId, invoceTypes, iva, mappedInvoceTypes]);
 
   const totalCarttotalShoppingCart = useCallback((values: any) =>
     Math.round(
@@ -375,6 +388,8 @@ export const FinishSale = () => {
                           <FormLabel htmlFor="invoceTypeId">Tipo de Comprobante</FormLabel>
                         </AbsoluteCenter>
                       </Box>
+                      {/*  */}
+                      {/*  */}
                       <ReactSelect
                         autoFocus
                         isClearable

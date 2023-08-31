@@ -20,7 +20,7 @@ import { useReactToPrint } from 'react-to-print';
 import { useRef } from 'react';
 
 import { DashBoard, Loading } from '../componets/common';
-import { useGetCashMovement } from '../hooks';
+import { useGetCashMovement, useGetSettings } from '../hooks';
 import { formatCurrency, formatDate } from '../utils';
 
 export const SaleDetails = () => {
@@ -33,10 +33,14 @@ export const SaleDetails = () => {
   });
 
   const { data: cashMovement, isLoading: isLoadingCashMovement } = useGetCashMovement(Number(id!));
+  const { data: settings, isLoading: isLoadingSettings } = useGetSettings(1);
 
   return (
-    <DashBoard isIndeterminate={isLoadingCashMovement} title="Detalles de la Caja">
-      {!cashMovement ? (
+    <DashBoard
+      isIndeterminate={isLoadingCashMovement || isLoadingSettings}
+      title="Comprobante Interno"
+    >
+      {!cashMovement || !settings ? (
         <Loading />
       ) : (
         <Flex
@@ -68,12 +72,16 @@ export const SaleDetails = () => {
               pos="relative"
             >
               <HStack p={2} w="50%">
-                <img src="http://via.placeholder.com/120x120" />
-                <Stack>
-                  <Text fontWeight={500}>Delivery Hero Stores SA</Text>
-                  <Text>25 de Mayo 1370</Text>
-                  <Text>5009 - Córdoba</Text>
-                  <Text>Responsable Inscripto</Text>
+                {settings.imageURL && (
+                  <img alt="logo" height={120} src={settings.imageURL} width={120} />
+                )}
+                <Stack px={settings.imageURL ? '' : 8}>
+                  <Text fontWeight={500}>{settings.name}</Text>
+                  <Text>{settings.address}</Text>
+                  <Text>
+                    {settings.cp} - {settings.province}
+                  </Text>
+                  <Text>{settings.ivaCondition}</Text>
                 </Stack>
               </HStack>
               <HStack
@@ -93,13 +101,14 @@ export const SaleDetails = () => {
               </HStack>
               <Stack pl={20} py={2} w="50%">
                 <Text fontSize="xl" fontWeight={500}>
-                  Comprobante
+                  {settings.invoceName}
                 </Text>
                 <Text fontSize="xl" fontWeight={500}>
-                  N°: {'1'.padStart(3, '0')}-{'1'.padStart(6, '0')}
+                  N°: {cashMovement.posNumber.toString().padStart(3, '0')}-
+                  {cashMovement.invoceNumber.toString().padStart(6, '0')}
                 </Text>
                 <Text>Fecha: {formatDate(cashMovement.createdAt)}</Text>
-                <Text>CUIT: 20-29127368-9</Text>
+                <Text>CUIT: {settings.cuit}</Text>
               </Stack>
             </HStack>
 

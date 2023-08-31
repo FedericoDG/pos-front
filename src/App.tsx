@@ -19,7 +19,7 @@ export const App = () => {
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
       </QueryClientProvider>
-      <ToastContainer />
+      <ToastContainer limit={3} />
     </AppProvider>
   );
 };

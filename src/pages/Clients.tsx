@@ -8,7 +8,7 @@ import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/clients/hooks';
-import { useGetClients } from '../hooks';
+import { useGetClients, useGetIvaTypes } from '../hooks';
 import { useGetIdentifications } from '../hooks/useIdentifications';
 
 export const Clients = () => {
@@ -29,6 +29,7 @@ export const Clients = () => {
       info: '',
       roleId: 5,
       identificationId: 35,
+      ivaTypeId: 5,
     }),
     []
   );
@@ -37,8 +38,9 @@ export const Clients = () => {
 
   const { data: clients, isFetching: isFetchingClients } = useGetClients();
   const { data: identifications, isFetching: isFetchingIdentifications } = useGetIdentifications();
+  const { data: ivaTypes, isFetching: isFetchingIvaTypes } = useGetIvaTypes();
 
-  const isIndeterminate = isFetchingClients || isFetchingIdentifications;
+  const isIndeterminate = isFetchingClients || isFetchingIdentifications || isFetchingIvaTypes;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
@@ -70,7 +72,7 @@ export const Clients = () => {
         CREAR CLIENTE
       </Button>
 
-      {!clients || !identifications ? (
+      {!clients || !identifications || !ivaTypes ? (
         <Loading />
       ) : (
         <>
@@ -89,6 +91,7 @@ export const Clients = () => {
             identifications={identifications}
             initialValues={initialValues}
             isOpen={isOpen}
+            ivaTypes={ivaTypes}
             resetValues={resetValues}
             setinitialValues={setinitialValues}
             onClose={onClose}

@@ -7,6 +7,7 @@ import {
   IVACondition,
   Identification,
   InvoceType,
+  IvaType,
   OtherTribute,
   PaymentMethod,
   PriceList,
@@ -15,6 +16,7 @@ import {
   Purchase,
   Reason,
   Role,
+  Settings,
   Stock2,
   Supplier,
   Transfer,
@@ -22,6 +24,12 @@ import {
   User,
   Warehouse,
 } from '.';
+
+export interface SettingsResponse {
+  body: {
+    settings: Settings;
+  };
+}
 
 export interface ProductResponse {
   body: {
@@ -246,6 +254,12 @@ export interface IVAConditionResponse {
 export interface IdentificationsResponse {
   body: {
     identifications: Identification[];
+  };
+}
+
+export interface IvaTypesResponse {
+  body: {
+    ivaTypes: IvaType[];
   };
 }
 

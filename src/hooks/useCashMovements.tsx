@@ -43,7 +43,7 @@ export const useGetCashMovements = () =>
   });
 
 export const useGetCashMovement = (id: number) =>
-  useQuery(['clients', id], () => getCashMovement(id), {
+  useQuery(['cashMovement', id], () => getCashMovement(id), {
     enabled: !!id,
     retry: 1,
     cacheTime: 1,

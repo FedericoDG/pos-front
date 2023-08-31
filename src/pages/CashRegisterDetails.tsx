@@ -172,7 +172,7 @@ export const CashRegisterDetails = () => {
               </Button>
             </Stack>
             <Stack ref={printRef} minW="1024px" py="8">
-              <Stack>
+              <Stack >
                 <TableContainer w="full">
                   <Table size="sm">
                     <Text as={'caption'} textAlign="left">
@@ -454,7 +454,7 @@ export const CashRegisterDetails = () => {
                                               borderBottomWidth="1"
                                               borderColor="black"
                                               borderStyle="solid"
-                                              colSpan={5}
+                                              colSpan={7}
                                               color="black"
                                               w="843px"
                                             >
@@ -475,6 +475,19 @@ export const CashRegisterDetails = () => {
                                                 <Td border="none" w="131px">
                                                   {formatCurrency(detail.price)}
                                                 </Td>
+
+                                                <Td isNumeric border="none" w="121px">
+                                                  {formatCurrency(detail.price * detail.quantity)}
+                                                </Td>
+                                                {
+                                                  movement.iva &&
+                                                  (
+
+                                                    <Td isNumeric border="none" w="121px">
+                                                      {formatCurrency(detail.price * detail.quantity * (detail.product?.ivaCondition?.tax!))}
+                                                    </Td>
+                                                  )
+                                                }
                                                 {
                                                   movement.iva ?
                                                     (
@@ -687,7 +700,7 @@ export const CashRegisterDetails = () => {
                           </React.Fragment>
                         ))}
                       </Tbody>
-                      <Tfoot>
+                      {/*  <Tfoot>
                         <Tr>
                           <Th isNumeric colSpan={3} fontSize={14} >
                             {formatCurrency(cashRegister.sales + cashRegister.discounts - cashRegister.recharges - cashRegister.otherTributes)}
@@ -701,11 +714,11 @@ export const CashRegisterDetails = () => {
                           <Th isNumeric fontSize={14} >
                             {formatCurrency(cashRegister.otherTributes)}
                           </Th>
-                          <Th isNumeric colSpan={7} fontSize={16} >
+                          <Th isNumeric fontSize={16} >
                             {formatCurrency(cashRegister.sales)}
                           </Th>
                         </Tr>
-                      </Tfoot>
+                      </Tfoot> */}
                     </Table>
                   </TableContainer>
                 </Stack>

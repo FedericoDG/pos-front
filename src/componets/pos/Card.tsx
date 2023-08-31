@@ -146,7 +146,7 @@ export const Card: FC<Props> = ({ disableBtn }) => {
                 <Button
                   colorScheme="brand"
                   display="block"
-                  isDisabled={disableBtn || !iva}
+                  isDisabled={disableBtn /* || !iva */}
                   ml="auto"
                   size="xs"
                   variant={'solid'}
@@ -159,70 +159,6 @@ export const Card: FC<Props> = ({ disableBtn }) => {
           </Tbody>
         </Table>
       </TableContainer>
-
-      {/* <Stack
-        bg="gray.700"
-        color="whitesmoke"
-        fontSize="md"
-        lineHeight="1"
-        p="2"
-        rounded="md"
-        w="360px"
-      >
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">LISTA DE PRECIO:</Text>
-          <Text>{priceList?.code}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">DESCRIPCIÓN:</Text>
-          <Text>{priceList?.description}</Text>
-        </Stack>
-      </Stack> */}
-      {/* <Stack
-        bg="gray.700"
-        color="whitesmoke"
-        fontSize="md"
-        lineHeight="1"
-        p="2"
-        rounded="md"
-        w="360px"
-      >
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">DEPÓSITO:</Text>
-          <Text>{warehouse?.code}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">DESCRIPCIÓN:</Text>
-          <Text>{warehouse?.description}</Text>
-        </Stack>
-      </Stack> */}
-      {/* <Stack
-        bg="gray.700"
-        color="whitesmoke"
-        fontSize="md"
-        lineHeight="1"
-        p="2"
-        rounded="md"
-        w="360px"
-      >
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">DNI:</Text>
-          <Text>{client?.document}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">NOMBRE:</Text>
-          <Text>{client?.name}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" w="full">
-          <Text fontWeight="semibold">APELLIDO:</Text>
-          <Text>{client?.lastname}</Text>
-        </Stack>
-        <Stack direction="row" justifyContent="flex-end" w="full">
-          <Button size="xs" onClick={onOpen}>
-            CAMBIAR
-          </Button>
-        </Stack>
-      </Stack> */}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

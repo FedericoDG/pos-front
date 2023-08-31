@@ -10,6 +10,20 @@ export interface Actions {
   };
 }
 
+export interface Settings {
+  id?: number;
+  name: string;
+  address: string;
+  cp: string;
+  province: string;
+  ivaCondition: string;
+  cuit: string;
+  posNumber: number;
+  invoceName: string;
+  invoceNumber: number;
+  imageURL: string;
+}
+
 export interface User {
   id?: number;
   name: string;
@@ -162,6 +176,7 @@ export interface Client {
   lastname: string;
   identificationId: number;
   document: string;
+  ivaTypeId: number;
   email: string;
   password: string;
   password2?: string;
@@ -173,6 +188,7 @@ export interface Client {
   createdAt?: string;
   updatedAt?: string;
   identification?: Identification;
+  ivaType?: IvaType;
 }
 
 export interface Supplier {
@@ -315,6 +331,8 @@ export interface CashMovement {
   userId: number;
   paymentMethodId: number;
   iva: boolean;
+  posNumber: number;
+  invoceNumber: number;
   info: string;
   createdAt?: string;
   updatedAt?: string;
@@ -376,6 +394,14 @@ export interface IVACondition {
 }
 
 export interface Identification {
+  id?: number;
+  code: string;
+  description: string;
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+export interface IvaType {
   id?: number;
   code: string;
   description: string;

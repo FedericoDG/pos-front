@@ -19,7 +19,7 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
-import { Client, Identification } from '../../interfaces';
+import { Client, Identification, IvaType } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useCreateClient, useUpdateClient } from '../../hooks/';
 
@@ -28,6 +28,7 @@ import { schema, schema2 } from './schemas';
 interface Props {
   initialValues: Client;
   identifications: Identification[];
+  ivaTypes: IvaType[];
   resetValues: Client;
   isOpen: boolean;
   onClose: () => void;
@@ -37,6 +38,7 @@ interface Props {
 export const Drawer = ({
   initialValues,
   identifications,
+  ivaTypes,
   resetValues,
   setinitialValues,
   isOpen,
@@ -53,6 +55,7 @@ export const Drawer = ({
     const parsedValues = {
       ...values,
       identificationId: Number(values.identificationId),
+      ivaTypeId: Number(values.ivaTypeId),
     };
 
     if (values?.id) {
@@ -97,7 +100,7 @@ export const Drawer = ({
         initialFocusRef={firstField}
         isOpen={isOpen}
         placement="right"
-        size="md"
+        size="lg"
         onClose={close}
       >
         <DrawerOverlay />
@@ -114,7 +117,7 @@ export const Drawer = ({
             <DrawerBody>
               <Stack spacing="14px">
                 <Flex gap="4" justifyContent="space-between">
-                  <Box>
+                  <Box w="full">
                     <FormLabel htmlFor="name">Nombre:</FormLabel>
                     <Input
                       ref={firstField}
@@ -127,7 +130,7 @@ export const Drawer = ({
                     />
                     {errors.name && touched.name && <ErrorMessage>{errors.name}</ErrorMessage>}
                   </Box>
-                  <Box>
+                  <Box w="full">
                     <FormLabel htmlFor="lastname">Apellido:</FormLabel>
                     <Input
                       id="lastname"
@@ -140,11 +143,23 @@ export const Drawer = ({
                       <ErrorMessage>{errors.lastname}</ErrorMessage>
                     )}
                   </Box>
+                  <Box w="full">
+                    <FormLabel htmlFor="email">Email:</FormLabel>
+                    <Input
+                      autoComplete="off"
+                      id="email"
+                      name="email"
+                      placeholder="juanperez@gmail.com"
+                      value={values.email}
+                      onChange={handleChange}
+                    />
+                    {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+                  </Box>
                 </Flex>
 
                 <Flex gap="4" justifyContent="space-between">
-                  <Box>
-                    <FormLabel htmlFor="identificationId">Condición IVA:</FormLabel>
+                  <Box w="67%">
+                    <FormLabel htmlFor="identificationId">Tipo de identificación</FormLabel>
                     <Select
                       defaultValue={initialValues.identificationId}
                       id="identificationId"
@@ -162,13 +177,12 @@ export const Drawer = ({
                       <ErrorMessage>{errors.identificationId}</ErrorMessage>
                     )}
                   </Box>
-                  <Box>
+                  <Box w="33%">
                     <FormLabel htmlFor="document">Número:</FormLabel>
                     <Input
                       id="document"
                       name="document"
                       placeholder="28809909"
-                      //
                       value={values.document}
                       onChange={handleChange}
                     />
@@ -179,23 +193,32 @@ export const Drawer = ({
                 </Flex>
 
                 <Flex gap="4" justifyContent="space-between">
-                  <Box>
-                    <FormLabel htmlFor="email">Email:</FormLabel>
-                    <Input
-                      autoComplete="off"
-                      id="email"
-                      name="email"
-                      placeholder="juanperez@gmail.com"
-                      value={values.email}
+                  <Box w="full">
+                    <FormLabel htmlFor="ivaTypeId">Condición IVA:</FormLabel>
+                    <Select
+                      defaultValue={initialValues.ivaTypeId}
+                      id="ivaTypeId"
+                      minW="224px"
+                      name="ivaTypeId"
                       onChange={handleChange}
-                    />
-                    {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+                    >
+                      {ivaTypes.map((ivaType) => (
+                        <option key={ivaType.code} value={ivaType.id}>
+                          {ivaType.code} - {ivaType.description}
+                        </option>
+                      ))}
+                    </Select>
+                    {errors.ivaTypeId && touched.ivaTypeId && (
+                      <ErrorMessage>{errors.ivaTypeId}</ErrorMessage>
+                    )}
                   </Box>
                 </Flex>
 
+                <Flex gap="4" justifyContent="space-between" />
+
                 {!initialValues.id && (
                   <Flex gap="4" justifyContent="space-between">
-                    <Box>
+                    <Box w="full">
                       <FormLabel htmlFor="password">Contraseña:</FormLabel>
                       <Input
                         autoComplete="new-password"
@@ -210,7 +233,7 @@ export const Drawer = ({
                         <ErrorMessage>{errors.password}</ErrorMessage>
                       )}
                     </Box>
-                    <Box>
+                    <Box w="full">
                       <FormLabel htmlFor="password2">Repetir contraseña:</FormLabel>
                       <Input
                         id="password2"
@@ -228,7 +251,7 @@ export const Drawer = ({
                 )}
 
                 <Flex gap="4" justifyContent="space-between">
-                  <Box>
+                  <Box w="25%">
                     <FormLabel htmlFor="phone">Teléfono:</FormLabel>
                     <Input
                       id="phone"
@@ -239,7 +262,7 @@ export const Drawer = ({
                     />
                     {errors.phone && touched.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
                   </Box>
-                  <Box>
+                  <Box w="25%">
                     <FormLabel htmlFor="mobile">Celular:</FormLabel>
                     <Input
                       id="mobile"
@@ -252,18 +275,17 @@ export const Drawer = ({
                       <ErrorMessage>{errors.mobile}</ErrorMessage>
                     )}
                   </Box>
+                  <Box w="50%">
+                    <FormLabel htmlFor="address">Dirección:</FormLabel>
+                    <Input
+                      id="address"
+                      name="address"
+                      placeholder="Av. San Martín 358"
+                      value={values.address}
+                      onChange={handleChange}
+                    />
+                  </Box>
                 </Flex>
-
-                <Box>
-                  <FormLabel htmlFor="address">Dirección:</FormLabel>
-                  <Input
-                    id="address"
-                    name="address"
-                    placeholder="Av. San Martín 358"
-                    value={values.address}
-                    onChange={handleChange}
-                  />
-                </Box>
 
                 <Box>
                   <FormLabel htmlFor="info">Información extra:</FormLabel>

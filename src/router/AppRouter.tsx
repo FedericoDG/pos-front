@@ -27,6 +27,7 @@ import {
   PurchaseDetails,
   Purchases,
   SaleDetails,
+  Settings,
   Stocks,
   Suppliers,
   TransferDetails,
@@ -94,6 +95,8 @@ export const AppRouter = () => (
         {/* USERS */}
         <Route element={<Users />} path="/panel/usuarios" />
         <Route element={<UserProfile />} path="/panel/usuarios/perfil" />
+        {/* SETTINGS */}
+        <Route element={<Settings />} path="/panel/parametros" />
         {/* DEFAULT */}
         <Route element={<Navigate replace to="/panel" />} path="*" />
       </Route>

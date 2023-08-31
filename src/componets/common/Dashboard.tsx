@@ -141,7 +141,17 @@ export const DashBoard = ({ children, title }: Props) => {
                   >
                     <MenuItem>Perfil</MenuItem>
                   </Link>
-                  <MenuItem>Configuración</MenuItem>
+                  {user.roleId === 1 && (
+                    <Link
+                      _hover={{ textDecoration: 'none' }}
+                      as={RouterLink}
+                      color="inherit"
+                      cursor="pointer"
+                      to="/panel/parametros"
+                    >
+                      <MenuItem>Parámetros del Sitio</MenuItem>
+                    </Link>
+                  )}
                   <MenuDivider />
                   <MenuItem onClick={logout}>Salir</MenuItem>
                 </MenuList>

@@ -74,11 +74,11 @@ export const SupplierAndWarehouse = () => {
     if (mappedPriceLists.length < 1 || mappedClients.length < 1 || mappedWarehouses.length < 1)
       return;
 
-    if (!iva) {
+    /*  if (!iva) {
       setClient(mappedClients.filter((el) => el.document === 'xxxxxxxx')[0]);
     } else {
-      setClient(mappedClients.find((el) => el.id === user.userPreferences?.clientId)!);
-    }
+    } */
+    setClient(mappedClients.find((el) => el.id === user.userPreferences?.clientId)!);
 
     setPriceList(mappedPriceLists.find((el) => el.id === user.userPreferences?.priceListId)!);
 
@@ -213,7 +213,7 @@ export const SupplierAndWarehouse = () => {
             isSearchable
             colorScheme="brand"
             id="client"
-            isDisabled={!priceList?.value || !warehouse?.value || !iva}
+            isDisabled={!priceList?.value || !warehouse?.value /* || !iva */}
             options={mappedClients}
             placeholder="Seleccionar Cliente"
             selectedOptionColorScheme="brand"
