@@ -221,6 +221,11 @@ export const SidebarContent = (props: Props) => {
               Listar
             </Box>
           </NavItem>
+          <NavItem link="/panel/lista-de-precios/actualizar-porcentaje">
+            <Box pl="8" py="0">
+              Acutalizar por %
+            </Box>
+          </NavItem>
           <NavItem link="/panel/lista-de-precios/generar-reporte">
             <Box pl="8" py="0">
               Generar Reporte

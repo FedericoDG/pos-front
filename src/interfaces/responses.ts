@@ -13,6 +13,7 @@ import {
   PriceList,
   Pricelists,
   Product,
+  ProductWithPrice,
   Purchase,
   Reason,
   Role,
@@ -93,6 +94,12 @@ export interface PriceListResponse {
 export interface PriceListByWareIdResponse {
   body: {
     pricelist: PriceList;
+  };
+}
+
+export interface PriceListByIdResponse {
+  body: {
+    products: ProductWithPrice[];
   };
 }
 

@@ -31,6 +31,7 @@ export * from './TransferDetails';
 export * from './Transfers';
 export * from './TransfersDriver';
 export * from './Units';
+export * from './UpdatePriceListPercentage';
 export * from './UserProfile';
 export * from './Users';
 export * from './Warehouses';

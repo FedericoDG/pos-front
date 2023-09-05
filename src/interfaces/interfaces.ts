@@ -76,6 +76,8 @@ export interface Product {
   ivaCondition?: IVACondition;
 }
 
+export type ProductWithPrice = Product & { price: number };
+
 export interface Category {
   id?: number;
   name: string;
@@ -118,6 +120,7 @@ export interface PriceList {
   pricelistId: number;
   pricelists: Pricelists;
   products: Product; // OJO
+  prices?: Price[];
   createdAt: string;
   totalStock: number;
   totalStockPosta: number;

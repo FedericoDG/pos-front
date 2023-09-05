@@ -6,9 +6,12 @@ import {
   PriceListReportResponse,
   Pricelists,
   PriceListByWareIdResponse,
+  PriceListByIdResponse,
 } from '../interfaces';
 
 const getPriceLists = () => getRequest<PriceListsResponse>(`/pricelists`);
+const getPriceListById = (priceListId: number) =>
+  getRequest<PriceListByIdResponse>(`/pricelists/${priceListId}`);
 const getPriceListByWareId = (priceListId: number, warehouseId: number) =>
   getRequest<PriceListByWareIdResponse>(`/pricelists/${priceListId}/${warehouseId}`);
 const getPriceListsReport = (
@@ -31,6 +34,15 @@ export const useGetPriceLists = () =>
     cacheTime: 1,
     refetchOnWindowFocus: false,
     select: (data) => data.body.pricelists,
+  });
+
+export const useGetPriceListById = (priceListId: number) =>
+  useQuery(['priceLists', priceListId], () => getPriceListById(priceListId), {
+    enabled: true,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body.products,
   });
 
 export const useGetPriceListByWarehouseId = (priceListId: number, warehouseId: number) =>

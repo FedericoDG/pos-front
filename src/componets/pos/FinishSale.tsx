@@ -241,7 +241,6 @@ export const FinishSale = () => {
       }
     );
 
-    emptyCart();
     queryClient.invalidateQueries({ queryKey: ['products'] });
     setWarehouse(null);
     setClient(null);
