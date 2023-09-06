@@ -6,17 +6,11 @@ import { CiBoxList } from 'react-icons/ci';
 import { ImCancelCircle } from 'react-icons/im';
 
 import { formatCurrency } from '../../utils';
-import { ProductWithPrice } from '../../interfaces';
 
-import { useUpdatePricePercentageContext } from './context';
+import { useUpdatePriceContext } from './context';
 
-interface Props {
-  products: ProductWithPrice[];
-}
-
-export const Basket = ({ products }: Props) => {
-  const { cart, removeItem, totalCartItems, goToNext, addItem, percentage } =
-    useUpdatePricePercentageContext();
+export const Basket = () => {
+  const { cart, removeItem, totalCartItems, goToNext } = useUpdatePriceContext();
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -31,12 +25,6 @@ export const Basket = ({ products }: Props) => {
       window.removeEventListener('keydown', handleUserKeyPress);
     };
   }, [goToNext]);
-
-  const handleAddAll = () => {
-    products.forEach((product) =>
-      addItem({ ...product, newPrice: product.price * (1 + percentage / 100) })
-    );
-  };
 
   return (
     <Stack
@@ -66,8 +54,8 @@ export const Basket = ({ products }: Props) => {
                     >
                       <Text fontWeight="bold">{item.name}</Text>
                     </Stack>
-                    <Text px="2">precio ant. : {formatCurrency(item.price)}</Text>
-                    <Text px="2">precio nuevo: {formatCurrency(item.newPrice)}</Text>
+                    <Text px="2">antes: {formatCurrency(item.price)}</Text>
+                    <Text px="2">nuevo: {formatCurrency(item.newPrice)}</Text>
                   </Box>
                   <Box position="absolute" right={0} top={'50%'}>
                     <Button
@@ -112,9 +100,6 @@ export const Basket = ({ products }: Props) => {
           <Heading color="gray.300" fontSize="24" pt="2" textAlign="center">
             AGREGUE PRODUCTOS
           </Heading>
-          <Button colorScheme="brand" isDisabled={percentage <= 0} onClick={handleAddAll}>
-            AGREGAR TODOS
-          </Button>
         </Stack>
       )}
     </Stack>

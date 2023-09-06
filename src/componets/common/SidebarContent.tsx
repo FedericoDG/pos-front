@@ -8,7 +8,7 @@ import { MdPointOfSale } from 'react-icons/md';
 
 import { useMyContext } from '../../context';
 
-import { NavItem, NavItemDivider, NavItemNewTab } from '.';
+import { NavItem, NavItemDivider } from '.';
 
 interface Props {
   borderRight?: string;
@@ -219,11 +219,6 @@ export const SidebarContent = (props: Props) => {
           <NavItem link="/panel/lista-de-precios/">
             <Box pl="8" py="0">
               Listar
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/lista-de-precios/actualizar-porcentaje">
-            <Box pl="8" py="0">
-              Acutalizar por %
             </Box>
           </NavItem>
           <NavItem link="/panel/lista-de-precios/generar-reporte">

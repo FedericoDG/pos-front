@@ -119,6 +119,19 @@ export interface PriceList {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
+  products: Product[]; // OJO
+  prices?: Price[];
+  createdAt: string;
+  totalStock: number;
+  totalStockPosta: number;
+}
+
+export interface PriceList2 {
+  id?: number;
+  price: number;
+  productId: number;
+  pricelistId: number;
+  pricelists: Pricelists;
   products: Product; // OJO
   prices?: Price[];
   createdAt: string;

@@ -1,4 +1,4 @@
-import { Box, Button, Text, FormLabel, Input, Stack, Flex } from '@chakra-ui/react';
+import { Box, Button, FormLabel, Input, Stack, Flex } from '@chakra-ui/react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';

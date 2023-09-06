@@ -34,6 +34,7 @@ import {
   Transfers,
   TransfersDriver,
   Units,
+  UpdatePriceList,
   UpdatePriceListPercentage,
   UserProfile,
   Users,
@@ -78,6 +79,7 @@ export const AppRouter = () => (
         {/* PRICELISTS */}
         <Route element={<PriceLists />} path="/panel/lista-de-precios/" />
         <Route element={<PriceListReport />} path="/panel/lista-de-precios/reporte" />
+        <Route element={<UpdatePriceList />} path="/panel/lista-de-precios/actualizar" />
         <Route
           element={<UpdatePriceListPercentage />}
           path="/panel/lista-de-precios/actualizar-porcentaje"

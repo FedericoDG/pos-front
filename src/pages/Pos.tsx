@@ -17,7 +17,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 
@@ -36,8 +36,6 @@ import { useCashRegisterStatus, useOpenCashRegister } from '../hooks';
 export const Pos = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [initialBalance, setInitialBalance] = useState(0);
-
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
@@ -49,15 +47,18 @@ export const Pos = () => {
     });
 
     queryClient.invalidateQueries({ queryKey: ['cashRegisters'] });
-
-    setInitialBalance(0);
   };
 
   const { data: cashRegister, isFetching } = useCashRegisterStatus();
   const { mutate } = useOpenCashRegister(onSuccess);
 
-  const openCashRegister = () => {
-    mutate({ initialBalance, openingDate: new Date() });
+  const openCashRegister = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const initialBalance = Number(e.currentTarget.initialBalance.value);
+
+    if (initialBalance > 0) {
+      mutate({ initialBalance, openingDate: new Date() });
+    }
   };
 
   useEffect(() => {
@@ -120,41 +121,35 @@ export const Pos = () => {
               <ModalContent>
                 <ModalHeader>Abrir Caja</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
-                  <Stack spacing="14px">
-                    <Box>
-                      <FormLabel htmlFor="initialBalance">Balance Inicial:</FormLabel>
-                      <InputGroup>
-                        <InputLeftAddon children="$" />
-                        <Input
-                          autoFocus
-                          id="initialBalance"
-                          name="initialBalance"
-                          tabIndex={1}
-                          type="number"
-                          value={initialBalance}
-                          onChange={(e) => setInitialBalance(Number(e.target.value))}
-                          onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                        />
-                      </InputGroup>
-                    </Box>
-                  </Stack>
-                </ModalBody>
+                <form onSubmit={openCashRegister}>
+                  <ModalBody>
+                    <Stack spacing="14px">
+                      <Box>
+                        <FormLabel htmlFor="initialBalance">Balance Inicial:</FormLabel>
+                        <InputGroup>
+                          <InputLeftAddon children="$" />
+                          <Input
+                            autoFocus
+                            id="initialBalance"
+                            name="initialBalance"
+                            tabIndex={1}
+                            type="number"
+                            onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                          />
+                        </InputGroup>
+                      </Box>
+                    </Stack>
+                  </ModalBody>
 
-                <ModalFooter>
-                  <Button tabIndex={3} onClick={onClose}>
-                    Cancelar
-                  </Button>
-                  <Button
-                    colorScheme="brand"
-                    isDisabled={!initialBalance}
-                    ml={3}
-                    tabIndex={2}
-                    onClick={openCashRegister}
-                  >
-                    Agregar
-                  </Button>
-                </ModalFooter>
+                  <ModalFooter>
+                    <Button tabIndex={3} type="reset" onClick={onClose}>
+                      Cancelar
+                    </Button>
+                    <Button colorScheme="brand" ml={3} tabIndex={2} type="submit">
+                      Agregar
+                    </Button>
+                  </ModalFooter>
+                </form>
               </ModalContent>
             </Modal>
           </>

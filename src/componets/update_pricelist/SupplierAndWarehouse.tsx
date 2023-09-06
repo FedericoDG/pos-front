@@ -7,14 +7,14 @@ import { useSearchParams } from 'react-router-dom';
 import { useGetPriceLists } from '../../hooks';
 import { Loading } from '../common';
 
-import { SelectedPriceList, useUpdatePricePercentageContext } from '.';
+import { SelectedPriceList, useUpdatePriceContext } from '.';
 
 export const SupplierAndWarehouse = () => {
   const { data: priceLists } = useGetPriceLists();
 
   const [mappedPriceLists, setMappedPriceLists] = useState<SelectedPriceList[]>([]);
 
-  const { goToNext, priceList, setPriceList, setActiveStep } = useUpdatePricePercentageContext();
+  const { goToNext, priceList, setPriceList, setActiveStep } = useUpdatePriceContext();
 
   let [searchParams] = useSearchParams();
   const id = searchParams.get('id');
@@ -90,6 +90,7 @@ export const SupplierAndWarehouse = () => {
             placeholder="Seleccionar Lista de Precio"
             selectedOptionColorScheme="brand"
             tabIndex={1}
+            // value={priceList}
             onChange={(e) => setPriceList(e)}
           />
         </Box>

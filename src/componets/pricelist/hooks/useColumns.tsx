@@ -3,6 +3,8 @@ import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
+import { BiDollar } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
 import { Pricelists } from '../../../interfaces';
 
@@ -13,6 +15,8 @@ interface Props {
 }
 
 export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => {
+  const navigate = useNavigate();
+
   const columns = useMemo<ColumnDef<Pricelists>[]>(
     () => [
       {
@@ -51,6 +55,22 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
                   Editar
                 </MenuItem>
                 <MenuItem
+                  icon={<BiDollar />}
+                  onClick={() =>
+                    navigate(`/panel/lista-de-precios/actualizar?id=${row.original.id}`)
+                  }
+                >
+                  Actualizar Precios
+                </MenuItem>
+                <MenuItem
+                  icon={<BiDollar />}
+                  onClick={() =>
+                    navigate(`/panel/lista-de-precios/actualizar-porcentaje?id=${row.original.id}`)
+                  }
+                >
+                  Actualizar Precios (porcentaje)
+                </MenuItem>
+                <MenuItem
                   icon={<FaRegTrashAlt />}
                   onClick={() => {
                     onOpenModal();
@@ -69,7 +89,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         size: 80,
       },
     ],
-    [onOpen, onOpenModal, setinitialValues]
+    [navigate, onOpen, onOpenModal, setinitialValues]
   );
 
   return { columns };

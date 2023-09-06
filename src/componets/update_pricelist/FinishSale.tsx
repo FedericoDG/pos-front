@@ -19,11 +19,11 @@ import { useNavigate } from 'react-router-dom';
 import { formatCurrency } from '../../utils';
 import { useCreatePriceManyPercentage } from '../../hooks';
 
-import { useUpdatePricePercentageContext } from '.';
+import { useUpdatePriceContext } from '.';
 
 export const FinishSale = () => {
   const { cart, goToPrevious, priceList, setPriceList, emptyCart, setActiveStep } =
-    useUpdatePricePercentageContext();
+    useUpdatePriceContext();
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -93,8 +93,8 @@ export const FinishSale = () => {
           <Thead>
             <Tr>
               <Th>Producto</Th>
-              <Th isNumeric>antes</Th>
-              <Th isNumeric>nuevo</Th>
+              <Th isNumeric>Precio Anterior</Th>
+              <Th isNumeric>Precio Actualizado</Th>
             </Tr>
           </Thead>
           <Tbody>

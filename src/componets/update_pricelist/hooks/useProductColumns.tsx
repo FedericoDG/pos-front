@@ -1,13 +1,18 @@
 import { Box, Button } from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, Dispatch } from 'react';
 
 import { ProductWithPrice } from '../../../interfaces';
 import { formatCurrency } from '../../../utils';
-import { useUpdatePricePercentageContext } from '..';
+import { CartItem, useUpdatePriceContext } from '..';
 
-export const useProductColumns = () => {
-  const { addItem, percentage, cart } = useUpdatePricePercentageContext();
+interface Props {
+  onOpen: () => void;
+  setActiveProduct: Dispatch<React.SetStateAction<CartItem>>;
+}
+
+export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
+  const { cart } = useUpdatePriceContext();
 
   const isDisabled = useCallback(
     (product: ProductWithPrice) => {
@@ -49,15 +54,17 @@ export const useProductColumns = () => {
           <Box fontFamily="IBM Plex Sans">
             <Button
               colorScheme="brand"
-              isDisabled={percentage <= 0 || isDisabled(row.original!)}
+              isDisabled={isDisabled(row.original!)}
               size="sm"
               type="submit"
               variant="ghost"
               onClick={() => {
-                addItem({
+                setActiveProduct({
                   ...row.original,
-                  newPrice: row.original.price! * (1 + percentage / 100),
+                  price: row.original.price!,
+                  newPrice: row.original.price!,
                 });
+                onOpen();
               }}
             >
               AGREGAR
@@ -69,7 +76,7 @@ export const useProductColumns = () => {
         },
       },
     ],
-    [addItem, isDisabled, percentage]
+    [isDisabled, onOpen, setActiveProduct]
   );
 
   return { columns };

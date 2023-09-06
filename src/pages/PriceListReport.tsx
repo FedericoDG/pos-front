@@ -8,7 +8,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { DashBoard, Loading } from '../componets/common';
 import { formatDate } from '../utils';
-import { PriceList } from '../interfaces';
+import { PriceList2 } from '../interfaces';
 import { useGetPriceListsReport } from '../hooks';
 import formatCurrency from '../utils/formatCurrency';
 
@@ -21,7 +21,7 @@ export const PriceListReport = () => {
   const [uniqueCategories, setUniqueCategories] = useState<string[]>([]);
   const [uniqueWarehouses, setUniqueWarehouses] = useState<string[]>([]);
 
-  const [filteredProducts, setFilteredProducts] = useState<PriceList[][]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<PriceList2[][]>([]);
   const [enabledFilter, setEnabledFilter] = useState(true);
   const [stockFilter, setStockFilter] = useState(false);
   const [stockFilterPosta, setStockFilterPosta] = useState(false);

@@ -11,7 +11,6 @@ import {
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tr,
@@ -99,17 +98,6 @@ export const CashRegisterDetails = () => {
 
   const navigate = useNavigate();
 
-  /*   const onSuccessClose = () => {
-      toast.info('Caja cerrada', {
-        theme: 'colored',
-        position: toast.POSITION.BOTTOM_LEFT,
-        autoClose: 3000,
-        closeOnClick: true,
-      });
-  
-      navigate('/panel/caja');
-    }; */
-
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
       {!cashRegister ? (
@@ -128,18 +116,6 @@ export const CashRegisterDetails = () => {
               CERRAR CAJA
             </Button>
           )}
-          {/*  {user?.role?.name! !== 'DRIVER' && cashRegister.closingDate === null && cashRegister.user?.role?.name !== "DRIVER" && (
-            <Button
-              colorScheme="brand"
-              leftIcon={<AiOutlineClose />}
-              mb={4}
-              ml="auto"
-              size="lg"
-              onClick={() => console.log('CLICK')}
-            >
-              CERRAR CAJA de otro que no sea un chofer (no funciona)
-            </Button>
-          )} */}
           <Flex
             alignItems="center"
             bg="white"

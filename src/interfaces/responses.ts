@@ -11,6 +11,7 @@ import {
   OtherTribute,
   PaymentMethod,
   PriceList,
+  PriceList2,
   Pricelists,
   Product,
   ProductWithPrice,
@@ -129,7 +130,7 @@ export interface WarehousesResponse {
 
 export interface PriceListReportResponse {
   body: {
-    pricelists: Array<PriceList[]>;
+    pricelists: Array<PriceList2[]>; // ERROR
   };
 }
 

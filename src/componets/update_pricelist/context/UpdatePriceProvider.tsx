@@ -1,14 +1,13 @@
 import { ReactNode, useContext, useMemo, useState } from 'react';
 import { useSteps } from '@chakra-ui/react';
 
-import { CartItem, SelectedPriceList, UpdatePricePercentageContext } from '.';
+import { CartItem, SelectedPriceList, UpdatePriceContext } from '.';
 
 interface Props {
   children: ReactNode;
 }
 
-export const UpdatePricePercentageProvider = ({ children }: Props) => {
-  const [percentage, setPercentage] = useState<number>(0);
+export const UpdatePriceProvider = ({ children }: Props) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [priceList, setPriceList] = useState<SelectedPriceList | null>({} as SelectedPriceList);
@@ -69,12 +68,10 @@ export const UpdatePricePercentageProvider = ({ children }: Props) => {
       goToNext,
       goToPrevious,
       isDisabled,
-      percentage,
       priceList,
       removeItem,
       setActiveStep,
       setIsDisabled,
-      setPercentage,
       setPriceList,
       steps,
       totalCartItems,
@@ -85,7 +82,6 @@ export const UpdatePricePercentageProvider = ({ children }: Props) => {
       goToNext,
       goToPrevious,
       isDisabled,
-      percentage,
       priceList,
       setActiveStep,
       steps,
@@ -93,14 +89,10 @@ export const UpdatePricePercentageProvider = ({ children }: Props) => {
     ]
   );
 
-  return (
-    <UpdatePricePercentageContext.Provider value={values}>
-      {children}
-    </UpdatePricePercentageContext.Provider>
-  );
+  return <UpdatePriceContext.Provider value={values}>{children}</UpdatePriceContext.Provider>;
 };
 
-export const useUpdatePricePercentageContext = () => {
+export const useUpdatePriceContext = () => {
   const {
     activeStep,
     addItem,
@@ -109,16 +101,14 @@ export const useUpdatePricePercentageContext = () => {
     goToNext,
     goToPrevious,
     isDisabled,
-    percentage,
     priceList,
     removeItem,
     setActiveStep,
     setIsDisabled,
-    setPercentage,
     setPriceList,
     steps,
     totalCartItems,
-  } = useContext(UpdatePricePercentageContext);
+  } = useContext(UpdatePriceContext);
 
   return {
     activeStep,
@@ -128,12 +118,10 @@ export const useUpdatePricePercentageContext = () => {
     goToNext,
     goToPrevious,
     isDisabled,
-    percentage,
     priceList,
     removeItem,
     setActiveStep,
     setIsDisabled,
-    setPercentage,
     setPriceList,
     steps,
     totalCartItems,

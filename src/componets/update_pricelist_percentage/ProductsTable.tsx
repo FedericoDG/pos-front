@@ -9,7 +9,7 @@ import { Basket, useUpdatePricePercentageContext } from '.';
 
 export const ProductsTable = () => {
   const { priceList, cart } = useUpdatePricePercentageContext();
-  const { data: products, refetch } = useGetPriceListById(priceList?.id!);
+  const { data: products } = useGetPriceListById(priceList?.id!);
 
   const { columns } = useProductColumns();
 
@@ -34,7 +34,7 @@ export const ProductsTable = () => {
           flag="products"
         />
       </Box>
-      <Basket products={products} refetch={refetch} />
+      <Basket products={products} />
     </Stack>
   );
 };

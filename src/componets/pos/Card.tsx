@@ -26,7 +26,7 @@ interface Props {
 }
 
 export const Card: FC<Props> = ({ disableBtn }) => {
-  const { client, warehouse, priceList, setClient, iva } = usePosContext();
+  const { client, warehouse, priceList, setClient } = usePosContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
