@@ -8,7 +8,6 @@ interface Props {
 }
 
 export const UpdatePriceProvider = ({ children }: Props) => {
-  const [isDisabled, setIsDisabled] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [priceList, setPriceList] = useState<SelectedPriceList | null>({} as SelectedPriceList);
 
@@ -67,26 +66,14 @@ export const UpdatePriceProvider = ({ children }: Props) => {
       emptyCart,
       goToNext,
       goToPrevious,
-      isDisabled,
       priceList,
       removeItem,
       setActiveStep,
-      setIsDisabled,
       setPriceList,
       steps,
       totalCartItems,
     }),
-    [
-      activeStep,
-      cart,
-      goToNext,
-      goToPrevious,
-      isDisabled,
-      priceList,
-      setActiveStep,
-      steps,
-      totalCartItems,
-    ]
+    [activeStep, cart, goToNext, goToPrevious, priceList, setActiveStep, steps, totalCartItems]
   );
 
   return <UpdatePriceContext.Provider value={values}>{children}</UpdatePriceContext.Provider>;
@@ -100,11 +87,9 @@ export const useUpdatePriceContext = () => {
     emptyCart,
     goToNext,
     goToPrevious,
-    isDisabled,
     priceList,
     removeItem,
     setActiveStep,
-    setIsDisabled,
     setPriceList,
     steps,
     totalCartItems,
@@ -117,11 +102,9 @@ export const useUpdatePriceContext = () => {
     emptyCart,
     goToNext,
     goToPrevious,
-    isDisabled,
     priceList,
     removeItem,
     setActiveStep,
-    setIsDisabled,
     setPriceList,
     steps,
     totalCartItems,

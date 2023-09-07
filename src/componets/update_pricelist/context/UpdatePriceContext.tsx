@@ -23,11 +23,9 @@ interface UpdatePriceContext {
   emptyCart: () => void;
   goToNext: () => void;
   goToPrevious: () => void;
-  isDisabled: boolean;
   priceList: SelectedPriceList | null;
   removeItem: (id: number) => void;
   setActiveStep: (index: number) => void;
-  setIsDisabled: Dispatch<SetStateAction<boolean>>;
   setPriceList: Dispatch<SetStateAction<SelectedPriceList | null>>;
   steps: Step[];
   totalCartItems: number;

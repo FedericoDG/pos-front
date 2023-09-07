@@ -22,7 +22,7 @@ import { useCreatePriceManyPercentage } from '../../hooks';
 import { useUpdatePricePercentageContext } from '.';
 
 export const FinishSale = () => {
-  const { cart, goToPrevious, priceList, setPriceList, emptyCart, setActiveStep } =
+  const { cart, goToPrevious, priceList, setPriceList, emptyCart, setActiveStep, setPercentage } =
     useUpdatePricePercentageContext();
 
   const queryClient = useQueryClient();
@@ -39,6 +39,7 @@ export const FinishSale = () => {
     setPriceList(null);
     emptyCart();
     setActiveStep(1);
+    setPercentage(0);
     navigate('/panel/lista-de-precios/actualizar-porcentaje/');
   };
 
@@ -57,8 +58,9 @@ export const FinishSale = () => {
   const onReset = () => {
     setPriceList(null);
     emptyCart();
-    navigate('/panel/lista-de-precios/actualizar-porcentaje/');
+    setPercentage(0);
     setActiveStep(1);
+    navigate('/panel/lista-de-precios/actualizar-porcentaje/');
   };
 
   useEffect(() => {
