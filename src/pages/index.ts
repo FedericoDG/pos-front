@@ -24,6 +24,7 @@ export * from './Products';
 export * from './PurchaseDetails';
 export * from './Purchases';
 export * from './SaleDatails';
+export * from './SaleDatailsAfip';
 export * from './Settings';
 export * from './Stocks';
 export * from './Suppliers';

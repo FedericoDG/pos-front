@@ -1,7 +1,14 @@
 import { ReactNode, useContext, useMemo, useState, useCallback } from 'react';
 import { useSteps } from '@chakra-ui/react';
 
-import { CartItem, SelectedClient, SelectedWarehouse, SelectedPriceList, posContext } from '.';
+import {
+  CartItem,
+  SelectedClient,
+  SelectedWarehouse,
+  SelectedPriceList,
+  posContext,
+  SelectedInvoceType,
+} from '.';
 
 interface Props {
   children: ReactNode;
@@ -10,8 +17,9 @@ interface Props {
 export const PosProvider = ({ children }: Props) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [client, setClient] = useState<SelectedClient | null>({} as SelectedClient);
-  const [warehouse, setWarehouse] = useState<SelectedWarehouse | null>({} as SelectedWarehouse);
+  const [invoceType, setInvoceType] = useState<SelectedInvoceType | null>({} as SelectedInvoceType);
   const [priceList, setPriceList] = useState<SelectedPriceList | null>({} as SelectedPriceList);
+  const [warehouse, setWarehouse] = useState<SelectedWarehouse | null>({} as SelectedWarehouse);
   const [iva, setIva] = useState<boolean>(true);
 
   const updateCartWithError = useCallback(
@@ -94,11 +102,13 @@ export const PosProvider = ({ children }: Props) => {
       emptyCart,
       goToNext,
       goToPrevious,
+      invoceType,
       iva,
       priceList,
       removeItem,
       setActiveStep,
       setClient,
+      setInvoceType,
       setIva,
       setPriceList,
       setWarehouse,
@@ -114,6 +124,7 @@ export const PosProvider = ({ children }: Props) => {
       client,
       goToNext,
       goToPrevious,
+      invoceType,
       iva,
       priceList,
       setActiveStep,
@@ -137,11 +148,13 @@ export const usePosContext = () => {
     emptyCart,
     goToNext,
     goToPrevious,
+    invoceType,
     iva,
     priceList,
     removeItem,
     setActiveStep,
     setClient,
+    setInvoceType,
     setIva,
     setPriceList,
     setWarehouse,
@@ -160,11 +173,13 @@ export const usePosContext = () => {
     emptyCart,
     goToNext,
     goToPrevious,
+    invoceType,
     iva,
     priceList,
     removeItem,
     setActiveStep,
     setClient,
+    setInvoceType,
     setIva,
     setPriceList,
     setWarehouse,

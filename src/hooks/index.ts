@@ -1,4 +1,5 @@
 export * from './index';
+export * from './useAfip';
 export * from './useCashMovements';
 export * from './useCashRegisters';
 export * from './useCategories';

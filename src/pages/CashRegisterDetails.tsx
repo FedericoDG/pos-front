@@ -341,8 +341,15 @@ export const CashRegisterDetails = () => {
                             {algo.find((el) => el.id === movement.id)?.open && (
                               <>
                                 <Tr className='no-print'>
-                                  <Td borderWidth={0} colSpan={7} textAlign='right'>
-                                    <Button size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/${movement.id}`)}>Ver Comprobante</Button>
+                                  {
+                                    movement.cae && (
+                                      <Td borderWidth={0} colSpan={6} textAlign='right'>
+                                        <Button size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.id}`)}>Ver Comprobante AFIP</Button>
+                                      </Td>
+                                    )
+                                  }
+                                  <Td borderWidth={0} colSpan={!movement.cae ? 7 : 1} textAlign='right'>
+                                    <Button size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/${movement.id}`)}>Ver Comprobante Interno</Button>
                                   </Td>
                                 </Tr>
                                 <Tr>

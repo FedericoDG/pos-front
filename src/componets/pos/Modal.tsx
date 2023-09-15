@@ -37,6 +37,7 @@ interface Props {
 
 interface Values {
   quantity: number;
+  discount: number;
 }
 
 export const Modal = ({
@@ -51,10 +52,20 @@ export const Modal = ({
   const { user } = useMyContext();
 
   const onSubmit = (values: Values, actions: FormikHelpers<Values>) => {
+    const discount = Number(values.discount);
+
     if (iva) {
-      addItem({ ...activeProduct!, quantity: values.quantity, error: false, tax: Number(activeProduct.ivaCondition?.tax) });
+      if (discount > 0) {
+        addItem({ ...activeProduct!, quantity: values.quantity, price: activeProduct.price * (1 - discount / 100), hasDiscount: true, discount: discount, error: false, tax: Number(activeProduct.ivaCondition?.tax) });
+      } else {
+        addItem({ ...activeProduct!, quantity: values.quantity, hasDiscount: false, discount: 0, error: false, tax: Number(activeProduct.ivaCondition?.tax) });
+      }
     } else {
-      addItem({ ...activeProduct!, quantity: values.quantity, error: false, tax: 0 });
+      if (discount > 0) {
+        addItem({ ...activeProduct!, quantity: values.quantity, price: activeProduct.price * (1 - discount / 100), hasDiscount: true, discount: discount, error: false, tax: 0 });
+      } else {
+        addItem({ ...activeProduct!, quantity: values.quantity, hasDiscount: false, discount: 0, error: false, tax: 0 });
+      }
     }
     setActiveProduct({} as CartItem);
     actions.resetForm();
@@ -68,6 +79,7 @@ export const Modal = ({
 
   const initialValues = {
     quantity: 0,
+    discount: 0,
   };
 
   const schema = () =>
@@ -125,10 +137,29 @@ export const Modal = ({
                     }}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                   />
-                  <InputRightAddon children={activeProduct?.unit?.code} />
+                  <InputRightAddon children={activeProduct?.unit?.code} minW="56px" />
                 </InputGroup>
                 {errors.quantity && touched.quantity && (
                   <ErrorMessage>{errors.quantity}</ErrorMessage>
+                )}
+              </Box>
+              <Box>
+                <FormLabel htmlFor="discount">Descuento:</FormLabel>
+                <InputGroup>
+                  <Input
+                    id="discount"
+                    name="discount"
+                    tabIndex={1}
+                    value={values.discount}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                    onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                  />
+                  <InputRightAddon children="%" minW="56px" />
+                </InputGroup>
+                {errors.discount && touched.discount && (
+                  <ErrorMessage>{errors.discount}</ErrorMessage>
                 )}
               </Box>
             </Stack>

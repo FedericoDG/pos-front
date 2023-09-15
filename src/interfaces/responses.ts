@@ -1,4 +1,5 @@
 import {
+  Afip,
   CashMovement,
   CashRegister,
   Category,
@@ -30,6 +31,12 @@ import {
 export interface SettingsResponse {
   body: {
     settings: Settings;
+  };
+}
+
+export interface AfipResponse {
+  body: {
+    afip: Afip;
   };
 }
 

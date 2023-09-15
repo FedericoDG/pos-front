@@ -18,10 +18,18 @@ export interface Settings {
   province: string;
   ivaCondition: string;
   cuit: string;
-  posNumber: number;
   invoceName: string;
   invoceNumber: number;
   imageURL: string;
+}
+
+export interface Afip {
+  id?: number;
+  posNumber: number;
+  nextInvoceNumberA: number;
+  nextInvoceNumberB: number;
+  nextInvoceNumberM: number;
+  certExpiration: string;
 }
 
 export interface User {
@@ -350,6 +358,12 @@ export interface CashMovement {
   posNumber: number;
   invoceNumber: number;
   info: string;
+  invoceIdAfip?: number;
+  invoceNumberAfip?: number;
+  cbteTipo?: number;
+  cae?: string;
+  vtoCae?: string;
+  impTotal?: string;
   createdAt?: string;
   updatedAt?: string;
   client?: Client;

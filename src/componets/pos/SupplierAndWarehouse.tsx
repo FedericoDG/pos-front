@@ -12,28 +12,43 @@ import {
 import { GroupBase, Select, SelectInstance } from 'chakra-react-select';
 import { useEffect, useRef, useState } from 'react';
 
-import { useGetWarehousesWOStock, useGetClients, useGetPriceLists } from '../../hooks';
+import {
+  useGetWarehousesWOStock,
+  useGetClients,
+  useGetPriceLists,
+  useGetInvoceTypes,
+} from '../../hooks';
 import { Loading } from '../common';
 import { useMyContext } from '../../context';
 
-import { SelectedClient, SelectedPriceList, SelectedWarehouse, usePosContext } from '.';
+import {
+  SelectedClient,
+  SelectedInvoceType,
+  SelectedPriceList,
+  SelectedWarehouse,
+  usePosContext,
+} from '.';
 
 export const SupplierAndWarehouse = () => {
   const { user } = useMyContext();
   const { data: warehouses } = useGetWarehousesWOStock();
   const { data: clients } = useGetClients();
   const { data: priceLists } = useGetPriceLists();
+  const { data: invoceTypes } = useGetInvoceTypes();
 
   const [mappedPriceLists, setMappedPriceLists] = useState<SelectedPriceList[]>([]);
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
+  const [mappedInvoceTypes, setMappedInvoceTypes] = useState<SelectedInvoceType[]>([]);
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
 
   const {
     client,
     goToNext,
+    invoceType,
     iva,
     priceList,
     setClient,
+    setInvoceType,
     setIva,
     setPriceList,
     setWarehouse,
@@ -41,7 +56,26 @@ export const SupplierAndWarehouse = () => {
   } = usePosContext();
 
   useEffect(() => {
-    if (!priceLists || !clients || !warehouses) return;
+    if (!priceLists || !clients || !warehouses || !invoceTypes) return;
+
+    const mappedInvoceTypes = invoceTypes.map((el) => ({
+      ...el,
+      value: el.id,
+      label: `${el.code} ${el.description}`,
+    }));
+
+    if (iva) {
+      const filter = mappedInvoceTypes.filter((el) => el.code !== '555');
+
+      setMappedInvoceTypes(filter);
+      setInvoceType(null);
+    } else {
+      const filter = mappedInvoceTypes.filter((el) => el.code === '555');
+
+      setMappedInvoceTypes(filter);
+
+      setInvoceType(filter[0]);
+    }
 
     const mappedClients = clients.map((el) => ({
       ...el,
@@ -68,16 +102,12 @@ export const SupplierAndWarehouse = () => {
 
       setMappedWarehouses(mappedWarehouses);
     }
-  }, [clients, priceLists, user.roleId, warehouses]);
+  }, [clients, invoceTypes, iva, priceLists, setInvoceType, user.roleId, warehouses]);
 
   useEffect(() => {
     if (mappedPriceLists.length < 1 || mappedClients.length < 1 || mappedWarehouses.length < 1)
       return;
 
-    /*  if (!iva) {
-      setClient(mappedClients.filter((el) => el.document === 'xxxxxxxx')[0]);
-    } else {
-    } */
     setClient(mappedClients.find((el) => el.id === user.userPreferences?.clientId)!);
 
     setPriceList(mappedPriceLists.find((el) => el.id === user.userPreferences?.priceListId)!);
@@ -111,6 +141,9 @@ export const SupplierAndWarehouse = () => {
 
   const clientRef = useRef<SelectInstance<SelectedClient, false, GroupBase<SelectedClient>>>(null);
 
+  const invoceTypeRef =
+    useRef<SelectInstance<SelectedInvoceType, false, GroupBase<SelectedInvoceType>>>(null);
+
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'F9') {
@@ -125,14 +158,14 @@ export const SupplierAndWarehouse = () => {
     };
   }, [goToNext]);
 
-  if (!clients || !warehouses || !priceLists) return <Loading />;
+  if (!clients || !warehouses || !priceLists || !invoceTypes) return <Loading />;
 
   return (
     <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"
-          isDisabled={!client?.value || !warehouse?.value}
+          isDisabled={!client?.value || !warehouse?.value || !invoceType?.value}
           minW="150px"
           ml="auto"
           rightIcon={<ArrowForwardIcon />}
@@ -208,18 +241,34 @@ export const SupplierAndWarehouse = () => {
           <FormLabel htmlFor="client">Cliente:</FormLabel>
           <Select
             ref={clientRef}
-            autoFocus
             isClearable
             isSearchable
             colorScheme="brand"
             id="client"
-            isDisabled={!priceList?.value || !warehouse?.value /* || !iva */}
+            isDisabled={!priceList?.value || !warehouse?.value}
             options={mappedClients}
             placeholder="Seleccionar Cliente"
             selectedOptionColorScheme="brand"
             tabIndex={3}
             value={client}
             onChange={(e) => setClient(e)}
+          />
+        </Box>
+        <Box w="49%">
+          <FormLabel htmlFor="client">Tipo de Comprobante:</FormLabel>
+          <Select
+            ref={invoceTypeRef}
+            isClearable
+            isSearchable
+            colorScheme="brand"
+            id="invoceType"
+            isDisabled={!priceList?.value || !warehouse?.value || !client?.value}
+            options={mappedInvoceTypes}
+            placeholder="Seleccionar Tipo de Comprobante"
+            selectedOptionColorScheme="brand"
+            tabIndex={3}
+            value={invoceType}
+            onChange={(e) => setInvoceType(e)}
           />
         </Box>
       </Stack>

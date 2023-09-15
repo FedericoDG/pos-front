@@ -1,4 +1,4 @@
-import { Box, Heading, Stack, Text, Button, Divider, Icon } from '@chakra-ui/react';
+import { Box, Heading, Stack, Text, Button, Divider, Icon, HStack } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 import { ArrowForwardIcon, WarningIcon } from '@chakra-ui/icons';
@@ -98,9 +98,20 @@ export const Basket = ({ refetch }: Props) => {
                       justifyContent="space-between"
                       px="2"
                     >
-                      <Text color={item.error ? 'white' : 'whitesmoke'} fontWeight="bold">
-                        {item.name}
-                      </Text>
+                      {item.hasDiscount ? (
+                        <HStack>
+                          <Text color={item.error ? 'white' : 'whitesmoke'} fontWeight="bold">
+                            {item.name}
+                          </Text>
+                          <Text color={item.error ? 'white' : 'plum'} fontWeight="bold">
+                            desc: {item.discount}%
+                          </Text>
+                        </HStack>
+                      ) : (
+                        <Text color={item.error ? 'white' : 'whitesmoke'} fontWeight="bold">
+                          {item.name}
+                        </Text>
+                      )}
                       {item.error && <WarningIcon color="white" h={4} marginX="1" w={4} />}
                     </Stack>
                     <Text px="2">

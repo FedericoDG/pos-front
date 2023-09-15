@@ -35,7 +35,6 @@ export const Form = ({ settings }: Props) => {
     const parsedValues = {
       ...values,
       invoceNumber: Number(values.invoceNumber),
-      posNumber: Number(values.posNumber),
     };
 
     updateSettings(parsedValues);
@@ -144,21 +143,6 @@ export const Form = ({ settings }: Props) => {
             />
             {errors.invoceName && touched.invoceName && (
               <ErrorMessage>{errors.invoceName}</ErrorMessage>
-            )}
-          </Box>
-          <Box w="full">
-            <FormLabel htmlFor="posNumber">N° Punto de Venta:</FormLabel>
-            <Input
-              id="posNumber"
-              isDisabled={isLoading}
-              name="posNumber"
-              placeholder="1"
-              type="posNumber"
-              value={values.posNumber}
-              onChange={handleChange}
-            />
-            {errors.posNumber && touched.posNumber && (
-              <ErrorMessage>{errors.posNumber}</ErrorMessage>
             )}
           </Box>
           <Box w="full">

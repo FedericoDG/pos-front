@@ -27,6 +27,7 @@ import {
   PurchaseDetails,
   Purchases,
   SaleDetails,
+  SaleDetailsAfip,
   Settings,
   Stocks,
   Suppliers,
@@ -99,6 +100,7 @@ export const AppRouter = () => (
         <Route element={<CashRegisterDetails />} path="/panel/caja/detalles/:id" />
         <Route element={<CloseCashRegister />} path="/panel/caja/detalles/:id/cerrar" />
         <Route element={<SaleDetails />} path="/panel/caja/detalles/venta/:id" />
+        <Route element={<SaleDetailsAfip />} path="/panel/caja/detalles/venta/afip/:id" />
         {/* USERS */}
         <Route element={<Users />} path="/panel/usuarios" />
         <Route element={<UserProfile />} path="/panel/usuarios/perfil" />

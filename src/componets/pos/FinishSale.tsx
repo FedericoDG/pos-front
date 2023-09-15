@@ -29,7 +29,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { CgArrowsExchangeAlt } from 'react-icons/cg';
 import { BsPlusCircle } from 'react-icons/bs';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import { Select as ReactSelect } from 'chakra-react-select';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
@@ -37,7 +36,7 @@ import { FiAlertTriangle } from 'react-icons/fi';
 import { AiFillLock, AiFillUnlock } from 'react-icons/ai';
 
 import { ErrorMessage, Loading } from '../common';
-import { useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods } from '../../hooks';
+import { useCreateCashMovement, useGetAfip, useGetOtherTributes, useGetPaymentMethods, useGetSettings } from '../../hooks';
 import { formatCurrency } from '../../utils';
 import { useGetInvoceTypes } from '../../hooks/';
 import { InvoceType } from '../../interfaces/interfaces';
@@ -51,8 +50,10 @@ interface Payment {
 }
 
 interface OtherTribute {
-  amount: string;
   otherTributeId: string;
+  code: string;
+  amount: string;
+  description: string;
 }
 
 interface Values {
@@ -86,8 +87,10 @@ interface Sale {
     paymentMethodId: number;
   }[];
   otherTributes: {
-    amount: number;
     otherTributeId: number;
+    id: number;
+    amount: number;
+    description: string;
   }[];
   info: string;
 }
@@ -122,14 +125,16 @@ export const FinishSale = () => {
   const [discount, setDiscount] = useState('0');
   const [recharge, setRecharge] = useState('0');
   const [percent, setPercent] = useState(true);
-  const [initialValues, setInitialValues] = useState<Values>({
+  const [initialValues] = useState<Values>({
     discount: 0,
     recharge: 0,
     info: '',
-    //payments: [{ amount: totalCart.toString(), paymentMethodId: '1' }],
   });
 
   const navigate = useNavigate();
+
+  const { data: settings } = useGetSettings(1);
+
 
   const {
     cart,
@@ -145,14 +150,8 @@ export const FinishSale = () => {
     totalCartItems,
     updateCartWithError,
     warehouse,
+    invoceType
   } = usePosContext();
-
-  /* const initialValues: Values = {
-    discount: 0,
-    recharge: 0,
-    info: '',
-    //payments: [{ amount: totalCart.toString(), paymentMethodId: '1' }],
-  }; */
 
   const queryClient = useQueryClient();
 
@@ -173,15 +172,21 @@ export const FinishSale = () => {
         price: item.price,
         allow: item.allownegativestock === 'ENABLED' ? true : false,
       })),
-      invoceTypeId: values.invoceType?.id!,
+      invoceTypeId: invoceType?.id!,
       payments: values?.payments?.map((item) => ({
         amount: Number(item.amount),
         paymentMethodId: Number(item.paymentMethodId),
       })) || [],
-      otherTributes: values?.otherTributes?.filter(el => Number(el.amount) > 0).map((item) => ({
-        amount: Number(item.amount),
-        otherTributeId: Number(item.otherTributeId),
-      })) || [],
+      otherTributes: values?.otherTributes?.filter(el => Number(el.amount) > 0).map((item) => {
+        const tribute = otherTributes?.find(el => el.id === Number(item.otherTributeId));
+
+        return {
+          amount: Number(item.amount),
+          otherTributeId: Number(item.otherTributeId),
+          id: Number(tribute?.code),
+          description: tribute?.description!
+        };
+      }) || [],
       info: values.info,
     };
 
@@ -227,10 +232,12 @@ export const FinishSale = () => {
   };
 
   const onSuccess = (res: any) => {
+
     toast.info(
       <Box>
         <Text>Venta Realizada</Text>
-        <Button display='block' ml="auto" variant='solid' onClick={() => navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`)}>Ver Factura</Button>
+        <Button display='block' ml="auto" variant='solid' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`)}>Ver Factura AFIP</Button>
+        <Button display='block' ml="auto" variant='solid' onClick={() => navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`)}>Ver Comprobante</Button>
       </Box>,
       {
         theme: 'light',
@@ -287,55 +294,6 @@ export const FinishSale = () => {
   const { data: invoceTypes } = useGetInvoceTypes();
   const { data: otherTributes } = useGetOtherTributes();
 
-  const [mappedInvoceTypes, setMappedInvoceTypes] = useState<SelectedInvoceType[]>([]);
-
-  useEffect(() => {
-    if (!invoceTypes) return;
-
-    if (!iva) {
-      const mappedInvoceTypes = invoceTypes.filter(el => el.code === '555').map((el) => ({
-        ...el,
-        value: el.id,
-        label: `${el.code} - ${el.description}`,
-      }));
-
-      setMappedInvoceTypes(mappedInvoceTypes);
-
-    } else {
-      const mappedInvoceTypes = invoceTypes.map((el) => ({
-        ...el,
-        value: el.id,
-        label: `${el.code} - ${el.description}`,
-      }));
-
-      setMappedInvoceTypes(mappedInvoceTypes);
-    }
-  }, [invoceTypes, iva]);
-
-  useEffect(() => {
-    if (!invoceTypes || mappedInvoceTypes.length < 1) return;
-
-    if (!iva) {
-      setInitialValues(current => ({
-        ...current,
-        invoceType: mappedInvoceTypes[0]
-      }));
-    } else {
-      if (client?.ivaTypeId === 1) {
-        setInitialValues(current => ({
-          ...current,
-          invoceType: mappedInvoceTypes[0]
-        }));
-      }
-      else {
-        setInitialValues(current => ({
-          ...current,
-          invoceType: mappedInvoceTypes[1]
-        }));
-      }
-    }
-  }, [client?.ivaTypeId, invoceTypes, iva, mappedInvoceTypes]);
-
   const totalCarttotalShoppingCart = useCallback((values: any) =>
     Math.round(
       (Number.EPSILON
@@ -361,7 +319,7 @@ export const FinishSale = () => {
     <Stack bg="white" p="4" rounded="md" shadow="md">
       <ToastContainer />
       {
-        !paymentMethods || !invoceTypes || !otherTributes ? <Loading /> : (
+        !paymentMethods || !invoceTypes || !otherTributes || !settings ? <Loading /> : (
           <FormikProvider value={formik}>
             <form onSubmit={handleSubmit}>
               <Stack spacing="14px">
@@ -379,42 +337,8 @@ export const FinishSale = () => {
                 <Flex gap="8" justifyContent="space-between">
                   <Stack gap={8} w="64%">
 
-                    <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
-                      <Icon as={FiAlertTriangle} boxSize={6} color={'red.500'} display={values.invoceType ? 'none' : 'block'} pos='absolute' right={1} top={1} />
-                      <Box position='relative' px="4" py='8'>
-                        <Divider />
-                        <AbsoluteCenter bg="white" px="2">
-                          <FormLabel htmlFor="invoceTypeId">Tipo de Comprobante</FormLabel>
-                        </AbsoluteCenter>
-                      </Box>
-                      {/*  */}
-                      {/*  */}
-                      <ReactSelect
-                        autoFocus
-                        isClearable
-                        isSearchable
-                        colorScheme="brand"
-                        id="invoceTypeId"
-                        isDisabled={!iva}
-                        name="invoceType"
-                        options={mappedInvoceTypes}
-                        placeholder="Seleccionar..."
-                        selectedOptionColorScheme="brand"
-                        value={
-                          !iva ?
-                            mappedInvoceTypes[0]
-                            :
-                            mappedInvoceTypes
-                              ? mappedInvoceTypes.find((option) => option.id === values.invoceType?.id)
-                              : ''
-                        }
-                        onChange={(selectedOption) => {
-                          formik.setFieldValue('invoceType', selectedOption);
-                        }}
-                      />
-                      {typeof errors.invoceType === 'string' && (
-                        <ErrorMessage>{errors.invoceType}</ErrorMessage>
-                      )}
+                    <Stack direction="row" pos='relative' w="full">
+                      <Heading bg="gray.600" color="whitesmoke" rounded='md' textAlign='center' w="full">{invoceType?.description}</Heading>
                     </Stack>
 
                     <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
@@ -608,6 +532,8 @@ export const FinishSale = () => {
                                 arrayHelpers.push({
                                   amount: 0,
                                   otherTributeId: '1',
+                                  id: '1',
+                                  description: 'IMPUESTOS NACIONALES'
                                 });
                               }}
                             >

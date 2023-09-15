@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 export const schema = z.object({
-  invoceType: z.object({}, { required_error: 'El Tipo de Comprobante es requerido' }),
   discount: z
     .preprocess(
       (val) => Number(val),

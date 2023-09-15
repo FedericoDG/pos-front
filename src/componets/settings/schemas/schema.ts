@@ -7,15 +7,6 @@ export const schema = z.object({
   province: z.string({ required_error: 'La provincia es obligatoria' }).trim(),
   cuit: z.string({ required_error: 'El CUIT es obligatorio' }).trim(),
   invoceName: z.string({ required_error: 'El Nombre del Comprobante es obligatorio' }).trim(),
-  posNumber: z.preprocess(
-    (val) => Number(val),
-    z
-      .number({
-        required_error: 'El n° de punto de venta es obligatorio',
-        invalid_type_error: 'Sólo se aceptan números',
-      })
-      .min(1, 'El número debe ser mayor a 0')
-  ),
   invoceNumber: z.preprocess(
     (val) => Number(val),
     z
