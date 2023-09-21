@@ -4,6 +4,8 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'sonner';
+
 import { AppProvider } from './context';
 import { AppRouter } from './router';
 import theme from './theme';
@@ -19,6 +21,7 @@ export const App = () => {
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
       </QueryClientProvider>
+      <Toaster closeButton richColors expand={true} />
       <ToastContainer limit={3} />
     </AppProvider>
   );

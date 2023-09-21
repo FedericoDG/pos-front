@@ -346,7 +346,9 @@ export interface CashMovement {
   id?: number;
   subtotal: number;
   discount: number;
+  discountPercent: number;
   recharge: number;
+  rechargePercent: number;
   otherTributes: number;
   total: number;
   cashRegisterId: number;

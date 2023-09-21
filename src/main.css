@@ -37,3 +37,8 @@
     display: none !important;
   }
 }
+
+/* html {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+} */

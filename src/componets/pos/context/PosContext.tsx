@@ -55,9 +55,12 @@ interface PosContext {
   setPriceList: Dispatch<SetStateAction<SelectedPriceList | null>>;
   setWarehouse: Dispatch<SetStateAction<SelectedWarehouse | null>>;
   steps: Step[];
+  subTotalCart: number;
   totalCart: number;
+  totalIvaCart: number;
   totalCartItems: number;
   updateCartWithError: (arr: number[]) => void;
+  recalculateCart: (num: number) => void;
   warehouse: SelectedWarehouse | null;
 }
 

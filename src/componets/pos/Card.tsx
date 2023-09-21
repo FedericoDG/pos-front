@@ -26,7 +26,7 @@ interface Props {
 }
 
 export const Card: FC<Props> = ({ disableBtn }) => {
-  const { client, warehouse, priceList, setClient } = usePosContext();
+  const { client, warehouse, priceList, setClient, invoceType } = usePosContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
@@ -36,14 +36,18 @@ export const Card: FC<Props> = ({ disableBtn }) => {
   useEffect(() => {
     if (!clients) return;
 
-    const mappedClients = clients.map((el) => ({
+    let mappedClients = clients.map((el) => ({
       ...el,
       value: el.id,
       label: `${el.document} - ${el.name} ${el.lastname}`,
     }));
 
+    if (invoceType?.code === '001') {
+      mappedClients = mappedClients.filter((el) => el.identificationId === 25);
+    }
+
     setMappedClients(mappedClients);
-  }, [clients]);
+  }, [clients, invoceType?.code]);
 
   if (!clients) return <Loading />;
 
@@ -112,6 +116,34 @@ export const Card: FC<Props> = ({ disableBtn }) => {
             </Tr>
             <Tr>
               <Td borderColor="brand.500">{warehouse?.description}</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th
+                bg="brand.500"
+                borderBottomWidth="1"
+                borderColor="black"
+                borderStyle="solid"
+                colSpan={2}
+                color="white"
+                h={30}
+              >
+                Tipo de Comprobante
+              </Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td borderBottomWidth="0" fontSize={18}>
+                {invoceType?.description.toUpperCase()}
+              </Td>
+            </Tr>
+            <Tr>
+              <Td borderColor="brand.500"> </Td>
             </Tr>
           </Tbody>
         </Table>

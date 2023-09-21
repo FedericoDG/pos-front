@@ -72,9 +72,38 @@ export const PosProvider = ({ children }: Props) => {
     return setCart([]);
   };
 
+  const subTotalCart = useMemo(
+    () => cart.reduce((acc, item) => acc + item.quantity * item.price, 0),
+    [cart]
+  );
+
+  const totalIvaCart = useMemo(
+    () => cart.reduce((acc, item) => acc + item.quantity * item.price * item.tax, 0),
+    [cart]
+  );
+
   const totalCart = useMemo(
     () => cart.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax), 0),
     [cart]
+  );
+
+  const recalculateCart = useCallback(
+    (num: number) => {
+      const newCart: CartItem[] = [];
+
+      for (let i = 0; i < cart.length; i++) {
+        const percent = (cart[i].quantity * cart[i].price) / subTotalCart;
+
+        console.log('porcentaje: ', percent);
+
+        const element = { ...cart[i], price: cart[i].price + percent * num };
+
+        newCart.push(element);
+      }
+
+      setCart(newCart);
+    },
+    [cart, subTotalCart]
   );
 
   const totalCartItems = useMemo(() => cart.length, [cart]);
@@ -117,6 +146,9 @@ export const PosProvider = ({ children }: Props) => {
       totalCartItems,
       updateCartWithError,
       warehouse,
+      subTotalCart,
+      totalIvaCart,
+      recalculateCart,
     }),
     [
       activeStep,
@@ -133,6 +165,9 @@ export const PosProvider = ({ children }: Props) => {
       totalCartItems,
       updateCartWithError,
       warehouse,
+      subTotalCart,
+      totalIvaCart,
+      recalculateCart,
     ]
   );
 
@@ -163,6 +198,9 @@ export const usePosContext = () => {
     totalCartItems,
     updateCartWithError,
     warehouse,
+    subTotalCart,
+    totalIvaCart,
+    recalculateCart,
   } = useContext(posContext);
 
   return {
@@ -188,5 +226,8 @@ export const usePosContext = () => {
     totalCartItems,
     updateCartWithError,
     warehouse,
+    subTotalCart,
+    totalIvaCart,
+    recalculateCart,
   };
 };

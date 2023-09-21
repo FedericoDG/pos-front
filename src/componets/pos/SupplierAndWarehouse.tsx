@@ -65,10 +65,17 @@ export const SupplierAndWarehouse = () => {
     }));
 
     if (iva) {
-      const filter = mappedInvoceTypes.filter((el) => el.code !== '555');
+      if (client?.ivaTypeId !== 1) {
+        const filter = mappedInvoceTypes.filter((el) => el.code === '006');
 
-      setMappedInvoceTypes(filter);
-      setInvoceType(null);
+        setMappedInvoceTypes(filter);
+        setInvoceType(filter[0]);
+      } else {
+        const filter = mappedInvoceTypes.filter((el) => el.code !== '555');
+
+        setMappedInvoceTypes(filter);
+        setInvoceType(null);
+      }
     } else {
       const filter = mappedInvoceTypes.filter((el) => el.code === '555');
 
@@ -102,10 +109,24 @@ export const SupplierAndWarehouse = () => {
 
       setMappedWarehouses(mappedWarehouses);
     }
-  }, [clients, invoceTypes, iva, priceLists, setInvoceType, user.roleId, warehouses]);
+  }, [
+    client?.ivaTypeId,
+    clients,
+    invoceTypes,
+    iva,
+    priceLists,
+    setInvoceType,
+    user.roleId,
+    warehouses,
+  ]);
 
   useEffect(() => {
-    if (mappedPriceLists.length < 1 || mappedClients.length < 1 || mappedWarehouses.length < 1)
+    if (
+      mappedPriceLists.length < 1 ||
+      mappedClients.length < 1 ||
+      mappedWarehouses.length < 1 ||
+      client?.id
+    )
       return;
 
     setClient(mappedClients.find((el) => el.id === user.userPreferences?.clientId)!);
@@ -118,6 +139,7 @@ export const SupplierAndWarehouse = () => {
       setWarehouse(mappedWarehouses.find((el) => el.id === user.userPreferences?.warehouseId)!);
     }
   }, [
+    client,
     iva,
     mappedClients,
     mappedClients.length,

@@ -147,7 +147,7 @@ export const CashRegisterDetails = () => {
                 Imprimir
               </Button>
             </Stack>
-            <Stack ref={printRef} minW="1024px" py="8">
+            <Stack ref={printRef} py="8" w="1024px">
               <Stack >
                 <TableContainer w="full">
                   <Table size="sm">
@@ -198,14 +198,14 @@ export const CashRegisterDetails = () => {
                           Saldo Inicial
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
-                          Ventas Brutas
+                          Ventas
                         </Th>
-                        <Th isNumeric bg="gray.700" color="white">
+                        {/* <Th isNumeric bg="gray.700" color="white">
                           Descuentos
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
                           Recargos
-                        </Th>
+                        </Th> */}
                         <Th isNumeric bg="gray.700" color="white">
                           Otros Impuestos
                         </Th>
@@ -216,7 +216,7 @@ export const CashRegisterDetails = () => {
                     </Thead>
                     <Tbody>
                       <Tr>
-                        <Td isNumeric>{formatDate(cashRegister.openingDate)}</Td>
+                        <Td >{formatDate(cashRegister.openingDate)}</Td>
                         <Td>
                           {cashRegister.closingDate ? formatDate(cashRegister.closingDate) : ''}
                         </Td>
@@ -226,17 +226,41 @@ export const CashRegisterDetails = () => {
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
                           {formatCurrency(cashRegister.sales + cashRegister.discounts - cashRegister.recharges - cashRegister.otherTributes)}
                         </Td>
-                        <Td isNumeric color="#4a5568" fontWeight="semibold">
+                        {/*  <Td isNumeric color="#4a5568" fontWeight="semibold">
                           {formatCurrency(cashRegister.discounts)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
                           {formatCurrency(cashRegister.recharges)}
-                        </Td>
+                        </Td> */}
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
                           {formatCurrency(cashRegister.otherTributes)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontSize={16} fontWeight="bold">
                           {formatCurrency(cashRegister.finalBalance + cashRegister.initialBalance)}
+                        </Td>
+                      </Tr>
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+
+                <TableContainer w="full">
+                  <Table size="sm" w="full">
+                    <Text as={'caption'} textAlign="left">
+                      Descuentos/Recargos
+                    </Text>
+                    <Thead>
+                      <Tr>
+                        <Th isNumeric bg="gray.700" color="white">Descuentos</Th>
+                        <Th isNumeric bg="gray.700" color="white">Recargos</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      <Tr>
+                        <Td isNumeric color="#4a5568" fontWeight="semibold">
+                          {formatCurrency(cashRegister.discounts)}
+                        </Td>
+                        <Td isNumeric color="#4a5568" fontWeight="semibold">
+                          {formatCurrency(cashRegister.recharges)}
                         </Td>
                       </Tr>
                     </Tbody>
@@ -298,12 +322,12 @@ export const CashRegisterDetails = () => {
                           <Th isNumeric bg="gray.700" color="white" w="181px">
                             Subtotal
                           </Th>
-                          <Th isNumeric bg="gray.700" color="white" w="181px">
+                          {/*  <Th isNumeric bg="gray.700" color="white" w="181px">
                             Descuentos
                           </Th>
                           <Th isNumeric bg="gray.700" color="white" w="181px">
                             Recargos
-                          </Th>
+                          </Th> */}
                           <Th isNumeric bg="gray.700" color="white" w="181px">
                             Otros impuestos
                           </Th>
@@ -332,8 +356,8 @@ export const CashRegisterDetails = () => {
                               </Td>
                               <Td>{formatDateAndHour(movement.createdAt)}</Td>
                               <Td isNumeric>{formatCurrency(movement.subtotal)}</Td>
-                              <Td isNumeric>{formatCurrency(movement.discount)}</Td>
-                              <Td isNumeric>{formatCurrency(movement.recharge)}</Td>
+                              {/* <Td isNumeric>{formatCurrency(movement.discount)}</Td>
+                              <Td isNumeric>{formatCurrency(movement.recharge)}</Td> */}
                               <Td isNumeric>{formatCurrency(movement.otherTributes)}</Td>
                               <Td isNumeric>{formatCurrency(movement.total)}</Td>
                             </Tr>
@@ -341,20 +365,20 @@ export const CashRegisterDetails = () => {
                             {algo.find((el) => el.id === movement.id)?.open && (
                               <>
                                 <Tr className='no-print'>
+                                  <Td borderWidth={0} textAlign='right'>
+                                    <Button colorScheme='green' size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/${movement.id}`)}>Ver Comprobante Interno</Button>
+                                  </Td>
                                   {
                                     movement.cae && (
-                                      <Td borderWidth={0} colSpan={6} textAlign='right'>
-                                        <Button size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.id}`)}>Ver Comprobante AFIP</Button>
+                                      <Td borderWidth={0} textAlign='right'>
+                                        <Button colorScheme='brand' size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.id}`)}>Ver Comprobante AFIP</Button>
                                       </Td>
                                     )
                                   }
-                                  <Td borderWidth={0} colSpan={!movement.cae ? 7 : 1} textAlign='right'>
-                                    <Button size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/${movement.id}`)}>Ver Comprobante Interno</Button>
-                                  </Td>
                                 </Tr>
                                 <Tr>
-                                  <Td colSpan={5} px="0">
-                                    <TableContainer w="843px">
+                                  <Td border="none" colSpan={5} px="0">
+                                    <TableContainer w="843px" >
                                       <Table size="sm">
                                         <Thead>
                                           <Tr>
@@ -392,7 +416,7 @@ export const CashRegisterDetails = () => {
                                 </Tr>
 
                                 <Tr>
-                                  <Td colSpan={5} px="0">
+                                  <Td border="none" colSpan={5} px="0">
                                     <TableContainer w="843px">
                                       <Table size="sm">
                                         <Thead>
@@ -428,7 +452,7 @@ export const CashRegisterDetails = () => {
                                 </Tr>
 
                                 <Tr>
-                                  <Td colSpan={5} px="0">
+                                  <Td border="none" colSpan={5} px="0">
                                     <TableContainer w="843px">
                                       <Table size="sm">
                                         <Thead>
@@ -512,7 +536,7 @@ export const CashRegisterDetails = () => {
 
                                 {movement.discount > 0 && (
                                   <Tr>
-                                    <Td colSpan={5} px="0">
+                                    <Td border="none" colSpan={5} px="0">
                                       <TableContainer w="843px">
                                         <Table size="sm">
                                           <Thead>
@@ -534,6 +558,9 @@ export const CashRegisterDetails = () => {
                                               <Td border="none" w="150px">
                                                 {formatCurrency(movement.discount)}
                                               </Td>
+                                              <Td border="none" w="693px">
+                                                {Math.round(movement.discountPercent * 100) / 100}%
+                                              </Td>
                                             </Tr>
                                           </Tbody>
                                         </Table>
@@ -544,7 +571,7 @@ export const CashRegisterDetails = () => {
 
                                 {movement.recharge > 0 && (
                                   <Tr>
-                                    <Td colSpan={5} px="0">
+                                    <Td border="none" colSpan={5} px="0">
                                       <TableContainer w="843px">
                                         <Table size="sm">
                                           <Thead>
@@ -566,6 +593,9 @@ export const CashRegisterDetails = () => {
                                               <Td border="none" w="150px">
                                                 {formatCurrency(movement.recharge)}
                                               </Td>
+                                              <Td border="none" w="693px">
+                                                {Math.round(movement.rechargePercent * 100) / 100}%
+                                              </Td>
                                             </Tr>
                                           </Tbody>
                                         </Table>
@@ -577,7 +607,7 @@ export const CashRegisterDetails = () => {
                                   movement.otherTributes > 0 &&
 
                                   <Tr>
-                                    <Td colSpan={5} px="0">
+                                    <Td border="none" colSpan={5} px="0">
                                       <TableContainer w="843px">
                                         <Table size="sm">
                                           <Thead>

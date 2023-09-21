@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-children-prop */
 import { useQueryClient } from 'react-query';
-import { toast, ToastContainer } from 'react-toastify';
+// import { toast, ToastContainer } from 'react-toastify';
 import {
   AbsoluteCenter,
   Box,
@@ -25,23 +25,24 @@ import {
 } from '@chakra-ui/react';
 import { FieldArray, useFormik, FormikProvider, useFormikContext } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CgArrowsExchangeAlt } from 'react-icons/cg';
-import { BsPlusCircle } from 'react-icons/bs';
+import { BsCheckCircle, BsPlusCircle } from 'react-icons/bs';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { AiFillLock, AiFillUnlock } from 'react-icons/ai';
+import { toast } from 'sonner';
 
 import { ErrorMessage, Loading } from '../common';
-import { useCreateCashMovement, useGetAfip, useGetOtherTributes, useGetPaymentMethods, useGetSettings } from '../../hooks';
+import { useCreateAfipInvoce, useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods, useGetSettings } from '../../hooks';
 import { formatCurrency } from '../../utils';
 import { useGetInvoceTypes } from '../../hooks/';
 import { InvoceType } from '../../interfaces/interfaces';
 
-import { schema } from '.';
+import { CartItem, schema } from '.';
 import { usePosContext } from '.';
 
 interface Payment {
@@ -74,7 +75,9 @@ interface Sale {
   clientId: number;
   warehouseId: number;
   discount?: number;
+  discountPercent?: number;
   recharge?: number;
+  rechargePercent?: number;
   invoceTypeId: number;
   cart: {
     productId: number;
@@ -121,21 +124,6 @@ const AutoSubmit = () => {
 };
 
 export const FinishSale = () => {
-  const [option, setOption] = useState('1');
-  const [discount, setDiscount] = useState('0');
-  const [recharge, setRecharge] = useState('0');
-  const [percent, setPercent] = useState(true);
-  const [initialValues] = useState<Values>({
-    discount: 0,
-    recharge: 0,
-    info: '',
-  });
-
-  const navigate = useNavigate();
-
-  const { data: settings } = useGetSettings(1);
-
-
   const {
     cart,
     client,
@@ -146,12 +134,69 @@ export const FinishSale = () => {
     setClient,
     setPriceList,
     setWarehouse,
-    totalCart,
     totalCartItems,
     updateCartWithError,
     warehouse,
-    invoceType
+    invoceType,
+    subTotalCart
   } = usePosContext();
+
+  const [option, setOption] = useState('1');
+  const [discount, setDiscount] = useState('0');
+  const [recharge, setRecharge] = useState('0');
+  const [percent, setPercent] = useState(true);
+  const [lockDOrR, setLockDOrR] = useState(false);
+  const [cartCopy, setCartCopy] = useState<CartItem[]>([]);
+
+  const subTotalCartCopy = useMemo(
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price, 0),
+    [cartCopy]
+  );
+
+  const totalIvaCartCopy = useMemo(
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price * item.tax, 0),
+    [cartCopy]
+  );
+
+  const totalCartCopy = useMemo(
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax), 0),
+    [cartCopy]
+  );
+
+  const recalculateCart = useCallback(
+    (num: number) => {
+      const newCart: CartItem[] = [];
+
+      console.log(subTotalCartCopy);
+
+      for (let i = 0; i < cart.length; i++) {
+        const percent = (cart[i].quantity * cart[i].price) / subTotalCartCopy;
+
+        console.log('porcentaje: ', percent);
+
+        const element = { ...cart[i], price: cart[i].price + percent * num / cart[i].quantity };
+
+        newCart.push(element);
+      }
+
+      setCartCopy(newCart);
+    },
+    [cart, subTotalCartCopy]
+  );
+
+
+  const initialValues = {
+    discount: 0,
+    recharge: 0,
+    info: '',
+  };
+
+  const navigate = useNavigate();
+
+  const { data: settings } = useGetSettings(1);
+  const { data: paymentMethods } = useGetPaymentMethods();
+  const { data: invoceTypes } = useGetInvoceTypes();
+  const { data: otherTributes } = useGetOtherTributes();
 
   const queryClient = useQueryClient();
 
@@ -165,7 +210,7 @@ export const FinishSale = () => {
       iva: true,
       clientId: Number(client?.id!),
       warehouseId: Number(warehouse?.id!),
-      cart: cart.map((item) => ({
+      cart: cartCopy.map((item) => ({
         productId: item.id!,
         quantity: Number(item.quantity),
         tax: Number(item.tax),
@@ -196,57 +241,72 @@ export const FinishSale = () => {
 
     if (option === '1') {
       sale.discount = 0;
+      sale.discountPercent = 0;
       sale.recharge = 0;
+      sale.rechargePercent = 0;
     }
 
     if (option === '2') {
       if (percent) {
-        sale.discount = Number((totalCart * parsedValues.discount) / 100);
+        sale.discount = Number((subTotalCart * parsedValues.discount) / 100);
+        sale.discountPercent = Number((parsedValues.discount));
         sale.recharge = 0;
+        sale.rechargePercent = 0;
       } else {
         sale.discount = Number(parsedValues.discount);
+        sale.discountPercent = Number((parsedValues.discount / subTotalCart) * 100);
         sale.recharge = 0;
+        sale.rechargePercent = 0;
       }
     }
 
     if (option === '3') {
       if (percent) {
-        sale.recharge = Number((totalCart * parsedValues.recharge) / 100);
+        sale.recharge = Number((subTotalCart * parsedValues.recharge) / 100);
+        sale.rechargePercent = Number((parsedValues.recharge));
         sale.discount = 0;
+        sale.discountPercent = 0;
       } else {
-        sale.recharge = Number(parsedValues.recharge);
+        sale.recharge = Number((parsedValues.recharge));
+        sale.rechargePercent = Number((parsedValues.recharge / subTotalCart) * 100);
         sale.discount = 0;
+        sale.discountPercent = 0;
       }
     }
 
-    if (Math.round(totalCart + sale.recharge! - sale.discount! + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
-      toast.error('El monto de la venta es distinto al de los pagos', {
-        theme: 'colored',
-        position: toast.POSITION.BOTTOM_LEFT,
-        autoClose: 5000,
-        closeOnClick: true,
-      });
+    console.log(sale);
+
+    if (Math.round(totalCartCopy + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
+      toast.error('El monto de la venta es distinto al de los pagos');
     } else {
-      mutateAsync(sale);
+      mutateAsync(sale).then((res: any) => {
+        const { id } = res.body.cashMovement;
+
+        if (invoceType?.code !== '555') {
+          createAfipInvoce({ ...sale, cashMovementId: id });
+        }
+      });
     }
   };
 
-  const onSuccess = (res: any) => {
+  const onSuccessAfip = (res: any) => {
+    toast('Comprobante de AFIP Creado', {
+      action: {
+        label: 'Ver',
+        onClick: () => navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`)
+      },
+    });
+  };
 
-    toast.info(
-      <Box>
-        <Text>Venta Realizada</Text>
-        <Button display='block' ml="auto" variant='solid' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`)}>Ver Factura AFIP</Button>
-        <Button display='block' ml="auto" variant='solid' onClick={() => navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`)}>Ver Comprobante</Button>
-      </Box>,
-      {
-        theme: 'light',
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 5000,
-        closeOnClick: true,
-        pauseOnHover: true,
-      }
-    );
+  const onSuccess = (res: any) => {
+    toast.success('Venta Realizada');
+
+    toast('Comprobante Interno Creado', {
+      action: {
+        label: 'Ver',
+        onClick: () => navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`)
+      },
+    });
 
     queryClient.invalidateQueries({ queryKey: ['products'] });
     setWarehouse(null);
@@ -254,6 +314,11 @@ export const FinishSale = () => {
     setPriceList(null);
     emptyCart();
     setActiveStep(1);
+
+  };
+
+  const onErrorAfip = (error: any) => {
+    toast.error(error.response.data.body.message);
   };
 
   const onReset = () => {
@@ -268,16 +333,12 @@ export const FinishSale = () => {
     if (error.length > 0) {
       updateCartWithError(error);
       goToPrevious();
-      toast.error('No hay suficiente stock en algunos productos', {
-        theme: 'colored',
-        position: toast.POSITION.BOTTOM_LEFT,
-        autoClose: 5000,
-        closeOnClick: true,
-      });
+      toast.error('No hay suficiente stock en algunos productos');
     }
   };
 
   const { mutateAsync, isLoading } = useCreateCashMovement(onSuccess, cb);
+  const { mutateAsync: createAfipInvoce } = useCreateAfipInvoce(onSuccessAfip, onErrorAfip);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -290,34 +351,56 @@ export const FinishSale = () => {
 
   const { handleSubmit, handleChange, values, errors, touched } = formik;
 
-  const { data: paymentMethods } = useGetPaymentMethods();
-  const { data: invoceTypes } = useGetInvoceTypes();
-  const { data: otherTributes } = useGetOtherTributes();
+  const totalCarttotalShoppingCart = useCallback((values: any) => Math.round((Number.EPSILON + totalCartCopy + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0))
+    * 100) / 100, [totalCartCopy]);
 
-  const totalCarttotalShoppingCart = useCallback((values: any) =>
-    Math.round(
-      (Number.EPSILON
-        + totalCart
-        - Number(discount)
-        + Number(recharge)
-        + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0)
-      )
-      * 100) / 100, [discount, recharge, totalCart]);
+  const applyDOrR = () => {
+    if (Number(discount) <= 0 && Number(recharge) <= 0) return;
 
+    if (Number(discount) > 0) {
+      let totalToDiscount: number;
 
-  const totalCarttotalShoppingCartPercentage = useCallback((values: any) =>
-    Math.round(
-      (Number.EPSILON
-        + totalCart
-        - totalCart * Number(discount) / 100
-        + totalCart * Number(recharge) / 100
-        + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0)
-      )
-      * 100) / 100, [discount, recharge, totalCart]);
+      if (!percent) {
+        totalToDiscount = Number(discount);
+      } else {
+        totalToDiscount = subTotalCartCopy * Number(discount) / 100;
+      }
+
+      console.log(totalToDiscount * -1);
+      recalculateCart(totalToDiscount * -1);
+    } else if (Number(recharge) > 0) {
+      let totalToRecharge: number;
+
+      if (!percent) {
+        totalToRecharge = Number(recharge);
+      } else {
+        totalToRecharge = subTotalCartCopy * Number(recharge) / 100;
+      }
+
+      recalculateCart(totalToRecharge);
+    }
+
+    setLockDOrR(true);
+  };
+
+  const resetDOrR = () => {
+    setCartCopy(cart);
+    setOption('1');
+    setDiscount('0');
+    setRecharge('0');
+    setPercent(true);
+    setLockDOrR(false);
+    formik.setFieldValue('discharge', '0');
+    formik.setFieldValue('recharge', '0');
+    formik.setFieldValue('payments', []);
+  };
+
+  useEffect(() => {
+    setCartCopy(cart);
+  }, [cart]);
 
   return (
     <Stack bg="white" p="4" rounded="md" shadow="md">
-      <ToastContainer />
       {
         !paymentMethods || !invoceTypes || !otherTributes || !settings ? <Loading /> : (
           <FormikProvider value={formik}>
@@ -342,7 +425,7 @@ export const FinishSale = () => {
                     </Stack>
 
                     <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
-                      <Icon as={AiFillLock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'block' : 'none'} pos='absolute' right={1} top={1} />
+                      <Icon as={AiFillLock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 || lockDOrR ? 'block' : 'none'} pos='absolute' right={1} top={1} />
                       <Icon as={AiFillUnlock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />
                       <Box position='relative' px="4" py='8'>
                         <Divider />
@@ -352,9 +435,9 @@ export const FinishSale = () => {
                       </Box>
                       <Box>
                         <RadioGroup
-                          defaultValue={option}
                           name="option"
                           py={2}
+                          value={option}
                           onChange={(e) => {
                             setOption(e);
                             setDiscount('0');
@@ -364,16 +447,16 @@ export const FinishSale = () => {
                           }}
                         >
                           <Stack direction="row" gap="8">
-                            <Radio isDisabled={(values.payments && values.payments?.length > 0)} value="1">No aplicar</Radio>
-                            <Radio isDisabled={(values.payments && values.payments?.length > 0)} value="2">Aplicar Descuento</Radio>
-                            <Radio isDisabled={(values.payments && values.payments?.length > 0)} value="3">Aplicar Recargo</Radio>
+                            <Radio isDisabled={(values.payments && values.payments?.length > 0 || lockDOrR)} value="1">No aplicar</Radio>
+                            <Radio isDisabled={(values.payments && values.payments?.length > 0 || lockDOrR)} value="2">Aplicar Descuento</Radio>
+                            <Radio isDisabled={(values.payments && values.payments?.length > 0 || lockDOrR)} value="3">Aplicar Recargo</Radio>
                           </Stack>
                         </RadioGroup>
                       </Box>
 
                       {
                         option !== "1" &&
-                        <Flex gap="8" justifyContent="space-between" >
+                        <Flex direction="column" gap="8" justifyContent="space-between" >
                           {option === '2' && (
                             <Box w="full">
                               <FormLabel htmlFor="discount">Descuento:</FormLabel>
@@ -384,8 +467,9 @@ export const FinishSale = () => {
                                   <InputLeftAddon children="$" w="48px" />
                                 )}
                                 <Input
+                                  autoComplete='off'
                                   id="discount"
-                                  isDisabled={(values.payments && values.payments?.length > 0)}
+                                  isDisabled={(values.payments && values.payments?.length > 0 || lockDOrR)}
                                   name="discount"
                                   value={discount}
                                   onChange={(e) => {
@@ -399,7 +483,7 @@ export const FinishSale = () => {
                                   children={
                                     <Tooltip label="Aternar entre porcentaje y valor">
                                       <Button
-                                        isDisabled={(values.payments && values.payments?.length > 0)}
+                                        isDisabled={(values.payments && values.payments?.length > 0 || lockDOrR)}
                                         onClick={() => {
                                           setPercent((current) => !current);
                                           setDiscount('0');
@@ -428,8 +512,9 @@ export const FinishSale = () => {
                                   <InputLeftAddon children="$" w="48px" />
                                 )}
                                 <Input
+                                  autoComplete='off'
                                   id="recharge"
-                                  isDisabled={(values.payments && values.payments?.length > 0)}
+                                  isDisabled={(values.payments && values.payments?.length > 0 || lockDOrR)}
                                   name="recharge"
                                   value={recharge}
                                   onChange={(e) => {
@@ -443,7 +528,7 @@ export const FinishSale = () => {
                                   <InputRightAddon
                                     children={
                                       <Button
-                                        isDisabled={(values.payments && values.payments?.length > 0)}
+                                        isDisabled={(values.payments && values.payments?.length > 0 || lockDOrR)}
                                         onClick={() => {
                                           setPercent((current) => !current);
                                           setDiscount('0');
@@ -462,6 +547,32 @@ export const FinishSale = () => {
                               )}
                             </Box>
                           )}
+                          {
+                            (Number(discount) > 0 || Number(recharge) > 0) && lockDOrR ? (
+
+                              <Button
+                                colorScheme="red"
+                                // isDisabled={lockDOrR}
+                                size="md"
+                                variant="outline"
+                                onClick={resetDOrR}
+                              >
+                                <Icon as={BsCheckCircle} color="brand" mr="2" />
+                                Eliminar {option === "2" ? "Descuento" : "Recargo"}
+                              </Button>
+                            ) : (
+                              <Button
+                                colorScheme="brand"
+                                isDisabled={lockDOrR || (values.payments && values.payments?.length > 0)}
+                                size="md"
+                                variant="outline"
+                                onClick={applyDOrR}
+                              >
+                                <Icon as={BsCheckCircle} color="brand" mr="2" />
+                                Aplicar {option === "2" ? "Descuento" : "Recargo"}
+                              </Button>
+                            )
+                          }
                         </Flex>
                       }
                     </Stack>
@@ -486,6 +597,7 @@ export const FinishSale = () => {
                                     <InputGroup>
                                       <InputLeftAddon children="$" />
                                       <Input
+                                        autoComplete='off'
                                         defaultValue={0}
                                         id={`otherTributes[${index}].amount`}
                                         isDisabled={(values.payments && values.payments?.length > 0)}
@@ -549,7 +661,7 @@ export const FinishSale = () => {
                       <Icon as={FiAlertTriangle} boxSize={6} color={'red.500'} display={values.payments?.length && values.payments?.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />
                       <Box position='relative' px="4" py='8'>
                         <Divider />
-                        <AbsoluteCenter px="2">
+                        <AbsoluteCenter bg="white" px="2">
                           <FormLabel htmlFor="payments">Forma de Pago</FormLabel>
                         </AbsoluteCenter>
                       </Box>
@@ -565,19 +677,13 @@ export const FinishSale = () => {
                                     <InputGroup>
                                       <InputLeftAddon children="$" />
                                       <Input
+                                        autoComplete='off'
                                         defaultValue={
-                                          values.payments?.length === 1
-                                            ? percent
-                                              ?
-                                              totalCarttotalShoppingCartPercentage(values)
-                                              :
-                                              totalCarttotalShoppingCart(values)
+                                          values.payments?.length === 1 ?
+                                            totalCarttotalShoppingCart(values)
                                             : values.payments &&
-                                              percent ?
-                                              Math.round(
-                                                (Number(values.payments[index].amount)) * 100) / 100
-                                              : values.payments &&
-                                              Math.round((Number(values.payments[index].amount)) * 100) / 100
+                                            Math.round((Number(values.payments[index].amount)) * 100) / 100
+
                                         }
                                         id={`payments[${index}].amount`}
                                         name={`payments[${index}].amount`}
@@ -613,35 +719,21 @@ export const FinishSale = () => {
 
                             ))}
 
-
                             <Button
                               colorScheme="brand"
                               isDisabled={
-                                percent ?
-                                  totalCarttotalShoppingCartPercentage(values)
-                                  <= (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)
-                                  :
-                                  totalCarttotalShoppingCart(values)
-                                  <= (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)
+                                totalCarttotalShoppingCart(values)
+                                <= (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)
                               }
                               size="md"
                               variant="outline"
                               onClick={() => {
-                                if (percent) {
-                                  arrayHelpers.push({
-                                    amount:
-                                      totalCarttotalShoppingCartPercentage(values)
-                                      - (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0),
-                                    paymentMethodId: '1',
-                                  });
-                                } else {
-                                  arrayHelpers.push({
-                                    amount:
-                                      totalCarttotalShoppingCart(values)
-                                      - (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0),
-                                    paymentMethodId: '1',
-                                  });
-                                }
+                                arrayHelpers.push({
+                                  amount:
+                                    totalCarttotalShoppingCart(values)
+                                    - (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0),
+                                  paymentMethodId: '1',
+                                });
                               }}
                             >
                               <Icon as={BsPlusCircle} color="brand" mr="2" />
@@ -674,52 +766,23 @@ export const FinishSale = () => {
                     </Stack>
 
                     <Stack bg='gray.800' color='whitesmoke' pb="4" px="4" rounded='md' w="full">
-                      <Text fontSize={24} textAlign="right">
-                        {formatCurrency(totalCart)}
-                      </Text>
-                      {option === '2' && percent ? (
-                        <Stack direction='row' justifyContent="flex-end" w="full">
-                          <Text textAlign="right" w="80%" >
-                            (Descuento)
-                          </Text>
-                          <Text fontSize={18} textAlign="right" w="20%">
-                            {formatCurrency(((totalCart * Number(discount)) / 100) * -1 || 0)}
-                          </Text>
-                        </Stack>
-                      ) : (
-                        option === '2' && (
-                          <Stack direction='row' justifyContent="flex-end" w="full">
-                            <Text textAlign="right" w="80%" >
-                              (Descuento)
-                            </Text>
-                            <Text fontSize={18} textAlign="right" w="20%">
-                              {formatCurrency(Number(discount) * -1 || 0)}
-                            </Text>
-                          </Stack>
-                        )
-                      )}
+                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                        <Text textAlign="right" w="80%" >
+                          Subtotal
+                        </Text>
+                        <Text fontSize={24} textAlign="right" w="20%">
+                          {formatCurrency(subTotalCartCopy)}
+                        </Text>
+                      </Stack>
 
-                      {option === '3' && percent ? (
-                        <Stack direction='row' justifyContent="flex-end" w="full">
-                          <Text textAlign="right" w="80%" >
-                            (Recargo)
-                          </Text>
-                          <Text fontSize={18} textAlign="right" w="20%">
-                            {formatCurrency((totalCart * Number(recharge)) / 100 || 0)}
-                          </Text>
-                        </Stack>
-                      ) : (
-                        option === '3' && (
-                          <Stack direction='row' justifyContent="flex-end" w="full">
-                            <Text textAlign="right" w="80%" >
-                              (Recargo)
-                            </Text>
-                            <Text fontSize={18} textAlign="right" w="20%">
-                              {formatCurrency(Number(recharge) || 0)}
-                            </Text>
-                          </Stack>
-                        )
-                      )}
+                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                        <Text textAlign="right" w="80%" >
+                          IVA
+                        </Text>
+                        <Text fontSize={24} textAlign="right" w="20%">
+                          {formatCurrency(totalIvaCartCopy)}
+                        </Text>
+                      </Stack>
                       {
                         values.otherTributes?.filter(el => Number(el.amount) > 0).length && values.otherTributes?.filter(el => Number(el.amount) > 0).length > 0 && (
                           <Stack direction='row' justifyContent="flex-end" w="full">
@@ -735,17 +798,9 @@ export const FinishSale = () => {
                       <Divider ml="auto" w="50%" />
                       <Flex justifyContent="space-between" ml="auto" w="50%">
                         <Text fontSize={24}>TOTAL:</Text>
-                        {percent ? (
-                          <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                            {!isNaN(totalCart + (totalCart * Number(recharge)) / 100 - (totalCart * Number(discount)) / 100) ? formatCurrency(
-                              totalCarttotalShoppingCartPercentage(values)
-                            ) : 'ERROR'}
-                          </Text>
-                        ) : (
-                          <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                            {!isNaN(totalCart + Number(recharge) - Number(discount)) ? formatCurrency(totalCarttotalShoppingCart(values)) : 'ERROR'}
-                          </Text>
-                        )}
+                        <Text fontSize={24} fontWeight="semibold" textAlign="right">
+                          {formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0))}
+                        </Text>
                       </Flex>
                     </Stack>
 
@@ -771,8 +826,8 @@ export const FinishSale = () => {
                       <Heading color="brand.500" fontSize="28" pt="2" textAlign="center">
                         Lista de Productos
                       </Heading>
-                      <Stack maxH="818px" overflowY="auto">
-                        {cart.map((item) => {
+                      <Stack maxH="680px" overflowY="auto">
+                        {cartCopy.map((item) => {
                           return (
                             <Stack key={nanoid()} fontFamily="mono" fontSize={14} position="relative" py="1">
                               <Box px="2">
@@ -807,9 +862,31 @@ export const FinishSale = () => {
                         })}
                       </Stack>
                       <Divider />
-                      <Text fontFamily="mono" fontSize="xl" fontWeight="bold" px="2" textAlign="right">
-                        {formatCurrency(totalCart)}
-                      </Text>
+                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                        <Text textAlign="right" w="50%" >
+                          Subtotal
+                        </Text>
+                        <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
+                          {formatCurrency(subTotalCartCopy)}
+                        </Text>
+                      </Stack>
+                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                        <Text textAlign="right" w="50%" >
+                          IVA
+                        </Text>
+                        <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
+                          {formatCurrency(totalIvaCartCopy)}
+                        </Text>
+                      </Stack>
+                      <Divider />
+                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                        <Text textAlign="right" w="50%" >
+                          TOTAL
+                        </Text>
+                        <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
+                          {formatCurrency(totalCartCopy)}
+                        </Text>
+                      </Stack>
                       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">
                         productos: ({totalCartItems})
                       </Text>
@@ -817,8 +894,6 @@ export const FinishSale = () => {
                   </Stack>
                 </Flex>
               </Stack>
-
-
               <AutoSubmit />
             </form>
           </FormikProvider >
