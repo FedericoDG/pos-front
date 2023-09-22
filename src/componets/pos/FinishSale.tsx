@@ -628,7 +628,7 @@ export const FinishSale = () => {
                                     <Icon as={FaRegTrashAlt} color="brand" m="0 auto" />
                                   </Button>
                                 </Stack>
-                                {Array.isArray(errors.otherTributes) && (
+                                {Array.isArray(errors.otherTributes) && errors.otherTributes[index] && (
                                   <ErrorMessage>{errors.otherTributes[index]['amount']}</ErrorMessage>
                                 )}
                               </Stack>
@@ -728,6 +728,7 @@ export const FinishSale = () => {
                               size="md"
                               variant="outline"
                               onClick={() => {
+                                formik.setFieldValue('otherTributes', values.otherTributes?.filter(el => Number(el.amount) > 0));
                                 arrayHelpers.push({
                                   amount:
                                     totalCarttotalShoppingCart(values)

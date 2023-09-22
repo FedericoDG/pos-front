@@ -65,6 +65,7 @@ export const B = ({ cashMovement, settings }: Props) => {
           alignSelf={'flex-end'}
           colorScheme="linkedin"
           leftIcon={<ImPrinter />}
+          mb="2"
           size="sm"
           onClick={handlePrint}
         >
@@ -133,7 +134,7 @@ export const B = ({ cashMovement, settings }: Props) => {
           </Stack>
         </HStack>
 
-        <HStack
+        <Stack
           alignItems="flex-start"
           as="header"
           borderColor="black"
@@ -195,20 +196,18 @@ export const B = ({ cashMovement, settings }: Props) => {
                     {formatCurrency(cashMovement.total)}
                   </Td>
                 </Tr>
-                <Tr>
-                  <Td borderWidth={0} colSpan={3} fontSize={18} fontWeight={700} textAlign="right">
-                    TOTAL AFIP:
-                  </Td>
-                  <Td isNumeric borderWidth={0} fontSize={18} fontWeight={700}>
-                    {formatCurrency(Number(cashMovement?.impTotal))}
-                  </Td>
-                </Tr>
               </Tbody>
-              <Tfoot>
+            </Table>
+          </TableContainer>
+          <TableContainer w="full">
+            <Table size={'sm'} variant="simple">
+              <Tbody>
                 {cashMovement.discount > 0 && (
                   <>
                     <Tr>
-                      <Th borderWidth={0}>Descuento:</Th>
+                      <Th borderWidth={0} width="180px">
+                        Descuento:
+                      </Th>
                     </Tr>
                     <Tr>
                       <Td borderWidth={0} colSpan={1} fontSize={12}>
@@ -223,7 +222,9 @@ export const B = ({ cashMovement, settings }: Props) => {
                 {cashMovement.recharge > 0 && (
                   <>
                     <Tr>
-                      <Th borderWidth={0}>Recargo:</Th>
+                      <Th borderWidth={0} width="180px">
+                        Recargo:
+                      </Th>
                     </Tr>
                     <Tr>
                       <Td borderWidth={0} colSpan={1} fontSize={12}>
@@ -277,10 +278,10 @@ export const B = ({ cashMovement, settings }: Props) => {
                     Vto. CAE: {formatDate(cashMovement.vtoCae)}
                   </Th>
                 </Tr>
-              </Tfoot>
+              </Tbody>
             </Table>
           </TableContainer>
-        </HStack>
+        </Stack>
       </Stack>
     </Flex>
   );

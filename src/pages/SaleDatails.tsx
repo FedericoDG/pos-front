@@ -22,6 +22,7 @@ import { useRef } from 'react';
 import { DashBoard, Loading } from '../componets/common';
 import { useGetCashMovement, useGetSettings } from '../hooks';
 import { formatCurrency, formatDate } from '../utils';
+import { formatTwoDigits } from '../utils/formatCurrency';
 
 export const SaleDetails = () => {
   const { id } = useParams();
@@ -58,6 +59,7 @@ export const SaleDetails = () => {
               alignSelf={'flex-end'}
               colorScheme="linkedin"
               leftIcon={<ImPrinter />}
+              mb="2"
               size="sm"
               onClick={handlePrint}
             >
@@ -132,7 +134,7 @@ export const SaleDetails = () => {
               </Stack>
             </HStack>
 
-            <HStack
+            <Stack
               alignItems="flex-start"
               as="header"
               borderColor="black"
@@ -142,7 +144,6 @@ export const SaleDetails = () => {
             >
               <TableContainer w="full">
                 <Table size={'sm'} variant="simple">
-                  <TableCaption>Este comprobante no tiene validez fiscal</TableCaption>
                   <Thead>
                     <Tr>
                       <Th isNumeric w="135px">
@@ -150,7 +151,7 @@ export const SaleDetails = () => {
                       </Th>
                       <Th>Descripción</Th>
                       <Th isNumeric>Precio unitatio</Th>
-                      <Th isNumeric>IVA</Th>
+                      {/* <Th isNumeric>IVA</Th> */}
                       <Th isNumeric>Total</Th>
                     </Tr>
                   </Thead>
@@ -163,9 +164,9 @@ export const SaleDetails = () => {
                           </Td>
                           <Td>{movement.product?.name}</Td>
                           <Td isNumeric>{formatCurrency(movement.price)}</Td>
-                          <Td isNumeric>
+                          {/*  <Td isNumeric>
                             {formatCurrency(movement.quantity * movement.price * movement.tax)}
-                          </Td>
+                          </Td> */}
                           <Td isNumeric>
                             {formatCurrency(
                               movement.quantity * movement.price * (1 + movement.tax)
@@ -177,7 +178,7 @@ export const SaleDetails = () => {
                     <Tr>
                       <Td
                         borderWidth={0}
-                        colSpan={4}
+                        colSpan={3}
                         fontSize={16}
                         fontWeight={500}
                         textAlign="right"
@@ -188,30 +189,10 @@ export const SaleDetails = () => {
                         {formatCurrency(cashMovement.subtotal)}
                       </Td>
                     </Tr>
-                    {cashMovement.discount > 0 && (
-                      <Tr>
-                        <Td borderWidth={0} colSpan={4} textAlign="right">
-                          Descuento:
-                        </Td>
-                        <Td isNumeric borderWidth={0}>
-                          {formatCurrency(cashMovement.discount * -1)}
-                        </Td>
-                      </Tr>
-                    )}
-                    {cashMovement.recharge > 0 && (
-                      <Tr>
-                        <Td borderWidth={0} colSpan={4} textAlign="right">
-                          Recargo:
-                        </Td>
-                        <Td isNumeric borderWidth={0}>
-                          {formatCurrency(cashMovement.recharge)}
-                        </Td>
-                      </Tr>
-                    )}
                     {cashMovement.otherTributes > 0 &&
                       cashMovement.otherTributesDetails?.map((tribute) => (
                         <Tr key={tribute.id}>
-                          <Td borderWidth={0} colSpan={4} textAlign="right">
+                          <Td borderWidth={0} colSpan={3} textAlign="right">
                             {tribute.otherTribute?.description}
                           </Td>
                           <Td isNumeric borderWidth={0}>
@@ -222,7 +203,7 @@ export const SaleDetails = () => {
                     <Tr>
                       <Td
                         borderWidth={0}
-                        colSpan={4}
+                        colSpan={3}
                         fontSize={18}
                         fontWeight={700}
                         textAlign="right"
@@ -234,7 +215,46 @@ export const SaleDetails = () => {
                       </Td>
                     </Tr>
                   </Tbody>
-                  <Tfoot>
+                </Table>
+              </TableContainer>
+              <TableContainer w="full">
+                <Table size={'sm'} variant="simple">
+                  <TableCaption>Este comprobante no tiene validez fiscal</TableCaption>
+                  <Tbody>
+                    {cashMovement.discount > 0 && (
+                      <>
+                        <Tr>
+                          <Th borderWidth={0} width="180px">
+                            Descuento:
+                          </Th>
+                        </Tr>
+                        <Tr>
+                          <Td borderWidth={0} colSpan={1} fontSize={12}>
+                            {formatCurrency(cashMovement.discount)}
+                          </Td>
+                          <Td borderWidth={0} colSpan={1} fontSize={12}>
+                            {formatTwoDigits(cashMovement.discountPercent)}%
+                          </Td>
+                        </Tr>
+                      </>
+                    )}
+                    {cashMovement.recharge > 0 && (
+                      <>
+                        <Tr>
+                          <Th borderWidth={0} width="180px">
+                            Recargo:
+                          </Th>
+                        </Tr>
+                        <Tr>
+                          <Td borderWidth={0} colSpan={1} fontSize={12}>
+                            {formatCurrency(cashMovement.recharge)}
+                          </Td>
+                          <Td borderWidth={0} colSpan={1} fontSize={12}>
+                            {formatTwoDigits(cashMovement.rechargePercent)}%
+                          </Td>
+                        </Tr>
+                      </>
+                    )}
                     <Tr>
                       <Th borderWidth={0}>Forma de pago</Th>
                     </Tr>
@@ -262,12 +282,11 @@ export const SaleDetails = () => {
                         </Tr>
                       </>
                     )}
-                  </Tfoot>
+                  </Tbody>
                 </Table>
               </TableContainer>
-            </HStack>
+            </Stack>
           </Stack>
-          {/*  <pre>{JSON.stringify(cashMovement, null, 2)}</pre> */}
         </Flex>
       )}
     </DashBoard>

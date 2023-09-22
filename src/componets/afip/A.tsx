@@ -17,6 +17,7 @@ import {
 import { ImPrinter } from 'react-icons/im';
 import { useReactToPrint } from 'react-to-print';
 import { useCallback, useMemo, useRef } from 'react';
+import { nanoid } from 'nanoid';
 
 import { CashMovement, Settings } from '../../interfaces';
 import { formatDate, formatCurrency } from '../../utils';
@@ -58,12 +59,32 @@ export const A = ({ cashMovement, settings }: Props) => {
     [cashMovement.cashMovementDetails]
   );
 
+  const iva2 = useMemo(() => {
+    const fede = cashMovement.cashMovementDetails?.reduce((acc: any, el) => {
+      acc[el.tax] ??= 0;
+      acc[el.tax] += el.quantity * el.price * el.tax;
+
+      return acc;
+    }, {});
+
+    const arr = [];
+
+    for (const key in fede) {
+      arr.push({
+        percent: 'IVA ' + formatTwoDigits(parseFloat(key) * 100) + '%',
+        value: Math.round(fede[key] * 100) / 100,
+      });
+    }
+
+    return arr.filter((el) => el.percent !== 'IVA 0,00%');
+  }, [cashMovement.cashMovementDetails]);
+
   return (
     <Flex
       alignItems="center"
       bg="white"
       flexDir={{ base: 'column' }}
-      justifyContent="space-between"
+      justifyContent="center"
       p="4"
       rounded="md"
       shadow="md"
@@ -74,6 +95,7 @@ export const A = ({ cashMovement, settings }: Props) => {
           alignSelf={'flex-end'}
           colorScheme="linkedin"
           leftIcon={<ImPrinter />}
+          mb="2"
           size="sm"
           onClick={handlePrint}
         >
@@ -142,7 +164,7 @@ export const A = ({ cashMovement, settings }: Props) => {
           </Stack>
         </HStack>
 
-        <HStack
+        <Stack
           alignItems="flex-start"
           as="header"
           borderColor="black"
@@ -152,17 +174,6 @@ export const A = ({ cashMovement, settings }: Props) => {
         >
           <TableContainer w="full">
             <Table size={'sm'} variant="simple">
-              {(cashMovement.cbteTipo === 1 || cashMovement.cbteTipo === 51) && (
-                <TableCaption>
-                  <Text>
-                    El crédito fiscal discriminado en el presente comprobante solo podrá ser
-                    computado
-                  </Text>
-                  <Text>
-                    a efectos del Procedimiento permanente de transición al Régimen General.
-                  </Text>
-                </TableCaption>
-              )}
               <Thead>
                 <Tr>
                   <Th isNumeric w="135px">
@@ -196,14 +207,23 @@ export const A = ({ cashMovement, settings }: Props) => {
                     {formatCurrency(cashMovement.subtotal - iva)}
                   </Td>
                 </Tr>
-                <Tr>
-                  <Td borderWidth={0} colSpan={4} fontSize={16} fontWeight={500} textAlign="right">
-                    IVA:
-                  </Td>
-                  <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
-                    {formatCurrency(iva)}
-                  </Td>
-                </Tr>
+                {iva2.length > 0 &&
+                  iva2.map((el) => (
+                    <Tr key={nanoid()}>
+                      <Td
+                        borderWidth={0}
+                        colSpan={4}
+                        fontSize={16}
+                        fontWeight={500}
+                        textAlign="right"
+                      >
+                        {el.percent}
+                      </Td>
+                      <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                        {formatCurrency(el.value)}
+                      </Td>
+                    </Tr>
+                  ))}
                 {cashMovement.otherTributes > 0 &&
                   cashMovement.otherTributesDetails?.map((tribute) => (
                     <Tr key={tribute.id}>
@@ -223,20 +243,29 @@ export const A = ({ cashMovement, settings }: Props) => {
                     {formatCurrency(cashMovement.total)}
                   </Td>
                 </Tr>
-                <Tr>
-                  <Td borderWidth={0} colSpan={4} fontSize={18} fontWeight={700} textAlign="right">
-                    TOTAL AFIP:
-                  </Td>
-                  <Td isNumeric borderWidth={0} fontSize={18} fontWeight={700}>
-                    {formatCurrency(Number(cashMovement?.impTotal))}
-                  </Td>
-                </Tr>
               </Tbody>
-              <Tfoot>
+            </Table>
+          </TableContainer>
+          <TableContainer w="full">
+            <Table size={'sm'} variant="simple">
+              {(cashMovement.cbteTipo === 1 || cashMovement.cbteTipo === 51) && (
+                <TableCaption>
+                  <Text>
+                    El crédito fiscal discriminado en el presente comprobante solo podrá ser
+                    computado
+                  </Text>
+                  <Text>
+                    a efectos del Procedimiento permanente de transición al Régimen General.
+                  </Text>
+                </TableCaption>
+              )}
+              <Tbody>
                 {cashMovement.discount > 0 && (
                   <>
                     <Tr>
-                      <Th borderWidth={0}>Descuento:</Th>
+                      <Th borderWidth={0} width="180px">
+                        Descuento:
+                      </Th>
                     </Tr>
                     <Tr>
                       <Td borderWidth={0} colSpan={1} fontSize={12}>
@@ -251,7 +280,9 @@ export const A = ({ cashMovement, settings }: Props) => {
                 {cashMovement.recharge > 0 && (
                   <>
                     <Tr>
-                      <Th borderWidth={0}>Recargo:</Th>
+                      <Th borderWidth={0} width="180px">
+                        Recargo:
+                      </Th>
                     </Tr>
                     <Tr>
                       <Td borderWidth={0} colSpan={1} fontSize={12}>
@@ -305,10 +336,10 @@ export const A = ({ cashMovement, settings }: Props) => {
                     Vto. CAE: {formatDate(cashMovement.vtoCae)}
                   </Th>
                 </Tr>
-              </Tfoot>
+              </Tbody>
             </Table>
           </TableContainer>
-        </HStack>
+        </Stack>
       </Stack>
     </Flex>
   );

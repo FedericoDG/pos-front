@@ -16,29 +16,18 @@
     overflow: initial !important;
     -webkit-print-color-adjust: exact;
   }
-}
-
-@media print {
   .page-break {
     margin-top: 1rem;
     display: block;
     page-break-before: auto;
   }
-}
-
-@page {
-  size: auto;
-  margin: 3mm;
-}
-
-@media print {
   .no-print,
   .no-print * {
     display: none !important;
   }
 }
 
-/* html {
-  overflow-y: auto;
-  scrollbar-gutter: stable;
-} */
+@page {
+  margin: 3mm;
+  size: A4 portrait;
+}
