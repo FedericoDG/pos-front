@@ -8,9 +8,9 @@ interface CartItem {
   productId: number;
   quantity: number;
   price: number;
-  allow: boolean;
+  allow?: boolean;
 }
-interface Sale {
+export interface Sale {
   cashMovementId: number;
   clientId: number;
   warehouseId: number;
@@ -24,8 +24,14 @@ interface Sale {
   info: string;
 }
 
+export interface CreditNote extends Sale {
+  invoceTypeId: number;
+  invoceNumber: number;
+}
+
 const getAfip = () => getRequest<AfipResponse>(`/afip/1`);
 const createInvoce = (sale: Sale) => postRequest(`/afip/`, sale);
+const createNoteCredit = (sale: CreditNote) => postRequest(`/afip/nota-credito`, sale);
 const updateAfip = (settings: Afip) => putRequest(`/afip/1`, settings);
 
 export const useGetAfip = () =>
@@ -39,6 +45,16 @@ export const useGetAfip = () =>
 
 export const useCreateAfipInvoce = (onSuccess: (res: any) => void, onError: (res: any) => void) => {
   return useMutation(createInvoce, {
+    onSuccess: onSuccess,
+    onError: onError,
+  });
+};
+
+export const useCreateAfipCreditNote = (
+  onSuccess: (res: any) => void,
+  onError: (res: any) => void
+) => {
+  return useMutation(createNoteCredit, {
     onSuccess: onSuccess,
     onError: onError,
   });

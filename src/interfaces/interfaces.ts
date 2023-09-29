@@ -330,6 +330,7 @@ export interface CashRegister {
   updatedAt?: string;
   total: number;
   sales: number;
+  creditNotes: number;
   cash: number;
   debit: number;
   credit: number;
@@ -359,6 +360,7 @@ export interface CashMovement {
   iva: boolean;
   posNumber: number;
   invoceNumber: number;
+  invoceTypeId: number;
   info: string;
   invoceIdAfip?: number;
   invoceNumberAfip?: number;

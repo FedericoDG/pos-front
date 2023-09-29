@@ -143,7 +143,9 @@ export const Card: FC<Props> = ({ disableBtn }) => {
               </Td>
             </Tr>
             <Tr>
-              <Td borderColor="brand.500"> </Td>
+              <Td borderColor="brand.500" color="transparent">
+                .
+              </Td>
             </Tr>
           </Tbody>
         </Table>
@@ -166,7 +168,7 @@ export const Card: FC<Props> = ({ disableBtn }) => {
           </Thead>
           <Tbody>
             <Tr>
-              <Td borderBottomWidth="0" fontSize={18}>
+              <Td borderBottomWidth="0" fontSize={16}>
                 {client?.identification?.description!}: {client?.document}
               </Td>
             </Tr>

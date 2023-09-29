@@ -7,6 +7,7 @@ import {
   Categories,
   Clients,
   CloseCashRegister,
+  CreditNote,
   DischargeDetails,
   Discharges,
   DriverDetails,
@@ -101,6 +102,7 @@ export const AppRouter = () => (
         <Route element={<CloseCashRegister />} path="/panel/caja/detalles/:id/cerrar" />
         <Route element={<SaleDetails />} path="/panel/caja/detalles/venta/:id" />
         <Route element={<SaleDetailsAfip />} path="/panel/caja/detalles/venta/afip/:id" />
+        <Route element={<CreditNote />} path="/panel/caja/detalles/nota-credito/:id" />
         {/* USERS */}
         <Route element={<Users />} path="/panel/usuarios" />
         <Route element={<UserProfile />} path="/panel/usuarios/perfil" />

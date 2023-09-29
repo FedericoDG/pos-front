@@ -1,4 +1,3 @@
-/* eslint-disable react/no-children-prop */
 import { Stack, TableContainer, Table, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react';
 
 import { useUpdatePriceContext } from '.';

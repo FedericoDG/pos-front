@@ -17,7 +17,7 @@ export const SaleDetailsAfip = () => {
     >
       {!cashMovement || !settings ? (
         <Loading />
-      ) : cashMovement.cbteTipo === 1 ? (
+      ) : cashMovement.cbteTipo === 1 || cashMovement.cbteTipo === 51 ? (
         <A cashMovement={cashMovement} settings={settings} />
       ) : (
         <B cashMovement={cashMovement} settings={settings} />

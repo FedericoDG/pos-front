@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { ImPrinter } from 'react-icons/im';
 import { useReactToPrint } from 'react-to-print';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 
 import { DashBoard, Loading } from '../componets/common';
 import { useGetCashMovement, useGetSettings } from '../hooks';
@@ -35,6 +35,29 @@ export const SaleDetails = () => {
 
   const { data: cashMovement, isLoading: isLoadingCashMovement } = useGetCashMovement(Number(id!));
   const { data: settings, isLoading: isLoadingSettings } = useGetSettings(1);
+
+  const getInvoceName = useCallback((num: number) => {
+    switch (num) {
+      case 1:
+        return 'FACTURA';
+      case 3:
+        return 'NOTA DE CRÉDITO';
+      case 6:
+        return 'FACTURA';
+      case 8:
+        return 'NOTA DE CRÉDITO';
+      case 11:
+        return 'FACTURA';
+      case 13:
+        return 'NOTA DE CRÉDITO';
+      case 51:
+        return 'FACTURA';
+      case 53:
+        return 'NOTA DE CRÉDITO';
+      default:
+        return 'FACTURA';
+    }
+  }, []);
 
   return (
     <DashBoard
@@ -102,9 +125,17 @@ export const SaleDetails = () => {
                 </Text>
               </HStack>
               <Stack pl={20} py={2} w="50%">
-                <Text fontSize="xl" fontWeight={500}>
-                  {settings.invoceName}
-                </Text>
+                {cashMovement.invoceTypeId == 5 ||
+                  cashMovement.invoceTypeId === 6 ||
+                  cashMovement.invoceTypeId === 7 ? (
+                  <Text fontSize="xl" fontWeight={500}>
+                    {getInvoceName(cashMovement?.cbteTipo!)}
+                  </Text>
+                ) : (
+                  <Text fontSize="xl" fontWeight={500}>
+                    {settings.invoceName}
+                  </Text>
+                )}
                 <Text fontSize="xl" fontWeight={500}>
                   N°: {cashMovement.posNumber.toString().padStart(3, '0')}-
                   {cashMovement.invoceNumber.toString().padStart(6, '0')}

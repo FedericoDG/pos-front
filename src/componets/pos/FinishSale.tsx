@@ -274,8 +274,6 @@ export const FinishSale = () => {
       }
     }
 
-    console.log(sale);
-
     if (Math.round(totalCartCopy + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
       toast.error('El monto de la venta es distinto al de los pagos');
     } else {
@@ -299,7 +297,12 @@ export const FinishSale = () => {
   };
 
   const onSuccess = (res: any) => {
-    toast.success('Venta Realizada');
+    toast.success('Venta Realizada', {
+      action: {
+        label: 'Ver',
+        onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`)
+      }
+    });
 
     toast('Comprobante Interno Creado', {
       action: {

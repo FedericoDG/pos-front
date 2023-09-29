@@ -12,7 +12,6 @@ import {
   Th,
   Tbody,
   Td,
-  Tfoot,
 } from '@chakra-ui/react';
 import { ImPrinter } from 'react-icons/im';
 import { useReactToPrint } from 'react-to-print';
@@ -39,14 +38,45 @@ export const A = ({ cashMovement, settings }: Props) => {
     switch (num) {
       case 1:
         return 'A';
+      case 3:
+        return 'A';
       case 6:
+        return 'B';
+      case 8:
         return 'B';
       case 11:
         return 'C';
+      case 13:
+        return 'C';
       case 51:
+        return 'M';
+      case 53:
         return 'M';
       default:
         return 'X';
+    }
+  }, []);
+
+  const getInvoceName = useCallback((num: number) => {
+    switch (num) {
+      case 1:
+        return 'FACTURA';
+      case 3:
+        return 'NOTA DE CRÉDITO';
+      case 6:
+        return 'FACTURA';
+      case 8:
+        return 'NOTA DE CRÉDITO';
+      case 11:
+        return 'FACTURA';
+      case 13:
+        return 'NOTA DE CRÉDITO';
+      case 51:
+        return 'FACTURA';
+      case 53:
+        return 'NOTA DE CRÉDITO';
+      default:
+        return 'FACTURA';
     }
   }, []);
 
@@ -134,7 +164,7 @@ export const A = ({ cashMovement, settings }: Props) => {
           </HStack>
           <Stack pl={20} py={2} w="50%">
             <Text fontSize="xl" fontWeight={500}>
-              FACTURA
+              {getInvoceName(cashMovement?.cbteTipo!)}
             </Text>
             <Text fontSize="xl" fontWeight={500}>
               N°: {cashMovement.posNumber.toString().padStart(3, '0')}-

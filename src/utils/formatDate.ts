@@ -12,6 +12,6 @@ export const formatDateAndHour = (date = '01-01-1990') =>
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  }).format(new Date(date))} hs.`;
+  }).format(new Date(date))}`;
 
 export const formatENDate = (date: Date) => new Date(date).toISOString().split('T')[0];

@@ -4,6 +4,7 @@ export * from './CashRegisters';
 export * from './Categories';
 export * from './Clients';
 export * from './CloseCashRegister';
+export * from './CreditNote';
 export * from './Discharges';
 export * from './DischargesDetails';
 export * from './DriveDetails';

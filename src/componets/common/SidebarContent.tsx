@@ -1,10 +1,11 @@
 import { AiOutlineStock } from 'react-icons/ai';
 import { Box, Collapse, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsPersonVcard, BsPersonVcardFill } from 'react-icons/bs';
-import { FaDollarSign, FaCubes, FaFileInvoiceDollar, FaHome, FaUserFriends } from 'react-icons/fa';
+import { FaDollarSign, FaCubes, FaFileInvoiceDollar, FaUserFriends } from 'react-icons/fa';
 import { GiCarWheel } from 'react-icons/gi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { MdPointOfSale } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 import { useMyContext } from '../../context';
 
@@ -65,14 +66,10 @@ export const SidebarContent = (props: Props) => {
           fontWeight="bold"
           ml="2"
         >
-          Sistema
+          <Link to="/panel/">Sistema</Link>
         </Text>
       </Flex>
       <Flex aria-label="Main Navigation" as="nav" color="gray.600" direction="column" fontSize="sm">
-        <NavItem icon={FaHome} link="/panel/">
-          Inicio
-        </NavItem>
-
         {/* POS */}
         <NavItem icon={MdPointOfSale} link="/panel/pos">
           Punto de Venta
