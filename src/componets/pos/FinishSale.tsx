@@ -40,7 +40,6 @@ import { ErrorMessage, Loading } from '../common';
 import { useCreateAfipInvoce, useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods, useGetSettings } from '../../hooks';
 import { formatCurrency } from '../../utils';
 import { useGetInvoceTypes } from '../../hooks/';
-import { InvoceType } from '../../interfaces/interfaces';
 
 import { CartItem, schema } from '.';
 import { usePosContext } from '.';
@@ -96,11 +95,6 @@ interface Sale {
     description: string;
   }[];
   info: string;
-}
-
-export interface SelectedInvoceType extends InvoceType {
-  value: number | undefined;
-  label: string;
 }
 
 const AutoSubmit = () => {

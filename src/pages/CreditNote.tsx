@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { DashBoard, Loading } from '../componets/common';
 import { PosProvider } from '../componets/credit_note/context';
-import { Card, ProductsTable, StepperWrapper, Steps } from '../componets/credit_note';
+import { Card, ProductsTable, StepperWrapper } from '../componets/credit_note';
 import { useGetCashMovement } from '../hooks';
 
 export const CreditNote = () => {

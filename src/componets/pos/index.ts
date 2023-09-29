@@ -8,5 +8,4 @@ export * from './Steps';
 export * from './SupplierAndWarehouse';
 export * from './context';
 export * from './hooks';
-export * from './index';
 export * from './schemas';

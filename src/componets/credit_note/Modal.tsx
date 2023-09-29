@@ -22,7 +22,6 @@ import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { z } from 'zod';
 
 import { ErrorMessage } from '../common';
-import { useMyContext } from '../../context/AppProvider';
 import { CashMovementsDetail } from '../../interfaces';
 
 import { usePosContext } from '.';
