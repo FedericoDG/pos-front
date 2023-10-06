@@ -184,9 +184,7 @@ export const A = ({ cashMovement, settings }: Props) => {
           pos="relative"
         >
           <Stack p={2}>
-            <Text>
-              Señores: {cashMovement.client?.name} {cashMovement.client?.lastname}
-            </Text>
+            <Text>Señores: {cashMovement.client?.name}</Text>
             <Text>Domicilio: {cashMovement.client?.address}</Text>
             <Text>
               {cashMovement.client?.identification?.description}: {cashMovement.client?.document}

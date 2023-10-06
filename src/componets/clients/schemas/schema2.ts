@@ -5,10 +5,6 @@ export const schema2 = z.object({
     .string({ required_error: 'El Nombre es requerido' })
     .trim()
     .nonempty({ message: 'Debe contener al menos un caracter' }),
-  lastname: z
-    .string({ required_error: 'El Apellido es requerido' })
-    .trim()
-    .nonempty({ message: 'Debe contener al menos un caracter' }),
   document: z
     .string({ required_error: 'El número es requerido' })
     .regex(/^[0-9]+$/, 'Sólo se aceptan números')

@@ -118,7 +118,7 @@ export const Drawer = ({
               <Stack spacing="14px">
                 <Flex gap="4" justifyContent="space-between">
                   <Box w="full">
-                    <FormLabel htmlFor="name">Nombre:</FormLabel>
+                    <FormLabel htmlFor="name">Razón Social:</FormLabel>
                     <Input
                       ref={firstField}
                       id="name"
@@ -129,19 +129,6 @@ export const Drawer = ({
                       onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                     />
                     {errors.name && touched.name && <ErrorMessage>{errors.name}</ErrorMessage>}
-                  </Box>
-                  <Box w="full">
-                    <FormLabel htmlFor="lastname">Apellido:</FormLabel>
-                    <Input
-                      id="lastname"
-                      name="lastname"
-                      placeholder="Pérez"
-                      value={values.lastname}
-                      onChange={handleChange}
-                    />
-                    {errors.lastname && touched.lastname && (
-                      <ErrorMessage>{errors.lastname}</ErrorMessage>
-                    )}
                   </Box>
                   <Box w="full">
                     <FormLabel htmlFor="email">Email:</FormLabel>
@@ -163,7 +150,7 @@ export const Drawer = ({
                     <Select
                       defaultValue={initialValues.identificationId}
                       id="identificationId"
-                      minW="224px"
+                      //minW="224px"
                       name="identificationId"
                       onChange={handleChange}
                     >
@@ -251,7 +238,7 @@ export const Drawer = ({
                 )}
 
                 <Flex gap="4" justifyContent="space-between">
-                  <Box w="25%">
+                  <Box>
                     <FormLabel htmlFor="phone">Teléfono:</FormLabel>
                     <Input
                       id="phone"
@@ -262,7 +249,7 @@ export const Drawer = ({
                     />
                     {errors.phone && touched.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
                   </Box>
-                  <Box w="25%">
+                  <Box>
                     <FormLabel htmlFor="mobile">Celular:</FormLabel>
                     <Input
                       id="mobile"
@@ -275,7 +262,7 @@ export const Drawer = ({
                       <ErrorMessage>{errors.mobile}</ErrorMessage>
                     )}
                   </Box>
-                  <Box w="50%">
+                  <Box w="505px">
                     <FormLabel htmlFor="address">Dirección:</FormLabel>
                     <Input
                       id="address"

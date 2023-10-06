@@ -39,7 +39,7 @@ export const Card: FC<Props> = ({ disableBtn }) => {
     let mappedClients = clients.map((el) => ({
       ...el,
       value: el.id,
-      label: `${el.document} - ${el.name} ${el.lastname}`,
+      label: `${el.document} - ${el.name}`,
     }));
 
     if (invoceType?.code === '001') {
@@ -173,9 +173,7 @@ export const Card: FC<Props> = ({ disableBtn }) => {
               </Td>
             </Tr>
             <Tr>
-              <Td borderColor="brand.500">
-                {client?.name} {client?.lastname}
-              </Td>
+              <Td borderColor="brand.500">{client?.name}</Td>
               <Td borderColor="brand.500">
                 <Button
                   colorScheme="brand"

@@ -35,6 +35,7 @@ export const Form = ({ settings }: Props) => {
     const parsedValues = {
       ...values,
       invoceNumber: Number(values.invoceNumber),
+      maxPerInvoice: Number(values.maxPerInvoice),
     };
 
     updateSettings(parsedValues);
@@ -131,7 +132,7 @@ export const Form = ({ settings }: Props) => {
             {errors.cuit && touched.cuit && <ErrorMessage>{errors.cuit}</ErrorMessage>}
           </Box>
           <Box w="full">
-            <FormLabel htmlFor="invoceName">Nombre del Comprobante X:</FormLabel>
+            <FormLabel htmlFor="invoceName">Nombre del Comprobante Interno:</FormLabel>
             <Input
               id="invoceName"
               isDisabled={isLoading}
@@ -146,7 +147,7 @@ export const Form = ({ settings }: Props) => {
             )}
           </Box>
           <Box w="full">
-            <FormLabel htmlFor="invoceNumber">N° Próximo Comprobante:</FormLabel>
+            <FormLabel htmlFor="invoceNumber">N° Próximo Comprobante Interno:</FormLabel>
             <Input
               id="invoceNumber"
               isDisabled={isLoading}
@@ -163,7 +164,7 @@ export const Form = ({ settings }: Props) => {
         </Flex>
 
         <Flex gap="2" mt="8">
-          <Box w="49.4%">
+          <Box w="full">
             <FormLabel htmlFor="imageURL">URL logotipo (120x120):</FormLabel>
             <Input
               id="imageURL"
@@ -175,6 +176,23 @@ export const Form = ({ settings }: Props) => {
               onChange={handleChange}
             />
             {errors.imageURL && touched.imageURL && <ErrorMessage>{errors.imageURL}</ErrorMessage>}
+          </Box>
+          <Box w="full">
+            <FormLabel htmlFor="maxPerInvoice">
+              Máx. Importe de Facturación p/Identificar a Cons. Finales
+            </FormLabel>
+            <Input
+              id="maxPerInvoice"
+              isDisabled={isLoading}
+              name="maxPerInvoice"
+              placeholder="92720"
+              type="maxPerInvoice"
+              value={values.maxPerInvoice}
+              onChange={handleChange}
+            />
+            {errors.maxPerInvoice && touched.maxPerInvoice && (
+              <ErrorMessage>{errors.maxPerInvoice}</ErrorMessage>
+            )}
           </Box>
         </Flex>
 

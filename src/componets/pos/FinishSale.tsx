@@ -282,12 +282,13 @@ export const FinishSale = () => {
   };
 
   const onSuccessAfip = (res: any) => {
-    toast('Comprobante de AFIP Creado', {
+    toast('Comprobante de AFIP Creado'/* , {
       action: {
         label: 'Ver',
         onClick: () => navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`)
       },
-    });
+    } */);
+    navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`);
   };
 
   const onSuccess = (res: any) => {

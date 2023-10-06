@@ -27,6 +27,7 @@ export interface Sale {
 export interface CreditNote extends Sale {
   invoceTypeId: number;
   invoceNumber: number;
+  creditNote: number;
 }
 
 const getAfip = () => getRequest<AfipResponse>(`/afip/1`);

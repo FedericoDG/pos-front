@@ -18,7 +18,6 @@ export const Clients = () => {
   const resetValues: Client = useMemo(
     () => ({
       name: '',
-      lastname: '',
       document: '',
       email: '',
       password: '',

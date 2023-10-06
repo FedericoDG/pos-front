@@ -124,10 +124,7 @@ export const Card: FC<Props> = ({ cashMovement }) => {
               </Td>
             </Tr>
             <Tr>
-              <Td borderColor="brand.500">
-                {' '}
-                {cashMovement.client?.name} {cashMovement.client?.lastname}
-              </Td>
+              <Td borderColor="brand.500"> {cashMovement.client?.name}</Td>
             </Tr>
           </Tbody>
         </Table>

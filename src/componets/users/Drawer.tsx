@@ -239,8 +239,7 @@ export const Drawer = ({
                             style={{ fontSize: '12px' }}
                             value={client.id}
                           >
-                            {client.identification?.description} {client.document} -{' '}
-                            {client.lastname} {client.name}
+                            {client.identification?.description} {client.document} - {client.name}
                           </option>
                         ))}
                       </Select>

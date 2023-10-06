@@ -36,8 +36,13 @@ export const Basket = ({ cashMovement }: Props) => {
   }, [goToNext]);
 
   const onSuccessAfip = (res: any) => {
-    navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`, { replace: true }),
-      toast.success('Nota de Crédito Creada');
+    navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`, { replace: true });
+    toast.success('Nota de Crédito Creada', {
+      action: {
+        label: 'Ver',
+        onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`),
+      },
+    });
   };
 
   const onErrorAfip = (error: any) => {

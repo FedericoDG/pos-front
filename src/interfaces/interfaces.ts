@@ -21,6 +21,7 @@ export interface Settings {
   invoceName: string;
   invoceNumber: number;
   imageURL: string;
+  maxPerInvoice: number;
 }
 
 export interface Afip {
@@ -197,7 +198,6 @@ export interface Cost {
 export interface Client {
   id?: number;
   name: string;
-  lastname: string;
   identificationId: number;
   document: string;
   ivaTypeId: number;
@@ -368,6 +368,7 @@ export interface CashMovement {
   cae?: string;
   vtoCae?: string;
   impTotal?: string;
+  creditNote?: number;
   createdAt?: string;
   updatedAt?: string;
   client?: Client;

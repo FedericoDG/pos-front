@@ -16,4 +16,5 @@ export const schema = z.object({
       })
       .min(1, 'El número debe ser mayor a 0')
   ),
+  maxPerInvoice: z.string().regex(/^[0-9]+$/, 'Sólo se aceptan números'),
 });

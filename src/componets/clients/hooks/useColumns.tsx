@@ -26,12 +26,6 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         accessorKey: 'name',
       },
       {
-        id: 'apellido',
-        header: 'Apellido',
-        cell: (row: CellContext<Client, unknown>) => row.renderValue(),
-        accessorKey: 'lastname',
-      },
-      {
         id: 'identificacion',
         header: 'Identificación',
         cell: (row: CellContext<Client, unknown>) => row.renderValue(),

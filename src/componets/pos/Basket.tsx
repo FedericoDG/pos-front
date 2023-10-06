@@ -1,4 +1,15 @@
-import { Box, Heading, Stack, Text, Button, Divider, Icon, HStack } from '@chakra-ui/react';
+import {
+  Box,
+  Heading,
+  Stack,
+  Text,
+  Button,
+  Divider,
+  Icon,
+  HStack,
+  Alert,
+  AlertIcon,
+} from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 import { ArrowForwardIcon, WarningIcon } from '@chakra-ui/icons';
@@ -7,7 +18,7 @@ import { MdOutlineRemoveShoppingCart } from 'react-icons/md';
 import { ImCancelCircle } from 'react-icons/im';
 
 import { formatCurrency } from '../../utils';
-import { useCheckCart } from '../../hooks';
+import { useCheckCart, useGetSettings } from '../../hooks';
 
 import { usePosContext } from './context';
 
@@ -18,6 +29,7 @@ interface Props {
 export const Basket = ({ refetch }: Props) => {
   const {
     cart,
+    client,
     removeItem,
     totalCart,
     totalCartItems,
@@ -69,6 +81,15 @@ export const Basket = ({ refetch }: Props) => {
     mutate({ warehouseId: warehouse?.id!, cart: mappedCart });
   };
 
+  const { data: settings } = useGetSettings(1);
+
+  useEffect(() => {
+    if (!settings) return;
+
+    if (client?.document === '00000000' && totalCart > settings?.maxPerInvoice) {
+      console.log('ERROR');
+    }
+  }, [client?.document, settings, totalCart]);
   //if (cart.length === 0) return null;
 
   return (
@@ -81,11 +102,19 @@ export const Basket = ({ refetch }: Props) => {
       rounded="md"
       w="35%"
     >
-      {cart.length > 0 ? (
+      {cart.length > 0 && settings ? (
         <Stack w="full">
           <Heading color="brand.500" fontSize="28" pt="2" textAlign="center">
             LISTA DE PRODUCTOS
           </Heading>
+          {client?.document === '00000000' && totalCart > settings?.maxPerInvoice && (
+            <Alert status="error">
+              <AlertIcon />
+              {`El importe máximo de facturación para identificar a consumidores finales es de ${formatCurrency(
+                settings?.maxPerInvoice
+              )}`}
+            </Alert>
+          )}
           <Stack maxH="448px" overflowY="auto">
             {cart.map((item) => {
               return (
@@ -156,6 +185,7 @@ export const Basket = ({ refetch }: Props) => {
           <Stack p="2">
             <Button
               colorScheme="brand"
+              isDisabled={client?.document === '00000000' && totalCart > settings?.maxPerInvoice}
               rightIcon={<ArrowForwardIcon />}
               size="lg"
               variant="solid"

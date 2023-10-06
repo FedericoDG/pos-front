@@ -71,7 +71,9 @@ export const SupplierAndWarehouse = () => {
         setMappedInvoceTypes(filter);
         setInvoceType(filter[0]);
       } else {
-        const filter = mappedInvoceTypes.filter((el) => el.code !== '555');
+        const filter = mappedInvoceTypes.filter(
+          (el) => el.code !== '555' && el.code !== '003' && el.code !== '008' && el.code !== '053'
+        );
 
         setMappedInvoceTypes(filter);
         setInvoceType(null);
@@ -87,7 +89,7 @@ export const SupplierAndWarehouse = () => {
     const mappedClients = clients.map((el) => ({
       ...el,
       value: el.id,
-      label: `${el.document} - ${el.name} ${el.lastname}`,
+      label: `${el.document} - ${el.name}`,
     }));
 
     setMappedClients(mappedClients);

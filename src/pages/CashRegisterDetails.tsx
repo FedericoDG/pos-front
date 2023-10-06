@@ -402,9 +402,15 @@ export const CashRegisterDetails = () => {
                                             <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.id}`)}>Ver Comprobante AFIP</Button>
                                           </Td>
                                           {
-                                            movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 &&
+                                            movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote &&
                                             <Td borderWidth={0} textAlign='right'>
                                               <Button colorScheme='orange' size='sm' onClick={() => navigate(`/panel/caja/detalles/nota-credito/${movement.id}`)}>Crear Nota de Crédito</Button>
+                                            </Td>
+                                          }
+                                          {
+                                            movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && movement.creditNote &&
+                                            <Td borderWidth={0} textAlign='right'>
+                                              <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.creditNote}`)}>Ver Nota de Crédito asociada</Button>
                                             </Td>
                                           }
                                         </>
@@ -436,9 +442,6 @@ export const CashRegisterDetails = () => {
                                               </Td>
                                               <Td border="none" w="231px">
                                                 {movement.client?.name}
-                                              </Td>
-                                              <Td border="none" w="231px">
-                                                {movement.client?.lastname}
                                               </Td>
                                               <Td border="none" w="231px">
                                                 {movement.client?.email}
@@ -853,9 +856,6 @@ export const CashRegisterDetails = () => {
                                               </Td>
                                               <Td border="none" w="231px">
                                                 {movement.client?.name}
-                                              </Td>
-                                              <Td border="none" w="231px">
-                                                {movement.client?.lastname}
                                               </Td>
                                               <Td border="none" w="231px">
                                                 {movement.client?.email}
