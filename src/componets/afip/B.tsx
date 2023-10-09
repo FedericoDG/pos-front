@@ -136,8 +136,8 @@ export const B = ({ cashMovement, settings }: Props) => {
               {getInvoceName(cashMovement?.cbteTipo!)}
             </Text>
             <Text fontSize="xl" fontWeight={500}>
-              N°: {cashMovement.posNumber.toString().padStart(3, '0')}-
-              {cashMovement?.invoceNumberAfip!.toString().padStart(6, '0')}
+              N°: {cashMovement.posNumber.toString().padStart(5, '0')}-
+              {cashMovement?.invoceNumberAfip!.toString().padStart(8, '0')}
             </Text>
             <Text>Fecha: {formatDate(cashMovement.createdAt)}</Text>
             <Text>CUIT: {settings.cuit}</Text>
@@ -268,7 +268,7 @@ export const B = ({ cashMovement, settings }: Props) => {
                 </Tr>
                 {cashMovement.paymentMethodDetails?.map((payment) => (
                   <Tr key={payment.id}>
-                    <Td borderWidth={0} colSpan={1} fontSize={12}>
+                    <Td borderWidth={0} fontSize={12} width="180px">
                       {payment.paymentMethod.code}
                     </Td>
                     <Td borderWidth={0} fontSize={12}>

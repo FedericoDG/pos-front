@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { useNavigate, useParams } from 'react-router-dom';
 import {
+  Badge,
   Flex,
   FormControl,
   FormLabel,
@@ -21,12 +22,15 @@ import { Text, Button } from '@chakra-ui/react';
 import { useReactToPrint } from 'react-to-print';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import { toast } from 'sonner';
+import { useQueryClient } from 'react-query';
 
 import { DashBoard, Loading } from '../componets/common';
 import { formatCurrency, formatDate, formatDateAndHour } from '../utils';
-import { useCashRegister } from '../hooks';
+import { useCashRegister, useCreateAfipInvoce } from '../hooks';
 import { useMyContext } from '../context';
 import { formatTwoDigits } from '../utils/formatCurrency';
+import { CashMovement } from '../interfaces';
 
 interface Algo {
   id: number | undefined;
@@ -96,9 +100,50 @@ export const CashRegisterDetails = () => {
   };
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const invoces = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 1 || el.invoceTypeId === 2 || el.invoceTypeId === 4), [cashRegister?.cashMovements]);
   const creditNotes = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 5 || el.invoceTypeId === 6 || el.invoceTypeId === 7), [cashRegister?.cashMovements]);
+
+
+  const onSuccessAfip = (res: any) => {
+    queryClient.invalidateQueries({ queryKey: ['cashRegisters'] });
+    toast('Comprobante de AFIP Creado', {
+      action: {
+        label: 'Ver',
+        onClick: () => navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`)
+      },
+    });
+  };
+
+  const onErrorAfip = (error: any) => {
+    toast.error(error.response.data.body.message);
+  };
+
+  const { mutateAsync: createAfipInvoce } = useCreateAfipInvoce(onSuccessAfip, onErrorAfip);
+
+  const fiscalizar = (movement: CashMovement) => {
+    const cart = movement.cashMovementsDetails?.map(el => ({ productId: el.productId, price: el.price, quantity: el.quantity, tax: el.tax }));
+    const otherTributes = movement.otherTributesDetails?.map(el => ({ amount: el.amount, id: el.id, otherTributeId: el.otherTributeId })) || [];
+    const payments = movement.paymentMethodDetails?.map(el => ({ amount: el.amount, paymentMethodId: el.paymentMethodId }));
+    const sale = {
+      cart: cart!,
+      clientId: movement.clientId,
+      discount: movement.discount,
+      discountPercent: movement.discountPercent,
+      info: movement.info,
+      invoceTypeId: movement.invoceTypeId,
+      iva: movement.iva,
+      otherTributes,
+      payments: payments!,
+      recharge: movement.recharge,
+      rechargePercent: movement.rechargePercent,
+      warehouseId: movement.warehouseId,
+      cashMovementId: movement.id!
+    };
+
+    createAfipInvoce(sale);
+  };
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
@@ -356,31 +401,31 @@ export const CashRegisterDetails = () => {
                                 <Td>
                                   {
                                     movement.invoceTypeId === 4 &&
-                                    <Text fontSize="xs">Comprobante X</Text>
+                                    <Badge>Comprobante X</Badge>
                                   }
                                   {
-                                    movement.invoceTypeId === 1 &&
-                                    <Text fontSize="xs">Factura A</Text>
+                                    movement.invoceTypeId === 1 && movement.cae &&
+                                    <Badge colorScheme='green'>Factura A</Badge>
                                   }
                                   {
-                                    movement.invoceTypeId === 2 &&
-                                    <Text fontSize="xs">Factura B</Text>
+                                    movement.invoceTypeId === 1 && !movement.cae &&
+                                    <Badge colorScheme='red'>Factura A</Badge>
                                   }
                                   {
-                                    movement.invoceTypeId === 3 &&
-                                    <Text fontSize="xs">Factura M</Text>
+                                    movement.invoceTypeId === 2 && movement.cae &&
+                                    <Badge colorScheme='green'>Factura B</Badge>
                                   }
                                   {
-                                    movement.invoceTypeId === 5 &&
-                                    <Text color='red.600' fontSize="xs">Nota de Crédito A</Text>
+                                    movement.invoceTypeId === 2 && !movement.cae &&
+                                    <Badge colorScheme='red'>Factura B</Badge>
                                   }
                                   {
-                                    movement.invoceTypeId === 6 &&
-                                    <Text color='red.600' fontSize="xs">Nota de Crédito B</Text>
+                                    movement.invoceTypeId === 3 && movement.cae &&
+                                    <Badge colorScheme='green'>Factura M</Badge>
                                   }
                                   {
-                                    movement.invoceTypeId === 7 &&
-                                    <Text color='red.600' fontSize="xs">Nota de Crédito M</Text>
+                                    movement.invoceTypeId === 3 && movement.cae &&
+                                    <Badge colorScheme='red'>Factura M</Badge>
                                   }
                                 </Td>
                                 <Td>{formatDateAndHour(movement.createdAt)}</Td>
@@ -410,11 +455,17 @@ export const CashRegisterDetails = () => {
                                           {
                                             movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && movement.creditNote &&
                                             <Td borderWidth={0} textAlign='right'>
-                                              <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.creditNote}`)}>Ver Nota de Crédito asociada</Button>
+                                              <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.creditNote}`)}>Ver Nota de Crédito</Button>
                                             </Td>
                                           }
                                         </>
                                       )
+                                    }
+                                    {
+                                      movement.iva && !movement.cae &&
+                                      <Td borderWidth={0} textAlign='right'>
+                                        <Button colorScheme='red' size='sm' onClick={() => fiscalizar(movement)}>Fiscalizar Factura</Button>
+                                      </Td>
                                     }
                                   </Tr>
                                   <Tr>
@@ -782,34 +833,17 @@ export const CashRegisterDetails = () => {
                                 onClick={() => handleClick(movement.id!)}
                               >
                                 <Td>
-
-                                  {
-                                    movement.invoceTypeId === 4 &&
-                                    <Text fontSize="xs">Comprobante X</Text>
-                                  }
-                                  {
-                                    movement.invoceTypeId === 1 &&
-                                    <Text fontSize="xs">Factura A</Text>
-                                  }
-                                  {
-                                    movement.invoceTypeId === 2 &&
-                                    <Text fontSize="xs">Factura B</Text>
-                                  }
-                                  {
-                                    movement.invoceTypeId === 3 &&
-                                    <Text fontSize="xs">Factura M</Text>
-                                  }
                                   {
                                     movement.invoceTypeId === 5 &&
-                                    <Text fontSize="xs">Nota de Crédito A</Text>
+                                    <Badge>Nota de Crédito A</Badge>
                                   }
                                   {
                                     movement.invoceTypeId === 6 &&
-                                    <Text fontSize="xs">Nota de Crédito B</Text>
+                                    <Badge>Nota de Crédito B</Badge>
                                   }
                                   {
                                     movement.invoceTypeId === 7 &&
-                                    <Text fontSize="xs">Nota de Crédito M</Text>
+                                    <Badge>Nota de Crédito M</Badge>
                                   }
                                 </Td>
                                 <Td>{formatDateAndHour(movement.createdAt)}</Td>

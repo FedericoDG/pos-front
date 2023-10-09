@@ -16,5 +16,23 @@ export const schema = z.object({
       })
       .min(1, 'El número debe ser mayor a 0')
   ),
-  maxPerInvoice: z.string().regex(/^[0-9]+$/, 'Sólo se aceptan números'),
+  maxPerInvoice: z.preprocess(
+    (val) => Number(val),
+    z
+      .number({
+        required_error:
+          'El Importe Máx. de Facturación p/Identificar a Cons. Finales es obligatorio',
+        invalid_type_error: 'Sólo se aceptan números',
+      })
+      .min(1, 'El número debe ser mayor a 0')
+  ),
+  posNumber: z.preprocess(
+    (val) => Number(val),
+    z
+      .number({
+        required_error: 'El unto de Venta es obligatorio',
+        invalid_type_error: 'Sólo se aceptan números',
+      })
+      .min(1, 'El número debe ser mayor a 0')
+  ),
 });

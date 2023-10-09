@@ -203,7 +203,7 @@ export const SupplierAndWarehouse = () => {
       <Box w="full">
         <Alert status="info">
           <AlertIcon />
-          Seleccione la Lista de Precio, el Depósito y el Cliente.
+          Seleccione Lista de Precio, Depósito, Cliente y Tipo de Comprobante.
         </Alert>
         <FormControl alignItems="center" display="flex" mt={4}>
           <FormLabel htmlFor="iva" m="0" mr="2" py="4">

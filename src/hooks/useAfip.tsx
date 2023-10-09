@@ -30,13 +30,13 @@ export interface CreditNote extends Sale {
   creditNote: number;
 }
 
-const getAfip = () => getRequest<AfipResponse>(`/afip/1`);
+const getAfip = () => getRequest<AfipResponse>(`/afip/settings/`);
 const createInvoce = (sale: Sale) => postRequest(`/afip/`, sale);
 const createNoteCredit = (sale: CreditNote) => postRequest(`/afip/nota-credito`, sale);
-const updateAfip = (settings: Afip) => putRequest(`/afip/1`, settings);
+const updateAfip = (settings: Afip) => putRequest(`/afip/settings`, settings);
 
 export const useGetAfip = () =>
-  useQuery(['settings'], () => getAfip(), {
+  useQuery(['afip'], () => getAfip(), {
     enabled: true,
     retry: 1,
     cacheTime: 1,

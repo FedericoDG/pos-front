@@ -136,8 +136,8 @@ export const SaleDetails = () => {
                   </Text>
                 )}
                 <Text fontSize="xl" fontWeight={500}>
-                  N°: {cashMovement.posNumber.toString().padStart(3, '0')}-
-                  {cashMovement.invoceNumber.toString().padStart(6, '0')}
+                  N°: {cashMovement.posNumber.toString().padStart(5, '0')}-
+                  {cashMovement.invoceNumber.toString().padStart(8, '0')}
                 </Text>
                 <Text>Fecha: {formatDate(cashMovement.createdAt)}</Text>
                 <Text>CUIT: {settings.cuit}</Text>

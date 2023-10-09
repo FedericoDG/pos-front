@@ -21,16 +21,16 @@ export interface Settings {
   invoceName: string;
   invoceNumber: number;
   imageURL: string;
-  maxPerInvoice: number;
 }
 
 export interface Afip {
   id?: number;
   posNumber: number;
-  nextInvoceNumberA: number;
-  nextInvoceNumberB: number;
-  nextInvoceNumberM: number;
-  certExpiration: string;
+  maxPerInvoice: number;
+  nextInvoceNumberA?: number;
+  nextInvoceNumberB?: number;
+  nextInvoceNumberM?: number;
+  certExpiration?: string;
 }
 
 export interface User {

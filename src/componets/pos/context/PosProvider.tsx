@@ -110,7 +110,7 @@ export const PosProvider = ({ children }: Props) => {
 
   const steps = useMemo(
     () => [
-      { title: 'Paso 1', description: 'Lista de Precio, Depósito y Cliente' },
+      { title: 'Paso 1', description: 'Lista de Precio, Depósito, Cliente y Comprobante' },
       { title: 'Paso 2', description: 'Agregar Productos' },
       { title: 'Paso 3', description: 'Finalizar Venta' },
     ],

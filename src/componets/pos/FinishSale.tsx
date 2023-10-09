@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-children-prop */
 import { useQueryClient } from 'react-query';
-// import { toast, ToastContainer } from 'react-toastify';
 import {
   AbsoluteCenter,
   Box,

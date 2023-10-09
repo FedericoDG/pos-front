@@ -2,50 +2,68 @@ import { Box, Button, FormLabel, Input, Stack, Flex } from '@chakra-ui/react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
-import { Settings } from '../../interfaces';
+import { Afip, Settings } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useUpdateSettings } from '../../hooks/useSettings';
+import { useUpdateAfip } from '../../hooks';
 
 import { schema } from './schemas';
 
 interface Props {
   settings: Settings;
+  afip: Afip;
 }
 
-export const Form = ({ settings }: Props) => {
+export const Form = ({ afip, settings }: Props) => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    toast.info('Parámetros actualizados', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Parámetros del sitio actualizados');
     queryClient.invalidateQueries({ queryKey: ['settings'] });
   };
 
-  const { mutateAsync: updateSettings, isLoading } = useUpdateSettings(onSuccess);
+  const onSuccess2 = () => {
+    toast.success('Parámetros de AFIP sitio actualizados');
+    queryClient.invalidateQueries({ queryKey: ['afip'] });
+  };
 
-  const onSubmit = (values: Settings, actions: FormikHelpers<Settings>) => {
-    delete values.id;
+  const { mutateAsync: updateSettings, isLoading: isLoadingSettings } =
+    useUpdateSettings(onSuccess);
+  const { mutateAsync: updateAfipSettings, isLoading: isLoadingAfipSettings } =
+    useUpdateAfip(onSuccess2);
 
-    const parsedValues = {
-      ...values,
+  const isLoading = isLoadingSettings && isLoadingAfipSettings;
+
+  const onSubmit = (values: Settings & Afip, actions: FormikHelpers<Settings & Afip>) => {
+    const { posNumber, maxPerInvoice, ...rest } = values;
+
+    delete rest.id;
+    delete rest.certExpiration;
+    delete rest.nextInvoceNumberA;
+    delete rest.nextInvoceNumberB;
+    delete rest.nextInvoceNumberM;
+
+    const parsedValuesSettings = {
+      ...rest,
       invoceNumber: Number(values.invoceNumber),
-      maxPerInvoice: Number(values.maxPerInvoice),
     };
 
-    updateSettings(parsedValues);
+    const parsedValuesAfip = {
+      posNumber: Number(posNumber),
+      maxPerInvoice: Number(maxPerInvoice),
+    };
+
+    updateSettings(parsedValuesSettings);
+    updateAfipSettings(parsedValuesAfip);
 
     actions.resetForm();
   };
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: settings,
+    initialValues: { ...settings, ...afip },
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: toFormikValidationSchema(schema),
@@ -177,6 +195,25 @@ export const Form = ({ settings }: Props) => {
             />
             {errors.imageURL && touched.imageURL && <ErrorMessage>{errors.imageURL}</ErrorMessage>}
           </Box>
+        </Flex>
+
+        <Flex gap="2" mt="8">
+          <Box w="full">
+            <FormLabel htmlFor="posNumber">Punto de Venta</FormLabel>
+            <Input
+              id="posNumber"
+              isDisabled={isLoading}
+              name="posNumber"
+              placeholder="92720"
+              type="posNumber"
+              value={values.posNumber}
+              onChange={handleChange}
+            />
+            {errors.posNumber && touched.posNumber && (
+              <ErrorMessage>{errors.posNumber}</ErrorMessage>
+            )}
+          </Box>
+
           <Box w="full">
             <FormLabel htmlFor="maxPerInvoice">
               Máx. Importe de Facturación p/Identificar a Cons. Finales

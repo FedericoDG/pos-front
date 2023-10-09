@@ -1,7 +1,7 @@
 import { Flex, Box } from '@chakra-ui/react';
 
 import { DashBoard, Loading } from '../componets/common';
-import { useGetSettings } from '../hooks';
+import { useGetAfip, useGetSettings } from '../hooks';
 import { Form } from '../componets/settings';
 import { useMyContext } from '../context';
 
@@ -10,18 +10,19 @@ export const Settings = () => {
     user: { id },
   } = useMyContext();
 
+  const { data: afip, isFetching: isFetchingAfip } = useGetAfip();
   const { data: settings, isFetching: isFetchingSettings } = useGetSettings(Number(id));
 
-  const isIndeterminate = isFetchingSettings;
+  const isIndeterminate = isFetchingAfip || isFetchingSettings;
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Parámetros del sitio">
-      {!settings ? (
+      {!afip || !settings ? (
         <Loading />
       ) : (
         <Flex bg="white" maxW="1024px" py="4" rounded="md" shadow="md" w="full">
           <Box w="full">
-            <Form settings={settings} />
+            <Form afip={afip} settings={settings} />
           </Box>
         </Flex>
       )}

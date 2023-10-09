@@ -18,7 +18,7 @@ import { MdOutlineRemoveShoppingCart } from 'react-icons/md';
 import { ImCancelCircle } from 'react-icons/im';
 
 import { formatCurrency } from '../../utils';
-import { useCheckCart, useGetSettings } from '../../hooks';
+import { useCheckCart, useGetAfip } from '../../hooks';
 
 import { usePosContext } from './context';
 
@@ -81,7 +81,7 @@ export const Basket = ({ refetch }: Props) => {
     mutate({ warehouseId: warehouse?.id!, cart: mappedCart });
   };
 
-  const { data: settings } = useGetSettings(1);
+  const { data: settings } = useGetAfip();
 
   useEffect(() => {
     if (!settings) return;
