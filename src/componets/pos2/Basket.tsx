@@ -78,14 +78,13 @@ export const Basket = ({ refetch }: Props) => {
 
   const { data: settings } = useGetAfip();
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (!settings) return;
 
     if (client?.document === '00000000' && totalCart > settings?.maxPerInvoice) {
       console.log('ERROR');
     }
-  }, [client?.document, settings, totalCart]);
-  //if (cart.length === 0) return null;
+  }, [client?.document, settings, totalCart]); */
 
   return (
     <Stack

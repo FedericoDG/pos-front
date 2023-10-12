@@ -74,6 +74,9 @@ export const SidebarContent = (props: Props) => {
         <NavItem icon={MdPointOfSale} link="/panel/pos">
           Punto de Venta
         </NavItem>
+        <NavItem icon={MdPointOfSale} link="/panel/presupuesto">
+          Remito Valorizado
+        </NavItem>
 
         {/* CASH REGISTER */}
         <NavItemDivider

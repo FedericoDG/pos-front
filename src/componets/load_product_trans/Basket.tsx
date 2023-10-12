@@ -1,8 +1,8 @@
 import { Box, Heading, Stack, Text, Button, Divider } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
-import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 import { useCallback, useEffect } from 'react';
+import { toast } from 'sonner';
 
 import { useCreateTransfer } from '../../hooks';
 
@@ -23,12 +23,7 @@ export const Basket = () => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    toast.info('Transferencia de stock realizada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Transferencia de stock realizada');
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['stocks'] });
     setWarehouse(null);

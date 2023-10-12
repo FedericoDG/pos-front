@@ -1,8 +1,8 @@
 import { Box, Heading, Stack, Text, Button, Divider } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
-import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 import { useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 
 import { formatCurrency } from '../../utils';
 import { useCreateCost } from '../../hooks';
@@ -15,12 +15,7 @@ export const Basket = () => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    toast.info('Costos actualizados', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Costos actualizaos');
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['stocks', 'costs', 'discharges', 'transfers'] });
   };

@@ -18,6 +18,7 @@ export * from './LoadProductTransDriver';
 export * from './LoadPurchase';
 export * from './Login';
 export * from './Pos';
+export * from './Pos2';
 export * from './PriceListReport';
 export * from './PriceLists';
 export * from './ProductDetails';

@@ -21,6 +21,7 @@ import {
   LoadPurchase,
   Login,
   Pos,
+  Pos2,
   PriceListReport,
   PriceLists,
   ProductDetails,
@@ -95,6 +96,7 @@ export const AppRouter = () => (
         <Route element={<DriverDetails />} path="/panel/choferes/detalles/:id" />
         {/* POS */}
         <Route element={<Pos />} path="/panel/pos" />
+        <Route element={<Pos2 />} path="/panel/presupuesto" />
         {/* CASH REGISTER */}
         <Route element={<CashRegisters />} path="/panel/caja" />
         <Route element={<CashRegisterStatus />} path="/panel/caja/estado" />

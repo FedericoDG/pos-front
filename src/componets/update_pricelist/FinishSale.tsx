@@ -13,8 +13,8 @@ import {
 import { useCallback, useEffect } from 'react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { formatCurrency } from '../../utils';
 import { useCreatePriceManyPercentage } from '../../hooks';
@@ -29,12 +29,7 @@ export const FinishSale = () => {
   const navigate = useNavigate();
 
   const onSucces = () => {
-    toast.info('Precios actualizados', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Precios actualizados');
     queryClient.invalidateQueries({ queryKey: ['products', 'pricelists'] });
     setPriceList(null);
     emptyCart();

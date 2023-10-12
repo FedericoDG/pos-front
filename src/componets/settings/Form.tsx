@@ -1,4 +1,15 @@
-import { Box, Button, FormLabel, Input, Stack, Flex } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  FormLabel,
+  Input,
+  Stack,
+  Flex,
+  Divider,
+  Heading,
+  FormControl,
+  Switch,
+} from '@chakra-ui/react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
@@ -37,13 +48,16 @@ export const Form = ({ afip, settings }: Props) => {
   const isLoading = isLoadingSettings && isLoadingAfipSettings;
 
   const onSubmit = (values: Settings & Afip, actions: FormikHelpers<Settings & Afip>) => {
-    const { posNumber, maxPerInvoice, ...rest } = values;
+    const { posNumber, maxPerInvoice, invoiceM, ...rest } = values;
 
     delete rest.id;
     delete rest.certExpiration;
     delete rest.nextInvoceNumberA;
+    delete rest.nextInvoceNumberNCA;
     delete rest.nextInvoceNumberB;
+    delete rest.nextInvoceNumberNCB;
     delete rest.nextInvoceNumberM;
+    delete rest.nextInvoceNumberNCM;
 
     const parsedValuesSettings = {
       ...rest,
@@ -53,6 +67,7 @@ export const Form = ({ afip, settings }: Props) => {
     const parsedValuesAfip = {
       posNumber: Number(posNumber),
       maxPerInvoice: Number(maxPerInvoice),
+      invoiceM: invoiceM ? 1 : 0,
     };
 
     updateSettings(parsedValuesSettings);
@@ -79,7 +94,12 @@ export const Form = ({ afip, settings }: Props) => {
   return (
     <Box p="4">
       <form onSubmit={handleSubmit}>
-        <Flex gap="2">
+        <Flex direction="column" gap="2">
+          <Heading size="md">Parámetros del Sitio</Heading>
+          <Divider w="full" />
+        </Flex>
+
+        <Flex gap="2" mt="10">
           <Box w="full">
             <FormLabel htmlFor="name">Nombre de la Empresa:</FormLabel>
             <Input
@@ -142,7 +162,7 @@ export const Form = ({ afip, settings }: Props) => {
               id="cuit"
               isDisabled={isLoading}
               name="cuit"
-              placeholder="30-25555666-9"
+              placeholder="30-24555666-9"
               type="cuit"
               value={values.cuit}
               onChange={handleChange}
@@ -197,9 +217,32 @@ export const Form = ({ afip, settings }: Props) => {
           </Box>
         </Flex>
 
+        <Flex direction="column" gap="2" mt="8">
+          <Heading size="md">Parámetros de AFIP</Heading>
+          <Divider w="full" />
+        </Flex>
+
         <Flex gap="2" mt="8">
           <Box w="full">
-            <FormLabel htmlFor="posNumber">Punto de Venta</FormLabel>
+            <FormControl alignItems="center" display="flex">
+              <Switch
+                colorScheme="brand"
+                defaultChecked={afip.invoiceM === 1}
+                id="invoiceM"
+                name="invoiceM"
+                size="md"
+                onChange={handleChange}
+              />
+              <FormLabel htmlFor="filter" mb="0" ml="2">
+                Utilizar Factura M
+              </FormLabel>
+            </FormControl>
+          </Box>
+        </Flex>
+
+        <Flex gap="2" mt="8">
+          <Box w="full">
+            <FormLabel htmlFor="posNumber">Punto de Venta:</FormLabel>
             <Input
               id="posNumber"
               isDisabled={isLoading}
@@ -216,7 +259,7 @@ export const Form = ({ afip, settings }: Props) => {
 
           <Box w="full">
             <FormLabel htmlFor="maxPerInvoice">
-              Máx. Importe de Facturación p/Identificar a Cons. Finales
+              Máx. Importe de Facturación p/Identificar a Cons. Finales:
             </FormLabel>
             <Input
               id="maxPerInvoice"
@@ -230,6 +273,71 @@ export const Form = ({ afip, settings }: Props) => {
             {errors.maxPerInvoice && touched.maxPerInvoice && (
               <ErrorMessage>{errors.maxPerInvoice}</ErrorMessage>
             )}
+          </Box>
+        </Flex>
+
+        <Flex gap="2" mt="8">
+          <Box w="full">
+            <FormLabel htmlFor="nextInvoceNumberA">Sig. Factura A:</FormLabel>
+            <Input
+              id="nextInvoceNumberA"
+              isDisabled={true}
+              name="nextInvoceNumberA"
+              type="nextInvoceNumberA"
+              value={values.nextInvoceNumberA}
+            />
+          </Box>
+          <Box w="full">
+            <FormLabel htmlFor="nextInvoceNumberB">Sig. Factura B:</FormLabel>
+            <Input
+              id="nextInvoceNumberB"
+              isDisabled={true}
+              name="nextInvoceNumberB"
+              type="nextInvoceNumberB"
+              value={values.nextInvoceNumberB}
+            />
+          </Box>
+          <Box w="full">
+            <FormLabel htmlFor="nextInvoceNumberM">Sig. Factura M:</FormLabel>
+            <Input
+              id="nextInvoceNumberM"
+              isDisabled={true}
+              name="nextInvoceNumberM"
+              type="nextInvoceNumberM"
+              value={values.nextInvoceNumberM}
+            />
+          </Box>
+        </Flex>
+        <Flex gap="2" mt="8">
+          <Box w="full">
+            <FormLabel htmlFor="nextInvoceNumberNCA">Sig. Nota de Crédito A:</FormLabel>
+            <Input
+              id="nextInvoceNumberNCA"
+              isDisabled={true}
+              name="nextInvoceNumber"
+              type="nextInvoceNumberNCA"
+              value={values.nextInvoceNumberNCA}
+            />
+          </Box>
+          <Box w="full">
+            <FormLabel htmlFor="nextInvoceNumberNCB">Sig. Nota de Crédito B:</FormLabel>
+            <Input
+              id="nextInvoceNumberNCB"
+              isDisabled={true}
+              name="nextInvoceNumberNCB"
+              type="nextInvoceNumberNCB"
+              value={values.nextInvoceNumberNCB}
+            />
+          </Box>
+          <Box w="full">
+            <FormLabel htmlFor="nextInvoceNumberNCM">Sig. Nota de Crédito M:</FormLabel>
+            <Input
+              id="nextInvoceNumberNCM"
+              isDisabled={true}
+              name="nextInvoceNumberNCM"
+              type="nextInvoceNumberNCM"
+              value={values.nextInvoceNumberNCM}
+            />
           </Box>
         </Flex>
 

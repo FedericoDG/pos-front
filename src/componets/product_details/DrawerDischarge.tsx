@@ -21,9 +21,9 @@ import {
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
-import { toast } from 'react-toastify';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
+import { toast } from 'sonner';
 
 import { Discharge, Reason, Warehouse } from '../../interfaces';
 import { ErrorMessage } from '../common';
@@ -56,12 +56,7 @@ export const DrawerDischarge = ({
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
-    toast.info('Baja de productos realizada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Baja de productos realizada');
   };
 
   const { mutate: createDischarge } = useCreateDischarge(onSuccess);

@@ -1,5 +1,5 @@
 import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 import { deleteRequest, getRequest, postRequest, putRequest } from '../services/';
 import { Warehouse, WarehouseResponse, WarehousesResponse } from '../interfaces';
@@ -99,12 +99,7 @@ export const useDeleteWarehose = () => {
       queryClient.invalidateQueries('warehouses');
     },
     onError: (_error) => {
-      toast.error('Error al intentar eliminar el Depósito', {
-        theme: 'colored',
-        position: toast.POSITION.BOTTOM_LEFT,
-        autoClose: 3000,
-        closeOnClick: true,
-      });
+      toast.error('Error al intentar eliminar el Depósito');
     },
   });
 };

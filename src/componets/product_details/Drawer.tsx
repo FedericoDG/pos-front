@@ -21,7 +21,7 @@ import { FormikHelpers, useFormik } from 'formik';
 import { InputGroup, AlertIcon, Alert, Text } from '@chakra-ui/react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 import { ErrorMessage } from '../common';
 import { Price, Pricelists } from '../../interfaces';
@@ -52,12 +52,7 @@ export const Drawer = ({
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
-    toast.info('Precio Actualizado', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Precio Actualizado');
   };
 
   const { mutate: createPrice } = useCreatePrice(onSuccess);

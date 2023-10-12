@@ -22,7 +22,7 @@ import { useQueryClient } from 'react-query';
 import { toast } from 'sonner';
 
 import { DashBoard, Loading } from '../componets/common';
-import { PosProvider } from '../componets/pos/context';
+import { PosProvider } from '../componets/pos2/context';
 import {
   Card,
   FinishSale,
@@ -30,10 +30,10 @@ import {
   StepperWrapper,
   Steps,
   SupplierAndWarehouse,
-} from '../componets/pos';
+} from '../componets/pos2';
 import { useCashRegisterStatus, useOpenCashRegister } from '../hooks';
 
-export const Pos = () => {
+export const Pos2 = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const queryClient = useQueryClient();
@@ -72,7 +72,7 @@ export const Pos = () => {
 
   return (
     <PosProvider>
-      <DashBoard isIndeterminate={isFetching} title="Punto de venta">
+      <DashBoard isIndeterminate={isFetching} title="Remito Valorizado">
         {!cashRegister ? (
           <Loading />
         ) : cashRegister?.isOpen ? (

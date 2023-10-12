@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Box, Stack, FormLabel, Button } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
-import { toast } from 'react-toastify';
 import { useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useCloseCashRegisterById, useGetWarehousesWOStock } from '../../hooks';
 import { Loading } from '../common';
@@ -34,12 +34,7 @@ export const Finish = () => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    toast.info('Caja cerrada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Caja Cerrada');
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['products'] });
     setWarehouse(null);

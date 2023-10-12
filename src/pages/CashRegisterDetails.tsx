@@ -262,7 +262,7 @@ export const CashRegisterDetails = () => {
                           {formatCurrency(cashRegister.initialBalance)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
-                          {formatCurrency(cashRegister.sales + cashRegister.discounts - cashRegister.recharges - cashRegister.otherTributes)}
+                          {formatCurrency(cashRegister.sales)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
                           {formatCurrency(cashRegister.creditNotes)}
@@ -271,7 +271,7 @@ export const CashRegisterDetails = () => {
                           {formatCurrency(cashRegister.otherTributes)}
                         </Td>
                         <Td isNumeric color="#4a5568" fontSize={16} fontWeight="bold">
-                          {formatCurrency(cashRegister.finalBalance + cashRegister.initialBalance)}
+                          {formatCurrency(cashRegister.initialBalance + cashRegister.sales + cashRegister.otherTributes - cashRegister.creditNotes)}
                         </Td>
                       </Tr>
                     </Tbody>
@@ -835,15 +835,15 @@ export const CashRegisterDetails = () => {
                                 <Td>
                                   {
                                     movement.invoceTypeId === 5 &&
-                                    <Badge>Nota de Crédito A</Badge>
+                                    <Badge bg='gray.50'>Nota de Crédito A</Badge>
                                   }
                                   {
                                     movement.invoceTypeId === 6 &&
-                                    <Badge>Nota de Crédito B</Badge>
+                                    <Badge bg='gray.50'>Nota de Crédito B</Badge>
                                   }
                                   {
                                     movement.invoceTypeId === 7 &&
-                                    <Badge>Nota de Crédito M</Badge>
+                                    <Badge bg='gray.50'>Nota de Crédito M</Badge>
                                   }
                                 </Td>
                                 <Td>{formatDateAndHour(movement.createdAt)}</Td>

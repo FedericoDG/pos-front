@@ -111,6 +111,7 @@ export const Modal = ({
                   <Input
                     ref={cancelRef}
                     autoFocus
+                    autoComplete='off'
                     id="quantity"
                     name="quantity"
                     tabIndex={1}

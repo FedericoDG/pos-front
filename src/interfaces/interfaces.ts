@@ -27,9 +27,13 @@ export interface Afip {
   id?: number;
   posNumber: number;
   maxPerInvoice: number;
+  invoiceM: number;
   nextInvoceNumberA?: number;
+  nextInvoceNumberNCA?: number;
   nextInvoceNumberB?: number;
+  nextInvoceNumberNCB?: number;
   nextInvoceNumberM?: number;
+  nextInvoceNumberNCM?: number;
   certExpiration?: string;
 }
 

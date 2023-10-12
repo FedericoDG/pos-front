@@ -301,12 +301,7 @@ export const FinishSale = () => {
       }
     });
 
-    toast('Comprobante Interno Creado', {
-      action: {
-        label: 'Ver',
-        onClick: () => navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`)
-      },
-    });
+    toast('Comprobante Interno Creado');
 
     queryClient.invalidateQueries({ queryKey: ['products'] });
     setWarehouse(null);
@@ -314,6 +309,8 @@ export const FinishSale = () => {
     setPriceList(null);
     emptyCart();
     setActiveStep(1);
+
+    navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`);
 
   };
 

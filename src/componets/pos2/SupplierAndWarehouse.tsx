@@ -31,7 +31,7 @@ export const SupplierAndWarehouse = () => {
 
   const [mappedPriceLists, setMappedPriceLists] = useState<SelectedPriceList[]>([]);
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
-  const [mappedInvoceTypes, setMappedInvoceTypes] = useState<SelectedInvoceType[]>([]);
+  const [_, setMappedInvoceTypes] = useState<SelectedInvoceType[]>([]);
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
 
   const {
@@ -177,9 +177,6 @@ export const SupplierAndWarehouse = () => {
 
   const clientRef = useRef<SelectInstance<SelectedClient, false, GroupBase<SelectedClient>>>(null);
 
-  const invoceTypeRef =
-    useRef<SelectInstance<SelectedInvoceType, false, GroupBase<SelectedInvoceType>>>(null);
-
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'F9') {
@@ -217,19 +214,6 @@ export const SupplierAndWarehouse = () => {
           <AlertIcon />
           Seleccione Lista de Precio, Depósito, Cliente y Tipo de Comprobante.
         </Alert>
-        {/* <FormControl alignItems="center" display="flex" mt={4}>
-          <FormLabel htmlFor="iva" m="0" mr="2" py="4">
-            IVA:
-          </FormLabel>
-          <Switch
-            colorScheme="brand"
-            id="iva"
-            isChecked={iva}
-            size="lg"
-            tabIndex={4}
-            onChange={() => setIva((current) => !current)}
-          />
-        </FormControl> */}
       </Box>
       <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
         <Box w="49%">
@@ -290,15 +274,15 @@ export const SupplierAndWarehouse = () => {
             onChange={(e) => setClient(e)}
           />
         </Box>
-        <Box w="49%">
+        {/*  <Box w="49%">
           <FormLabel htmlFor="client">Tipo de Comprobante:</FormLabel>
           <Select
             ref={invoceTypeRef}
             isClearable
+            isDisabled
             isSearchable
             colorScheme="brand"
             id="invoceType"
-            isDisabled={!priceList?.value || !warehouse?.value || !client?.value}
             options={mappedInvoceTypes}
             placeholder="Seleccionar Tipo de Comprobante"
             selectedOptionColorScheme="brand"
@@ -306,7 +290,7 @@ export const SupplierAndWarehouse = () => {
             value={invoceType}
             onChange={(e) => setInvoceType(e)}
           />
-        </Box>
+        </Box> */}
       </Stack>
     </Stack>
   );

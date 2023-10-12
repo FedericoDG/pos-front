@@ -1,8 +1,8 @@
 import { Box, Heading, Stack, Text, Button, Divider } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
-import { toast } from 'react-toastify';
 import { useCallback, useEffect } from 'react';
 import { useQueryClient } from 'react-query';
+import { toast } from 'sonner';
 
 import { formatCurrency } from '../../utils';
 import { useCreateDischarge } from '../../hooks';
@@ -23,12 +23,7 @@ export const Basket = () => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    toast.info('Pérdida de stock cargada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Pérdida de stock cargada');
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['products'] });
     setWarehouse(null);

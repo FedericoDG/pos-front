@@ -1,8 +1,3 @@
-:root {
-  --toastify-color-info: #4d5499;
-  --toastify-toast-width: 480px;
-}
-
 @media all {
   .page-break {
     display: none;
@@ -16,18 +11,39 @@
     overflow: initial !important;
     -webkit-print-color-adjust: exact;
   }
+
   .page-break {
     margin-top: 1rem;
     display: block;
     page-break-before: auto;
   }
+
   .no-print,
   .no-print * {
     display: none !important;
+  }
+
+  .coso {
+    padding-top: 275px !important;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
   }
 }
 
 @page {
   margin: 3mm;
-  size: A4 portrait;
 }

@@ -1,9 +1,8 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { ToastContainer } from 'react-toastify';
+// eslint-disable-next-line import/order
+import { QueryClient, QueryClientProvider } from 'react-query';
 
-import 'react-toastify/dist/ReactToastify.css';
 import { Toaster } from 'sonner';
 
 import { AppProvider } from './context';
@@ -22,7 +21,6 @@ export const App = () => {
         <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
       </QueryClientProvider>
       <Toaster closeButton richColors expand={true} />
-      <ToastContainer limit={3} />
     </AppProvider>
   );
 };

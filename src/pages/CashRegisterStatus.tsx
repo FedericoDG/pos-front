@@ -20,7 +20,7 @@ import { HiPlus } from 'react-icons/Hi';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
@@ -39,12 +39,7 @@ export const CashRegisterStatus = () => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    toast.info('Caja abierta', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Caja abierta');
 
     queryClient.invalidateQueries({ queryKey: ['cashRegisters'] });
 
@@ -53,12 +48,7 @@ export const CashRegisterStatus = () => {
   };
 
   const onSuccessClose = () => {
-    toast.info('Caja cerrada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Caja cerrada');
 
     queryClient.invalidateQueries({ queryKey: ['cashRegisters'] });
 

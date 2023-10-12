@@ -2,8 +2,8 @@ import { Box, Button, Text, FormLabel, Input, Stack } from '@chakra-ui/react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { User } from '../../interfaces';
 import { ErrorMessage } from '../common';
@@ -34,12 +34,7 @@ export const Form = ({ user }: Props) => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    toast.info('Contraseña actualizada', {
-      theme: 'colored',
-      position: toast.POSITION.BOTTOM_LEFT,
-      autoClose: 3000,
-      closeOnClick: true,
-    });
+    toast.success('Contraseña actualizada');
     queryClient.invalidateQueries({ queryKey: ['users'] });
     dispatchLogout();
     navigate('/');

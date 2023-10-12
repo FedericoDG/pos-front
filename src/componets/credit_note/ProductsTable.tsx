@@ -34,34 +34,36 @@ export const ProductsTable = ({ cashMovement }: Props) => {
   if (!cashMovement) return null;
 
   return (
-    <Stack
-      alignItems={cart.length === 0 ? 'center' : 'flex-start'}
-      bg="white"
-      direction="row"
-      p="4"
-      rounded="md"
-      shadow="md"
-    >
-      <Box width="64%">
-        <CustomTable
-          showGlobalFilter
-          showNavigation
-          amount={cashMovement.cashMovementDetails?.length || 0}
-          columns={columns}
-          data={cashMovement.cashMovementDetails!}
-          flag="products"
-        />
+    <Stack bg="white">
+      <Stack
+        alignItems={cart.length === 0 ? 'center' : 'flex-start'}
+        bg="white"
+        direction="row"
+        p="4"
+        rounded="md"
+        shadow="md"
+      >
+        <Box width="64%">
+          <CustomTable
+            showGlobalFilter
+            showNavigation
+            amount={cashMovement.cashMovementDetails?.length || 0}
+            columns={columns}
+            data={cashMovement.cashMovementDetails!}
+            flag="products"
+          />
 
-        <Modal
-          activeProduct={activeProduct}
-          cancelRef={cancelRef}
-          handleClose={handleClose}
-          isOpen={isOpen}
-          setActiveProduct={setActiveProduct}
-          tableInput={tableInput}
-        />
-      </Box>
-      <Basket cashMovement={cashMovement} />
+          <Modal
+            activeProduct={activeProduct}
+            cancelRef={cancelRef}
+            handleClose={handleClose}
+            isOpen={isOpen}
+            setActiveProduct={setActiveProduct}
+            tableInput={tableInput}
+          />
+        </Box>
+        <Basket cashMovement={cashMovement} />
+      </Stack>
     </Stack>
   );
 };

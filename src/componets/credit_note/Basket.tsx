@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const Basket = ({ cashMovement }: Props) => {
-  const { cart, removeItem, totalCart, totalCartItems, goToNext } = usePosContext();
+  const { cart, removeItem, totalCart, totalCartItems, goToNext, addItem } = usePosContext();
 
   const navigate = useNavigate();
 
@@ -159,6 +159,16 @@ export const Basket = ({ cashMovement }: Props) => {
           <Heading color="gray.300" fontSize="24" pt="2" textAlign="center">
             AGREGUE PRODUCTOS
           </Heading>
+          <Button
+            colorScheme="brand"
+            onClick={() => {
+              cashMovement.cashMovementDetails?.forEach((detail) =>
+                addItem({ ...detail, quantity: detail.quantity })
+              );
+            }}
+          >
+            AGREGAR TODOS
+          </Button>
         </Stack>
       )}
     </Stack>
