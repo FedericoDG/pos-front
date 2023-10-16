@@ -1,7 +1,13 @@
 import { AiOutlineStock } from 'react-icons/ai';
 import { Box, Collapse, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsPersonVcard, BsPersonVcardFill } from 'react-icons/bs';
-import { FaDollarSign, FaCubes, FaFileInvoiceDollar, FaUserFriends } from 'react-icons/fa';
+import {
+  FaDollarSign,
+  FaCubes,
+  FaFileInvoiceDollar,
+  FaUserFriends,
+  FaChartLine,
+} from 'react-icons/fa';
 import { GiCarWheel } from 'react-icons/gi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 import { MdPointOfSale } from 'react-icons/md';
@@ -241,6 +247,11 @@ export const SidebarContent = (props: Props) => {
         {/* SUPPLIERS */}
         <NavItem icon={BsPersonVcardFill} link="/panel/proveedores">
           Proveedores
+        </NavItem>
+
+        {/* BALANCE */}
+        <NavItem icon={FaChartLine} link="/panel/balance">
+          Balance
         </NavItem>
 
         {/* USERS */}

@@ -466,3 +466,15 @@ export interface OtherTributeDetails {
   updatedAt?: number;
   otherTribute?: OtherTribute;
 }
+
+export interface Movement {
+  id?: number;
+  amount: number;
+  concept: string;
+  type: string;
+  paymentMethodId: number;
+  createdAt?: number;
+  updatedAt?: number;
+  user?: User;
+  paymentMethod?: PaymentMethod;
+}

@@ -9,6 +9,7 @@ import {
   Identification,
   InvoceType,
   IvaType,
+  Movement,
   OtherTribute,
   PaymentMethod,
   PriceList,
@@ -287,5 +288,22 @@ export interface InvoceTypesResponse {
 export interface OtherTributesResponse {
   body: {
     otherTributes: OtherTribute[];
+  };
+}
+
+export interface BalanceResponse {
+  body: {
+    movements: Movement;
+    incomes: {
+      totalIncomes: number;
+      totalCash: number;
+      totalDebit: number;
+      totalCredit: number;
+      totalTransfer: number;
+      totalMercadoPago: number;
+    };
+    outcomes: {
+      totalOutcomes: number;
+    };
   };
 }

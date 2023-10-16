@@ -41,6 +41,12 @@ const httpRequest = <T>(
 export const getRequest = <T>(endpoint: string, headers?: Record<string, any>): Promise<T> =>
   httpRequest<T>('get', endpoint, null, headers);
 
+export const getRequestWithBody = <T>(
+  endpoint: string,
+  data: any,
+  headers?: Record<string, any>
+): Promise<T> => httpRequest('get', endpoint, data, headers);
+
 export const postRequest = (
   endpoint: string,
   data: any,

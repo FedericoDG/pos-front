@@ -409,7 +409,7 @@ export const FinishSale = () => {
                 <Button
                   colorScheme="brand"
                   leftIcon={<ArrowBackIcon />}
-                  minW="150px"
+                  minW="170px"
                   mr="auto"
                   size="lg"
                   onClick={() => goToPrevious()}
