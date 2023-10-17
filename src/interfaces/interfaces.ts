@@ -473,8 +473,8 @@ export interface Movement {
   concept: string;
   type: string;
   paymentMethodId: number;
-  createdAt?: number;
-  updatedAt?: number;
+  createdAt?: string;
+  updatedAt?: string;
   user?: User;
   paymentMethod?: PaymentMethod;
 }
