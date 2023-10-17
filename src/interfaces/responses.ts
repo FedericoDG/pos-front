@@ -293,7 +293,8 @@ export interface OtherTributesResponse {
 
 export interface BalanceResponse {
   body: {
-    movements: Movement;
+    from: string;
+    to: string;
     incomes: {
       totalIncomes: number;
       totalCash: number;
@@ -305,5 +306,7 @@ export interface BalanceResponse {
     outcomes: {
       totalOutcomes: number;
     };
+    movements: Movement[];
+    user?: User;
   };
 }
