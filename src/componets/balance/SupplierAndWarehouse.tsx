@@ -1,5 +1,5 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { Box, Stack, Alert, AlertIcon, FormLabel, Button, Input, Text } from '@chakra-ui/react';
+import { Box, Stack, Alert, AlertIcon, FormLabel, Button, Input } from '@chakra-ui/react';
 import { GroupBase, Select, SelectInstance } from 'chakra-react-select';
 import { useEffect, useRef, useState } from 'react';
 
@@ -48,9 +48,9 @@ export const SupplierAndWarehouse = () => {
     setMappedPayments(mappedPayments);
   }, [clients, payments, users]);
 
-  const userRef = useRef<SelectInstance<SelectedUser, false, GroupBase<SelectedUser>>>(null);
+  /* const userRef = useRef<SelectInstance<SelectedUser, false, GroupBase<SelectedUser>>>(null);
 
-  const clientRef = useRef<SelectInstance<SelectedClient, false, GroupBase<SelectedClient>>>(null);
+  const clientRef = useRef<SelectInstance<SelectedClient, false, GroupBase<SelectedClient>>>(null); */
 
   const {
     goToNext,
@@ -92,7 +92,7 @@ export const SupplierAndWarehouse = () => {
           ml="auto"
           rightIcon={<ArrowForwardIcon />}
           size="lg"
-          tabIndex={3}
+          tabIndex={6}
           onClick={() => goToNext()}
         >
           SIGUIENTE
@@ -113,6 +113,7 @@ export const SupplierAndWarehouse = () => {
             name="from"
             placeholder="Selecciona una fecha"
             size="md"
+            tabIndex={1}
             type="date"
             onChange={(e) => setFrom(e.target.value)}
           />
@@ -124,6 +125,7 @@ export const SupplierAndWarehouse = () => {
             name="to"
             placeholder="Selecciona una fecha"
             size="md"
+            tabIndex={2}
             type="date"
             onChange={(e) => setTo(e.target.value)}
           />
@@ -133,7 +135,6 @@ export const SupplierAndWarehouse = () => {
         <Box w="50%">
           <FormLabel htmlFor="user">Usuario:</FormLabel>
           <Select
-            ref={userRef}
             isClearable
             isSearchable
             colorScheme="brand"
@@ -142,33 +143,13 @@ export const SupplierAndWarehouse = () => {
             options={mappedUsers}
             placeholder="Seleccionar Usuario"
             selectedOptionColorScheme="brand"
-            tabIndex={2}
+            tabIndex={3}
             onChange={(e) => setUser(e)}
           />
         </Box>
-      </Stack>
-      <Box w="full">
-        <Alert status="warning" variant="left-accent">
-          <Text>
-            Los siguientes filtros solo afectaran a las tablas de{' '}
-            <Text as={'span'} fontWeight={500}>
-              {' '}
-              Clientes{' '}
-            </Text>
-            y
-            <Text as={'span'} fontWeight={500}>
-              {' '}
-              Detalles de Movimiento{' '}
-            </Text>
-            del informe.
-          </Text>
-        </Alert>
-      </Box>
-      <Stack direction="row">
         <Box w="50%">
           <FormLabel htmlFor="client">Cliente:</FormLabel>
           <Select
-            ref={clientRef}
             isClearable
             isSearchable
             colorScheme="brand"
@@ -177,10 +158,12 @@ export const SupplierAndWarehouse = () => {
             options={mappedClients}
             placeholder="Seleccionar Client"
             selectedOptionColorScheme="brand"
-            tabIndex={2}
+            tabIndex={4}
             onChange={(e) => setClient(e)}
           />
         </Box>
+      </Stack>
+      {/* <Stack direction="row">
         <Box w="50%">
           <FormLabel htmlFor="payment">Forma de Pago:</FormLabel>
           <Select
@@ -192,11 +175,11 @@ export const SupplierAndWarehouse = () => {
             options={mappedPayments}
             placeholder="Seleccionar Forma de Pago"
             selectedOptionColorScheme="brand"
-            tabIndex={2}
+            tabIndex={5}
             onChange={(e) => setPayment(e)}
           />
         </Box>
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 };

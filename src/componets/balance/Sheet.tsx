@@ -457,7 +457,7 @@ export const Sheet = () => {
                       <Th bg="gray.700" color="white">
                         Rol
                       </Th>
-                      <Th bg="gray.700" color="white">
+                      <Th isNumeric bg="gray.700" color="white">
                         Total
                       </Th>
                     </Tr>
@@ -490,7 +490,7 @@ export const Sheet = () => {
                       <Th bg="gray.700" color="white">
                         Número
                       </Th>
-                      <Th bg="gray.700" color="white">
+                      <Th isNumeric bg="gray.700" color="white">
                         Total
                       </Th>
                     </Tr>
@@ -519,9 +519,6 @@ export const Sheet = () => {
                         Fecha
                       </Th>
                       <Th bg="gray.700" color="white">
-                        Monto
-                      </Th>
-                      <Th bg="gray.700" color="white">
                         Tipo
                       </Th>
                       <Th bg="gray.700" color="white">
@@ -533,13 +530,15 @@ export const Sheet = () => {
                       <Th bg="gray.700" color="white">
                         Usuario
                       </Th>
+                      <Th isNumeric bg="gray.700" color="white">
+                        Total
+                      </Th>
                     </Tr>
                   </Thead>
                   <Tbody>
                     {balance?.movements.map((el) => (
                       <Tr key={nanoid()}>
                         <Td>{formatDate(el.createdAt)}</Td>
-                        <Td isNumeric>{formatCurrency(el.amount)}</Td>
                         <Td color={el.type === 'IN' ? 'green.600' : 'red.600'}>
                           {getType(el.type)}
                         </Td>
@@ -548,6 +547,7 @@ export const Sheet = () => {
                         <Td>
                           {el.user?.name} {el.user?.lastname}
                         </Td>
+                        <Td isNumeric>{formatCurrency(el.amount)}</Td>
                       </Tr>
                     ))}
                   </Tbody>
