@@ -1,22 +1,24 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { Box, Stack, Alert, AlertIcon, FormLabel, Button, Input } from '@chakra-ui/react';
+import { Box, Stack, Alert, AlertIcon, FormLabel, Button, Input, Text } from '@chakra-ui/react';
 import { GroupBase, Select, SelectInstance } from 'chakra-react-select';
 import { useEffect, useRef, useState } from 'react';
 
 import { Loading } from '../common';
-import { useGetPaymentMethods, useGetUsers } from '../../hooks';
+import { useGetClients, useGetPaymentMethods, useGetUsers } from '../../hooks';
 
-import { SelectedUser, SelectedPayment, useBalanceContext } from '.';
+import { SelectedUser, SelectedPayment, useBalanceContext, SelectedClient } from '.';
 
 export const SupplierAndWarehouse = () => {
   const { data: users } = useGetUsers();
+  const { data: clients } = useGetClients();
   const { data: payments } = useGetPaymentMethods();
 
   const [mappedUsers, setMappedUsers] = useState<SelectedUser[]>([]);
+  const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
   const [mappedPayments, setMappedPayments] = useState<SelectedPayment[]>([]);
 
   useEffect(() => {
-    if (!users || !payments) return;
+    if (!users || !payments || !clients) return;
 
     const mappedUsers = users.map((el) => ({
       value: el.id,
@@ -27,6 +29,15 @@ export const SupplierAndWarehouse = () => {
 
     setMappedUsers(mappedUsers!);
 
+    const mappedClients = clients.map((el) => ({
+      value: el.id,
+      label: el.name,
+    }));
+
+    mappedClients.unshift({ value: 0, label: 'TODOS' });
+
+    setMappedClients(mappedClients!);
+
     const mappedPayments = payments.map((el) => ({
       value: el.id,
       label: el.code,
@@ -35,12 +46,25 @@ export const SupplierAndWarehouse = () => {
     mappedPayments.unshift({ value: 0, label: 'TODAS' });
 
     setMappedPayments(mappedPayments);
-  }, [payments, users]);
+  }, [clients, payments, users]);
 
-  const wareRef = useRef<SelectInstance<SelectedUser, false, GroupBase<SelectedUser>>>(null);
+  const userRef = useRef<SelectInstance<SelectedUser, false, GroupBase<SelectedUser>>>(null);
 
-  const { goToNext, user, setUser, payment, setPayment, from, setFrom, to, setTo } =
-    useBalanceContext();
+  const clientRef = useRef<SelectInstance<SelectedClient, false, GroupBase<SelectedClient>>>(null);
+
+  const {
+    goToNext,
+    user,
+    setUser,
+    payment,
+    setPayment,
+    from,
+    setFrom,
+    to,
+    setTo,
+    client,
+    setClient,
+  } = useBalanceContext();
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -56,14 +80,14 @@ export const SupplierAndWarehouse = () => {
     };
   }, [goToNext]);
 
-  if (!users || !payments) return <Loading />;
+  if (!users || !clients || !payments) return <Loading />;
 
   return (
     <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"
-          isDisabled={!user?.label || !payment?.label}
+          isDisabled={!user?.label || !client?.label || !payment?.label}
           minW="150px"
           ml="auto"
           rightIcon={<ArrowForwardIcon />}
@@ -77,7 +101,7 @@ export const SupplierAndWarehouse = () => {
       <Box w="full">
         <Alert status="info">
           <AlertIcon />
-          Seleccione las fechas, usuario y forma de pago para obtener un informe.
+          Seleccione las fechas, usuario, cliente y forma de pago para obtener un informe.
         </Alert>
       </Box>
       <Stack direction="row">
@@ -109,7 +133,7 @@ export const SupplierAndWarehouse = () => {
         <Box w="50%">
           <FormLabel htmlFor="user">Usuario:</FormLabel>
           <Select
-            ref={wareRef}
+            ref={userRef}
             isClearable
             isSearchable
             colorScheme="brand"
@@ -120,6 +144,41 @@ export const SupplierAndWarehouse = () => {
             selectedOptionColorScheme="brand"
             tabIndex={2}
             onChange={(e) => setUser(e)}
+          />
+        </Box>
+      </Stack>
+      <Box w="full">
+        <Alert status="warning" variant="left-accent">
+          <Text>
+            Los siguientes filtros solo afectaran a las tablas de{' '}
+            <Text as={'span'} fontWeight={500}>
+              {' '}
+              Clientes{' '}
+            </Text>
+            y
+            <Text as={'span'} fontWeight={500}>
+              {' '}
+              Detalles de Movimiento{' '}
+            </Text>
+            del informe.
+          </Text>
+        </Alert>
+      </Box>
+      <Stack direction="row">
+        <Box w="50%">
+          <FormLabel htmlFor="client">Cliente:</FormLabel>
+          <Select
+            ref={clientRef}
+            isClearable
+            isSearchable
+            colorScheme="brand"
+            defaultValue={client}
+            name="client"
+            options={mappedClients}
+            placeholder="Seleccionar Client"
+            selectedOptionColorScheme="brand"
+            tabIndex={2}
+            onChange={(e) => setClient(e)}
           />
         </Box>
         <Box w="50%">

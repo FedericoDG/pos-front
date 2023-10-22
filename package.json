@@ -30,6 +30,7 @@
     "react-router-dom": "^6.11.2",
     "react-to-print": "^2.14.12",
     "sonner": "^0.7.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
     "zod": "^3.21.4",
     "zod-formik-adapter": "^1.2.0"
   },

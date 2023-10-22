@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { useSteps } from '@chakra-ui/react';
 
-import { SelectedUser, SelectedPayment, balanceContext } from '.';
+import { SelectedUser, SelectedPayment, balanceContext, SelectedClient } from '.';
 
 interface Props {
   children: ReactNode;
@@ -9,6 +9,7 @@ interface Props {
 
 export const BalanceProvider = ({ children }: Props) => {
   const [user, setUser] = useState<SelectedUser | null>({ value: 0, label: 'TODOS' });
+  const [client, setClient] = useState<SelectedClient | null>({ value: 0, label: 'TODOS' });
   const [payment, setPayment] = useState<SelectedPayment | null>({ value: 0, label: 'TODAS' });
   const [from, setFrom] = useState<string>(new Date().toISOString().split('T')[0]);
   const [to, setTo] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -52,8 +53,22 @@ export const BalanceProvider = ({ children }: Props) => {
       to,
       setTo,
       data,
+      client,
+      setClient,
     }),
-    [activeStep, user, from, goToNext, goToPrevious, payment, setActiveStep, steps, to, data]
+    [
+      activeStep,
+      goToNext,
+      goToPrevious,
+      setActiveStep,
+      steps,
+      user,
+      payment,
+      from,
+      to,
+      data,
+      client,
+    ]
   );
 
   return <balanceContext.Provider value={values}>{children}</balanceContext.Provider>;
@@ -75,6 +90,8 @@ export const useBalanceContext = () => {
     to,
     setTo,
     data,
+    client,
+    setClient,
   } = useContext(balanceContext);
 
   return {
@@ -92,5 +109,7 @@ export const useBalanceContext = () => {
     to,
     setTo,
     data,
+    client,
+    setClient,
   };
 };
