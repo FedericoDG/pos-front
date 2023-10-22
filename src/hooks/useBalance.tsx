@@ -5,6 +5,7 @@ import { getRequest } from '../services';
 
 interface Data {
   userId: number;
+  clientId: number;
   paymentMethodId: number;
   from: string;
   to: string;
@@ -12,7 +13,7 @@ interface Data {
 
 const getBalance = (data: Data) =>
   getRequest<BalanceResponse>(
-    `/movements?userId=${data.userId}&paymentMethodId=${data.paymentMethodId}&from=${data.from}&to=${data.to}`,
+    `/movements?userId=${data.userId}&clientId=${data.clientId}&paymentMethodId=${data.paymentMethodId}&from=${data.from}&to=${data.to}`,
     data
   );
 

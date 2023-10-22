@@ -29,6 +29,9 @@ import {
   Warehouse,
 } from '.';
 
+type ClientWithTotal = Client & { total: number };
+type UserWithTotal = User & { total: number };
+
 export interface SettingsResponse {
   body: {
     settings: Settings;
@@ -295,6 +298,29 @@ export interface BalanceResponse {
   body: {
     from: string;
     to: string;
+    discounts: number;
+    recharges: number;
+    otherTributes: number;
+    invoices: {
+      invoiceAFIPCount: number;
+      invoiceAFIPTotal: number;
+      invoiceAFIPNCCount: number;
+      invoiceAFIPNCTotal: number;
+      invoiceACount: number;
+      invoiceATotal: number;
+      invoiceBCount: number;
+      invoiceBTotal: number;
+      invoiceMCount: number;
+      invoiceMTotal: number;
+      invoiceXCount: number;
+      invoiceXTotal: number;
+      invoiceNCACount: number;
+      invoiceNCATotal: number;
+      invoiceNCBCount: number;
+      invoiceNCBTotal: number;
+      invoiceNCMCount: number;
+      invoiceNCMTotal: number;
+    };
     incomes: {
       totalIncomes: number;
       totalCash: number;
@@ -307,6 +333,8 @@ export interface BalanceResponse {
       totalOutcomes: number;
     };
     movements: Movement[];
+    clients: ClientWithTotal[];
+    users: UserWithTotal[];
     user?: User;
   };
 }

@@ -4,19 +4,21 @@ import { GroupBase, Select, SelectInstance } from 'chakra-react-select';
 import { useEffect, useRef, useState } from 'react';
 
 import { Loading } from '../common';
-import { useGetPaymentMethods, useGetUsers } from '../../hooks';
+import { useGetClients, useGetPaymentMethods, useGetUsers } from '../../hooks';
 
-import { SelectedUser, SelectedPayment, useBalanceContext } from '.';
+import { SelectedUser, SelectedPayment, useBalanceContext, SelectedClient } from '.';
 
 export const SupplierAndWarehouse = () => {
   const { data: users } = useGetUsers();
+  const { data: clients } = useGetClients();
   const { data: payments } = useGetPaymentMethods();
 
   const [mappedUsers, setMappedUsers] = useState<SelectedUser[]>([]);
+  const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
   const [mappedPayments, setMappedPayments] = useState<SelectedPayment[]>([]);
 
   useEffect(() => {
-    if (!users || !payments) return;
+    if (!users || !payments || !clients) return;
 
     const mappedUsers = users.map((el) => ({
       value: el.id,
@@ -27,6 +29,15 @@ export const SupplierAndWarehouse = () => {
 
     setMappedUsers(mappedUsers!);
 
+    const mappedClients = clients.map((el) => ({
+      value: el.id,
+      label: el.name,
+    }));
+
+    mappedClients.unshift({ value: 0, label: 'TODOS' });
+
+    setMappedClients(mappedClients!);
+
     const mappedPayments = payments.map((el) => ({
       value: el.id,
       label: el.code,
@@ -35,12 +46,25 @@ export const SupplierAndWarehouse = () => {
     mappedPayments.unshift({ value: 0, label: 'TODAS' });
 
     setMappedPayments(mappedPayments);
-  }, [payments, users]);
+  }, [clients, payments, users]);
 
-  const wareRef = useRef<SelectInstance<SelectedUser, false, GroupBase<SelectedUser>>>(null);
+  /* const userRef = useRef<SelectInstance<SelectedUser, false, GroupBase<SelectedUser>>>(null);
 
-  const { goToNext, user, setUser, payment, setPayment, from, setFrom, to, setTo } =
-    useBalanceContext();
+  const clientRef = useRef<SelectInstance<SelectedClient, false, GroupBase<SelectedClient>>>(null); */
+
+  const {
+    goToNext,
+    user,
+    setUser,
+    payment,
+    setPayment,
+    from,
+    setFrom,
+    to,
+    setTo,
+    client,
+    setClient,
+  } = useBalanceContext();
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -56,19 +80,19 @@ export const SupplierAndWarehouse = () => {
     };
   }, [goToNext]);
 
-  if (!users || !payments) return <Loading />;
+  if (!users || !clients || !payments) return <Loading />;
 
   return (
     <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"
-          isDisabled={!user?.label || !payment?.label}
+          isDisabled={!user?.label || !client?.label || !payment?.label}
           minW="150px"
           ml="auto"
           rightIcon={<ArrowForwardIcon />}
           size="lg"
-          tabIndex={3}
+          tabIndex={6}
           onClick={() => goToNext()}
         >
           SIGUIENTE
@@ -77,7 +101,7 @@ export const SupplierAndWarehouse = () => {
       <Box w="full">
         <Alert status="info">
           <AlertIcon />
-          Seleccione las fechas, usuario y forma de pago para obtener un informe.
+          Seleccione las fechas, usuario, cliente y forma de pago para obtener un informe.
         </Alert>
       </Box>
       <Stack direction="row">
@@ -89,6 +113,7 @@ export const SupplierAndWarehouse = () => {
             name="from"
             placeholder="Selecciona una fecha"
             size="md"
+            tabIndex={1}
             type="date"
             onChange={(e) => setFrom(e.target.value)}
           />
@@ -100,6 +125,7 @@ export const SupplierAndWarehouse = () => {
             name="to"
             placeholder="Selecciona una fecha"
             size="md"
+            tabIndex={2}
             type="date"
             onChange={(e) => setTo(e.target.value)}
           />
@@ -109,7 +135,6 @@ export const SupplierAndWarehouse = () => {
         <Box w="50%">
           <FormLabel htmlFor="user">Usuario:</FormLabel>
           <Select
-            ref={wareRef}
             isClearable
             isSearchable
             colorScheme="brand"
@@ -118,10 +143,27 @@ export const SupplierAndWarehouse = () => {
             options={mappedUsers}
             placeholder="Seleccionar Usuario"
             selectedOptionColorScheme="brand"
-            tabIndex={2}
+            tabIndex={3}
             onChange={(e) => setUser(e)}
           />
         </Box>
+        <Box w="50%">
+          <FormLabel htmlFor="client">Cliente:</FormLabel>
+          <Select
+            isClearable
+            isSearchable
+            colorScheme="brand"
+            defaultValue={client}
+            name="client"
+            options={mappedClients}
+            placeholder="Seleccionar Client"
+            selectedOptionColorScheme="brand"
+            tabIndex={4}
+            onChange={(e) => setClient(e)}
+          />
+        </Box>
+      </Stack>
+      {/* <Stack direction="row">
         <Box w="50%">
           <FormLabel htmlFor="payment">Forma de Pago:</FormLabel>
           <Select
@@ -133,11 +175,11 @@ export const SupplierAndWarehouse = () => {
             options={mappedPayments}
             placeholder="Seleccionar Forma de Pago"
             selectedOptionColorScheme="brand"
-            tabIndex={2}
+            tabIndex={5}
             onChange={(e) => setPayment(e)}
           />
         </Box>
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 };
