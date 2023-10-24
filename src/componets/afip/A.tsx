@@ -14,11 +14,11 @@ import {
 } from '@chakra-ui/react';
 import { ImPrinter } from 'react-icons/im';
 import { useReactToPrint } from 'react-to-print';
-import { Fragment, useCallback, useMemo, useRef } from 'react';
+import { Fragment, useMemo, useRef } from 'react';
 import { nanoid } from 'nanoid';
 
 import { CashMovement, Settings } from '../../interfaces';
-import { formatDate, formatCurrency } from '../../utils';
+import { formatDate, formatCurrency, getInvoiceName, getInvoiceLetter } from '../../utils';
 import { formatTwoDigits } from '../../utils/formatCurrency';
 
 interface Props {
@@ -33,51 +33,6 @@ export const A = ({ cashMovement, settings }: Props) => {
     content: () => printRef.current,
   });
 
-  const getInvoceLetter = useCallback((num: number) => {
-    switch (num) {
-      case 1:
-        return 'A';
-      case 3:
-        return 'A';
-      case 6:
-        return 'B';
-      case 8:
-        return 'B';
-      case 11:
-        return 'C';
-      case 13:
-        return 'C';
-      case 51:
-        return 'M';
-      case 53:
-        return 'M';
-      default:
-        return 'X';
-    }
-  }, []);
-
-  const getInvoceName = useCallback((num: number) => {
-    switch (num) {
-      case 1:
-        return 'FACTURA';
-      case 3:
-        return 'NOTA DE CRÉDITO';
-      case 6:
-        return 'FACTURA';
-      case 8:
-        return 'NOTA DE CRÉDITO';
-      case 11:
-        return 'FACTURA';
-      case 13:
-        return 'NOTA DE CRÉDITO';
-      case 51:
-        return 'FACTURA';
-      case 53:
-        return 'NOTA DE CRÉDITO';
-      default:
-        return 'FACTURA';
-    }
-  }, []);
 
   const iva = useMemo(
     () =>
@@ -159,16 +114,16 @@ export const A = ({ cashMovement, settings }: Props) => {
               w="20mm"
             >
               <Text fontSize="48px" lineHeight={1} textAlign="center">
-                {getInvoceLetter(cashMovement?.cbteTipo!)}
+                {getInvoiceLetter(cashMovement?.cbteTipo!)}
               </Text>
             </HStack>
             <Stack pl={20} py={2} w="50%">
               <Text fontSize="xl" fontWeight={500}>
-                {getInvoceName(cashMovement?.cbteTipo!)}
+                {getInvoiceName(cashMovement?.cbteTipo!)}
               </Text>
               <Text fontSize="xl" fontWeight={500}>
                 N°: {cashMovement.posNumber.toString().padStart(5, '0')}-
-                {cashMovement?.invoceNumberAfip!.toString().padStart(5, '0')}
+                {cashMovement?.invoceNumberAfip!.toString().padStart(8, '0')}
               </Text>
               <Text>Fecha: {formatDate(cashMovement.createdAt)}</Text>
               <Text>CUIT: {settings.cuit}</Text>

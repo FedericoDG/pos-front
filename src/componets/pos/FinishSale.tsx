@@ -274,22 +274,19 @@ export const FinishSale = () => {
       toast.error('El monto de la venta es distinto al de los pagos');
     } else {
       mutateAsync(sale).then((res: any) => {
-        const { id } = res.body.cashMovement;
+        const { id: cashMovementId } = res.body.cashMovement;
+
+        console.log(res.body.ids);
 
         if (invoceType?.code !== '555' && user.roleId !== 4) {
-          createAfipInvoce({ ...sale, cashMovementId: id });
+          createAfipInvoce({ ...sale, cashMovementId, movementIds: res.body.ids });
         }
       });
     }
   };
 
   const onSuccessAfip = (res: any) => {
-    toast('Comprobante de AFIP Creado'/* , {
-      action: {
-        label: 'Ver',
-        onClick: () => navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`)
-      },
-    } */);
+    toast('Comprobante de AFIP Creado');
     navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`);
   };
 

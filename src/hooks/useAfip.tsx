@@ -11,7 +11,6 @@ interface CartItem {
   allow?: boolean;
 }
 export interface Sale {
-  cashMovementId: number;
   clientId: number;
   warehouseId: number;
   discount?: number;
@@ -22,6 +21,8 @@ export interface Sale {
     paymentMethodId: number;
   }[];
   info: string;
+  cashMovementId: number;
+  movementIds: number[];
 }
 
 export interface CreditNote extends Sale {

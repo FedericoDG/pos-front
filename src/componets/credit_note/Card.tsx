@@ -1,37 +1,15 @@
 import { Stack } from '@chakra-ui/react';
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import { TableContainer, Table, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react';
 
 import { CashMovement } from '../../interfaces/interfaces';
+import { getInvoiceLetter } from '../../utils';
 
 interface Props {
   cashMovement: CashMovement;
 }
 
 export const Card: FC<Props> = ({ cashMovement }) => {
-  const getInvoceLetter = useCallback((num: number) => {
-    switch (num) {
-      case 1:
-        return 'A';
-      case 3:
-        return 'A';
-      case 6:
-        return 'B';
-      case 8:
-        return 'B';
-      case 11:
-        return 'C';
-      case 13:
-        return 'C';
-      case 51:
-        return 'M';
-      case 53:
-        return 'M';
-      default:
-        return 'X';
-    }
-  }, []);
-
   return (
     <Stack
       alignItems="flex-start"
@@ -92,7 +70,7 @@ export const Card: FC<Props> = ({ cashMovement }) => {
           <Tbody>
             <Tr>
               <Td borderBottomWidth="0" fontSize={18}>
-                Nota de Crédito {getInvoceLetter(cashMovement.invoceIdAfip!)}
+                Nota de Crédito {getInvoiceLetter(cashMovement.invoceIdAfip!)}
               </Td>
             </Tr>
             <Tr>

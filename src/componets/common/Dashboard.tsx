@@ -26,6 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import { NavLink as RouterLink } from 'react-router-dom';
 
 import { useMyContext } from '../../context';
+import { getRole } from '../../utils';
 
 import { Footer, SidebarContent } from '.';
 
@@ -43,14 +44,6 @@ export const DashBoard = ({ children, title }: Props) => {
   const logout = () => {
     dispatchLogout();
     navigate('/');
-  };
-
-  const role = (role: string) => {
-    if (role === 'SUPERADMIN') return 'Súper Administrador';
-    if (role === 'ADMIN') return 'Administrador';
-    if (role === 'SELLER') return 'Vendedor';
-    if (role === 'DRIVER') return 'Chofer';
-    if (role === 'USER') return 'Usuario';
   };
 
   return (
@@ -120,7 +113,7 @@ export const DashBoard = ({ children, title }: Props) => {
                         {user.name.toLocaleUpperCase()} {user.lastname.toLocaleUpperCase()}
                       </Text>
                       <Text color="whitesmoke" fontSize="xx-small" fontWeight="semibold">
-                        {role(user.role?.name!)}
+                        {getRole(user.role?.name!)}
                       </Text>
                     </VStack>
                     <Box>

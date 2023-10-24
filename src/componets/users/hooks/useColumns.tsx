@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
 
 import { User } from '../../../interfaces';
+import { getRole } from '../../../utils';
 
 interface Props {
   onOpen: () => void;
@@ -13,14 +14,6 @@ interface Props {
 }
 
 export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => {
-  const role = (role: string) => {
-    if (role === 'SUPERADMIN') return 'Súper Administrador';
-    if (role === 'ADMIN') return 'Administrador';
-    if (role === 'SELLER') return 'Vendedor';
-    if (role === 'DRIVER') return 'Chofer';
-    if (role === 'USER') return 'Usuario';
-  };
-
   const columns = useMemo<ColumnDef<User>[]>(
     () => [
       {
@@ -44,7 +37,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
       {
         id: 'rol',
         header: 'Rol',
-        cell: ({ row }: CellContext<User, unknown>) => role(row.original.role?.name!),
+        cell: ({ row }: CellContext<User, unknown>) => getRole(row.original.role?.name!),
         accessorFn: (x) => x.role?.name,
       },
       {

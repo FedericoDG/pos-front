@@ -21,6 +21,7 @@ import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { Client, Pricelists, Role, User, Warehouse } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useCreateUser, useUpdateUser } from '../../hooks/';
+import { getRole } from '../../utils';
 
 import { schema, schema2 } from './schemas';
 
@@ -95,14 +96,6 @@ export const Drawer = ({
     onClose();
   };
 
-  const role = (role: string) => {
-    if (role === 'SUPERADMIN') return 'Súper Administrador';
-    if (role === 'ADMIN') return 'Administrador';
-    if (role === 'SELLER') return 'Vendedor';
-    if (role === 'DRIVER') return 'Chofer';
-    if (role === 'USER') return 'Usuario';
-  };
-
   return (
     <>
       <ChakraDrawer
@@ -166,7 +159,7 @@ export const Drawer = ({
                     >
                       {roles.map((unit) => (
                         <option key={unit.name} value={unit.id}>
-                          {role(unit.name)}
+                          {getRole(unit.name)}
                         </option>
                       ))}
                     </Select>

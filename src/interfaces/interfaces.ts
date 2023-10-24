@@ -477,4 +477,5 @@ export interface Movement {
   updatedAt?: string;
   user?: User;
   paymentMethod?: PaymentMethod;
+  cashMovement?: CashMovement;
 }
