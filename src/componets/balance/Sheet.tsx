@@ -1,6 +1,7 @@
 import {
   Button,
   HStack,
+  Link,
   Stack,
   Table,
   TableContainer,
@@ -19,10 +20,12 @@ import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { BsDownload } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
+import { useNavigate } from 'react-router-dom';
 
 import { useGetAfip, useGetBalance } from '../../hooks';
 import { Loading } from '../common';
-import { formatCurrency, formatDate } from '../../utils';
+import { formatCurrency, formatDate, getInvoiceLetter } from '../../utils';
+import { getRole } from '../../utils/getRole';
 
 import { useBalanceContext } from '.';
 
@@ -31,6 +34,8 @@ export const Sheet = () => {
   const { data: afip, isFetching: isFetchingAfip } = useGetAfip();
 
   const printRef = useRef<any | null>(null);
+
+  const navigate = useNavigate();
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -125,7 +130,7 @@ export const Sheet = () => {
               VOLVER
             </Button>
           </HStack>
-          <Stack m="0 auto" maxW="1024px">
+          <Stack m="0 auto">
             <HStack justifyContent="flex-end">
               <Button
                 colorScheme="green"
@@ -166,7 +171,7 @@ export const Sheet = () => {
                 </Table>
               </TableContainer>
 
-              <HStack alignItems="flex-start" w="210mm">
+              <HStack alignItems="flex-start">
                 <TableContainer my={2} w="full">
                   <Table size="sm">
                     <Thead>
@@ -226,6 +231,18 @@ export const Sheet = () => {
                         </Th>
                       </Tr>
                     </Thead>
+                    <Tbody>
+                      <Tr>
+                        <Td>Compras</Td>
+                        <Td isNumeric>{formatCurrency(balance?.outcomes.purchases!)}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td borderColor="black">Baja/Pérdida</Td>
+                        <Td isNumeric borderColor="black">
+                          {formatCurrency(balance?.outcomes.destroys!)}
+                        </Td>
+                      </Tr>
+                    </Tbody>
                     <Tfoot>
                       <Tr>
                         <Th />
@@ -236,7 +253,7 @@ export const Sheet = () => {
                     </Tfoot>
                   </Table>
                 </TableContainer>
-                <TableContainer my={2} w="full">
+                <TableContainer mt={2} w="full">
                   <Table size="sm">
                     <Thead>
                       <Tr>
@@ -262,7 +279,7 @@ export const Sheet = () => {
                 </TableContainer>
               </HStack>
 
-              <HStack alignItems="flex-start" w="210mm">
+              <HStack alignItems="flex-start">
                 <TableContainer my={2} w="full">
                   <Table size="sm">
                     <Thead>
@@ -413,8 +430,8 @@ export const Sheet = () => {
                 </TableContainer>
               </HStack>
 
-              <HStack alignItems="flex-start" w="210mm">
-                <TableContainer my={2}>
+              <HStack alignItems="flex-start">
+                <TableContainer my={2} w="full">
                   <Table size="sm" w="259px">
                     <Thead>
                       <Tr>
@@ -444,7 +461,7 @@ export const Sheet = () => {
                 </TableContainer>
               </HStack>
 
-              <TableContainer my={2} w="210mm">
+              <TableContainer my={2} w="full">
                 <Table size="sm">
                   <Thead>
                     <Tr>
@@ -469,7 +486,7 @@ export const Sheet = () => {
                           {el.name} {el.lastname}
                         </Td>
                         <Td>{el.email}</Td>
-                        <Td>{el.role?.name}</Td>
+                        <Td>{getRole(el.role?.name!)}</Td>
                         <Td isNumeric>{formatCurrency(el.total)}</Td>
                       </Tr>
                     ))}
@@ -477,7 +494,7 @@ export const Sheet = () => {
                 </Table>
               </TableContainer>
 
-              <TableContainer my={2} w="210mm">
+              <TableContainer my={2} w="full">
                 <Table size="sm">
                   <Thead>
                     <Tr>
@@ -508,29 +525,32 @@ export const Sheet = () => {
                 </Table>
               </TableContainer>
 
-              <TableContainer my={2} w="210mm">
+              <TableContainer my={2} w="full">
                 <Table size="sm">
                   <Text as="caption" fontSize="sm">
                     DETALLE DE MOVIMIENTOS
                   </Text>
                   <Thead>
                     <Tr>
-                      <Th bg="gray.700" color="white">
+                      <Th bg="gray.700" color="white" fontSize={10}>
                         Fecha
                       </Th>
-                      <Th bg="gray.700" color="white">
+                      <Th bg="gray.700" color="white" fontSize={10}>
                         Tipo
                       </Th>
-                      <Th bg="gray.700" color="white">
+                      <Th bg="gray.700" color="white" fontSize={10}>
                         Forma de pago
                       </Th>
-                      <Th bg="gray.700" color="white">
+                      <Th bg="gray.700" color="white" fontSize={10}>
                         Concepto
                       </Th>
-                      <Th bg="gray.700" color="white">
+                      <Th bg="gray.700" color="white" fontSize={10} textAlign="center">
+                        Comprobante
+                      </Th>
+                      <Th bg="gray.700" color="white" fontSize={10}>
                         Usuario
                       </Th>
-                      <Th isNumeric bg="gray.700" color="white">
+                      <Th isNumeric bg="gray.700" color="white" fontSize={10}>
                         Total
                       </Th>
                     </Tr>
@@ -538,16 +558,59 @@ export const Sheet = () => {
                   <Tbody>
                     {balance?.movements.map((el) => (
                       <Tr key={nanoid()}>
-                        <Td>{formatDate(el.createdAt)}</Td>
-                        <Td color={el.type === 'IN' ? 'green.600' : 'red.600'}>
+                        <Td fontSize={12}>{formatDate(el.createdAt)}</Td>
+                        <Td color={el.type === 'IN' ? 'green.600' : 'red.600'} fontSize={12}>
                           {getType(el.type)}
                         </Td>
-                        <Td>{el.paymentMethod?.code}</Td>
-                        <Td>{el.concept}</Td>
-                        <Td>
+                        <Td fontSize={12}>{el.paymentMethod?.code}</Td>
+                        <Td fontSize={12}>{el.concept}</Td>
+                        {el.concept === 'Venta' || el.concept === 'N. de Crédito' ? (
+                          el.cashMovement?.cae ? (
+                            <Td fontSize={12} textAlign="center">
+                              <Link
+                                color="black"
+                                fontSize={12}
+                                fontWeight={400}
+                                href={`/panel/caja/detalles/venta/afip/${el.cashMovement?.id}`}
+                                target="_blank"
+                                variant="link"
+                                w="full"
+                              >
+                                {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
+                                {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
+                                {'-'}
+                                {el.cashMovement?.invoceNumberAfip?.toString().padStart(8, '0')}
+                              </Link>
+                            </Td>
+                          ) : (
+                            <Td fontSize={12} textAlign="center">
+                              <Link
+                                color="black"
+                                fontSize={12}
+                                fontWeight={400}
+                                href={`/panel/caja/detalles/venta/${el.cashMovement?.id}`}
+                                target="_blank"
+                                variant="link"
+                                w="full"
+                              >
+                                {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
+                                {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
+                                {'-'}
+                                {el.cashMovement?.id?.toString().padStart(8, '0')}
+                              </Link>
+                            </Td>
+                          )
+                        ) : (
+                          <Td fontSize={12} textAlign="center">
+                            {' '}
+                          </Td>
+                        )}
+                        <Td fontSize={12}>
                           {el.user?.name} {el.user?.lastname}
                         </Td>
-                        <Td isNumeric>{formatCurrency(el.amount)}</Td>
+                        <Td isNumeric fontSize={12}>
+                          {formatCurrency(el.amount)}
+                        </Td>
                       </Tr>
                     ))}
                   </Tbody>

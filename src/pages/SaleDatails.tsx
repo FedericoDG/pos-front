@@ -15,11 +15,11 @@ import {
 } from '@chakra-ui/react';
 import { ImPrinter } from 'react-icons/im';
 import { useReactToPrint } from 'react-to-print';
-import { Fragment, useCallback, useRef } from 'react';
+import { Fragment, useRef } from 'react';
 
 import { DashBoard, Loading } from '../componets/common';
 import { useGetCashMovement, useGetSettings } from '../hooks';
-import { formatCurrency, formatDate } from '../utils';
+import { formatCurrency, formatDate, getInvoiceName } from '../utils';
 import { formatTwoDigits } from '../utils/formatCurrency';
 
 export const SaleDetails = () => {
@@ -33,29 +33,6 @@ export const SaleDetails = () => {
 
   const { data: cashMovement, isLoading: isLoadingCashMovement } = useGetCashMovement(Number(id!));
   const { data: settings, isLoading: isLoadingSettings } = useGetSettings(1);
-
-  const getInvoceName = useCallback((num: number) => {
-    switch (num) {
-      case 1:
-        return 'FACTURA';
-      case 3:
-        return 'NOTA DE CRÉDITO';
-      case 6:
-        return 'FACTURA';
-      case 8:
-        return 'NOTA DE CRÉDITO';
-      case 11:
-        return 'FACTURA';
-      case 13:
-        return 'NOTA DE CRÉDITO';
-      case 51:
-        return 'FACTURA';
-      case 53:
-        return 'NOTA DE CRÉDITO';
-      default:
-        return 'FACTURA';
-    }
-  }, []);
 
   return (
     <DashBoard
@@ -123,7 +100,7 @@ export const SaleDetails = () => {
                     cashMovement.invoceTypeId === 6 ||
                     cashMovement.invoceTypeId === 7 ? (
                     <Text fontSize="xl" fontWeight={500}>
-                      {getInvoceName(cashMovement?.cbteTipo!)}
+                      {getInvoiceName(cashMovement?.cbteTipo!)}
                     </Text>
                   ) : (
                     <Text fontSize="xl" fontWeight={500}>

@@ -3,20 +3,13 @@ import { FaEnvelope } from 'react-icons/fa';
 import { FaUserCircle } from 'react-icons/fa';
 
 import { User } from '../../interfaces';
+import { getRole } from '../../utils';
 
 interface Props {
   user: User;
 }
 
 export const Card = ({ user }: Props) => {
-  const role = (role: string) => {
-    if (role === 'SUPERADMIN') return 'Súper Administrador';
-    if (role === 'ADMIN') return 'Administrador';
-    if (role === 'SELLER') return 'Vendedor';
-    if (role === 'DRIVER') return 'Chofer';
-    if (role === 'USER') return 'Usuario';
-  };
-
   return (
     <Flex alignItems="center" bg="gray.50" direction="column" justifyContent="center" rounded="lg">
       <Box
@@ -61,7 +54,7 @@ export const Card = ({ user }: Props) => {
         <HStack color="gray.600" spacing={3}>
           <Icon as={FaUserCircle} fontSize={22} />
           <Text color="gray.600" fontSize="xl" fontWeight="bold">
-            {role(user.role?.name!)}
+            {getRole(user.role?.name!)}
           </Text>
         </HStack>
         <HStack color="gray.600" spacing={3}>

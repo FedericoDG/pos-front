@@ -330,6 +330,8 @@ export interface BalanceResponse {
       totalMercadoPago: number;
     };
     outcomes: {
+      purchases: number;
+      destroys: number;
       totalOutcomes: number;
     };
     movements: Movement[];

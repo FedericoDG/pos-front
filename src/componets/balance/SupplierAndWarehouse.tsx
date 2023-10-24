@@ -163,7 +163,13 @@ export const SupplierAndWarehouse = () => {
           />
         </Box>
       </Stack>
-      {/* <Stack direction="row">
+      {/*  <Box mt={4} w="full">
+        <Alert status="warning">
+          <AlertIcon />
+          El siguiente filtro sólo afecta a la tabla DETALLE DE MOVIMIENTOS
+        </Alert>
+      </Box>
+      <Stack direction="row">
         <Box w="50%">
           <FormLabel htmlFor="payment">Forma de Pago:</FormLabel>
           <Select
