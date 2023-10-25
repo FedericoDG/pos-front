@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { useSteps } from '@chakra-ui/react';
 
-import { SelectedUser, SelectedPayment, balanceContext, SelectedClient } from '.';
+import { SelectedUser, balanceContext, SelectedClient, SelectedInvoice } from '.';
 
 interface Props {
   children: ReactNode;
@@ -10,18 +10,18 @@ interface Props {
 export const BalanceProvider = ({ children }: Props) => {
   const [user, setUser] = useState<SelectedUser | null>({ value: 0, label: 'TODOS' });
   const [client, setClient] = useState<SelectedClient | null>({ value: 0, label: 'TODOS' });
-  const [payment, setPayment] = useState<SelectedPayment | null>({ value: 0, label: 'TODAS' });
+  const [invoices, setInvoices] = useState<SelectedInvoice[] | []>([]);
   const [from, setFrom] = useState<string>(new Date().toISOString().split('T')[0]);
   const [to, setTo] = useState<string>(new Date().toISOString().split('T')[0]);
 
   const data = useCallback(
     () => ({
       userId: user?.value || 0,
-      paymentMethodId: payment?.value || 0,
+      invoices: invoices,
       from: from,
       to: to,
     }),
-    [from, payment?.value, to, user?.value]
+    [from, invoices, to, user?.value]
   );
 
   const steps = useMemo(
@@ -46,8 +46,6 @@ export const BalanceProvider = ({ children }: Props) => {
       setUser,
       steps,
       user,
-      payment,
-      setPayment,
       from,
       setFrom,
       to,
@@ -55,6 +53,8 @@ export const BalanceProvider = ({ children }: Props) => {
       data,
       client,
       setClient,
+      invoices,
+      setInvoices,
     }),
     [
       activeStep,
@@ -63,11 +63,11 @@ export const BalanceProvider = ({ children }: Props) => {
       setActiveStep,
       steps,
       user,
-      payment,
       from,
       to,
       data,
       client,
+      invoices,
     ]
   );
 
@@ -83,8 +83,6 @@ export const useBalanceContext = () => {
     setUser,
     steps,
     user,
-    payment,
-    setPayment,
     from,
     setFrom,
     to,
@@ -92,6 +90,8 @@ export const useBalanceContext = () => {
     data,
     client,
     setClient,
+    invoices,
+    setInvoices,
   } = useContext(balanceContext);
 
   return {
@@ -102,8 +102,6 @@ export const useBalanceContext = () => {
     setUser,
     steps,
     user,
-    payment,
-    setPayment,
     from,
     setFrom,
     to,
@@ -111,5 +109,7 @@ export const useBalanceContext = () => {
     data,
     client,
     setClient,
+    invoices,
+    setInvoices,
   };
 };

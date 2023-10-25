@@ -1,24 +1,39 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { Box, Stack, Alert, AlertIcon, FormLabel, Button, Input } from '@chakra-ui/react';
-import { GroupBase, Select, SelectInstance } from 'chakra-react-select';
-import { useEffect, useRef, useState } from 'react';
+import { Select } from 'chakra-react-select';
+import { useEffect, useState } from 'react';
 
 import { Loading } from '../common';
-import { useGetClients, useGetPaymentMethods, useGetUsers } from '../../hooks';
+import { useGetAfip, useGetClients, useGetInvoceTypes, useGetUsers } from '../../hooks';
 
-import { SelectedUser, SelectedPayment, useBalanceContext, SelectedClient } from '.';
+import { SelectedUser, useBalanceContext, SelectedClient, SelectedInvoice } from '.';
 
 export const SupplierAndWarehouse = () => {
+  const {
+    goToNext,
+    user,
+    setUser,
+    from,
+    setFrom,
+    to,
+    setTo,
+    client,
+    setClient,
+    invoices,
+    setInvoices,
+  } = useBalanceContext();
+
   const { data: users } = useGetUsers();
   const { data: clients } = useGetClients();
-  const { data: payments } = useGetPaymentMethods();
+  const { data: invoiceList } = useGetInvoceTypes();
+  const { data: afip } = useGetAfip();
 
   const [mappedUsers, setMappedUsers] = useState<SelectedUser[]>([]);
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
-  const [mappedPayments, setMappedPayments] = useState<SelectedPayment[]>([]);
+  const [mappedInvoices, setMappedInvoices] = useState<SelectedInvoice[]>([]);
 
   useEffect(() => {
-    if (!users || !payments || !clients) return;
+    if (!users || !clients || !invoiceList || !afip) return;
 
     const mappedUsers = users.map((el) => ({
       value: el.id,
@@ -38,33 +53,28 @@ export const SupplierAndWarehouse = () => {
 
     setMappedClients(mappedClients!);
 
-    const mappedPayments = payments.map((el) => ({
-      value: el.id,
-      label: el.code,
-    }));
+    if (afip.invoiceM === 1) {
+      const mappedInvoices = invoiceList
+        .filter((el) => el.code === '051' || el.code === '006' || el.code === '555')
+        .map((el) => ({
+          value: el.id,
+          label: el.description,
+        }));
 
-    mappedPayments.unshift({ value: 0, label: 'TODAS' });
+      setMappedInvoices(mappedInvoices);
+      if (invoices.length === 0) setInvoices(mappedInvoices);
+    } else {
+      const mappedInvoices = invoiceList
+        .filter((el) => el.code === '001' || el.code === '006' || el.code === '555')
+        .map((el) => ({
+          value: el.id,
+          label: el.description,
+        }));
 
-    setMappedPayments(mappedPayments);
-  }, [clients, payments, users]);
-
-  /* const userRef = useRef<SelectInstance<SelectedUser, false, GroupBase<SelectedUser>>>(null);
-
-  const clientRef = useRef<SelectInstance<SelectedClient, false, GroupBase<SelectedClient>>>(null); */
-
-  const {
-    goToNext,
-    user,
-    setUser,
-    payment,
-    setPayment,
-    from,
-    setFrom,
-    to,
-    setTo,
-    client,
-    setClient,
-  } = useBalanceContext();
+      setMappedInvoices(mappedInvoices);
+      if (invoices.length === 0) setInvoices(mappedInvoices);
+    }
+  }, [afip, clients, invoiceList, invoices.length, setInvoices, users]);
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -80,14 +90,14 @@ export const SupplierAndWarehouse = () => {
     };
   }, [goToNext]);
 
-  if (!users || !clients || !payments) return <Loading />;
+  if (!users || !clients || !invoiceList) return <Loading />;
 
   return (
     <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"
-          isDisabled={!user?.label || !client?.label || !payment?.label}
+          isDisabled={!user?.label || !client?.label || invoices.length < 1}
           minW="150px"
           ml="auto"
           rightIcon={<ArrowForwardIcon />}
@@ -101,7 +111,7 @@ export const SupplierAndWarehouse = () => {
       <Box w="full">
         <Alert status="info">
           <AlertIcon />
-          Seleccione las fechas, usuario, cliente y forma de pago para obtener un informe.
+          Seleccione las fechas, usuario, cliente y tipo de comprobante para obtener un informe.
         </Alert>
       </Box>
       <Stack direction="row">
@@ -156,36 +166,33 @@ export const SupplierAndWarehouse = () => {
             defaultValue={client}
             name="client"
             options={mappedClients}
-            placeholder="Seleccionar Client"
+            placeholder="Seleccionar Cliente"
             selectedOptionColorScheme="brand"
             tabIndex={4}
             onChange={(e) => setClient(e)}
           />
         </Box>
       </Stack>
-      {/*  <Box mt={4} w="full">
-        <Alert status="warning">
-          <AlertIcon />
-          El siguiente filtro sólo afecta a la tabla DETALLE DE MOVIMIENTOS
-        </Alert>
-      </Box>
       <Stack direction="row">
         <Box w="50%">
-          <FormLabel htmlFor="payment">Forma de Pago:</FormLabel>
+          <FormLabel htmlFor="client">Tipo de Comprobante:</FormLabel>
           <Select
             isClearable
+            isMulti
             isSearchable
-            colorScheme="brand"
-            defaultValue={payment}
-            name="payment"
-            options={mappedPayments}
-            placeholder="Seleccionar Forma de Pago"
+            colorScheme="gray"
+            name="invoices"
+            noOptionsMessage={() => 'No hay más opciones'}
+            options={mappedInvoices}
+            placeholder="Seleccionar Comprobantes"
             selectedOptionColorScheme="brand"
-            tabIndex={5}
-            onChange={(e) => setPayment(e)}
+            tabIndex={4}
+            value={invoices}
+            onChange={(e) => setInvoices([...e])}
           />
         </Box>
-      </Stack> */}
+        <Box w="50%" />
+      </Stack>
     </Stack>
   );
 };

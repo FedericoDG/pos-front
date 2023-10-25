@@ -20,22 +20,20 @@ import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { BsDownload } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
-import { useNavigate } from 'react-router-dom';
 
 import { useGetAfip, useGetBalance } from '../../hooks';
 import { Loading } from '../common';
-import { formatCurrency, formatDate, getInvoiceLetter } from '../../utils';
+import { formatCurrency, formatDate, getInvoiceLetter, getInvoceLetterById } from '../../utils';
 import { getRole } from '../../utils/getRole';
 
 import { useBalanceContext } from '.';
 
 export const Sheet = () => {
-  const { user, client, payment, from, to, goToPrevious } = useBalanceContext();
+  const { user, client, from, to, goToPrevious, invoices } = useBalanceContext();
+
   const { data: afip, isFetching: isFetchingAfip } = useGetAfip();
 
   const printRef = useRef<any | null>(null);
-
-  const navigate = useNavigate();
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -44,7 +42,7 @@ export const Sheet = () => {
   const data = {
     userId: user?.value!,
     clientId: client?.value!,
-    paymentMethodId: payment?.value!,
+    invoices: JSON.stringify(invoices.map((el) => el.value)),
     from,
     to,
   };
@@ -149,30 +147,51 @@ export const Sheet = () => {
                 Imprimir
               </Button>
             </HStack>
-            <Stack ref={printRef} py="8">
-              <TableContainer w="210mm">
-                <Table size="sm">
-                  <Thead>
-                    <Tr>
-                      <Th bg="gray.700" color="white">
-                        Desde
-                      </Th>
-                      <Th bg="gray.700" color="white">
-                        Hasta
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    <Tr>
-                      <Td>{formatDate(balance?.from)}</Td>
-                      <Td>{formatDate(balance?.to)}</Td>
-                    </Tr>
-                  </Tbody>
-                </Table>
-              </TableContainer>
+            <Stack ref={printRef} my={8} w="210mm">
+              <HStack alignItems="flex-start">
+                <TableContainer w="66.66%">
+                  <Table size="sm">
+                    <Thead>
+                      <Tr>
+                        <Th bg="gray.700" color="white">
+                          Desde
+                        </Th>
+                        <Th bg="gray.700" color="white">
+                          Hasta
+                        </Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      <Tr>
+                        <Td>{formatDate(balance?.from)}</Td>
+                        <Td>{formatDate(balance?.to)}</Td>
+                      </Tr>
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+
+                <TableContainer w="33%">
+                  <Table size="sm">
+                    <Thead>
+                      <Tr>
+                        <Th bg="gray.700" color="white">
+                          Tipo de Comprobantes
+                        </Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {invoices.map((el) => (
+                        <Tr key={nanoid()}>
+                          <Td>{getInvoceLetterById(el.value!)}</Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </HStack>
 
               <HStack alignItems="flex-start">
-                <TableContainer my={2} w="full">
+                <TableContainer my={2} w="66.66%">
                   <Table size="sm">
                     <Thead>
                       <Tr>
@@ -219,7 +238,7 @@ export const Sheet = () => {
                   </Table>
                 </TableContainer>
 
-                <TableContainer my={2} w="full">
+                {/*  <TableContainer my={2} w="full">
                   <Table size="sm">
                     <Thead>
                       <Tr>
@@ -253,6 +272,7 @@ export const Sheet = () => {
                     </Tfoot>
                   </Table>
                 </TableContainer>
+
                 <TableContainer mt={2} w="full">
                   <Table size="sm">
                     <Thead>
@@ -276,7 +296,7 @@ export const Sheet = () => {
                       </Tr>
                     </Tfoot>
                   </Table>
-                </TableContainer>
+                </TableContainer> */}
               </HStack>
 
               <HStack alignItems="flex-start">
@@ -526,31 +546,31 @@ export const Sheet = () => {
               </TableContainer>
 
               <TableContainer my={2} w="full">
-                <Table size="sm">
+                <Table className="lastCellPB" size="sm">
                   <Text as="caption" fontSize="sm">
                     DETALLE DE MOVIMIENTOS
                   </Text>
                   <Thead>
                     <Tr>
-                      <Th bg="gray.700" color="white" fontSize={10}>
+                      <Th bg="gray.700" color="white" fontSize={14}>
                         Fecha
                       </Th>
-                      <Th bg="gray.700" color="white" fontSize={10}>
+                      <Th bg="gray.700" color="white" fontSize={14}>
                         Tipo
                       </Th>
-                      <Th bg="gray.700" color="white" fontSize={10}>
+                      {/*  <Th bg="gray.700" color="white" fontSize={14}>
                         Forma de pago
-                      </Th>
-                      <Th bg="gray.700" color="white" fontSize={10}>
+                      </Th> */}
+                      <Th bg="gray.700" color="white" fontSize={14}>
                         Concepto
                       </Th>
-                      <Th bg="gray.700" color="white" fontSize={10} textAlign="center">
+                      <Th bg="gray.700" color="white" fontSize={14} textAlign="center">
                         Comprobante
                       </Th>
-                      <Th bg="gray.700" color="white" fontSize={10}>
+                      <Th bg="gray.700" color="white" fontSize={14}>
                         Usuario
                       </Th>
-                      <Th isNumeric bg="gray.700" color="white" fontSize={10}>
+                      <Th isNumeric bg="gray.700" color="white" fontSize={14}>
                         Total
                       </Th>
                     </Tr>
@@ -558,18 +578,18 @@ export const Sheet = () => {
                   <Tbody>
                     {balance?.movements.map((el) => (
                       <Tr key={nanoid()}>
-                        <Td fontSize={12}>{formatDate(el.createdAt)}</Td>
-                        <Td color={el.type === 'IN' ? 'green.600' : 'red.600'} fontSize={12}>
+                        <Td fontSize={14}>{formatDate(el.createdAt)}</Td>
+                        <Td color={el.type === 'IN' ? 'green.600' : 'red.600'} fontSize={14}>
                           {getType(el.type)}
                         </Td>
-                        <Td fontSize={12}>{el.paymentMethod?.code}</Td>
-                        <Td fontSize={12}>{el.concept}</Td>
+                        {/*  <Td fontSize={14}>{el.paymentMethod?.code}</Td> */}
+                        <Td fontSize={14}>{el.concept}</Td>
                         {el.concept === 'Venta' || el.concept === 'N. de Crédito' ? (
                           el.cashMovement?.cae ? (
-                            <Td fontSize={12} textAlign="center">
+                            <Td fontSize={14} textAlign="center">
                               <Link
                                 color="black"
-                                fontSize={12}
+                                fontSize={14}
                                 fontWeight={400}
                                 href={`/panel/caja/detalles/venta/afip/${el.cashMovement?.id}`}
                                 target="_blank"
@@ -583,10 +603,10 @@ export const Sheet = () => {
                               </Link>
                             </Td>
                           ) : (
-                            <Td fontSize={12} textAlign="center">
+                            <Td fontSize={14} textAlign="center">
                               <Link
                                 color="black"
-                                fontSize={12}
+                                fontSize={14}
                                 fontWeight={400}
                                 href={`/panel/caja/detalles/venta/${el.cashMovement?.id}`}
                                 target="_blank"
@@ -601,14 +621,14 @@ export const Sheet = () => {
                             </Td>
                           )
                         ) : (
-                          <Td fontSize={12} textAlign="center">
+                          <Td fontSize={14} textAlign="center">
                             {' '}
                           </Td>
                         )}
-                        <Td fontSize={12}>
+                        <Td fontSize={14}>
                           {el.user?.name} {el.user?.lastname}
                         </Td>
-                        <Td isNumeric fontSize={12}>
+                        <Td isNumeric fontSize={14}>
                           {formatCurrency(el.amount)}
                         </Td>
                       </Tr>

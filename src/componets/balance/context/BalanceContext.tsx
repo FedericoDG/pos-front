@@ -16,14 +16,14 @@ export interface SelectedClient {
   value: number | undefined;
 }
 
-export interface SelectedPayment {
+export interface SelectedInvoice {
   label: string;
   value: number | undefined;
 }
 
 export interface Data {
   userId: number;
-  paymentMethodId: number;
+  invoices: SelectedInvoice[];
   from: string;
   to: string;
 }
@@ -35,13 +35,13 @@ interface BalanceContext {
   setActiveStep: (index: number) => void;
   setUser: Dispatch<SetStateAction<SelectedUser | null>>;
   setClient: Dispatch<SetStateAction<SelectedClient | null>>;
-  setPayment: Dispatch<SetStateAction<SelectedPayment | null>>;
+  setInvoices: Dispatch<SetStateAction<SelectedInvoice[] | []>>;
   setFrom: Dispatch<SetStateAction<string>>;
   setTo: Dispatch<SetStateAction<string>>;
   steps: Step[];
   user: SelectedUser | null;
   client: SelectedClient | null;
-  payment: SelectedPayment | null;
+  invoices: SelectedInvoice[] | [];
   from: string;
   to: string;
   data: () => Data;

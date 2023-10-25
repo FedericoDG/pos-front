@@ -42,6 +42,10 @@
     right: 0;
     height: 50px;
   }
+
+  .lastCellPB tr:last-child td {
+    padding-bottom: 35px;
+  }
 }
 
 @page {

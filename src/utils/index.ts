@@ -1,5 +1,6 @@
 export { default as formatCurrency } from './formatCurrency';
 export * from './formatDate';
+export * from './getInvoceLetterById';
 export * from './getInvoiceLetter';
 export * from './getInvoiceName';
 export * from './getRole';

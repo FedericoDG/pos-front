@@ -6,14 +6,14 @@ import { getRequest } from '../services';
 interface Data {
   userId: number;
   clientId: number;
-  paymentMethodId: number;
+  invoices: string;
   from: string;
   to: string;
 }
 
 const getBalance = (data: Data) =>
   getRequest<BalanceResponse>(
-    `/movements?userId=${data.userId}&clientId=${data.clientId}&paymentMethodId=${data.paymentMethodId}&from=${data.from}&to=${data.to}`,
+    `/movements?userId=${data.userId}&clientId=${data.clientId}&invoices=${data.invoices}&from=${data.from}&to=${data.to}`,
     data
   );
 
