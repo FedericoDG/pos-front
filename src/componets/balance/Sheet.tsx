@@ -1,8 +1,13 @@
 import {
   Button,
+  Divider,
+  FormControl,
+  FormLabel,
   HStack,
+  Heading,
   Link,
   Stack,
+  Switch,
   Table,
   TableContainer,
   Tbody,
@@ -15,23 +20,21 @@ import {
 } from '@chakra-ui/react';
 import * as XLSX from 'xlsx';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { BsDownload } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
 
-import { useGetAfip, useGetBalance } from '../../hooks';
+import { useGetBalance } from '../../hooks';
 import { Loading } from '../common';
 import { formatCurrency, formatDate, getInvoiceLetter, getInvoceLetterById } from '../../utils';
 import { getRole } from '../../utils/getRole';
 
-import { useBalanceContext } from '.';
+import { SelectedInvoice, useBalanceContext } from '.';
 
 export const Sheet = () => {
   const { user, client, from, to, goToPrevious, invoices } = useBalanceContext();
-
-  const { data: afip, isFetching: isFetchingAfip } = useGetAfip();
 
   const printRef = useRef<any | null>(null);
 
@@ -110,9 +113,15 @@ export const Sheet = () => {
     }, 500);
   };
 
+  const getInvoiceList = (list: SelectedInvoice[]) =>
+    list.map((el) => getInvoceLetterById(el.value!)).join(', ');
+
+  const [enabledUserFilter, setEnabledUserFilter] = useState(false);
+  const [enabledClientFilter, setEnabledClientFilter] = useState(false);
+
   return (
     <Stack w="full">
-      {isFetching || isFetchingAfip ? (
+      {isFetching ? (
         <Loading />
       ) : (
         <>
@@ -129,74 +138,71 @@ export const Sheet = () => {
             </Button>
           </HStack>
           <Stack m="0 auto">
-            <HStack justifyContent="flex-end">
-              <Button
-                colorScheme="green"
-                leftIcon={<BsDownload />}
-                size="sm"
-                onClick={handleDownload}
-              >
-                Descargar Excel
-              </Button>
-              <Button
-                colorScheme="linkedin"
-                leftIcon={<ImPrinter />}
-                size="sm"
-                onClick={handlePrint}
-              >
-                Imprimir
-              </Button>
+            <HStack alignItems="flex-start" justifyContent="space-between" w="full">
+              <Stack>
+                <FormControl alignItems="center" display="flex">
+                  <Switch
+                    id="filter"
+                    isChecked={enabledUserFilter}
+                    onChange={(e) => setEnabledUserFilter(e.target.checked)}
+                  />
+                  <FormLabel htmlFor="filter" mb="0" ml="2">
+                    Ver tabla de Vendedores/Choferes
+                  </FormLabel>
+                </FormControl>
+                <FormControl alignItems="center" display="flex">
+                  <Switch
+                    id="filter"
+                    isChecked={enabledClientFilter}
+                    onChange={(e) => setEnabledClientFilter(e.target.checked)}
+                  />
+                  <FormLabel htmlFor="filter" mb="0" ml="2">
+                    Ver tabla de Clientes
+                  </FormLabel>
+                </FormControl>
+              </Stack>
+              <Stack>
+                <HStack justifyContent="flex-end">
+                  <Button
+                    colorScheme="green"
+                    leftIcon={<BsDownload />}
+                    size="sm"
+                    onClick={handleDownload}
+                  >
+                    Descargar Excel
+                  </Button>
+                  <Button
+                    colorScheme="linkedin"
+                    leftIcon={<ImPrinter />}
+                    size="sm"
+                    onClick={handlePrint}
+                  >
+                    Imprimir
+                  </Button>
+                </HStack>
+              </Stack>
             </HStack>
+
             <Stack ref={printRef} my={8} w="210mm">
-              <HStack alignItems="flex-start">
-                <TableContainer w="66.66%">
+              <Stack alignItems="flex-start">
+                <Heading fontWeight={500} size="md" textAlign="center" w="full">
+                  INFORME DE INGRESOS
+                </Heading>
+                <HStack justifyContent="space-between" w="full">
+                  <Text fontSize="lg">{`${formatDate(balance?.from)} AL ${formatDate(
+                    balance?.to
+                  )}`}</Text>
+                  <Text fontSize="lg">{`COMPROBANTES: ${getInvoiceList(invoices)}`}</Text>
+                </HStack>
+                <Divider />
+              </Stack>
+              <HStack alignItems="flex-end">
+                <TableContainer my={4} w="66.66%">
                   <Table size="sm">
                     <Thead>
                       <Tr>
                         <Th bg="gray.700" color="white">
-                          Desde
-                        </Th>
-                        <Th bg="gray.700" color="white">
-                          Hasta
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      <Tr>
-                        <Td>{formatDate(balance?.from)}</Td>
-                        <Td>{formatDate(balance?.to)}</Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-
-                <TableContainer w="33%">
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          Tipo de Comprobantes
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {invoices.map((el) => (
-                        <Tr key={nanoid()}>
-                          <Td>{getInvoceLetterById(el.value!)}</Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </HStack>
-
-              <HStack alignItems="flex-start">
-                <TableContainer my={2} w="66.66%">
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          Ingresos
+                          Medio de Pago
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
                           TOTAL
@@ -230,20 +236,21 @@ export const Sheet = () => {
                     <Tfoot>
                       <Tr>
                         <Th />
-                        <Th isNumeric color="green.600" fontSize={16}>
+                        <Th isNumeric fontSize={16}>
                           {formatCurrency(balance?.incomes.totalIncomes!)}
                         </Th>
                       </Tr>
                     </Tfoot>
                   </Table>
                 </TableContainer>
-
-                {/*  <TableContainer my={2} w="full">
-                  <Table size="sm">
+              </HStack>
+              <HStack alignItems="flex-start">
+                <TableContainer my={2} w="full">
+                  <Table size="sm" w="full">
                     <Thead>
                       <Tr>
                         <Th bg="gray.700" color="white">
-                          Egresos
+                          Presupuesto
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
                           TOTAL
@@ -252,54 +259,21 @@ export const Sheet = () => {
                     </Thead>
                     <Tbody>
                       <Tr>
-                        <Td>Compras</Td>
-                        <Td isNumeric>{formatCurrency(balance?.outcomes.purchases!)}</Td>
+                        <Td fontSize={16}>Monto</Td>
+                        <Td isNumeric fontSize={16}>
+                          {formatCurrency(balance?.invoices.invoiceXTotal!)}
+                        </Td>
                       </Tr>
                       <Tr>
-                        <Td borderColor="black">Baja/Pérdida</Td>
-                        <Td isNumeric borderColor="black">
-                          {formatCurrency(balance?.outcomes.destroys!)}
+                        <Td fontSize={16}>Cantidad</Td>
+                        <Td isNumeric fontSize={16}>
+                          {balance?.invoices.invoiceXCount!}
                         </Td>
                       </Tr>
                     </Tbody>
-                    <Tfoot>
-                      <Tr>
-                        <Th />
-                        <Th isNumeric color="red.600" fontSize={16}>
-                          {formatCurrency(balance?.outcomes.totalOutcomes!)}
-                        </Th>
-                      </Tr>
-                    </Tfoot>
                   </Table>
                 </TableContainer>
 
-                <TableContainer mt={2} w="full">
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          Balance
-                        </Th>
-                        <Th isNumeric bg="gray.700" color="white">
-                          TOTAL
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tfoot>
-                      <Tr>
-                        <Th fontSize={14} />
-                        <Th isNumeric fontSize={16}>
-                          {formatCurrency(
-                            balance?.incomes.totalIncomes! - balance?.outcomes.totalOutcomes!
-                          )}
-                        </Th>
-                      </Tr>
-                    </Tfoot>
-                  </Table>
-                </TableContainer> */}
-              </HStack>
-
-              <HStack alignItems="flex-start">
                 <TableContainer my={2} w="full">
                   <Table size="sm">
                     <Thead>
@@ -334,7 +308,7 @@ export const Sheet = () => {
                     <Thead>
                       <Tr>
                         <Th bg="gray.700" color="white">
-                          Facturas
+                          Comprobantes
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
                           TOTAL
@@ -342,209 +316,100 @@ export const Sheet = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {afip?.invoiceM === 0 ? (
-                        <>
-                          <Tr>
-                            <Td>
-                              A <span style={{ fontSize: 12 }}> (Monto)</span>
-                            </Td>
-                            <Td isNumeric>{formatCurrency(balance?.invoices.invoiceATotal!)}</Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              A <span style={{ fontSize: 12 }}> (Cantidad)</span>
-                            </Td>
-                            <Td isNumeric>{balance?.invoices.invoiceACount!}</Td>
-                          </Tr>
-                        </>
-                      ) : (
-                        <>
-                          <Tr>
-                            <Td>
-                              M <span style={{ fontSize: 12 }}> (Monto)</span>
-                            </Td>
-                            <Td isNumeric>{formatCurrency(balance?.invoices.invoiceMTotal!)}</Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              M <span style={{ fontSize: 12 }}> (Cantidad)</span>
-                            </Td>
-                            <Td isNumeric>{balance?.invoices.invoiceMCount!}</Td>
-                          </Tr>
-                        </>
-                      )}
                       <Tr>
-                        <Td>
-                          B <span style={{ fontSize: 12 }}> (Monto)</span>
-                        </Td>
+                        <Td>Factura A</Td>
+                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceATotal!)}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>Factura M</Td>
+                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceMTotal!)}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>Factura B</Td>
                         <Td isNumeric>{formatCurrency(balance?.invoices.invoiceBTotal!)}</Td>
                       </Tr>
                       <Tr>
-                        <Td>
-                          B <span style={{ fontSize: 12 }}> (Cantidad)</span>
-                        </Td>
-                        <Td isNumeric>{balance?.invoices.invoiceBCount!}</Td>
+                        <Td>N. de Crédito A</Td>
+                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCATotal!)}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>N. de Crédito M</Td>
+                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCMTotal!)}</Td>
+                      </Tr>
+                      <Tr>
+                        <Td>N. de Crédito B</Td>
+                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCBTotal!)}</Td>
                       </Tr>
                     </Tbody>
                   </Table>
                 </TableContainer>
-
+              </HStack>
+              {enabledUserFilter && (
                 <TableContainer my={2} w="full">
                   <Table size="sm">
                     <Thead>
                       <Tr>
                         <Th bg="gray.700" color="white">
-                          Notas de Crédito
+                          Vendedor/Chofer
+                        </Th>
+                        <Th bg="gray.700" color="white">
+                          Email
+                        </Th>
+                        <Th bg="gray.700" color="white">
+                          Rol
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
-                          TOTAL
+                          Total
                         </Th>
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {afip?.invoiceM === 0 ? (
-                        <>
-                          <Tr>
-                            <Td>
-                              A <span style={{ fontSize: 12 }}> (Monto)</span>
-                            </Td>
-                            <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCATotal!)}</Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              A <span style={{ fontSize: 12 }}> (Cantidad)</span>
-                            </Td>
-                            <Td isNumeric>{balance?.invoices.invoiceNCACount!}</Td>
-                          </Tr>
-                        </>
-                      ) : (
-                        <>
-                          <Tr>
-                            <Td>
-                              M <span style={{ fontSize: 12 }}> (Monto)</span>
-                            </Td>
-                            <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCMTotal!)}</Td>
-                          </Tr>
-                          <Tr>
-                            <Td>
-                              M <span style={{ fontSize: 12 }}> (Cantidad)</span>
-                            </Td>
-                            <Td isNumeric>{balance?.invoices.invoiceNCMCount!}</Td>
-                          </Tr>
-                        </>
-                      )}
-                      <Tr>
-                        <Td>
-                          B<span style={{ fontSize: 12 }}> (Monto)</span>
-                        </Td>
-                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCBTotal!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>
-                          B<span style={{ fontSize: 12 }}> (Cantidad)</span>
-                        </Td>
-                        <Td isNumeric>{balance?.invoices.invoiceNCBCount!}</Td>
-                      </Tr>
+                      {balance?.users.map((el) => (
+                        <Tr key={nanoid()}>
+                          <Td>
+                            {el.name} {el.lastname}
+                          </Td>
+                          <Td>{el.email}</Td>
+                          <Td>{getRole(el.role?.name!)}</Td>
+                          <Td isNumeric>{formatCurrency(el.total)}</Td>
+                        </Tr>
+                      ))}
                     </Tbody>
                   </Table>
                 </TableContainer>
-              </HStack>
-
-              <HStack alignItems="flex-start">
+              )}
+              {enabledClientFilter && (
                 <TableContainer my={2} w="full">
-                  <Table size="sm" w="259px">
+                  <Table size="sm">
                     <Thead>
                       <Tr>
                         <Th bg="gray.700" color="white">
-                          NO AFIP
+                          Cliente
+                        </Th>
+                        <Th bg="gray.700" color="white">
+                          Tipo
+                        </Th>
+                        <Th bg="gray.700" color="white">
+                          Número
                         </Th>
                         <Th isNumeric bg="gray.700" color="white">
-                          TOTAL
+                          Total
                         </Th>
                       </Tr>
                     </Thead>
                     <Tbody>
-                      <Tr>
-                        <Td fontSize={16}>Monto</Td>
-                        <Td isNumeric fontSize={16}>
-                          {formatCurrency(balance?.invoices.invoiceXTotal!)}
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td fontSize={16}>Cantidad</Td>
-                        <Td isNumeric fontSize={16}>
-                          {balance?.invoices.invoiceXCount!}
-                        </Td>
-                      </Tr>
+                      {balance?.clients.map((el) => (
+                        <Tr key={nanoid()}>
+                          <Td>{el.name}</Td>
+                          <Td>{el.identification?.description}</Td>
+                          <Td>{el.document}</Td>
+                          <Td isNumeric>{formatCurrency(el.total)}</Td>
+                        </Tr>
+                      ))}
                     </Tbody>
                   </Table>
                 </TableContainer>
-              </HStack>
-
-              <TableContainer my={2} w="full">
-                <Table size="sm">
-                  <Thead>
-                    <Tr>
-                      <Th bg="gray.700" color="white">
-                        Vendedor/Chofer
-                      </Th>
-                      <Th bg="gray.700" color="white">
-                        Email
-                      </Th>
-                      <Th bg="gray.700" color="white">
-                        Rol
-                      </Th>
-                      <Th isNumeric bg="gray.700" color="white">
-                        Total
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {balance?.users.map((el) => (
-                      <Tr key={nanoid()}>
-                        <Td>
-                          {el.name} {el.lastname}
-                        </Td>
-                        <Td>{el.email}</Td>
-                        <Td>{getRole(el.role?.name!)}</Td>
-                        <Td isNumeric>{formatCurrency(el.total)}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-
-              <TableContainer my={2} w="full">
-                <Table size="sm">
-                  <Thead>
-                    <Tr>
-                      <Th bg="gray.700" color="white">
-                        Cliente
-                      </Th>
-                      <Th bg="gray.700" color="white">
-                        Tipo
-                      </Th>
-                      <Th bg="gray.700" color="white">
-                        Número
-                      </Th>
-                      <Th isNumeric bg="gray.700" color="white">
-                        Total
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {balance?.clients.map((el) => (
-                      <Tr key={nanoid()}>
-                        <Td>{el.name}</Td>
-                        <Td>{el.identification?.description}</Td>
-                        <Td>{el.document}</Td>
-                        <Td isNumeric>{formatCurrency(el.total)}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-
+              )}
               <TableContainer my={2} w="full">
                 <Table className="lastCellPB" size="sm">
                   <Text as="caption" fontSize="sm">
@@ -555,12 +420,6 @@ export const Sheet = () => {
                       <Th bg="gray.700" color="white" fontSize={14}>
                         Fecha
                       </Th>
-                      <Th bg="gray.700" color="white" fontSize={14}>
-                        Tipo
-                      </Th>
-                      {/*  <Th bg="gray.700" color="white" fontSize={14}>
-                        Forma de pago
-                      </Th> */}
                       <Th bg="gray.700" color="white" fontSize={14}>
                         Concepto
                       </Th>
@@ -579,11 +438,9 @@ export const Sheet = () => {
                     {balance?.movements.map((el) => (
                       <Tr key={nanoid()}>
                         <Td fontSize={14}>{formatDate(el.createdAt)}</Td>
-                        <Td color={el.type === 'IN' ? 'green.600' : 'red.600'} fontSize={14}>
-                          {getType(el.type)}
+                        <Td color={el.concept === 'Venta' ? 'black' : 'red.600'} fontSize={14}>
+                          {el.concept}
                         </Td>
-                        {/*  <Td fontSize={14}>{el.paymentMethod?.code}</Td> */}
-                        <Td fontSize={14}>{el.concept}</Td>
                         {el.concept === 'Venta' || el.concept === 'N. de Crédito' ? (
                           el.cashMovement?.cae ? (
                             <Td fontSize={14} textAlign="center">
@@ -628,15 +485,22 @@ export const Sheet = () => {
                         <Td fontSize={14}>
                           {el.user?.name} {el.user?.lastname}
                         </Td>
-                        <Td isNumeric fontSize={14}>
-                          {formatCurrency(el.amount)}
-                        </Td>
+                        {el.concept === 'Venta' ? (
+                          <Td isNumeric fontSize={14}>
+                            {formatCurrency(el.amount)}
+                          </Td>
+                        ) : (
+                          <Td isNumeric color="red.600" fontSize={14}>
+                            {formatCurrency(el.amount * -1)}
+                          </Td>
+                        )}
                       </Tr>
                     ))}
                   </Tbody>
                 </Table>
               </TableContainer>
               {/* <pre>{JSON.stringify(balance, null, 2)}</pre> */}
+              SH
             </Stack>
           </Stack>
         </>

@@ -4,7 +4,7 @@ import { Select } from 'chakra-react-select';
 import { useEffect, useState } from 'react';
 
 import { Loading } from '../common';
-import { useGetAfip, useGetClients, useGetInvoceTypes, useGetUsers } from '../../hooks';
+import { useGetClients, useGetInvoceTypes, useGetUsers } from '../../hooks';
 
 import { SelectedUser, useBalanceContext, SelectedClient, SelectedInvoice } from '.';
 
@@ -26,14 +26,13 @@ export const SupplierAndWarehouse = () => {
   const { data: users } = useGetUsers();
   const { data: clients } = useGetClients();
   const { data: invoiceList } = useGetInvoceTypes();
-  const { data: afip } = useGetAfip();
 
   const [mappedUsers, setMappedUsers] = useState<SelectedUser[]>([]);
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
   const [mappedInvoices, setMappedInvoices] = useState<SelectedInvoice[]>([]);
 
   useEffect(() => {
-    if (!users || !clients || !invoiceList || !afip) return;
+    if (!users || !clients || !invoiceList) return;
 
     const mappedUsers = users.map((el) => ({
       value: el.id,
@@ -53,28 +52,18 @@ export const SupplierAndWarehouse = () => {
 
     setMappedClients(mappedClients!);
 
-    if (afip.invoiceM === 1) {
-      const mappedInvoices = invoiceList
-        .filter((el) => el.code === '051' || el.code === '006' || el.code === '555')
-        .map((el) => ({
-          value: el.id,
-          label: el.description,
-        }));
+    const mappedInvoices = invoiceList
+      .filter(
+        (el) => el.code === '001' || el.code === '006' || el.code === '051' || el.code === '555'
+      )
+      .map((el) => ({
+        value: el.id,
+        label: el.description,
+      }));
 
-      setMappedInvoices(mappedInvoices);
-      if (invoices.length === 0) setInvoices(mappedInvoices);
-    } else {
-      const mappedInvoices = invoiceList
-        .filter((el) => el.code === '001' || el.code === '006' || el.code === '555')
-        .map((el) => ({
-          value: el.id,
-          label: el.description,
-        }));
-
-      setMappedInvoices(mappedInvoices);
-      if (invoices.length === 0) setInvoices(mappedInvoices);
-    }
-  }, [afip, clients, invoiceList, invoices.length, setInvoices, users]);
+    setMappedInvoices(mappedInvoices);
+    if (invoices.length === 0) setInvoices(mappedInvoices);
+  }, [clients, invoiceList, invoices.length, setInvoices, users]);
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {

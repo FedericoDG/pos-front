@@ -7,7 +7,7 @@ import { Sheet, StepperWrapper, Steps, SupplierAndWarehouse } from '../componets
 export const Balance = () => {
   return (
     <BalanceProvider>
-      <DashBoard isIndeterminate={false} title="Balance">
+      <DashBoard isIndeterminate={false} title="Ingresos">
         <Steps />
         <Box w="full">
           <StepperWrapper step={1}>
