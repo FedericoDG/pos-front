@@ -139,7 +139,8 @@ export const CashRegisterDetails = () => {
       recharge: movement.recharge,
       rechargePercent: movement.rechargePercent,
       warehouseId: movement.warehouseId,
-      cashMovementId: movement.id!
+      cashMovementId: movement.id!,
+      movementIds: [] //OJOACA
     };
 
     createAfipInvoce(sale);

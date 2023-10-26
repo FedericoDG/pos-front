@@ -251,7 +251,7 @@ export const SidebarContent = (props: Props) => {
 
         {/* BALANCE */}
         <NavItem icon={FaChartLine} link="/panel/balance">
-          Balance
+          Ingresos
         </NavItem>
 
         {/* USERS */}
