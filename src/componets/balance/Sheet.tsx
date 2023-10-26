@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Button,
   Divider,
@@ -25,6 +26,7 @@ import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { BsDownload } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
+import { useDownloadExcel } from 'react-export-table-to-excel';
 
 import { useGetBalance } from '../../hooks';
 import { Loading } from '../common';
@@ -36,10 +38,28 @@ import { SelectedInvoice, useBalanceContext } from '.';
 export const Sheet = () => {
   const { user, client, from, to, goToPrevious, invoices } = useBalanceContext();
 
+  const [enabledUserFilter, setEnabledUserFilter] = useState(false);
+  const [enabledClientFilter, setEnabledClientFilter] = useState(false);
+
   const printRef = useRef<any | null>(null);
+  const printRef2 = useRef<any | null>(null);
+  const movementDetailsTable = useRef<any | null>(null);
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
+  });
+
+  const handlePrint2 = useReactToPrint({
+    content: () => printRef2.current,
+  });
+
+  const getInvoiceList = (list: SelectedInvoice[]) =>
+    list.map((el) => getInvoceLetterById(el.value!)).join(', ');
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: movementDetailsTable.current,
+    filename: `ingresos_${from}_${to}`,
+    sheet: 'Ingresos',
   });
 
   const data = {
@@ -50,74 +70,48 @@ export const Sheet = () => {
     to,
   };
 
-  const getType = (type: string) => {
-    if (type === 'IN') return 'Ingreso';
-
-    return 'Egreso';
-  };
-
   const { data: balance, isFetching } = useGetBalance(data);
 
   const handleDownload = () => {
     const libro = XLSX.utils.book_new();
-
-    // Hoja 1
     const hoja = XLSX.utils.json_to_sheet([]);
 
-    XLSX.utils.sheet_add_json(hoja, [
-      {
-        INGRESOS: balance?.incomes.totalIncomes,
-        EGRESOS: balance?.outcomes.totalOutcomes,
-        TOTAL: balance?.incomes.totalIncomes! - balance?.outcomes.totalOutcomes!,
-      },
-    ]);
+    const tabla2: any[] = [{
+      A: 'Fecha',
+      B: "Concepto",
+      C: "Comprobante",
+      D: "Usuario",
+      E: "Monto",
+    }];
 
-    XLSX.utils.sheet_add_json(hoja, [{ a: 'Detalles de Ingresos' }], {
-      origin: 5,
-      skipHeader: true,
+
+    balance?.movements.forEach((el) => {
+      tabla2.push({
+        A: formatDate(el.createdAt),
+        B: el.concept,
+        C: el.cashMovement?.cae
+          ? `${getInvoiceLetter(el.cashMovement?.cbteTipo!)} ${el.cashMovement?.posNumber
+            ?.toString()
+            .padStart(3, '0')}-${el.cashMovement?.invoceNumberAfip?.toString().padStart(8, '0')}`
+          : `${getInvoiceLetter(el.cashMovement?.cbteTipo!)} ${el.cashMovement?.posNumber
+            ?.toString()
+            .padStart(3, '0')}-${el.cashMovement?.id?.toString().padStart(8, '0')}`,
+        D: `${el.user?.name} ${el.user?.lastname}`,
+        E: el.concept === 'Venta' ? el.amount : el.amount * -1,
+      });
     });
 
-    XLSX.utils.sheet_add_json(
-      hoja,
-      [
-        {
-          efectivo: balance?.incomes.totalCash,
-          débito: balance?.incomes.totalDebit,
-          crédito: balance?.incomes.totalCredit,
-          transferencia: balance?.incomes.totalTransfer,
-          mercado_pago: balance?.incomes.totalMercadoPago,
-        },
-      ],
-      { origin: 3 }
-    );
 
-    // Hoja 2
-    const tabla2 =
-      balance?.movements.map((el) => ({
-        fecha: formatDate(el.createdAt),
-        monto: el.amount,
-        tipo: getType(el.type),
-        forma_de_pago: `${el.paymentMethod?.code!}`,
-        concepto: el.concept,
-        usuario: `${el.user?.name} ${el.user?.lastname}`,
-      })) || [];
+    XLSX.utils.sheet_add_json(hoja, tabla2);
 
-    const hoja2 = XLSX.utils.json_to_sheet(tabla2);
+    //tabla2.forEach((_, i) => hoja[`E${i + 2}`].z = '"$"#,##0.00_);\\("$"#,##0.00\\)');
 
-    // Agregar Hojas
-    XLSX.utils.book_append_sheet(libro, hoja, 'Balance');
-    XLSX.utils.book_append_sheet(libro, hoja2, 'Detalles de Movimientos');
+    XLSX.utils.book_append_sheet(libro, hoja, 'Detalles de Movimientos');
 
     setTimeout(() => {
-      XLSX.writeFile(libro, `balance_${from}_${to}.xlsx`);
+      XLSX.writeFile(libro, `ingresos_${from}_${to}.xlsx`);
     }, 500);
   };
-
-  const getInvoiceList = (list: SelectedInvoice[]) =>
-    list.map((el) => getInvoceLetterById(el.value!)).join(', ');
-
-  const [enabledUserFilter, setEnabledUserFilter] = useState(false);
-  const [enabledClientFilter, setEnabledClientFilter] = useState(false);
 
   return (
     <Stack w="full">
@@ -137,7 +131,7 @@ export const Sheet = () => {
               VOLVER
             </Button>
           </HStack>
-          <Stack m="0 auto">
+          <Stack m="0 auto" mt={8}>
             <HStack alignItems="flex-start" justifyContent="space-between" w="full">
               <Stack>
                 <FormControl alignItems="center" display="flex">
@@ -163,14 +157,6 @@ export const Sheet = () => {
               </Stack>
               <Stack>
                 <HStack justifyContent="flex-end">
-                  <Button
-                    colorScheme="green"
-                    leftIcon={<BsDownload />}
-                    size="sm"
-                    onClick={handleDownload}
-                  >
-                    Descargar Excel
-                  </Button>
                   <Button
                     colorScheme="linkedin"
                     leftIcon={<ImPrinter />}
@@ -410,95 +396,113 @@ export const Sheet = () => {
                   </Table>
                 </TableContainer>
               )}
-              <TableContainer my={2} w="full">
-                <Table className="lastCellPB" size="sm">
-                  <Text as="caption" fontSize="sm">
-                    DETALLE DE MOVIMIENTOS
-                  </Text>
-                  <Thead>
-                    <Tr>
-                      <Th bg="gray.700" color="white" fontSize={14}>
-                        Fecha
-                      </Th>
-                      <Th bg="gray.700" color="white" fontSize={14}>
-                        Concepto
-                      </Th>
-                      <Th bg="gray.700" color="white" fontSize={14} textAlign="center">
-                        Comprobante
-                      </Th>
-                      <Th bg="gray.700" color="white" fontSize={14}>
-                        Usuario
-                      </Th>
-                      <Th isNumeric bg="gray.700" color="white" fontSize={14}>
-                        Total
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {balance?.movements.map((el) => (
-                      <Tr key={nanoid()}>
-                        <Td fontSize={14}>{formatDate(el.createdAt)}</Td>
-                        <Td color={el.concept === 'Venta' ? 'black' : 'red.600'} fontSize={14}>
-                          {el.concept}
-                        </Td>
-                        {el.concept === 'Venta' || el.concept === 'N. de Crédito' ? (
-                          el.cashMovement?.cae ? (
-                            <Td fontSize={14} textAlign="center">
-                              <Link
-                                color="black"
-                                fontSize={14}
-                                fontWeight={400}
-                                href={`/panel/caja/detalles/venta/afip/${el.cashMovement?.id}`}
-                                target="_blank"
-                                variant="link"
-                                w="full"
-                              >
-                                {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
-                                {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
-                                {'-'}
-                                {el.cashMovement?.invoceNumberAfip?.toString().padStart(8, '0')}
-                              </Link>
-                            </Td>
+              <HStack className="no-print" justifyContent="flex-end" mt={8}>
+                <Button
+                  colorScheme="green"
+                  leftIcon={<BsDownload />}
+                  size="sm"
+                  onClick={handleDownload}
+                >
+                  Descargar Excel
+                </Button>
+                <Button
+                  colorScheme="linkedin"
+                  leftIcon={<ImPrinter />}
+                  size="sm"
+                  onClick={handlePrint2}
+                >
+                  Imprimir
+                </Button>
+              </HStack>
+              <Stack ref={printRef2}>
+                <Text textAlign="center">DETALLE DE MOVIMIENTOS</Text>
+                <TableContainer my={2} w="full">
+                  <Table ref={movementDetailsTable} className="lastCellPB" size="sm">
+                    <Thead>
+                      <Tr>
+                        <Th bg="gray.700" color="white" fontSize={14}>
+                          Fecha
+                        </Th>
+                        <Th bg="gray.700" color="white" fontSize={14}>
+                          Concepto
+                        </Th>
+                        <Th bg="gray.700" color="white" fontSize={14} textAlign="center">
+                          Comprobante
+                        </Th>
+                        <Th bg="gray.700" color="white" fontSize={14}>
+                          Usuario
+                        </Th>
+                        <Th isNumeric bg="gray.700" color="white" fontSize={14}>
+                          Total
+                        </Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {balance?.movements.map((el) => (
+                        <Tr key={nanoid()}>
+                          <Td fontSize={14}>{formatDate(el.createdAt)}</Td>
+                          <Td color={el.concept === 'Venta' ? 'black' : 'red.600'} fontSize={14}>
+                            {el.concept}
+                          </Td>
+                          {el.concept === 'Venta' || el.concept === 'N. de Crédito' ? (
+                            el.cashMovement?.cae ? (
+                              <Td fontSize={14} textAlign="center">
+                                <Link
+                                  color="black"
+                                  fontSize={14}
+                                  fontWeight={400}
+                                  href={`/panel/caja/detalles/venta/afip/${el.cashMovement?.id}`}
+                                  target="_blank"
+                                  variant="link"
+                                  w="full"
+                                >
+                                  {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
+                                  {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
+                                  {'-'}
+                                  {el.cashMovement?.invoceNumberAfip?.toString().padStart(8, '0')}
+                                </Link>
+                              </Td>
+                            ) : (
+                              <Td fontSize={14} textAlign="center">
+                                <Link
+                                  color="black"
+                                  fontSize={14}
+                                  fontWeight={400}
+                                  href={`/panel/caja/detalles/venta/${el.cashMovement?.id}`}
+                                  target="_blank"
+                                  variant="link"
+                                  w="full"
+                                >
+                                  {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
+                                  {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
+                                  {'-'}
+                                  {el.cashMovement?.id?.toString().padStart(8, '0')}
+                                </Link>
+                              </Td>
+                            )
                           ) : (
                             <Td fontSize={14} textAlign="center">
-                              <Link
-                                color="black"
-                                fontSize={14}
-                                fontWeight={400}
-                                href={`/panel/caja/detalles/venta/${el.cashMovement?.id}`}
-                                target="_blank"
-                                variant="link"
-                                w="full"
-                              >
-                                {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
-                                {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
-                                {'-'}
-                                {el.cashMovement?.id?.toString().padStart(8, '0')}
-                              </Link>
+                              {' '}
                             </Td>
-                          )
-                        ) : (
-                          <Td fontSize={14} textAlign="center">
-                            {' '}
+                          )}
+                          <Td fontSize={14}>
+                            {el.user?.name} {el.user?.lastname}
                           </Td>
-                        )}
-                        <Td fontSize={14}>
-                          {el.user?.name} {el.user?.lastname}
-                        </Td>
-                        {el.concept === 'Venta' ? (
-                          <Td isNumeric fontSize={14}>
-                            {formatCurrency(el.amount)}
-                          </Td>
-                        ) : (
-                          <Td isNumeric color="red.600" fontSize={14}>
-                            {formatCurrency(el.amount * -1)}
-                          </Td>
-                        )}
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </TableContainer>
+                          {el.concept === 'Venta' ? (
+                            <Td isNumeric fontSize={14}>
+                              {formatCurrency(el.amount)}
+                            </Td>
+                          ) : (
+                            <Td isNumeric color="red.600" fontSize={14}>
+                              {formatCurrency(el.amount * -1)}
+                            </Td>
+                          )}
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </Stack>
               {/* <pre>{JSON.stringify(balance, null, 2)}</pre> */}
               SH
             </Stack>
