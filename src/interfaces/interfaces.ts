@@ -476,6 +476,7 @@ export interface Movement {
   createdAt?: string;
   updatedAt?: string;
   user?: User;
+  client?: Client;
   paymentMethod?: PaymentMethod;
   cashMovement?: CashMovement;
 }
