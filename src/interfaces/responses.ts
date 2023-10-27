@@ -306,6 +306,8 @@ export interface BalanceResponse {
       invoiceAFIPTotal: number;
       invoiceAFIPNCCount: number;
       invoiceAFIPNCTotal: number;
+      invoiceNoAFIPCount: number;
+      invoiceNoAFIPTotal: number;
       invoiceACount: number;
       invoiceATotal: number;
       invoiceBCount: number;
@@ -320,6 +322,8 @@ export interface BalanceResponse {
       invoiceNCBTotal: number;
       invoiceNCMCount: number;
       invoiceNCMTotal: number;
+      invoiceNCXCount: number;
+      invoiceNCXTotal: number;
     };
     incomes: {
       totalIncomes: number;

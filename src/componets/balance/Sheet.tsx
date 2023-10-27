@@ -247,13 +247,13 @@ export const Sheet = () => {
                       <Tr>
                         <Td fontSize={16}>Monto</Td>
                         <Td isNumeric fontSize={16}>
-                          {formatCurrency(balance?.invoices.invoiceXTotal!)}
+                          {formatCurrency(balance?.invoices.invoiceNoAFIPTotal!)}
                         </Td>
                       </Tr>
                       <Tr>
                         <Td fontSize={16}>Cantidad</Td>
                         <Td isNumeric fontSize={16}>
-                          {balance?.invoices.invoiceXCount!}
+                          {balance?.invoices.invoiceNoAFIPCount!}
                         </Td>
                       </Tr>
                     </Tbody>
@@ -302,30 +302,62 @@ export const Sheet = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      <Tr>
-                        <Td>Factura A</Td>
-                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceATotal!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Factura M</Td>
-                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceMTotal!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Factura B</Td>
-                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceBTotal!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>N. de Crédito A</Td>
-                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCATotal!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>N. de Crédito M</Td>
-                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCMTotal!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>N. de Crédito B</Td>
-                        <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCBTotal!)}</Td>
-                      </Tr>
+                      {
+                        balance?.invoices.invoiceATotal! > 0 &&
+                        <Tr>
+                          <Td>Factura A</Td>
+                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceATotal!)}</Td>
+                        </Tr>
+                      }
+                      {
+                        balance?.invoices.invoiceMTotal! > 0 &&
+                        <Tr>
+                          <Td>Factura M</Td>
+                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceMTotal!)}</Td>
+                        </Tr>
+                      }
+                      {
+                        balance?.invoices.invoiceBTotal! > 0 &&
+                        <Tr>
+                          <Td>Factura B</Td>
+                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceBTotal!)}</Td>
+                        </Tr>
+                      }
+                      {
+                        balance?.invoices.invoiceXTotal! > 0 &&
+                        <Tr>
+                          <Td>Comprobante X</Td>
+                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceXTotal!)}</Td>
+                        </Tr>
+                      }
+                      {
+                        balance?.invoices.invoiceNCATotal! > 0 &&
+                        <Tr>
+                          <Td>N. de Crédito A</Td>
+                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCATotal!)}</Td>
+                        </Tr>
+                      }
+                      {
+                        balance?.invoices.invoiceNCMTotal! > 0 &&
+                        <Tr>
+                          <Td>N. de Crédito M</Td>
+                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCMTotal!)}</Td>
+                        </Tr>
+                      }
+                      {
+                        balance?.invoices.invoiceNCBTotal! > 0 &&
+                        <Tr>
+                          <Td>N. de Crédito B</Td>
+                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCBTotal!)}</Td>
+                        </Tr>
+                      }
+                      {
+                        balance?.invoices.invoiceNCXTotal! > 0 &&
+                        <Tr>
+                          <Td>N. de Crédito X</Td>
+                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCXTotal!)}</Td>
+                        </Tr>
+                      }
                     </Tbody>
                   </Table>
                 </TableContainer>
@@ -415,7 +447,7 @@ export const Sheet = () => {
                 </Button>
               </HStack>
               <Stack ref={printRef2}>
-                <Text textAlign="center">DETALLE DE MOVIMIENTOS</Text>
+                <Text textAlign="center" w="full">DETALLE DE MOVIMIENTOS</Text>
                 <TableContainer my={2} w="full">
                   <Table ref={movementDetailsTable} className="lastCellPB" size="sm">
                     <Thead>
@@ -431,6 +463,9 @@ export const Sheet = () => {
                         </Th>
                         <Th bg="gray.700" color="white" fontSize={14}>
                           Usuario
+                        </Th>
+                        <Th bg="gray.700" color="white" fontSize={14}>
+                          Cliente
                         </Th>
                         <Th isNumeric bg="gray.700" color="white" fontSize={14}>
                           Total
@@ -487,6 +522,9 @@ export const Sheet = () => {
                           )}
                           <Td fontSize={14}>
                             {el.user?.name} {el.user?.lastname}
+                          </Td>
+                          <Td fontSize={14}>
+                            {el.client?.name}
                           </Td>
                           {el.concept === 'Venta' ? (
                             <Td isNumeric fontSize={14}>
