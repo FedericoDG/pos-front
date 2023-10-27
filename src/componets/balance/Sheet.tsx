@@ -26,7 +26,7 @@ import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { BsDownload } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
-import { useDownloadExcel } from 'react-export-table-to-excel';
+// import { useDownloadExcel } from 'react-export-table-to-excel';
 
 import { useGetBalance } from '../../hooks';
 import { Loading } from '../common';
@@ -56,11 +56,11 @@ export const Sheet = () => {
   const getInvoiceList = (list: SelectedInvoice[]) =>
     list.map((el) => getInvoceLetterById(el.value!)).join(', ');
 
-  const { onDownload } = useDownloadExcel({
-    currentTableRef: movementDetailsTable.current,
-    filename: `ingresos_${from}_${to}`,
-    sheet: 'Ingresos',
-  });
+  /*   const { onDownload } = useDownloadExcel({
+      currentTableRef: movementDetailsTable.current,
+      filename: `ingresos_${from}_${to}`,
+      sheet: 'Ingresos',
+    }); */
 
   const data = {
     userId: user?.value!,
@@ -80,8 +80,9 @@ export const Sheet = () => {
       A: 'Fecha',
       B: "Concepto",
       C: "Comprobante",
-      D: "Usuario",
-      E: "Monto",
+      D: "Cliente",
+      E: "Usuario",
+      F: "Monto",
     }];
 
 
@@ -96,8 +97,9 @@ export const Sheet = () => {
           : `${getInvoiceLetter(el.cashMovement?.cbteTipo!)} ${el.cashMovement?.posNumber
             ?.toString()
             .padStart(3, '0')}-${el.cashMovement?.id?.toString().padStart(8, '0')}`,
-        D: `${el.user?.name} ${el.user?.lastname}`,
-        E: el.concept === 'Venta' ? el.amount : el.amount * -1,
+        D: el.client?.name,
+        E: `${el.user?.name} ${el.user?.lastname}`,
+        F: el.concept === 'Venta' ? el.amount : el.amount * -1,
       });
     });
 
@@ -462,10 +464,10 @@ export const Sheet = () => {
                           Comprobante
                         </Th>
                         <Th bg="gray.700" color="white" fontSize={14}>
-                          Usuario
+                          Cliente
                         </Th>
                         <Th bg="gray.700" color="white" fontSize={14}>
-                          Cliente
+                          Usuario
                         </Th>
                         <Th isNumeric bg="gray.700" color="white" fontSize={14}>
                           Total
@@ -521,10 +523,10 @@ export const Sheet = () => {
                             </Td>
                           )}
                           <Td fontSize={14}>
-                            {el.user?.name} {el.user?.lastname}
+                            {el.client?.name}
                           </Td>
                           <Td fontSize={14}>
-                            {el.client?.name}
+                            {el.user?.name} {el.user?.lastname}
                           </Td>
                           {el.concept === 'Venta' ? (
                             <Td isNumeric fontSize={14}>
