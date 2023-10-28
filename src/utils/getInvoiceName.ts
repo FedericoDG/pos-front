@@ -17,6 +17,6 @@ export const getInvoiceName = (num: number) => {
     case 53:
       return 'NOTA DE CRÉDITO';
     default:
-      return 'FACTURA';
+      return 'NOTA DE CRÉDITO';
   }
 };

@@ -34,6 +34,7 @@ export interface CreditNote extends Sale {
 const getAfip = () => getRequest<AfipResponse>(`/afip/settings/`);
 const createInvoce = (sale: Sale) => postRequest(`/afip/`, sale);
 const createNoteCredit = (sale: CreditNote) => postRequest(`/afip/nota-credito`, sale);
+const createNoteCreditX = (sale: CreditNote) => postRequest(`/cashmovements/nota-credito`, sale);
 const updateAfip = (settings: Afip) => putRequest(`/afip/settings`, settings);
 
 export const useGetAfip = () =>
@@ -57,6 +58,16 @@ export const useCreateAfipCreditNote = (
   onError: (res: any) => void
 ) => {
   return useMutation(createNoteCredit, {
+    onSuccess: onSuccess,
+    onError: onError,
+  });
+};
+
+export const useCreateAfipCreditNoteX = (
+  onSuccess: (res: any) => void,
+  onError: (res: any) => void
+) => {
+  return useMutation(createNoteCreditX, {
     onSuccess: onSuccess,
     onError: onError,
   });

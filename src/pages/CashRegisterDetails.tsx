@@ -103,7 +103,7 @@ export const CashRegisterDetails = () => {
   const queryClient = useQueryClient();
 
   const invoces = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 1 || el.invoceTypeId === 2 || el.invoceTypeId === 4), [cashRegister?.cashMovements]);
-  const creditNotes = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 5 || el.invoceTypeId === 6 || el.invoceTypeId === 7), [cashRegister?.cashMovements]);
+  const creditNotes = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 5 || el.invoceTypeId === 6 || el.invoceTypeId === 7 || el.invoceTypeId === 8), [cashRegister?.cashMovements]);
 
 
   const onSuccessAfip = (res: any) => {
@@ -442,25 +442,28 @@ export const CashRegisterDetails = () => {
                                       <Button colorScheme='brand' size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/${movement.id}`)}>Ver Comprobante Interno</Button>
                                     </Td>
                                     {
-                                      movement.cae && (
-                                        <>
-                                          <Td borderWidth={0} textAlign='right'>
-                                            <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.id}`)}>Ver Comprobante AFIP</Button>
-                                          </Td>
-                                          {
-                                            movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote &&
-                                            <Td borderWidth={0} textAlign='right'>
-                                              <Button colorScheme='orange' size='sm' onClick={() => navigate(`/panel/caja/detalles/nota-credito/${movement.id}`)}>Crear Nota de Crédito</Button>
-                                            </Td>
-                                          }
-                                          {
-                                            movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && movement.creditNote &&
-                                            <Td borderWidth={0} textAlign='right'>
-                                              <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.creditNote}`)}>Ver Nota de Crédito</Button>
-                                            </Td>
-                                          }
-                                        </>
-                                      )
+                                      movement.iva &&
+                                      <Td borderWidth={0} textAlign='right'>
+                                        <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.id}`)}>Ver Comprobante AFIP</Button>
+                                      </Td>
+                                    }
+                                    {
+                                      movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote &&
+                                      <Td borderWidth={0} textAlign='right'>
+                                        <Button colorScheme='orange' size='sm' onClick={() => navigate(`/panel/caja/detalles/nota-credito/${movement.id}`)}>Crear Nota de Crédito</Button>
+                                      </Td>
+                                    }
+                                    {
+                                      movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && movement.invoceTypeId !== 7 && movement.invoceTypeId !== 8 && movement.iva && movement.creditNote &&
+                                      <Td borderWidth={0} textAlign='right'>
+                                        <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.creditNote}`)}>Ver Nota de Crédito</Button>
+                                      </Td>
+                                    }
+                                    {
+                                      movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && movement.invoceTypeId !== 7 && movement.invoceTypeId !== 8 && !movement.iva && movement.creditNote &&
+                                      <Td borderWidth={0} textAlign='right'>
+                                        <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/${movement.creditNote}`)}>Ver Nota de Crédito</Button>
+                                      </Td>
                                     }
                                     {
                                       movement.iva && !movement.cae &&
@@ -845,6 +848,10 @@ export const CashRegisterDetails = () => {
                                   {
                                     movement.invoceTypeId === 7 &&
                                     <Badge bg='gray.50'>Nota de Crédito M</Badge>
+                                  }
+                                  {
+                                    movement.invoceTypeId === 8 &&
+                                    <Badge bg='gray.50'>Nota de Crédito X</Badge>
                                   }
                                 </Td>
                                 <Td>{formatDateAndHour(movement.createdAt)}</Td>

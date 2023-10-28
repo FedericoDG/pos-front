@@ -34,6 +34,7 @@ export const SaleDetails = () => {
   const { data: cashMovement, isLoading: isLoadingCashMovement } = useGetCashMovement(Number(id!));
   const { data: settings, isLoading: isLoadingSettings } = useGetSettings(1);
 
+
   return (
     <DashBoard
       isIndeterminate={isLoadingCashMovement || isLoadingSettings}
@@ -98,7 +99,8 @@ export const SaleDetails = () => {
                 <Stack pl={20} py={2} w="50%">
                   {cashMovement.invoceTypeId == 5 ||
                     cashMovement.invoceTypeId === 6 ||
-                    cashMovement.invoceTypeId === 7 ? (
+                    cashMovement.invoceTypeId === 7 ||
+                    cashMovement.invoceTypeId === 8 ? (
                     <Text fontSize="xl" fontWeight={500}>
                       {getInvoiceName(cashMovement?.cbteTipo!)}
                     </Text>

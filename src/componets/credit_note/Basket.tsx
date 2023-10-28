@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { formatCurrency } from '../../utils';
 import { CashMovement } from '../../interfaces/interfaces';
-import { CreditNote, useCreateAfipCreditNote } from '../../hooks';
+import { CreditNote, useCreateAfipCreditNote, useCreateAfipCreditNoteX } from '../../hooks';
 
 import { usePosContext } from './context';
 
@@ -36,13 +36,23 @@ export const Basket = ({ cashMovement }: Props) => {
   }, [goToNext]);
 
   const onSuccessAfip = (res: any) => {
-    navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`, { replace: true });
-    toast.success('Nota de Crédito Creada', {
-      action: {
-        label: 'Ver',
-        onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`),
-      },
-    });
+    if (cashMovement.iva) {
+      navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`, { replace: true });
+      toast.success('Nota de Crédito Creada', {
+        action: {
+          label: 'Ver',
+          onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`),
+        },
+      });
+    } else {
+      navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`, { replace: true });
+      toast.success('Nota de Crédito Creada', {
+        action: {
+          label: 'Ver',
+          onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`),
+        },
+      });
+    }
   };
 
   const onErrorAfip = (error: any) => {
@@ -50,6 +60,7 @@ export const Basket = ({ cashMovement }: Props) => {
   };
 
   const { mutateAsync } = useCreateAfipCreditNote(onSuccessAfip, onErrorAfip);
+  const { mutateAsync: mutateAsyncX } = useCreateAfipCreditNoteX(onSuccessAfip, onErrorAfip);
 
   const handleSubmit = () => {
     const sale = {} as CreditNote;
@@ -71,7 +82,11 @@ export const Basket = ({ cashMovement }: Props) => {
     sale.invoceTypeId = cashMovement.invoceIdAfip!;
     sale.invoceNumber = cashMovement.invoceNumberAfip!;
 
-    mutateAsync(sale);
+    if (cashMovement.iva) {
+      mutateAsync(sale);
+    } else {
+      mutateAsyncX(sale);
+    }
   };
 
   return (
