@@ -16,12 +16,13 @@ import {
   Select,
   Stack,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { InputGroup, AlertIcon, Alert, Text } from '@chakra-ui/react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
 import { toast } from 'sonner';
+import { useSearchParams } from 'react-router-dom';
 
 import { ErrorMessage } from '../common';
 import { Price, Pricelists } from '../../interfaces';
@@ -36,6 +37,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   setinitialValues: Dispatch<SetStateAction<Price>>;
+  prices: (Price | null)[];
 }
 
 export const Drawer = ({
@@ -45,10 +47,13 @@ export const Drawer = ({
   priceList,
   isOpen,
   onClose,
+  prices,
 }: Props) => {
   const firstField = useRef<HTMLSelectElement | null>(null);
 
   const queryClient = useQueryClient();
+
+  const [_, setSearchParams] = useSearchParams();
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -75,6 +80,7 @@ export const Drawer = ({
     formik.resetForm();
     setinitialValues(resetValues);
     onClose();
+    setSearchParams('tab=0');
   };
 
   const formik = useFormik({
@@ -86,7 +92,13 @@ export const Drawer = ({
     onSubmit,
   });
 
-  const { handleSubmit, handleChange, values, errors, touched } = formik;
+  const { handleSubmit, handleChange, values, errors, touched, setFieldValue } = formik;
+
+  useEffect(() => {
+    const price = prices.find((el) => el?.pricelistId === Number(values.pricelistId))?.price || 0;
+
+    setFieldValue('price', price);
+  }, [prices, setFieldValue, values.pricelistId]);
 
   return (
     <>
@@ -145,7 +157,7 @@ export const Drawer = ({
                     <Input
                       id="price"
                       name="price"
-                      placeholder="20"
+                      placeholder="800"
                       value={values.price}
                       onChange={handleChange}
                       onFocus={(event) => setTimeout(() => event.target.select(), 100)}

@@ -24,6 +24,7 @@ import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
 import { toast } from 'sonner';
+import { useSearchParams } from 'react-router-dom';
 
 import { Discharge, Reason, Warehouse } from '../../interfaces';
 import { ErrorMessage } from '../common';
@@ -53,6 +54,8 @@ export const DrawerDischarge = ({
   const firstField = useRef<HTMLInputElement | null>(null);
 
   const queryClient = useQueryClient();
+
+  const [_, setSearchParams] = useSearchParams();
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -86,6 +89,7 @@ export const DrawerDischarge = ({
     formik.resetForm();
     setinitialValues(resetValues);
     onClose();
+    setSearchParams('tab=0');
   };
 
   const formik = useFormik({

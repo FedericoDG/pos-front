@@ -50,7 +50,12 @@ export const Drawer = ({
   const firstField = useRef<HTMLInputElement | null>(null);
 
   const { mutateAsync: createProduct, isLoading: isLoadingCreate } = useCreateProduct();
-  const { mutateAsync: updateProduct, isLoading: isLoadingUpdate } = useUpdateProduct();
+  const {
+    mutateAsync: updateProduct,
+    isLoading: isLoadingUpdate,
+    data,
+    isSuccess,
+  } = useUpdateProduct();
 
   const onSubmit = async (values: Product, actions: FormikHelpers<Product>) => {
     const parsedValues = {
@@ -69,11 +74,18 @@ export const Drawer = ({
     };
 
     if (values?.id) {
-      await updateProduct(parsedValues).finally(() => {
-        setinitialValues(resetValues);
-        actions.resetForm();
-        onClose();
-      });
+      await updateProduct(parsedValues)
+        .then(() => {
+          if (isSuccess) {
+            console.log('UDATE OK');
+            console.log(data);
+          }
+        })
+        .finally(() => {
+          setinitialValues(resetValues);
+          actions.resetForm();
+          onClose();
+        });
     } else {
       createProduct(parsedValues).finally(() => {
         setinitialValues(resetValues);

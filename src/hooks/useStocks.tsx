@@ -1,10 +1,23 @@
-import { useQuery } from 'react-query';
+import { isError, useMutation, useQuery } from 'react-query';
 
-import { getRequest } from '../services';
+import { getRequest, postRequest } from '../services';
 import { StocksResponse, StockResponse } from '../interfaces';
+
+interface StockMovements {
+  productId: number;
+  warehouseId: number;
+  from: string;
+  to: string;
+}
 
 const getStocks = () => getRequest<StocksResponse>('/stocks');
 const getStock = (id: number | null) => getRequest<StockResponse>(`/stocks/${id}`);
+const getStockMovements = (stock: StockMovements) =>
+  postRequest(`/stocks/${stock.warehouseId}`, {
+    productId: stock.productId,
+    from: stock.from,
+    to: stock.to,
+  });
 
 export const useGetStocks = () =>
   useQuery(['stocks', 'costs', 'discharges', 'transfers'], () => getStocks(), {
@@ -23,3 +36,14 @@ export const useGetStock = (id: number | null) =>
     refetchOnWindowFocus: false,
     select: (data) => data.body.stocks,
   });
+
+export const useGetStockMovements = (onSuccess: () => any) => {
+  return useMutation(getStockMovements, {
+    onSuccess,
+    onError: (error) => {
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
+    },
+  });
+};

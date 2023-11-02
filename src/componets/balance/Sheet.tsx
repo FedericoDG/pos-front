@@ -177,10 +177,10 @@ export const Sheet = () => {
                   INFORME DE INGRESOS
                 </Heading>
                 <HStack justifyContent="space-between" w="full">
+                  <Text fontSize="lg">{`COMPROBANTES: ${getInvoiceList(invoices)}`}</Text>
                   <Text fontSize="lg">{`${formatDate(balance?.from)} AL ${formatDate(
                     balance?.to
                   )}`}</Text>
-                  <Text fontSize="lg">{`COMPROBANTES: ${getInvoiceList(invoices)}`}</Text>
                 </HStack>
                 <Divider />
               </Stack>

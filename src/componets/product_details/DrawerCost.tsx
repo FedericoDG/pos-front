@@ -21,6 +21,7 @@ import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
 import { toast } from 'sonner';
+import { useSearchParams } from 'react-router-dom';
 
 import { ErrorMessage } from '../common';
 import { useCreateCost } from '../../hooks';
@@ -50,6 +51,8 @@ export const DrawerCost = ({
   const firstField = useRef<HTMLInputElement | null>(null);
 
   const queryClient = useQueryClient();
+
+  const [_, setSearchParams] = useSearchParams();
 
   const onSuccess = () => {
     queryClient.invalidateQueries({
@@ -81,6 +84,7 @@ export const DrawerCost = ({
     formik.resetForm();
     setinitialValues(resetValues);
     onClose();
+    setSearchParams('tab=0');
   };
 
   const formik = useFormik({
