@@ -16,7 +16,7 @@ import {
   Select,
   Stack,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { InputGroup, AlertIcon, Alert, Text } from '@chakra-ui/react';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
@@ -50,17 +50,24 @@ export const Drawer = ({
   prices,
 }: Props) => {
   const firstField = useRef<HTMLSelectElement | null>(null);
+  const [flag, setFlag] = useState(0);
 
   const queryClient = useQueryClient();
 
   const [_, setSearchParams] = useSearchParams();
 
-  const onSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ['products'] });
-    toast.success('Precio Actualizado');
+  const onSuccess = (res: any) => {
+    if (res.body.price) {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Precio actualizado');
+    } else {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast('No fue necesario actualizar el precio');
+    }
+    setFlag(Math.random);
   };
 
-  const { mutate: createPrice } = useCreatePrice(onSuccess);
+  const { mutateAsync: createPrice } = useCreatePrice(onSuccess);
 
   const onSubmit = (values: Price, actions: FormikHelpers<Price>) => {
     const parsedValues = {
@@ -69,11 +76,12 @@ export const Drawer = ({
       price: Number(values.price),
     };
 
-    createPrice(parsedValues);
-
-    setinitialValues(resetValues);
-    actions.resetForm();
-    onClose();
+    createPrice(parsedValues).finally(() => {
+      setinitialValues(resetValues);
+      actions.resetForm();
+      onClose();
+      setSearchParams('tab=0');
+    });
   };
 
   const close = () => {
@@ -81,6 +89,7 @@ export const Drawer = ({
     setinitialValues(resetValues);
     onClose();
     setSearchParams('tab=0');
+    setFlag(Math.random);
   };
 
   const formik = useFormik({
@@ -98,7 +107,7 @@ export const Drawer = ({
     const price = prices.find((el) => el?.pricelistId === Number(values.pricelistId))?.price || 0;
 
     setFieldValue('price', price);
-  }, [prices, setFieldValue, values.pricelistId]);
+  }, [flag, prices, setFieldValue, values.pricelistId]);
 
   return (
     <>

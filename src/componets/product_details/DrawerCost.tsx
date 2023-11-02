@@ -78,6 +78,7 @@ export const DrawerCost = ({
     setinitialValues(resetValues);
     actions.resetForm();
     onClose();
+    setSearchParams('tab=0');
   };
 
   const close = () => {

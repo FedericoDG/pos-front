@@ -83,6 +83,7 @@ export const DrawerDischarge = ({
     setinitialValues(resetValues);
     actions.resetForm();
     onClose();
+    setSearchParams('tab=0');
   };
 
   const close = () => {

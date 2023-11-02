@@ -5,6 +5,13 @@ export const formatDate = (date = '01-01-1990') =>
     year: 'numeric',
   }).format(new Date(date))}`;
 
+export const formatDateShortYear = (date = '01-01-1990') =>
+  `${new Intl.DateTimeFormat('es', {
+    month: '2-digit',
+    day: '2-digit',
+    year: '2-digit',
+  }).format(new Date(date))}`;
+
 export const formatDateAndHour = (date = '01-01-1990') =>
   `${new Intl.DateTimeFormat('es', {
     month: '2-digit',

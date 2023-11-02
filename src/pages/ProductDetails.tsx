@@ -110,7 +110,7 @@ export const ProductDetails = () => {
                 <General product={product} onOpen={onOpen} onOpen2={onOpen2} onOpen3={onOpen3} />
               </TabPanel>
               <TabPanel>
-                <Stock product={product} />
+                <Stock product={product} warehouses={warehouses} />
               </TabPanel>
             </TabPanels>
           </Tabs>
