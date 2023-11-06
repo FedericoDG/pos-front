@@ -185,9 +185,9 @@ export const Stock = ({ product, warehouses }: Props) => {
                             <Th bg="gray.700" color="white">
                               CONCEPTO
                             </Th>
-                            {/* <Th isNumeric bg="gray.700" color="white">
-                            STOCK Anterior
-                          </Th> */}
+                            <Th isNumeric bg="gray.700" color="white">
+                              Variación
+                            </Th>
                             <Th isNumeric bg="gray.700" color="white">
                               STOCK
                             </Th>
@@ -348,20 +348,26 @@ export const Stock = ({ product, warehouses }: Props) => {
 
                               <Td>{el.movement.concept}</Td>
 
-                              {/*  {idx === data.body.stock.length - 1 ? (
-                              <Td isNumeric />
-                            ) : (
-                              <Td isNumeric>
-                                {data.body.stock[`${idx + 1}`].stock} {product.unit?.code}
-                              </Td>
-                            )} */}
+                              {idx === data.body.stock.length - 1 ? (
+                                <Td isNumeric>
+                                  {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    0 {product.unit?.code}
+                                    <EvoIcon el={el} />
+                                  </div> */}
+                                </Td>
+                              ) : (
+                                <Td isNumeric>
+                                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    {Math.abs(el.stock - data.body.stock[`${idx + 1}`].stock)}{' '}
+                                    {product.unit?.code}
+                                    <EvoIcon el={el} />
+                                  </div>
+                                </Td>
+                              )}
 
                               <Td isNumeric>
-                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                  {/* {Math.max(el.stock, 0)} {product.unit?.code} */}
-                                  {el.stock} {product.unit?.code}
-                                  <EvoIcon el={el} />
-                                </div>
+                                {/* {Math.max(el.stock, 0)} {product.unit?.code} */}
+                                {el.stock} {product.unit?.code}
                               </Td>
                             </Tr>
                           ))}

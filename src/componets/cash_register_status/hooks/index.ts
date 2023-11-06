@@ -1,3 +1,3 @@
 export * from './index';
 export * from './useColumns';
-export * from './useColumns2';
+// export * from './useColumns2';

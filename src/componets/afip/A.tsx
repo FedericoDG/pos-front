@@ -86,7 +86,7 @@ export const A = ({ cashMovement, settings }: Props) => {
           Imprimir
         </Button>
       </Stack>
-      <Flex ref={printRef} direction="column" minH="297mm" w="210mm">
+      <Flex ref={printRef} direction="column" minH="267mm" w="210mm">
         <Stack className="header">
           <HStack alignItems="flex-start" justifyContent="space-between" pos="relative">
             <HStack p={2} w="50%">

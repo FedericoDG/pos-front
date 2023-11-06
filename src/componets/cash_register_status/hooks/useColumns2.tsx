@@ -1,4 +1,14 @@
-import { Box, Menu, MenuButton, IconButton, MenuList, MenuItem, Badge } from '@chakra-ui/react';
+import {
+  Box,
+  Menu,
+  MenuButton,
+  IconButton,
+  MenuList,
+  MenuItem,
+  Badge,
+  Button,
+  Icon,
+} from '@chakra-ui/react';
 import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { useMemo } from 'react';
@@ -82,23 +92,14 @@ export const useColumns2 = () => {
         header: 'Acciones',
         cell: ({ row }: CellContext<CashRegister, unknown>) => (
           <Box fontFamily="IBM Plex Sans">
-            <Menu placement="left-start">
-              <MenuButton
-                aria-label="Options"
-                as={IconButton}
-                fontSize={24}
-                icon={<BsThreeDots />}
-                variant="link"
-              />
-              <MenuList>
-                <MenuItem
-                  icon={<TbListDetails />}
-                  onClick={() => navigate(`/panel/CashRegisteros/${row.original.id}`)}
-                >
-                  Ver Detalles
-                </MenuItem>
-              </MenuList>
-            </Menu>
+            <Box fontFamily="IBM Plex Sans">
+              <Button
+                size="xs"
+                onClick={() => navigate(`/panel/CashRegisteros/${row.original.id}`)}
+              >
+                <Icon as={TbListDetails} />
+              </Button>
+            </Box>
           </Box>
         ),
         meta: {

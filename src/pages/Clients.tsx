@@ -3,7 +3,7 @@ import { HiPlus } from 'react-icons/Hi';
 import { useMemo, useState, useEffect } from 'react';
 
 import { Client } from '../interfaces';
-import { ConfirmationModal, Drawer } from '../componets/clients';
+import { ConfirmationModal, Drawer, exportToexcel } from '../componets/clients';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
@@ -78,12 +78,14 @@ export const Clients = () => {
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={clients.length}
               columns={columns}
               data={clients}
+              exportToExcel={() => exportToexcel(clients)}
             />
           </Box>
           <Drawer

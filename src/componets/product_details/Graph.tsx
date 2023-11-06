@@ -7,6 +7,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { FormControl, FormLabel, Stack, Switch } from '@chakra-ui/react';
@@ -15,7 +16,16 @@ import { useState } from 'react';
 import { Product } from '../../interfaces';
 import { formatDateShortYear } from '../../utils';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 export const Graph = ({ stock, product }: { stock: any; product: Product; }) => {
   const [showChart, setShowChart] = useState(false);
@@ -101,8 +111,8 @@ export const Graph = ({ stock, product }: { stock: any; product: Product; }) => 
         label: product.unit?.code,
         data: dataSet,
         borderColor: '#6b6b6b',
-        backgroundColor: '#000000',
-        fill: true,
+        backgroundColor: 'rgba(0,0,0,0.25)',
+        fill: false,
       },
     ],
   };

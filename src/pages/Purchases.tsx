@@ -8,6 +8,7 @@ import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/purchases/hooks';
 import { useGetPurchases } from '../hooks';
+import { exportToexcel } from '../componets/purchases';
 
 export const Purchases = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const Purchases = () => {
   const { columns } = useColumns();
 
   useEffect(() => {
-    const handleUserKeyPress = (e: KeyboardEvent) => {
+    const handleUserKeyPress = (e: KeyboardEvent): void => {
       if (e.key === 'F9') {
         return navigate('/panel/stock/compras/cargar');
       }
@@ -53,12 +54,14 @@ export const Purchases = () => {
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={purchases.length}
               columns={columns}
               data={purchases}
+              exportToExcel={() => exportToexcel(purchases)}
             />
           </Box>
         </>

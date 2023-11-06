@@ -65,7 +65,7 @@ export const SaleDetails = () => {
               Imprimir
             </Button>
           </Stack>
-          <Stack ref={printRef} minH="297mm" w="210mm">
+          <Stack ref={printRef} minH="267mm" w="210mm">
             <Stack className="header">
               <HStack alignItems="flex-start" justifyContent="space-between" pos="relative">
                 <HStack p={2} w="50%">

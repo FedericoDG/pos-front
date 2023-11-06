@@ -30,6 +30,7 @@ import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import { ImPrinter } from 'react-icons/im';
 import { useMemo, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { BsDownload } from 'react-icons/bs';
 
 import { usePriceListContext } from '../pricelist_report/context';
 
@@ -47,9 +48,11 @@ interface ReactTableProps<T extends object> {
   showGlobalFilter?: boolean;
   showColumsSelector?: boolean;
   showPrintOption?: boolean;
+  showExportToExcelButton?: boolean;
   showSelectButton?: boolean;
   filterFn?: FilterFn<T>;
   flag?: string;
+  exportToExcel?: (object: any) => void;
 }
 
 export const CustomTable = <T extends object>({
@@ -63,7 +66,9 @@ export const CustomTable = <T extends object>({
   showGlobalFilter = false,
   showNavigation = false,
   showPrintOption = false,
+  showExportToExcelButton = false,
   showSelectButton = false,
+  exportToExcel = () => { },
 }: ReactTableProps<T>) => {
   const [globalFilter, setGlobalFilter] = useState('');
 
@@ -133,6 +138,12 @@ export const CustomTable = <T extends object>({
   return (
     <Box _dark={{ bg: 'gray.700' }} bg="white" w="full">
       <Flex gap="1" justifyContent="flex-end">
+        {showExportToExcelButton && (
+          <Button colorScheme="green" leftIcon={<BsDownload />} size="sm" onClick={exportToExcel}>
+            Descargar Excel
+          </Button>
+        )}
+
         {showPrintOption && (
           <Button colorScheme="linkedin" leftIcon={<ImPrinter />} size="sm" onClick={handlePrint}>
             Imprimir

@@ -21,6 +21,7 @@ export interface Settings {
   invoceName: string;
   invoceNumber: number;
   imageURL: string;
+  showOtherTaxes: number;
 }
 
 export interface Afip {

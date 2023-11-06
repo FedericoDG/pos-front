@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Discharge, Warehouse } from '../interfaces';
-import { Drawer } from '../componets/stocks';
+import { Drawer, exportToexcel } from '../componets/stocks';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/stocks/hooks';
 import { useGetReasons, useGetStocks, useGetWarehousesWOStock } from '../hooks';
@@ -58,12 +58,16 @@ export const Stocks = () => {
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={stocks.length}
               columns={columns}
               data={stocks}
+              exportToExcel={() =>
+                exportToexcel({ stocks, warehouses: warehouses.filter((el) => el.driver === 0) })
+              }
             />
           </Box>
           <Drawer

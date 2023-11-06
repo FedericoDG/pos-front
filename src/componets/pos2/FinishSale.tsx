@@ -574,7 +574,7 @@ export const FinishSale = () => {
                       }
                     </Stack>
 
-                    <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
+                    {/*   <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
                       <Icon as={AiFillLock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'block' : 'none'} pos='absolute' right={1} top={1} />
                       <Icon as={AiFillUnlock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />
                       <Box position='relative' px="4" py='8'>
@@ -652,7 +652,7 @@ export const FinishSale = () => {
                           </Stack>
                         )}
                       />
-                    </Stack>
+                    </Stack> */}
 
                     <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
                       <Icon as={FiAlertTriangle} boxSize={6} color={'red.500'} display={values.payments?.length && values.payments?.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />

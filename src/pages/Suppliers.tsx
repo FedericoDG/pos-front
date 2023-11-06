@@ -2,7 +2,7 @@ import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { useMemo, useState, useEffect } from 'react';
 
-import { ConfirmationModal, Drawer } from '../componets/suppliers';
+import { ConfirmationModal, Drawer, exportToexcel } from '../componets/suppliers';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
@@ -70,12 +70,14 @@ export const Suppliers = () => {
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={suppliers.length}
               columns={columns}
               data={suppliers}
+              exportToExcel={() => exportToexcel(suppliers)}
             />
           </Box>
           <Drawer

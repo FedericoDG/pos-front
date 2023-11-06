@@ -8,6 +8,7 @@ import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/discharges/hooks';
 import { useGetDischarges } from '../hooks';
+import { exportToexcel } from '../componets/discharges';
 
 export const Discharges = () => {
   const navigate = useNavigate();
@@ -53,12 +54,14 @@ export const Discharges = () => {
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={discharges.length}
               columns={columns}
               data={discharges}
+              exportToExcel={() => exportToexcel(discharges)}
             />
           </Box>
         </>

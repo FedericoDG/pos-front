@@ -22,7 +22,7 @@ export interface Sale {
   }[];
   info: string;
   cashMovementId: number;
-  movementIds: number[];
+  movementIds?: number[]; //OJO2
 }
 
 export interface CreditNote extends Sale {

@@ -5,6 +5,7 @@ import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/cash_registers/hooks';
 import { useChasRegisters } from '../hooks';
+import { exportToexcel } from '../componets/cash_registers';
 
 export const CashRegisters = () => {
   const { data: cashRegisters, isFetching: isFetchingCashRegisters } = useChasRegisters();
@@ -21,11 +22,13 @@ export const CashRegisters = () => {
         <Box bg="white" p="4" rounded="md" shadow="md" w="full">
           <CustomTable
             showColumsSelector
+            showExportToExcelButton
             showNavigation
             showPrintOption
             amount={cashRegisters.length}
             columns={columns}
             data={cashRegisters}
+            exportToExcel={() => exportToexcel(cashRegisters)}
           />
         </Box>
       )}

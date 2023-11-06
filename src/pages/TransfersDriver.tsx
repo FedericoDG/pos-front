@@ -8,6 +8,7 @@ import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/transfers/hooks';
 import { useGetTransfers } from '../hooks';
+import { exportToexcel } from '../componets/transfers';
 
 export const TransfersDriver = () => {
   const navigate = useNavigate();
@@ -53,12 +54,16 @@ export const TransfersDriver = () => {
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={transfers.filter((el) => el.warehouseDestination.driver === 1).length}
               columns={columns}
               data={transfers.filter((el) => el.warehouseDestination.driver === 1)}
+              exportToExcel={() =>
+                exportToexcel(transfers.filter((el) => el.warehouseDestination.driver === 1))
+              }
             />
           </Box>
         </>

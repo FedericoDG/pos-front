@@ -24,7 +24,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
       },
       {
         id: 'nombre',
-        header: 'name',
+        header: 'Razón Social',
         cell: (row: CellContext<Supplier, unknown>) => row.renderValue(),
         accessorKey: 'name',
       },
