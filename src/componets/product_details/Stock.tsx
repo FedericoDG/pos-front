@@ -26,7 +26,7 @@ import { ImPrinter } from 'react-icons/im';
 import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
 
-import { useGetStockMovements, useGetWarehousesWOStock } from '../../hooks';
+import { useGetStockMovements } from '../../hooks';
 import { Product, Warehouse } from '../../interfaces';
 import { formatDate, getInvoiceLetter } from '../../utils';
 
@@ -380,8 +380,6 @@ export const Stock = ({ product, warehouses }: Props) => {
                     NO EXISTEN DATOS PARA LAS FECHAS Y DEPÓSITO SELECCIONADO
                   </Text>
                 )}
-
-                <pre>{JSON.stringify(data.body.stock, null, 2)}</pre>
               </Stack>
             </Stack>
           </Stack>

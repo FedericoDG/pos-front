@@ -187,6 +187,7 @@ export const B = ({ cashMovement, settings }: Props) => {
             </Tbody>
           </Table>
         </TableContainer>
+        <div style={{ flex: 1 }} />
         <HStack alignItems="flex-start" color="#4a5568" flex={1} fontSize="sm">
           {cashMovement.cbteTipo !== 8 && (
             <Stack>

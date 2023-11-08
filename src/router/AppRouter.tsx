@@ -15,6 +15,7 @@ import {
   Drivers,
   GeneratePriceListReport,
   Home,
+  IvaBook,
   LoadCosts,
   LoadDischarges,
   LoadProductTrans,
@@ -113,6 +114,8 @@ export const AppRouter = () => (
         <Route element={<Settings />} path="/panel/parametros" />
         {/* BALANCE */}
         <Route element={<Balance />} path="/panel/balance" />
+        {/* LIBRO IVA */}
+        <Route element={<IvaBook />} path="/panel/libro-iva" />
         {/* DEFAULT */}
         <Route element={<Navigate replace to="/panel" />} path="*" />
       </Route>

@@ -254,6 +254,11 @@ export const SidebarContent = (props: Props) => {
           Ingresos
         </NavItem>
 
+        {/* LIBRO IVA */}
+        <NavItem icon={FaChartLine} link="/panel/libro-iva">
+          Libro IVA
+        </NavItem>
+
         {/* USERS */}
         <NavItem icon={FaUserFriends} link="/panel/usuarios">
           Usuarios

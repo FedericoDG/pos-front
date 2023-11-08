@@ -344,3 +344,35 @@ export interface BalanceResponse {
     user?: User;
   };
 }
+
+export interface LibroIva {
+  body: {
+    from: string;
+    to: string;
+    movements: {
+      id: number;
+      isCreditNote: boolean;
+      subTotal: number;
+      iva: number;
+      total: number;
+      invoceTypeId: number;
+      posNumber: number;
+      invoceNumberAfip: number;
+      cae: string;
+      vtoCae: string;
+      creditNote: number;
+      cbteTipo: number;
+      info: string;
+      ivaDetails: {
+        '0': number;
+        '0.21': number;
+        '0.105': number;
+        '0.025': number;
+        '0.05': number;
+        '0.27': number;
+      };
+      createdAt: string;
+      client: Client;
+    }[];
+  };
+}

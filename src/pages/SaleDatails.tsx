@@ -215,7 +215,7 @@ export const SaleDetails = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-
+            <div style={{ flex: 1 }} />
             <HStack alignItems="flex-start" color="#4a5568" fontSize="sm">
               <Stack>
                 <Text fontWeight={700} width="180px">
