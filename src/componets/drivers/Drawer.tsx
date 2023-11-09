@@ -79,8 +79,6 @@ export const Drawer = ({
   const { handleSubmit, handleChange, values, errors, touched } = formik;
 
   const close = () => {
-    // resetForm();
-    //formik.setTouched({}, false);
     formik.resetForm();
     setinitialValues(resetValues);
     onClose();

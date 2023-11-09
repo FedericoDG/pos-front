@@ -30,7 +30,6 @@ export const Finish = () => {
     setMappedWarehouses(mappedWarehouses);
   }, [warehouses]);
 
-  //
   const queryClient = useQueryClient();
 
   const onSuccess = () => {

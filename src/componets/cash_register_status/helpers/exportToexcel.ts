@@ -7,24 +7,15 @@ export const exportToexcel = (cashRegister: CashRegister) => {
   const libro = XLSX.utils.book_new();
   const hoja = XLSX.utils.json_to_sheet([]);
 
-  const tabla: Record<string, any>[] = [
-    {
-      A: 'Estado',
-      B: 'Apertura',
-      C: 'Monto Inicial',
-      D: 'Ventas',
-      E: 'Total A Rendir',
-      F: 'Usuario',
-    },
-  ];
+  const tabla: Record<string, any>[] = [];
 
   tabla.push({
-    A: cashRegister.isOpen ? 'abierta' : 'cerrada',
-    B: formatDateAndHour(cashRegister.openingDate),
-    C: cashRegister.initialBalance,
-    D: cashRegister.finalBalance,
-    E: cashRegister.initialBalance + cashRegister.finalBalance,
-    F: `${cashRegister.user?.name} ${cashRegister.user?.lastname}`,
+    Estado: cashRegister.isOpen ? 'abierta' : 'cerrada',
+    Apertura: formatDateAndHour(cashRegister.openingDate),
+    ['Monto Inicial']: cashRegister.initialBalance,
+    Ventas: cashRegister.finalBalance,
+    ['Total a Rendir']: cashRegister.initialBalance + cashRegister.finalBalance,
+    Usuario: `${cashRegister.user?.name} ${cashRegister.user?.lastname}`,
   });
 
   XLSX.utils.sheet_add_json(hoja, tabla);

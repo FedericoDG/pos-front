@@ -26,7 +26,6 @@ import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { BsDownload } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
-// import { useDownloadExcel } from 'react-export-table-to-excel';
 
 import { useGetBalance } from '../../hooks';
 import { Loading } from '../common';
@@ -56,12 +55,6 @@ export const Sheet = () => {
   const getInvoiceList = (list: SelectedInvoice[]) =>
     list.map((el) => getInvoceLetterById(el.value!)).join(', ');
 
-  /*   const { onDownload } = useDownloadExcel({
-      currentTableRef: movementDetailsTable.current,
-      filename: `ingresos_${from}_${to}`,
-      sheet: 'Ingresos',
-    }); */
-
   const data = {
     userId: user?.value!,
     clientId: client?.value!,
@@ -76,37 +69,28 @@ export const Sheet = () => {
     const libro = XLSX.utils.book_new();
     const hoja = XLSX.utils.json_to_sheet([]);
 
-    const tabla2: any[] = [{
-      A: 'Fecha',
-      B: "Concepto",
-      C: "Comprobante",
-      D: "Cliente",
-      E: "Usuario",
-      F: "Monto",
-    }];
+    const tabla2: any[] = [];
 
 
     balance?.movements.forEach((el) => {
       tabla2.push({
-        A: formatDate(el.createdAt),
-        B: el.concept,
-        C: el.cashMovement?.cae
+        Fecha: formatDate(el.createdAt),
+        Concepto: el.concept,
+        Comprobante: el.cashMovement?.cae
           ? `${getInvoiceLetter(el.cashMovement?.cbteTipo!)} ${el.cashMovement?.posNumber
             ?.toString()
             .padStart(3, '0')}-${el.cashMovement?.invoceNumberAfip?.toString().padStart(8, '0')}`
           : `${getInvoiceLetter(el.cashMovement?.cbteTipo!)} ${el.cashMovement?.posNumber
             ?.toString()
             .padStart(3, '0')}-${el.cashMovement?.id?.toString().padStart(8, '0')}`,
-        D: el.client?.name,
-        E: `${el.user?.name} ${el.user?.lastname}`,
-        F: el.concept === 'Venta' ? el.amount : el.amount * -1,
+        Cliente: el.client?.name,
+        Usuario: `${el.user?.name} ${el.user?.lastname}`,
+        Monto: el.concept === 'Venta' ? el.amount : el.amount * -1,
       });
     });
 
 
     XLSX.utils.sheet_add_json(hoja, tabla2);
-
-    //tabla2.forEach((_, i) => hoja[`E${i + 2}`].z = '"$"#,##0.00_);\\("$"#,##0.00\\)');
 
     XLSX.utils.book_append_sheet(libro, hoja, 'Detalles de Movimientos');
 
@@ -117,7 +101,7 @@ export const Sheet = () => {
 
   return (
     <Stack w="full">
-      {isFetching ? (
+      {isFetching || !balance ? (
         <Loading />
       ) : (
         <>
@@ -184,367 +168,374 @@ export const Sheet = () => {
                 </HStack>
                 <Divider />
               </Stack>
-              <HStack alignItems="flex-end">
-                <TableContainer my={4} w="66.66%">
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          Medio de Pago
-                        </Th>
-                        <Th isNumeric bg="gray.700" color="white">
-                          TOTAL
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      <Tr>
-                        <Td>Efectivo</Td>
-                        <Td isNumeric>{formatCurrency(balance?.incomes.totalCash!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Débito</Td>
-                        <Td isNumeric>{formatCurrency(balance?.incomes.totalDebit!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Crédito</Td>
-                        <Td isNumeric>{formatCurrency(balance?.incomes.totalCredit!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Transferencia</Td>
-                        <Td isNumeric>{formatCurrency(balance?.incomes.totalTransfer!)}</Td>
-                      </Tr>
-                      <Tr>
-                        <Td borderColor="black">Mercado Pago</Td>
-                        <Td isNumeric borderColor="black">
-                          {formatCurrency(balance?.incomes.totalMercadoPago!)}
-                        </Td>
-                      </Tr>
-                    </Tbody>
-                    <Tfoot>
-                      <Tr>
-                        <Th />
-                        <Th isNumeric fontSize={16}>
-                          {formatCurrency(balance?.incomes.totalIncomes!)}
-                        </Th>
-                      </Tr>
-                    </Tfoot>
-                  </Table>
-                </TableContainer>
-              </HStack>
-              <HStack alignItems="flex-start">
-                <TableContainer my={2} w="full">
-                  <Table size="sm" w="full">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          Presupuesto
-                        </Th>
-                        <Th isNumeric bg="gray.700" color="white">
-                          TOTAL
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      <Tr>
-                        <Td fontSize={16}>Monto</Td>
-                        <Td isNumeric fontSize={16}>
-                          {formatCurrency(balance?.invoices.invoiceNoAFIPTotal!)}
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td fontSize={16}>Cantidad</Td>
-                        <Td isNumeric fontSize={16}>
-                          {balance?.invoices.invoiceNoAFIPCount!}
-                        </Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-
-                <TableContainer my={2} w="full">
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          AFIP
-                        </Th>
-                        <Th isNumeric bg="gray.700" color="white">
-                          TOTAL
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      <Tr>
-                        <Td fontSize={16}>Monto</Td>
-                        <Td isNumeric fontSize={16}>
-                          {formatCurrency(balance?.invoices.invoiceAFIPTotal!)}
-                        </Td>
-                      </Tr>
-                      <Tr>
-                        <Td fontSize={16}>Cantidad</Td>
-                        <Td isNumeric fontSize={16}>
-                          {balance?.invoices.invoiceAFIPCount!}
-                        </Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-
-                <TableContainer my={2} w="full">
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          Comprobantes
-                        </Th>
-                        <Th isNumeric bg="gray.700" color="white">
-                          TOTAL
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {
-                        balance?.invoices.invoiceATotal! > 0 &&
-                        <Tr>
-                          <Td>Factura A</Td>
-                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceATotal!)}</Td>
-                        </Tr>
-                      }
-                      {
-                        balance?.invoices.invoiceMTotal! > 0 &&
-                        <Tr>
-                          <Td>Factura M</Td>
-                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceMTotal!)}</Td>
-                        </Tr>
-                      }
-                      {
-                        balance?.invoices.invoiceBTotal! > 0 &&
-                        <Tr>
-                          <Td>Factura B</Td>
-                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceBTotal!)}</Td>
-                        </Tr>
-                      }
-                      {
-                        balance?.invoices.invoiceXTotal! > 0 &&
-                        <Tr>
-                          <Td>Comprobante X</Td>
-                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceXTotal!)}</Td>
-                        </Tr>
-                      }
-                      {
-                        balance?.invoices.invoiceNCATotal! > 0 &&
-                        <Tr>
-                          <Td>N. de Crédito A</Td>
-                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCATotal!)}</Td>
-                        </Tr>
-                      }
-                      {
-                        balance?.invoices.invoiceNCMTotal! > 0 &&
-                        <Tr>
-                          <Td>N. de Crédito M</Td>
-                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCMTotal!)}</Td>
-                        </Tr>
-                      }
-                      {
-                        balance?.invoices.invoiceNCBTotal! > 0 &&
-                        <Tr>
-                          <Td>N. de Crédito B</Td>
-                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCBTotal!)}</Td>
-                        </Tr>
-                      }
-                      {
-                        balance?.invoices.invoiceNCXTotal! > 0 &&
-                        <Tr>
-                          <Td>N. de Crédito X</Td>
-                          <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCXTotal!)}</Td>
-                        </Tr>
-                      }
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </HStack>
-              {enabledUserFilter && (
-                <TableContainer my={2} w="full">
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          Vendedor/Chofer
-                        </Th>
-                        <Th bg="gray.700" color="white">
-                          Email
-                        </Th>
-                        <Th bg="gray.700" color="white">
-                          Rol
-                        </Th>
-                        <Th isNumeric bg="gray.700" color="white">
-                          Total
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {balance?.users.map((el) => (
-                        <Tr key={nanoid()}>
-                          <Td>
-                            {el.name} {el.lastname}
-                          </Td>
-                          <Td>{el.email}</Td>
-                          <Td>{getRole(el.role?.name!)}</Td>
-                          <Td isNumeric>{formatCurrency(el.total)}</Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              )}
-              {enabledClientFilter && (
-                <TableContainer my={2} w="full">
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white">
-                          Cliente
-                        </Th>
-                        <Th bg="gray.700" color="white">
-                          Tipo
-                        </Th>
-                        <Th bg="gray.700" color="white">
-                          Número
-                        </Th>
-                        <Th isNumeric bg="gray.700" color="white">
-                          Total
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {balance?.clients.map((el) => (
-                        <Tr key={nanoid()}>
-                          <Td>{el.name}</Td>
-                          <Td>{el.identification?.description}</Td>
-                          <Td>{el.document}</Td>
-                          <Td isNumeric>{formatCurrency(el.total)}</Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              )}
-              <HStack className="no-print" justifyContent="flex-end" mt={8}>
-                <Button
-                  colorScheme="green"
-                  leftIcon={<BsDownload />}
-                  size="sm"
-                  onClick={handleDownload}
-                >
-                  Descargar Excel
-                </Button>
-                <Button
-                  colorScheme="linkedin"
-                  leftIcon={<ImPrinter />}
-                  size="sm"
-                  onClick={handlePrint2}
-                >
-                  Imprimir
-                </Button>
-              </HStack>
-              <Stack ref={printRef2}>
-                <Text textAlign="center" w="full">DETALLE DE MOVIMIENTOS</Text>
-                <TableContainer my={2} w="full">
-                  <Table ref={movementDetailsTable} className="lastCellPB" size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th bg="gray.700" color="white" fontSize={14}>
-                          Fecha
-                        </Th>
-                        <Th bg="gray.700" color="white" fontSize={14}>
-                          Concepto
-                        </Th>
-                        <Th bg="gray.700" color="white" fontSize={14} textAlign="center">
-                          Comprobante
-                        </Th>
-                        <Th bg="gray.700" color="white" fontSize={14}>
-                          Cliente
-                        </Th>
-                        <Th bg="gray.700" color="white" fontSize={14}>
-                          Usuario
-                        </Th>
-                        <Th isNumeric bg="gray.700" color="white" fontSize={14}>
-                          Total
-                        </Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {balance?.movements.map((el) => (
-                        <Tr key={nanoid()}>
-                          <Td fontSize={14}>{formatDate(el.createdAt)}</Td>
-                          <Td color={el.concept === 'Venta' ? 'black' : 'red.600'} fontSize={14}>
-                            {el.concept}
-                          </Td>
-                          {el.concept === 'Venta' || el.concept === 'N. de Crédito' ? (
-                            el.cashMovement?.cae ? (
-                              <Td fontSize={14} textAlign="center">
-                                <Link
-                                  color="black"
-                                  fontSize={14}
-                                  fontWeight={400}
-                                  href={`/panel/caja/detalles/venta/afip/${el.cashMovement?.id}`}
-                                  target="_blank"
-                                  variant="link"
-                                  w="full"
-                                >
-                                  {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
-                                  {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
-                                  {'-'}
-                                  {el.cashMovement?.invoceNumberAfip?.toString().padStart(8, '0')}
-                                </Link>
+              {
+                balance?.movements.length > 0 ?
+                  <>
+                    <HStack alignItems="flex-end">
+                      <TableContainer my={4} w="66.66%">
+                        <Table size="sm">
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white">
+                                Medio de Pago
+                              </Th>
+                              <Th isNumeric bg="gray.700" color="white">
+                                TOTAL
+                              </Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            <Tr>
+                              <Td>Efectivo</Td>
+                              <Td isNumeric>{formatCurrency(balance?.incomes.totalCash!)}</Td>
+                            </Tr>
+                            <Tr>
+                              <Td>Débito</Td>
+                              <Td isNumeric>{formatCurrency(balance?.incomes.totalDebit!)}</Td>
+                            </Tr>
+                            <Tr>
+                              <Td>Crédito</Td>
+                              <Td isNumeric>{formatCurrency(balance?.incomes.totalCredit!)}</Td>
+                            </Tr>
+                            <Tr>
+                              <Td>Transferencia</Td>
+                              <Td isNumeric>{formatCurrency(balance?.incomes.totalTransfer!)}</Td>
+                            </Tr>
+                            <Tr>
+                              <Td borderColor="black">Mercado Pago</Td>
+                              <Td isNumeric borderColor="black">
+                                {formatCurrency(balance?.incomes.totalMercadoPago!)}
                               </Td>
-                            ) : (
-                              <Td fontSize={14} textAlign="center">
-                                <Link
-                                  color="black"
-                                  fontSize={14}
-                                  fontWeight={400}
-                                  href={`/panel/caja/detalles/venta/${el.cashMovement?.id}`}
-                                  target="_blank"
-                                  variant="link"
-                                  w="full"
-                                >
-                                  {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
-                                  {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
-                                  {'-'}
-                                  {el.cashMovement?.id?.toString().padStart(8, '0')}
-                                </Link>
+                            </Tr>
+                          </Tbody>
+                          <Tfoot>
+                            <Tr>
+                              <Th />
+                              <Th isNumeric fontSize={16}>
+                                {formatCurrency(balance?.incomes.totalIncomes!)}
+                              </Th>
+                            </Tr>
+                          </Tfoot>
+                        </Table>
+                      </TableContainer>
+                    </HStack>
+                    <HStack alignItems="flex-start">
+                      <TableContainer my={2} w="full">
+                        <Table size="sm" w="full">
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white">
+                                Presupuesto
+                              </Th>
+                              <Th isNumeric bg="gray.700" color="white">
+                                TOTAL
+                              </Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            <Tr>
+                              <Td fontSize={16}>Monto</Td>
+                              <Td isNumeric fontSize={16}>
+                                {formatCurrency(balance?.invoices.invoiceNoAFIPTotal!)}
                               </Td>
-                            )
-                          ) : (
-                            <Td fontSize={14} textAlign="center">
-                              {' '}
-                            </Td>
-                          )}
-                          <Td fontSize={14}>
-                            {el.client?.name}
-                          </Td>
-                          <Td fontSize={14}>
-                            {el.user?.name} {el.user?.lastname}
-                          </Td>
-                          {el.concept === 'Venta' ? (
-                            <Td isNumeric fontSize={14}>
-                              {formatCurrency(el.amount)}
-                            </Td>
-                          ) : (
-                            <Td isNumeric color="red.600" fontSize={14}>
-                              {formatCurrency(el.amount * -1)}
-                            </Td>
-                          )}
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </Stack>
-              {/* <pre>{JSON.stringify(balance, null, 2)}</pre> */}
-              SH
+                            </Tr>
+                            <Tr>
+                              <Td fontSize={16}>Cantidad</Td>
+                              <Td isNumeric fontSize={16}>
+                                {balance?.invoices.invoiceNoAFIPCount!}
+                              </Td>
+                            </Tr>
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+
+                      <TableContainer my={2} w="full">
+                        <Table size="sm">
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white">
+                                AFIP
+                              </Th>
+                              <Th isNumeric bg="gray.700" color="white">
+                                TOTAL
+                              </Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            <Tr>
+                              <Td fontSize={16}>Monto</Td>
+                              <Td isNumeric fontSize={16}>
+                                {formatCurrency(balance?.invoices.invoiceAFIPTotal!)}
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td fontSize={16}>Cantidad</Td>
+                              <Td isNumeric fontSize={16}>
+                                {balance?.invoices.invoiceAFIPCount!}
+                              </Td>
+                            </Tr>
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+
+                      <TableContainer my={2} w="full">
+                        <Table size="sm">
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white">
+                                Comprobantes
+                              </Th>
+                              <Th isNumeric bg="gray.700" color="white">
+                                TOTAL
+                              </Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {
+                              balance?.invoices.invoiceATotal! > 0 &&
+                              <Tr>
+                                <Td>Factura A</Td>
+                                <Td isNumeric>{formatCurrency(balance?.invoices.invoiceATotal!)}</Td>
+                              </Tr>
+                            }
+                            {
+                              balance?.invoices.invoiceMTotal! > 0 &&
+                              <Tr>
+                                <Td>Factura M</Td>
+                                <Td isNumeric>{formatCurrency(balance?.invoices.invoiceMTotal!)}</Td>
+                              </Tr>
+                            }
+                            {
+                              balance?.invoices.invoiceBTotal! > 0 &&
+                              <Tr>
+                                <Td>Factura B</Td>
+                                <Td isNumeric>{formatCurrency(balance?.invoices.invoiceBTotal!)}</Td>
+                              </Tr>
+                            }
+                            {
+                              balance?.invoices.invoiceXTotal! > 0 &&
+                              <Tr>
+                                <Td>Comprobante X</Td>
+                                <Td isNumeric>{formatCurrency(balance?.invoices.invoiceXTotal!)}</Td>
+                              </Tr>
+                            }
+                            {
+                              balance?.invoices.invoiceNCATotal! > 0 &&
+                              <Tr>
+                                <Td>N. de Crédito A</Td>
+                                <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCATotal!)}</Td>
+                              </Tr>
+                            }
+                            {
+                              balance?.invoices.invoiceNCMTotal! > 0 &&
+                              <Tr>
+                                <Td>N. de Crédito M</Td>
+                                <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCMTotal!)}</Td>
+                              </Tr>
+                            }
+                            {
+                              balance?.invoices.invoiceNCBTotal! > 0 &&
+                              <Tr>
+                                <Td>N. de Crédito B</Td>
+                                <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCBTotal!)}</Td>
+                              </Tr>
+                            }
+                            {
+                              balance?.invoices.invoiceNCXTotal! > 0 &&
+                              <Tr>
+                                <Td>N. de Crédito X</Td>
+                                <Td isNumeric>{formatCurrency(balance?.invoices.invoiceNCXTotal!)}</Td>
+                              </Tr>
+                            }
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    </HStack>
+                    {enabledUserFilter && (
+                      <TableContainer my={2} w="full">
+                        <Table size="sm">
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white">
+                                Vendedor/Chofer
+                              </Th>
+                              <Th bg="gray.700" color="white">
+                                Email
+                              </Th>
+                              <Th bg="gray.700" color="white">
+                                Rol
+                              </Th>
+                              <Th isNumeric bg="gray.700" color="white">
+                                Total
+                              </Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {balance?.users.map((el) => (
+                              <Tr key={nanoid()}>
+                                <Td>
+                                  {el.name} {el.lastname}
+                                </Td>
+                                <Td>{el.email}</Td>
+                                <Td>{getRole(el.role?.name!)}</Td>
+                                <Td isNumeric>{formatCurrency(el.total)}</Td>
+                              </Tr>
+                            ))}
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    )}
+                    {enabledClientFilter && (
+                      <TableContainer my={2} w="full">
+                        <Table size="sm">
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white">
+                                Cliente
+                              </Th>
+                              <Th bg="gray.700" color="white">
+                                Tipo
+                              </Th>
+                              <Th bg="gray.700" color="white">
+                                Número
+                              </Th>
+                              <Th isNumeric bg="gray.700" color="white">
+                                Total
+                              </Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {balance?.clients.map((el) => (
+                              <Tr key={nanoid()}>
+                                <Td>{el.name}</Td>
+                                <Td>{el.identification?.description}</Td>
+                                <Td>{el.document}</Td>
+                                <Td isNumeric>{formatCurrency(el.total)}</Td>
+                              </Tr>
+                            ))}
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    )}
+                    <HStack className="no-print" justifyContent="flex-end" mt={8}>
+                      <Button
+                        colorScheme="green"
+                        leftIcon={<BsDownload />}
+                        size="sm"
+                        onClick={handleDownload}
+                      >
+                        Descargar Excel
+                      </Button>
+                      <Button
+                        colorScheme="linkedin"
+                        leftIcon={<ImPrinter />}
+                        size="sm"
+                        onClick={handlePrint2}
+                      >
+                        Imprimir
+                      </Button>
+                    </HStack>
+                    <Stack ref={printRef2}>
+                      <Text textAlign="center" w="full">DETALLE DE MOVIMIENTOS</Text>
+                      <TableContainer my={2} w="full">
+                        <Table ref={movementDetailsTable} className="lastCellPB" size="sm">
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white" fontSize={14}>
+                                Fecha
+                              </Th>
+                              <Th bg="gray.700" color="white" fontSize={14}>
+                                Concepto
+                              </Th>
+                              <Th bg="gray.700" color="white" fontSize={14} textAlign="center">
+                                Comprobante
+                              </Th>
+                              <Th bg="gray.700" color="white" fontSize={14}>
+                                Cliente
+                              </Th>
+                              <Th bg="gray.700" color="white" fontSize={14}>
+                                Usuario
+                              </Th>
+                              <Th isNumeric bg="gray.700" color="white" fontSize={14}>
+                                Total
+                              </Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {balance?.movements.map((el) => (
+                              <Tr key={nanoid()}>
+                                <Td fontSize={14}>{formatDate(el.createdAt)}</Td>
+                                <Td color={el.concept === 'Venta' ? 'black' : 'red.600'} fontSize={14}>
+                                  {el.concept}
+                                </Td>
+                                {el.concept === 'Venta' || el.concept === 'N. de Crédito' ? (
+                                  el.cashMovement?.cae ? (
+                                    <Td fontSize={14} textAlign="center">
+                                      <Link
+                                        color="black"
+                                        fontSize={14}
+                                        fontWeight={400}
+                                        href={`/panel/caja/detalles/venta/afip/${el.cashMovement?.id}`}
+                                        target="_blank"
+                                        variant="link"
+                                        w="full"
+                                      >
+                                        {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
+                                        {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
+                                        {'-'}
+                                        {el.cashMovement?.invoceNumberAfip?.toString().padStart(8, '0')}
+                                      </Link>
+                                    </Td>
+                                  ) : (
+                                    <Td fontSize={14} textAlign="center">
+                                      <Link
+                                        color="black"
+                                        fontSize={14}
+                                        fontWeight={400}
+                                        href={`/panel/caja/detalles/venta/${el.cashMovement?.id}`}
+                                        target="_blank"
+                                        variant="link"
+                                        w="full"
+                                      >
+                                        {getInvoiceLetter(el.cashMovement?.cbteTipo!)}{' '}
+                                        {el.cashMovement?.posNumber?.toString().padStart(3, '0')}
+                                        {'-'}
+                                        {el.cashMovement?.id?.toString().padStart(8, '0')}
+                                      </Link>
+                                    </Td>
+                                  )
+                                ) : (
+                                  <Td fontSize={14} textAlign="center">
+                                    {' '}
+                                  </Td>
+                                )}
+                                <Td fontSize={14}>
+                                  {el.client?.name}
+                                </Td>
+                                <Td fontSize={14}>
+                                  {el.user?.name} {el.user?.lastname}
+                                </Td>
+                                {el.concept === 'Venta' ? (
+                                  <Td isNumeric fontSize={14}>
+                                    {formatCurrency(el.amount)}
+                                  </Td>
+                                ) : (
+                                  <Td isNumeric color="red.600" fontSize={14}>
+                                    {formatCurrency(el.amount * -1)}
+                                  </Td>
+                                )}
+                              </Tr>
+                            ))}
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    </Stack>
+                  </>
+                  :
+                  <Text fontSize={'xl'} mt={8} textAlign={'center'} textColor={'gray.900'} w="full">
+                    NO EXISTEN DATOS PARA LAS FECHA, USUARIO, CLIENTE Y COMPROBANTES SELECCIONADOS
+                  </Text>
+              }
             </Stack>
           </Stack>
         </>

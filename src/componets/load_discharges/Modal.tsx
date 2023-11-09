@@ -143,7 +143,6 @@ export const Modal = ({
                     id="cost"
                     name="cost"
                     tabIndex={2}
-                    //type="number"
                     value={values.cost}
                     onChange={handleChange}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}

@@ -55,7 +55,7 @@ export const DrawerDischarge = ({
 
   const queryClient = useQueryClient();
 
-  const [_, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });

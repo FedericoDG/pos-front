@@ -1,11 +1,33 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { Box, Stack, Alert, AlertIcon, FormLabel, Button, Input } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Select } from 'chakra-react-select';
 
-import { useBalanceContext } from '.';
+import { useGetInvoceTypes } from '../../hooks';
+import { Loading } from '../common';
+
+import { SelectedInvoice, useBalanceContext } from '.';
 
 export const SupplierAndWarehouse = () => {
-  const { goToNext, from, setFrom, to, setTo } = useBalanceContext();
+  const { goToNext, from, setFrom, to, setTo, invoices, setInvoices } = useBalanceContext();
+
+  const { data: invoiceList } = useGetInvoceTypes();
+
+  const [mappedInvoices, setMappedInvoices] = useState<SelectedInvoice[]>([]);
+
+  useEffect(() => {
+    if (!invoiceList) return;
+
+    const mappedInvoices = invoiceList
+      .filter((el) => el.code === '001' || el.code === '006' || el.code === '051')
+      .map((el) => ({
+        value: el.id,
+        label: el.description,
+      }));
+
+    setMappedInvoices(mappedInvoices);
+    if (invoices.length === 0) setInvoices(mappedInvoices);
+  }, [invoiceList, invoices.length, setInvoices]);
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -21,12 +43,13 @@ export const SupplierAndWarehouse = () => {
     };
   }, [goToNext]);
 
+  if (!invoiceList) return <Loading />;
+
   return (
     <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">
       <Stack direction="row" justify="flex-end">
         <Button
           colorScheme="brand"
-          //isDisabled={!user?.label || !client?.label || invoices.length < 1}
           minW="150px"
           ml="auto"
           rightIcon={<ArrowForwardIcon />}
@@ -69,6 +92,26 @@ export const SupplierAndWarehouse = () => {
             onChange={(e) => setTo(e.target.value)}
           />
         </Box>
+      </Stack>
+      <Stack direction="row">
+        <Box w="50%">
+          <FormLabel htmlFor="client">Tipo de Comprobante:</FormLabel>
+          <Select
+            isClearable
+            isMulti
+            isSearchable
+            colorScheme="gray"
+            name="invoices"
+            noOptionsMessage={() => 'No hay más opciones'}
+            options={mappedInvoices}
+            placeholder="Seleccionar Comprobantes"
+            selectedOptionColorScheme="brand"
+            tabIndex={4}
+            value={invoices}
+            onChange={(e) => setInvoices([...e])}
+          />
+        </Box>
+        <Box w="50%" />
       </Stack>
     </Stack>
   );

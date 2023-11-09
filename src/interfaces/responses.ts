@@ -141,7 +141,7 @@ export interface WarehousesResponse {
 
 export interface PriceListReportResponse {
   body: {
-    pricelists: Array<PriceList2[]>; // ERROR
+    pricelists: Array<PriceList2[]>;
   };
 }
 
@@ -349,6 +349,15 @@ export interface LibroIva {
   body: {
     from: string;
     to: string;
+    totalSubTotal: number;
+    totalIva: number;
+    totalTotal: number;
+    total0: number;
+    total0025: number;
+    total005: number;
+    total0105: number;
+    total021: number;
+    total027: number;
     movements: {
       id: number;
       isCreditNote: boolean;

@@ -12,27 +12,17 @@ export const exportToexcel = (cosas: Fede) => {
   const libro = XLSX.utils.book_new();
   const hoja = XLSX.utils.json_to_sheet([]);
 
-  const tabla: Record<string, any>[] = [
-    {
-      A: 'Nombre',
-      B: 'Código',
-      C: 'Código de Barra',
-      D: 'Stock Total',
-      E: `Stock ${cosas.warehouses[0].code}`,
-      F: `Stock ${cosas.warehouses[0].code}`,
-      G: 'Costo',
-    },
-  ];
+  const tabla: Record<string, any>[] = [];
 
   cosas.stocks?.forEach((el) => {
     tabla.push({
-      A: el.products.name,
-      B: el.products.code,
-      C: el.products.barcode,
-      D: el.stock,
-      E: el.products?.stocks![0].stock,
-      F: el.products?.stocks![1].stock,
-      G: el.products?.costs![0].price,
+      Nombre: el.products.name,
+      ['Código']: el.products.code,
+      ['Código de Barra']: el.products.barcode,
+      ['Stock Total']: el.stock,
+      [`Stock ${cosas.warehouses[0].code}`]: el.products?.stocks![0].stock,
+      [`Stock ${cosas.warehouses[1].code}`]: el.products?.stocks![1].stock,
+      Costo: el.products?.costs![0].price,
     });
   });
 

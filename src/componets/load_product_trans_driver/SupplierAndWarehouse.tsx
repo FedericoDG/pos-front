@@ -89,17 +89,6 @@ export const SupplierAndWarehouse = () => {
             : 'Seleccione los Depósitos de Origen y Destino.'}
         </Alert>
       </Box>
-      {/* <FormControl alignItems="center" display="flex" my="2">
-        <Switch
-          colorScheme="brand"
-          defaultChecked={enabledFilter}
-          id="drivers"
-          onChange={(e) => setEnabledFilter(e.target.checked)}
-        />
-        <FormLabel htmlFor="drivers" mb="0" ml="2">
-          Choferes
-        </FormLabel>
-      </FormControl> */}
       <Stack direction="row">
         <Box w="full">
           <FormLabel htmlFor="warehouse">Depósito de Origen:</FormLabel>

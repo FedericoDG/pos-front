@@ -1,15 +1,4 @@
-import {
-  Box,
-  Menu,
-  MenuButton,
-  IconButton,
-  MenuList,
-  MenuItem,
-  Badge,
-  Button,
-  Icon,
-} from '@chakra-ui/react';
-import { BsThreeDots } from 'react-icons/bs';
+import { Box, Badge, Button, Icon } from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { TbListDetails } from 'react-icons/Tb';

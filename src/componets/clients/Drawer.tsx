@@ -150,7 +150,6 @@ export const Drawer = ({
                     <Select
                       defaultValue={initialValues.identificationId}
                       id="identificationId"
-                      //minW="224px"
                       name="identificationId"
                       onChange={handleChange}
                     >

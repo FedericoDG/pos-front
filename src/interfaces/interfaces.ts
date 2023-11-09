@@ -133,7 +133,7 @@ export interface PriceList {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
-  products: Product[]; // OJO
+  products: Product[];
   prices?: Price[];
   createdAt: string;
   totalStock: number;
@@ -146,7 +146,7 @@ export interface PriceList2 {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
-  products: Product; // OJO
+  products: Product;
   prices?: Price[];
   createdAt: string;
   totalStock: number;
@@ -176,7 +176,7 @@ export interface Stock {
   prevdate: string;
   createdAt: string;
   updatedAt: string;
-  products: Product; // OJO Products[]
+  products: Product;
   warehouse: Warehouse;
 }
 

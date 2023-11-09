@@ -140,7 +140,7 @@ export const CashRegisterDetails = () => {
       rechargePercent: movement.rechargePercent,
       warehouseId: movement.warehouseId,
       cashMovementId: movement.id!,
-      movementIds: [] //OJOACA
+      movementIds: []
     };
 
     createAfipInvoce(sale);
@@ -364,7 +364,6 @@ export const CashRegisterDetails = () => {
                         </Text>
                         <Thead>
                           <Tr>
-                            {/*  <Th bg="gray.700" className="no-print" color="white" w="50px" /> */}
                             <Th bg="gray.700" color="white" w="215px" >Tipo</Th>
                             <Th bg="gray.700" color="white" w="250px">
                               Fecha
@@ -384,21 +383,10 @@ export const CashRegisterDetails = () => {
                           {invoces.map((movement) => (
                             <React.Fragment key={nanoid()}>
                               <Tr
-                                // bg={algo.some((el) => el.open) ? 'gray.50' : 'white'}
                                 bg='gray.50'
                                 cursor="pointer"
                                 onClick={() => handleClick(movement.id!)}
                               >
-                                {/*  <Td className="no-print">
-                                <Icon
-                                  as={MdKeyboardArrowRight}
-                                  transform={
-                                    algo.find((el) => el.id === movement.id)?.open
-                                      ? 'rotate(90deg)'
-                                      : ''
-                                  }
-                                />
-                              </Td> */}
                                 <Td>
                                   {
                                     movement.invoceTypeId === 4 &&
@@ -817,7 +805,6 @@ export const CashRegisterDetails = () => {
                         </Text>
                         <Thead>
                           <Tr>
-                            {/*  <Th bg="gray.700" className="no-print" color="white" w="50px" /> */}
                             <Th bg="gray.700" color="white" w="215px" >Tipo</Th>
                             <Th bg="gray.700" color="white" w="250px">
                               Fecha
@@ -831,7 +818,6 @@ export const CashRegisterDetails = () => {
                           {creditNotes.map((movement) => (
                             <React.Fragment key={nanoid()}>
                               <Tr
-                                // bg={algo.some((el) => el.open) ? 'gray.50' : 'white'}
                                 bg='gray.50'
                                 cursor="pointer"
                                 onClick={() => handleClick(movement.id!)}

@@ -43,7 +43,7 @@ export const Products = () => {
 
     resetValues.categoryId = categories[0].id!;
     resetValues.unitId = units[0].id!;
-    resetValues.ivaConditionId = ivaConditions[5].id!;
+    resetValues.ivaConditionId = ivaConditions[2].id!;
   }, [categories, ivaConditions, resetValues, units]);
 
   const isIndeterminate =

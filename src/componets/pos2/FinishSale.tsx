@@ -549,7 +549,6 @@ export const FinishSale = () => {
 
                               <Button
                                 colorScheme="red"
-                                // isDisabled={lockDOrR}
                                 size="md"
                                 variant="outline"
                                 onClick={resetDOrR}
@@ -573,87 +572,6 @@ export const FinishSale = () => {
                         </Flex>
                       }
                     </Stack>
-
-                    {/*   <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
-                      <Icon as={AiFillLock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'block' : 'none'} pos='absolute' right={1} top={1} />
-                      <Icon as={AiFillUnlock} boxSize={6} color={'blackAlpha.700'} display={values.payments?.length && values.payments.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />
-                      <Box position='relative' px="4" py='8'>
-                        <Divider />
-                        <AbsoluteCenter bg='white' px="2">
-                          <FormLabel htmlFor="otherTributes">Otros Tributos</FormLabel>
-                        </AbsoluteCenter>
-                      </Box>
-                      <FieldArray
-                        name="otherTributes"
-                        render={(arrayHelpers) => (
-                          <Stack w="full">
-                            {values?.otherTributes?.map((_, index) => (
-                              <Stack key={index} w='full' >
-                                <Stack alignItems="flex-end" direction="row" w="full">
-                                  <Box w='29%'>
-                                    <InputGroup>
-                                      <InputLeftAddon children="$" />
-                                      <Input
-                                        autoComplete='off'
-                                        defaultValue={0}
-                                        id={`otherTributes[${index}].amount`}
-                                        isDisabled={(values.payments && values.payments?.length > 0)}
-                                        name={`otherTributes[${index}].amount`}
-                                        onChange={handleChange}
-                                        onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                                      />
-                                    </InputGroup>
-                                  </Box>
-
-                                  <Box w='59%'>
-                                    <Select
-                                      id={`otherTributes.${index}.otherTributeId`}
-                                      isDisabled={(values.payments && values.payments?.length > 0)}
-                                      minW="224px"
-                                      name={`otherTributes.${index}.otherTributeId`}
-                                      onChange={handleChange}
-
-                                    >
-                                      {otherTributes.map((tribute) => (
-                                        <option key={tribute.code} value={tribute.id}>
-                                          {tribute.code} - {tribute.description}
-                                        </option>
-                                      ))}
-                                    </Select>
-                                  </Box>
-                                  <Button flex={1} isDisabled={(values.payments && values.payments?.length > 0)} onClick={() => arrayHelpers.remove(index)}>
-                                    <Icon as={FaRegTrashAlt} color="brand" m="0 auto" />
-                                  </Button>
-                                </Stack>
-                                {Array.isArray(errors.otherTributes) && errors.otherTributes[index] && (
-                                  <ErrorMessage>{errors.otherTributes[index]['amount']}</ErrorMessage>
-                                )}
-                              </Stack>
-
-                            ))}
-
-                            <Button
-                              colorScheme="brand"
-                              isDisabled={values.otherTributes?.some(el => Number(el.amount) <= 0) || (values.payments && values.payments?.length > 0)}
-                              size="md"
-                              variant="outline"
-                              onClick={() => {
-                                arrayHelpers.push({
-                                  amount: 0,
-                                  otherTributeId: '1',
-                                  id: '1',
-                                  description: 'IMPUESTOS NACIONALES'
-                                });
-                              }}
-                            >
-                              <Icon as={BsPlusCircle} color="brand" mr="2" />
-                              Tributo
-                            </Button>
-                          </Stack>
-                        )}
-                      />
-                    </Stack> */}
-
                     <Stack border="1px solid whitesmoke" pb="4" pos='relative' px="4" rounded='md' w="full">
                       <Icon as={FiAlertTriangle} boxSize={6} color={'red.500'} display={values.payments?.length && values.payments?.length > 0 ? 'none' : 'block'} pos='absolute' right={1} top={1} />
                       <Box position='relative' px="4" py='8'>

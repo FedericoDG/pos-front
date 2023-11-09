@@ -11,18 +11,20 @@ interface Data {
   to: string;
 }
 interface Data2 {
+  invoices: string;
   from: string;
   to: string;
 }
 
 const getBalance = (data: Data) =>
   getRequest<BalanceResponse>(
-    `/movements?userId=${data.userId}&clientId=${data.clientId}&invoices=${data.invoices}&from=${data.from}&to=${data.to}`,
-    data
+    `/movements?userId=${data.userId}&clientId=${data.clientId}&invoices=${data.invoices}&from=${data.from}&to=${data.to}`
   );
 
 const getLibroIva = (data: Data2) =>
-  getRequest<LibroIva>(`/cashmovements/iva?from=${data.from}&to=${data.to}`, data);
+  getRequest<LibroIva>(
+    `/cashmovements/iva?invoices=${data.invoices}&from=${data.from}&to=${data.to}`
+  );
 
 export const useGetBalance = (data: Data) =>
   useQuery(['balance'], () => getBalance(data), {

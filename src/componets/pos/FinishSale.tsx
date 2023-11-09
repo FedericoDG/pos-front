@@ -396,8 +396,6 @@ export const FinishSale = () => {
     setCartCopy(cart);
   }, [cart]);
 
-  console.log({ settings });
-
   return (
     <Stack bg="white" p="4" rounded="md" shadow="md">
       {
@@ -551,7 +549,6 @@ export const FinishSale = () => {
 
                               <Button
                                 colorScheme="red"
-                                // isDisabled={lockDOrR}
                                 size="md"
                                 variant="outline"
                                 onClick={resetDOrR}

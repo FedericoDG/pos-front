@@ -27,7 +27,12 @@ ChartJS.register(
   Filler
 );
 
-export const Graph = ({ stock, product }: { stock: any; product: Product; }) => {
+interface Props {
+  stock: any;
+  product: Product;
+}
+
+export const Graph = ({ stock, product }: Props) => {
   const [showChart, setShowChart] = useState(false);
 
   const options = {

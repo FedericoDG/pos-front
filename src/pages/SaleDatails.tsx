@@ -83,7 +83,6 @@ export const SaleDetails = () => {
                 </HStack>
                 <HStack
                   border="solid black"
-                  //borderTop={0}
                   borderWidth={1}
                   justifyContent="center"
                   left="95mm"

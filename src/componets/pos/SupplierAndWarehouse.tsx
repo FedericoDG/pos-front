@@ -219,19 +219,6 @@ export const SupplierAndWarehouse = () => {
           <AlertIcon />
           Seleccione Lista de Precio, Depósito, Cliente y Tipo de Comprobante.
         </Alert>
-        {/* <FormControl alignItems="center" display="flex" mt={4}>
-          <FormLabel htmlFor="iva" m="0" mr="2" py="4">
-            IVA:
-          </FormLabel>
-          <Switch
-            colorScheme="brand"
-            id="iva"
-            isChecked={iva}
-            size="lg"
-            tabIndex={4}
-            onChange={() => setIva((current) => !current)}
-          />
-        </FormControl> */}
       </Box>
       <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
         <Box w="49%">

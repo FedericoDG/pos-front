@@ -73,13 +73,6 @@ export const Basket = () => {
       >
         SIGUIENTE
       </Button>
-      {/*  <Button
-        colorScheme="brand"
-        rightIcon={<ArrowForwardIcon />}
-        onClick={() => goToNext()}
-      >
-        SIGUIENTE
-      </Button> */}
     </Stack>
   );
 };

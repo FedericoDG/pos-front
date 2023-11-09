@@ -20,7 +20,6 @@ export const Drivers = () => {
       address: '',
       description: '',
       driver: 1,
-      //
       user: {
         roleId: 4,
         lastname: '',

@@ -154,13 +154,6 @@ export const DashBoard = ({ children, title }: Props) => {
           <Box h="6px" w="full">
             <Progress bg="blue.500" h="6px" w="full" />
           </Box>
-          {/*  <Box h="5px" w="full">
-            {isIndeterminate ? (
-              <Progress isIndeterminate colorScheme="brand" size="xs" w="full" />
-            ) : (
-              <Progress bg="brand" size="xs" w="full" />
-            )}
-          </Box> */}
           <Flex
             _dark={{ color: 'black' }}
             alignItems="center"
@@ -170,8 +163,6 @@ export const DashBoard = ({ children, title }: Props) => {
             mb={4}
             p={4}
             pb={0}
-            //style={{ scrollbarGutter: 'stable', overflow: 'hidden' }}
-            // style={{ scrollbarGutter: 'stable both-edges', overflow: 'hidden' }}
             w="full"
             zIndex={1}
           >

@@ -7,21 +7,14 @@ export const exportToexcel = (products: Discharge[]) => {
   const libro = XLSX.utils.book_new();
   const hoja = XLSX.utils.json_to_sheet([]);
 
-  const tabla: Record<string, any>[] = [
-    {
-      A: 'Fecha',
-      B: 'Pérdida',
-      C: 'Depósito',
-      D: 'Usuario',
-    },
-  ];
+  const tabla: Record<string, any>[] = [];
 
   products?.forEach((el) => {
     tabla.push({
-      A: el.createdAt,
-      B: el.cost,
-      C: el.warehouses?.code,
-      D: `${el.user?.name} ${el.user?.lastname}`,
+      Fecha: el.createdAt,
+      ['Pérdida']: el.cost,
+      ['Depósito']: el.warehouses?.code,
+      Usuario: `${el.user?.name} ${el.user?.lastname}`,
     });
   });
 

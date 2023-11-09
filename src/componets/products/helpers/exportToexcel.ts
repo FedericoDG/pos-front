@@ -7,27 +7,17 @@ export const exportToexcel = (products: Product[]) => {
   const libro = XLSX.utils.book_new();
   const hoja = XLSX.utils.json_to_sheet([]);
 
-  const tabla: Record<string, any>[] = [
-    {
-      A: 'Nombre',
-      B: 'Código',
-      C: 'Stock',
-      D: 'Costo',
-      E: 'Estado',
-      F: 'Stock Negativo',
-      G: 'Alerta Stock Bajo',
-    },
-  ];
+  const tabla: Record<string, any>[] = [];
 
   products?.forEach((el) => {
     tabla.push({
-      A: el.name,
-      B: el.code,
-      C: el.stocks?.reduce((acc, el) => acc + el.stock, 0) || 0,
-      D: el?.costs ? el.costs[0] : 0,
-      E: el.status === 'ENABLED' ? 'HABILITADO' : 'NO HABILITADO',
-      F: el.allownegativestock === 'ENABLED' ? 'HABILITADO' : 'NO HABILITADO',
-      G: el.alertlowstock === 'ENABLED' ? 'HABILITADO' : 'NO HABILITADO',
+      Nombre: el.name,
+      ['Código']: el.code,
+      Stock: el.stocks?.reduce((acc, el) => acc + el.stock, 0) || 0,
+      Costo: el?.costs ? el.costs[0] : 0,
+      Estado: el.status === 'ENABLED' ? 'HABILITADO' : 'NO HABILITADO',
+      ['Stock Negativo']: el.allownegativestock === 'ENABLED' ? 'HABILITADO' : 'NO HABILITADO',
+      ['Alerta Stock Bajo']: el.alertlowstock === 'ENABLED' ? 'HABILITADO' : 'NO HABILITADO',
     });
   });
 

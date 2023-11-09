@@ -35,7 +35,6 @@ export const Basket = () => {
   const handleSubmit = useCallback(() => {
     const discharge = {
       warehouseId: warehouse?.id!,
-      //date: new Date(),
       cart: cart.map((item) => ({
         productId: item.productId,
         reasonId: item.reasonId,

@@ -7,27 +7,17 @@ export const exportToexcel = (products: CashRegister[]) => {
   const libro = XLSX.utils.book_new();
   const hoja = XLSX.utils.json_to_sheet([]);
 
-  const tabla: Record<string, any>[] = [
-    {
-      A: 'Estado',
-      B: 'Apertura',
-      C: 'Cierre',
-      D: 'Monto Inicial',
-      E: 'Ventas',
-      F: 'Total A Rendir',
-      G: 'Usuario',
-    },
-  ];
+  const tabla: Record<string, any>[] = [];
 
   products?.forEach((el) => {
     tabla.push({
-      A: el.isOpen ? 'abierta' : 'cerrada',
-      B: el.openingDate,
-      C: el.closingDate,
-      D: el.initialBalance,
-      E: el.finalBalance,
-      F: el.initialBalance + el.finalBalance,
-      G: `${el.user?.name} ${el.user?.lastname}`,
+      Estado: el.isOpen ? 'abierta' : 'cerrada',
+      Apertura: el.openingDate,
+      Cierre: el.closingDate,
+      ['Monto Inicial']: el.initialBalance,
+      Ventas: el.finalBalance,
+      ['Total a Rendir']: el.initialBalance + el.finalBalance,
+      Usuario: `${el.user?.name} ${el.user?.lastname}`,
     });
   });
 

@@ -124,7 +124,6 @@ export const Drawer = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton color="white" />
-          {/* x' bgGradient='linear(to-r, green.200, pink.500)' */}
           <DrawerHeader
             bgGradient="linear(to-r, brand.600, blue.500)"
             borderBottomWidth="1px"

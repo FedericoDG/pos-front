@@ -7,6 +7,7 @@ import {
   FaFileInvoiceDollar,
   FaUserFriends,
   FaChartLine,
+  FaBook,
 } from 'react-icons/fa';
 import { GiCarWheel } from 'react-icons/gi';
 import { MdKeyboardArrowRight } from 'react-icons/md';
@@ -255,7 +256,7 @@ export const SidebarContent = (props: Props) => {
         </NavItem>
 
         {/* LIBRO IVA */}
-        <NavItem icon={FaChartLine} link="/panel/libro-iva">
+        <NavItem icon={FaBook} link="/panel/libro-iva">
           Libro IVA
         </NavItem>
 

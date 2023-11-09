@@ -10,7 +10,7 @@ import { useColumns } from '../componets/stocks/hooks';
 import { useGetReasons, useGetStocks, useGetWarehousesWOStock } from '../hooks';
 
 export const Stocks = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
 
   const resetValues: Discharge = useMemo(
     () => ({
@@ -47,7 +47,7 @@ export const Stocks = () => {
 
   const isIndeterminate = isFetchingStocks;
 
-  const { columns } = useColumns({ onOpen, warehouses: ware, setinitialValues });
+  const { columns } = useColumns({ warehouses: ware });
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Stock">

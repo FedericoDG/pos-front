@@ -54,7 +54,7 @@ export const Drawer = ({
 
   const queryClient = useQueryClient();
 
-  const [_, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const onSuccess = (res: any) => {
     if (res.body.price) {

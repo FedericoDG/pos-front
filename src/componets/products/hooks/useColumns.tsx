@@ -139,7 +139,6 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
                 </MenuItem>
                 <MenuItem
                   icon={<GoAlert />}
-                  //isDisabled={row.original.stock <= 0}
                   onClick={() =>
                     navigate(`/panel/productos/detalles/${row.original.id}?tab=0&discharge=1`)
                   }
