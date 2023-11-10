@@ -16,8 +16,9 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'sonner';
 
 import { Client, Identification, IvaType } from '../../interfaces';
 import { ErrorMessage } from '../common';
@@ -49,7 +50,7 @@ export const Drawer = ({
   const { mutateAsync: createClient, isLoading: isLoadingCreate } = useCreateClient();
   const { mutateAsync: updateClient, isLoading: isLoadingUpdate } = useUpdateClient();
 
-  const onSubmit = async (values: Client, actions: FormikHelpers<Client>) => {
+  const onSubmit = async (values: Client) => {
     delete values.password2;
 
     const parsedValues = {
@@ -59,17 +60,17 @@ export const Drawer = ({
     };
 
     if (values?.id) {
-      updateClient(parsedValues).finally(() => {
-        setinitialValues(resetValues);
-        actions.resetForm();
-        onClose();
-      });
+      updateClient(parsedValues)
+        .then(() => toast.success('Cliente actualizado'))
+        .finally(() => {
+          close();
+        });
     } else {
-      createClient(parsedValues).finally(() => {
-        setinitialValues(resetValues);
-        actions.resetForm();
-        onClose();
-      });
+      createClient(parsedValues)
+        .then(() => toast.success('Cliente creado'))
+        .finally(() => {
+          close();
+        });
     }
   };
 

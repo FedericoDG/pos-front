@@ -26,6 +26,7 @@ import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { BsDownload } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
+import { toast } from 'sonner';
 
 import { useGetBalance } from '../../hooks';
 import { Loading } from '../common';
@@ -63,7 +64,7 @@ export const Sheet = () => {
     to,
   };
 
-  const { data: balance, isFetching } = useGetBalance(data);
+  const { data: balance, isFetching, isSuccess } = useGetBalance(data);
 
   const handleDownload = () => {
     const libro = XLSX.utils.book_new();
@@ -98,6 +99,8 @@ export const Sheet = () => {
       XLSX.writeFile(libro, `ingresos_${from}_${to}.xlsx`);
     }, 500);
   };
+
+  if (isSuccess) toast('Ingresos recuperados');
 
   return (
     <Stack w="full">

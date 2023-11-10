@@ -13,11 +13,13 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'sonner';
 
 import { Pricelists } from '../../interfaces';
 import { useCreatePriceLists, useUpdatePriceLists } from '../../hooks/';
+import { ErrorMessage } from '../common';
 
 import { schema } from './schemas';
 
@@ -38,22 +40,23 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createPriceList } = useCreatePriceLists();
-  const { mutate: updatePriceList } = useUpdatePriceLists();
+  const { mutateAsync: createPriceList } = useCreatePriceLists();
+  const { mutateAsync: updatePriceList } = useUpdatePriceLists();
 
-  const onSubmit = (values: Pricelists, actions: FormikHelpers<Pricelists>) => {
+  const onSubmit = (values: Pricelists /* , actions: FormikHelpers<Pricelists> */) => {
     const parsedValues = {
       ...values,
     };
 
     if (values?.id) {
-      updatePriceList(parsedValues);
+      updatePriceList(parsedValues)
+        .then(() => toast.success('Lista de Precios actualizada'))
+        .finally(() => close());
     } else {
-      createPriceList(parsedValues);
+      createPriceList(parsedValues)
+        .then(() => toast.success('Lista de Precios creada'))
+        .finally(() => close());
     }
-    setinitialValues(resetValues);
-    actions.resetForm();
-    onClose();
   };
 
   const close = () => {
@@ -106,7 +109,9 @@ export const Drawer = ({
                     onChange={handleChange}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                   />
-                  {errors.code && touched.code && <div>{errors.code}</div>}
+                  <ErrorMessage>
+                    {errors.code && touched.code && <div>{errors.code}</div>}
+                  </ErrorMessage>
                 </Box>
                 <Box>
                   <FormLabel htmlFor="description">Descripción:</FormLabel>
@@ -117,7 +122,9 @@ export const Drawer = ({
                     value={values.description}
                     onChange={handleChange}
                   />
-                  {errors.description && touched.description && <div>{errors.description}</div>}
+                  <ErrorMessage>
+                    {errors.description && touched.description && <div>{errors.description}</div>}
+                  </ErrorMessage>
                 </Box>
               </Stack>
             </DrawerBody>

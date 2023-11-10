@@ -21,6 +21,7 @@ import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { BsDownload } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
+import { toast } from 'sonner';
 
 import { useGetLibroIva } from '../../hooks';
 import { Loading } from '../common';
@@ -50,7 +51,7 @@ export const Sheet = () => {
   };
 
 
-  const { data: libroIva, isFetching } = useGetLibroIva(data);
+  const { data: libroIva, isFetching, isSuccess } = useGetLibroIva(data);
 
   const creditNotesIds = [5, 6, 7, 8];
 
@@ -91,6 +92,8 @@ export const Sheet = () => {
 
   const getInvoiceList = (list: SelectedInvoice[]) =>
     list.map((el) => getInvoceLetterById(el.value!)).join(', ');
+
+  if (isSuccess) toast('Libro IVA recuperado');
 
   return (
     <Stack w="full">

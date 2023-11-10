@@ -15,8 +15,9 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { FormikHelpers, getIn, useFormik } from 'formik';
+import { getIn, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'sonner';
 
 import { Warehouse } from '../../interfaces';
 import { useCreateWarehouse, useUpdateWarehose } from '../../hooks/';
@@ -41,10 +42,10 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createWarehouse } = useCreateWarehouse();
-  const { mutate: updateWarehouse } = useUpdateWarehose();
+  const { mutateAsync: createWarehouse } = useCreateWarehouse();
+  const { mutateAsync: updateWarehouse } = useUpdateWarehose();
 
-  const onSubmit = (values: Warehouse, actions: FormikHelpers<Warehouse>) => {
+  const onSubmit = (values: Warehouse) => {
     const parsedValues = {
       code: values.code,
       driver: 1,
@@ -56,13 +57,14 @@ export const Drawer = ({
     };
 
     if (values?.id) {
-      updateWarehouse({ ...parsedValues, id: Number(values.id) });
+      updateWarehouse({ ...parsedValues, id: Number(values.id) })
+        .then(() => toast.success('Chofer actualizado'))
+        .finally(() => close());
     } else {
-      createWarehouse(parsedValues);
+      createWarehouse(parsedValues)
+        .then(() => toast.success('Chofer creado'))
+        .finally(() => close());
     }
-    setinitialValues(resetValues);
-    actions.resetForm();
-    onClose();
   };
 
   const formik = useFormik({

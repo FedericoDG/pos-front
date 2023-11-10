@@ -13,11 +13,13 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'sonner';
 
 import { Unit } from '../../interfaces';
 import { useCreateUnits, useUpdateUnits } from '../../hooks/';
+import { ErrorMessage } from '../common';
 
 import { schema } from './schemas';
 
@@ -38,22 +40,23 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createUnit } = useCreateUnits();
-  const { mutate: updateUnit } = useUpdateUnits();
+  const { mutateAsync: createUnit } = useCreateUnits();
+  const { mutateAsync: updateUnit } = useUpdateUnits();
 
-  const onSubmit = (values: Unit, actions: FormikHelpers<Unit>) => {
+  const onSubmit = (values: Unit) => {
     const parsedValues = {
       ...values,
     };
 
     if (values?.id) {
-      updateUnit(parsedValues);
+      updateUnit(parsedValues)
+        .then(() => toast.success('Unidad actualizada'))
+        .finally(() => close());
     } else {
-      createUnit(parsedValues);
+      createUnit(parsedValues)
+        .then(() => toast.success('Unidad creada'))
+        .finally(() => close());
     }
-    setinitialValues(resetValues);
-    actions.resetForm();
-    onClose();
   };
 
   const close = () => {
@@ -106,7 +109,9 @@ export const Drawer = ({
                     onChange={handleChange}
                     onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                   />
-                  {errors.code && touched.code && <div>{errors.code}</div>}
+                  <ErrorMessage>
+                    {errors.code && touched.code && <div>{errors.code}</div>}
+                  </ErrorMessage>
                 </Box>
                 <Box>
                   <FormLabel htmlFor="name">Nombre:</FormLabel>
@@ -117,7 +122,9 @@ export const Drawer = ({
                     value={values.name}
                     onChange={handleChange}
                   />
-                  {errors.name && touched.name && <div>{errors.name}</div>}
+                  <ErrorMessage>
+                    {errors.name && touched.name && <div>{errors.name}</div>}
+                  </ErrorMessage>
                 </Box>
               </Stack>
             </DrawerBody>

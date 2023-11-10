@@ -15,8 +15,9 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'sonner';
 
 import { Supplier } from '../../interfaces';
 import { useCreateSupplier, useUpdateSupplier } from '../../hooks/';
@@ -41,22 +42,23 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createSupplier } = useCreateSupplier();
-  const { mutate: updateSupplier } = useUpdateSupplier();
+  const { mutateAsync: createSupplier } = useCreateSupplier();
+  const { mutateAsync: updateSupplier } = useUpdateSupplier();
 
-  const onSubmit = (values: Supplier, actions: FormikHelpers<Supplier>) => {
+  const onSubmit = (values: Supplier) => {
     const parsedValues = {
       ...values,
     };
 
     if (values?.id) {
-      updateSupplier(parsedValues);
+      updateSupplier(parsedValues)
+        .then(() => toast.success('Proveedor actualizado'))
+        .finally(() => close());
     } else {
-      createSupplier(parsedValues);
+      createSupplier(parsedValues)
+        .then(() => toast.success('Proveedor creado'))
+        .finally(() => close());
     }
-    setinitialValues(resetValues);
-    actions.resetForm();
-    onClose();
   };
 
   const close = () => {

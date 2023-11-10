@@ -14,8 +14,9 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'sonner';
 
 import { Category } from '../../interfaces';
 import { useCreateCategory, useUpdateCategory } from '../../hooks/';
@@ -40,22 +41,27 @@ export const Drawer = ({
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
 
-  const { mutate: createCategory } = useCreateCategory();
-  const { mutate: updateCategory } = useUpdateCategory();
+  const { mutateAsync: createCategory } = useCreateCategory();
+  const { mutateAsync: updateCategory } = useUpdateCategory();
 
-  const onSubmit = (values: Category, actions: FormikHelpers<Category>) => {
+  const onSubmit = (values: Category) => {
     const parsedValues = {
       ...values,
     };
 
     if (values?.id) {
-      updateCategory(parsedValues);
+      updateCategory(parsedValues)
+        .then(() => {
+          toast.success('Categoría actualizada');
+        })
+        .finally(() => close());
     } else {
-      createCategory(parsedValues);
+      createCategory(parsedValues)
+        .then(() => {
+          toast.success('Categoría actualizada');
+        })
+        .finally(() => close());
     }
-    setinitialValues(resetValues);
-    actions.resetForm();
-    onClose();
   };
 
   const close = () => {
