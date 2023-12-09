@@ -61,9 +61,14 @@ export const Stock = ({ product, warehouses }: Props) => {
   });
 
   useEffect(() => {
-    const mappedWarehouses = warehouses
-      .map((el) => ({ ...el, value: el.id, label: el.code }))
-      .filter((el) => el.driver !== 1);
+    const mappedWarehouses = warehouses.map((el) => {
+      if (el.driver === 1) {
+        return { ...el, value: el.id, label: `**CHOFER** ${el.code}` };
+      } else {
+        return { ...el, value: el.id, label: `*DEPOSITO* ${el.code}` };
+      }
+    });
+    //.filter((el) => el.driver !== 1);
 
     setMappedWarehouses(mappedWarehouses);
   }, [warehouses]);

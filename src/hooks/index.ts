@@ -20,6 +20,7 @@ export * from './usePurchase';
 export * from './useReasons';
 export * from './useRoles';
 export * from './useSettings';
+export * from './useStates';
 export * from './useStocks';
 export * from './useSuppliers';
 export * from './useTransfer';

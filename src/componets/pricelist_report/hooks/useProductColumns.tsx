@@ -39,6 +39,12 @@ export const useProductColumns = () => {
         accessorKey: 'name',
       },
       {
+        id: 'categoría',
+        header: 'Categoría',
+        cell: (row: CellContext<Product, unknown>) => row.renderValue(),
+        accessorFn: (x) => x.category?.name,
+      },
+      {
         id: 'cod',
         header: 'Código',
         cell: (row: CellContext<Product, unknown>) => row.renderValue(),

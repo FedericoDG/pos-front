@@ -20,7 +20,7 @@ import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { toast } from 'sonner';
 
-import { Client, Identification, IvaType } from '../../interfaces';
+import { Client, Identification, IvaType, State } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useCreateClient, useUpdateClient } from '../../hooks/';
 
@@ -30,6 +30,7 @@ interface Props {
   initialValues: Client;
   identifications: Identification[];
   ivaTypes: IvaType[];
+  states: State[];
   resetValues: Client;
   isOpen: boolean;
   onClose: () => void;
@@ -40,6 +41,7 @@ export const Drawer = ({
   initialValues,
   identifications,
   ivaTypes,
+  states,
   resetValues,
   setinitialValues,
   isOpen,
@@ -57,6 +59,8 @@ export const Drawer = ({
       ...values,
       identificationId: Number(values.identificationId),
       ivaTypeId: Number(values.ivaTypeId),
+      stateId: Number(values.stateId),
+      city: values.city.toUpperCase(),
     };
 
     if (values?.id) {
@@ -146,8 +150,40 @@ export const Drawer = ({
                 </Flex>
 
                 <Flex gap="4" justifyContent="space-between">
+                  <Box w="49%">
+                    <FormLabel htmlFor="stateId">Provincia:</FormLabel>
+                    <Select
+                      defaultValue={initialValues.stateId}
+                      id="stateId"
+                      name="stateId"
+                      onChange={handleChange}
+                    >
+                      {states.map((state) => (
+                        <option key={state.name} value={state.id}>
+                          {state.id} - {state.name}
+                        </option>
+                      ))}
+                    </Select>
+                    {errors.stateId && touched.stateId && (
+                      <ErrorMessage>{errors.stateId}</ErrorMessage>
+                    )}
+                  </Box>
+                  <Box w="49%">
+                    <FormLabel htmlFor="city">Ciudad:</FormLabel>
+                    <Input
+                      id="city"
+                      name="city"
+                      placeholder="Posadas"
+                      value={values.city}
+                      onChange={handleChange}
+                    />
+                    {errors.city && touched.city && <ErrorMessage>{errors.city}</ErrorMessage>}
+                  </Box>
+                </Flex>
+
+                <Flex gap="4" justifyContent="space-between">
                   <Box w="67%">
-                    <FormLabel htmlFor="identificationId">Tipo de identificación</FormLabel>
+                    <FormLabel htmlFor="identificationId">Tipo de identificación:</FormLabel>
                     <Select
                       defaultValue={initialValues.identificationId}
                       id="identificationId"
@@ -203,7 +239,7 @@ export const Drawer = ({
 
                 <Flex gap="4" justifyContent="space-between" />
 
-                {!initialValues.id && (
+                {/* {!initialValues.id && (
                   <Flex gap="4" justifyContent="space-between">
                     <Box w="full">
                       <FormLabel htmlFor="password">Contraseña:</FormLabel>
@@ -235,7 +271,7 @@ export const Drawer = ({
                       )}
                     </Box>
                   </Flex>
-                )}
+                )} */}
 
                 <Flex gap="4" justifyContent="space-between">
                   <Box>

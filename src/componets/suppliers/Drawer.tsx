@@ -11,6 +11,7 @@ import {
   Flex,
   FormLabel,
   Input,
+  Select,
   Stack,
   Textarea,
 } from '@chakra-ui/react';
@@ -18,8 +19,9 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { toast } from 'sonner';
+import { QueryClient, useQueryClient } from 'react-query';
 
-import { Supplier } from '../../interfaces';
+import { State, Supplier } from '../../interfaces';
 import { useCreateSupplier, useUpdateSupplier } from '../../hooks/';
 import { ErrorMessage } from '../common';
 
@@ -28,6 +30,7 @@ import { schema } from './schemas';
 interface Props {
   initialValues: Supplier;
   resetValues: Supplier;
+  states: State[];
   isOpen: boolean;
   onClose: () => void;
   setinitialValues: Dispatch<SetStateAction<Supplier>>;
@@ -35,30 +38,41 @@ interface Props {
 
 export const Drawer = ({
   initialValues,
+  states,
   isOpen,
   onClose,
   resetValues,
   setinitialValues,
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
+  const queryClient = useQueryClient();
 
-  const { mutateAsync: createSupplier } = useCreateSupplier();
-  const { mutateAsync: updateSupplier } = useUpdateSupplier();
+  const onSuccess = (res: any) => {
+    queryClient.invalidateQueries({ queryKey: ['suppliers'] });
+    toast.success(res.message);
+  };
+
+  const onError = (error: any) => {
+    toast.error(error.response.data.message);
+  };
+
+  const { mutate: createSupplier } = useCreateSupplier(onSuccess, onError);
+  const { mutate: updateSupplier } = useUpdateSupplier(onSuccess, onError);
 
   const onSubmit = (values: Supplier) => {
     const parsedValues = {
       ...values,
+      stateId: Number(values.stateId),
+      city: values.city.toUpperCase(),
     };
 
     if (values?.id) {
-      updateSupplier(parsedValues)
-        .then(() => toast.success('Proveedor actualizado'))
-        .finally(() => close());
+      updateSupplier(parsedValues);
     } else {
-      createSupplier(parsedValues)
-        .then(() => toast.success('Proveedor creado'))
-        .finally(() => close());
+      createSupplier(parsedValues);
     }
+
+    close();
   };
 
   const close = () => {
@@ -117,7 +131,7 @@ export const Drawer = ({
 
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
-                    <FormLabel htmlFor="name">Nombre:</FormLabel>
+                    <FormLabel htmlFor="name">Razón Social:</FormLabel>
                     <Input
                       id="name"
                       name="name"
@@ -138,6 +152,38 @@ export const Drawer = ({
                       onFocus={(event) => setTimeout(() => event.target.select(), 100)}
                     />
                     {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+                  </Box>
+                </Flex>
+
+                <Flex gap="4" justifyContent="space-between">
+                  <Box w="49%">
+                    <FormLabel htmlFor="stateId">Provincia:</FormLabel>
+                    <Select
+                      defaultValue={initialValues.stateId}
+                      id="stateId"
+                      name="stateId"
+                      onChange={handleChange}
+                    >
+                      {states.map((state) => (
+                        <option key={state.name} value={state.id}>
+                          {state.id} - {state.name}
+                        </option>
+                      ))}
+                    </Select>
+                    {errors.stateId && touched.stateId && (
+                      <ErrorMessage>{errors.stateId}</ErrorMessage>
+                    )}
+                  </Box>
+                  <Box w="49%">
+                    <FormLabel htmlFor="city">Ciudad:</FormLabel>
+                    <Input
+                      id="city"
+                      name="city"
+                      placeholder="Posadas"
+                      value={values.city}
+                      onChange={handleChange}
+                    />
+                    {errors.city && touched.city && <ErrorMessage>{errors.city}</ErrorMessage>}
                   </Box>
                 </Flex>
 

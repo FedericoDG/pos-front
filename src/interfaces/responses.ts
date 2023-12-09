@@ -21,6 +21,7 @@ import {
   Reason,
   Role,
   Settings,
+  State,
   Stock2,
   Supplier,
   Transfer,
@@ -291,6 +292,12 @@ export interface InvoceTypesResponse {
 export interface OtherTributesResponse {
   body: {
     otherTributes: OtherTribute[];
+  };
+}
+
+export interface StatesResponse {
+  body: {
+    states: State[];
   };
 }
 
