@@ -48,7 +48,7 @@ export const Form = ({ afip, settings }: Props) => {
   const isLoading = isLoadingSettings && isLoadingAfipSettings;
 
   const onSubmit = (values: Settings & Afip, actions: FormikHelpers<Settings & Afip>) => {
-    const { posNumber, maxPerInvoice, invoiceM, ...rest } = values;
+    const { posNumber, maxPerInvoice, invoiceM, showOtherTaxes, ...rest } = values;
 
     delete rest.id;
     delete rest.certExpiration;
@@ -62,6 +62,7 @@ export const Form = ({ afip, settings }: Props) => {
     const parsedValuesSettings = {
       ...rest,
       invoceNumber: Number(values.invoceNumber),
+      showOtherTaxes: showOtherTaxes ? 1 : 0,
     };
 
     const parsedValuesAfip = {
@@ -198,6 +199,24 @@ export const Form = ({ afip, settings }: Props) => {
             {errors.invoceNumber && touched.invoceNumber && (
               <ErrorMessage>{errors.invoceNumber}</ErrorMessage>
             )}
+          </Box>
+        </Flex>
+
+        <Flex gap="2" mt="8">
+          <Box w="full">
+            <FormControl alignItems="center" display="flex">
+              <Switch
+                colorScheme="brand"
+                defaultChecked={settings.showOtherTaxes === 1}
+                id="showOtherTaxes"
+                name="showOtherTaxes"
+                size="md"
+                onChange={handleChange}
+              />
+              <FormLabel htmlFor="filter" mb="0" ml="2">
+                Hahilitar Otros Impuestos
+              </FormLabel>
+            </FormControl>
           </Box>
         </Flex>
 

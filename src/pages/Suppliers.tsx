@@ -2,13 +2,13 @@ import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { useMemo, useState, useEffect } from 'react';
 
-import { ConfirmationModal, Drawer } from '../componets/suppliers';
+import { ConfirmationModal, Drawer, exportToexcel } from '../componets/suppliers';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { Supplier } from '../interfaces';
 import { useColumns } from '../componets/suppliers/hooks';
-import { useGetSuppliers } from '../hooks';
+import { useGetStates, useGetSuppliers } from '../hooks';
 
 export const Suppliers = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,6 +18,8 @@ export const Suppliers = () => {
     () => ({
       cuit: '',
       name: '',
+      stateId: 14,
+      city: '',
       email: '',
       phone: '',
       mobile: '',
@@ -30,8 +32,9 @@ export const Suppliers = () => {
   const [initialValues, setinitialValues] = useState(resetValues);
 
   const { data: suppliers, isFetching: isFetchingSuppliers } = useGetSuppliers();
+  const { data: states, isFetching: isFetchingStates } = useGetStates();
 
-  const isIndeterminate = isFetchingSuppliers;
+  const isIndeterminate = isFetchingSuppliers || isFetchingStates;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
@@ -63,19 +66,21 @@ export const Suppliers = () => {
         CREAR PROVEEDOR
       </Button>
 
-      {!suppliers ? (
+      {!suppliers || !states ? (
         <Loading />
       ) : (
         <>
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={suppliers.length}
               columns={columns}
               data={suppliers}
+              exportToExcel={() => exportToexcel(suppliers)}
             />
           </Box>
           <Drawer
@@ -83,6 +88,7 @@ export const Suppliers = () => {
             isOpen={isOpen}
             resetValues={resetValues}
             setinitialValues={setinitialValues}
+            states={states}
             onClose={onClose}
           />
           <ConfirmationModal

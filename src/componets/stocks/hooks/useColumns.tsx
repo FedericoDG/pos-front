@@ -2,23 +2,21 @@
 import { Box, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
-import { Dispatch, SetStateAction, useMemo } from 'react';
+import { useMemo } from 'react';
 import { GoAlert, GoGraph } from 'react-icons/go';
 import { TbListDetails } from 'react-icons/Tb';
 import { useNavigate } from 'react-router-dom';
 import { AiFillDollarCircle, AiOutlineDollarCircle } from 'react-icons/ai';
 
-import { Discharge, Warehouse } from '../../../interfaces/interfaces';
+import { Warehouse } from '../../../interfaces/interfaces';
 import { formatCurrency } from '../../../utils';
 import { Stock2 } from '../../../interfaces';
 
 interface Props {
-  onOpen: () => void;
   warehouses: Warehouse[];
-  setinitialValues: Dispatch<SetStateAction<Discharge>>;
 }
 
-export const useColumns = ({ onOpen, warehouses, setinitialValues }: Props) => {
+export const useColumns = ({ warehouses }: Props) => {
   const navigate = useNavigate();
 
   const warehousesColumns: ColumnDef<Stock2>[] = warehouses.map((el, idx) => ({
@@ -132,23 +130,6 @@ export const useColumns = ({ onOpen, warehouses, setinitialValues }: Props) => {
               >
                 Cargar pérdida de stock
               </MenuItem>
-              {/* <MenuItem
-                icon={<GoAlert />}
-                isDisabled={row.original.stock <= 0}
-                onClick={() => {
-                  onOpen();
-                  setinitialValues((current) => {
-                    return {
-                      ...current,
-                      productId: row.original.productId,
-                      cost: row.original.products.costs![0].price.toString(),
-                      unit: row.original.products.unit?.code!,
-                    };
-                  });
-                }}
-              >
-                Cargar pérdida de stock
-              </MenuItem> */}
               <MenuItem
                 icon={<Icon as={AiOutlineDollarCircle} />}
                 onClick={() =>

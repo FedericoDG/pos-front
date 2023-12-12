@@ -21,6 +21,7 @@ export interface Settings {
   invoceName: string;
   invoceNumber: number;
   imageURL: string;
+  showOtherTaxes: number;
 }
 
 export interface Afip {
@@ -132,7 +133,7 @@ export interface PriceList {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
-  products: Product[]; // OJO
+  products: Product[];
   prices?: Price[];
   createdAt: string;
   totalStock: number;
@@ -145,7 +146,7 @@ export interface PriceList2 {
   productId: number;
   pricelistId: number;
   pricelists: Pricelists;
-  products: Product; // OJO
+  products: Product;
   prices?: Price[];
   createdAt: string;
   totalStock: number;
@@ -175,7 +176,7 @@ export interface Stock {
   prevdate: string;
   createdAt: string;
   updatedAt: string;
-  products: Product; // OJO Products[]
+  products: Product;
   warehouse: Warehouse;
 }
 
@@ -205,6 +206,8 @@ export interface Client {
   identificationId: number;
   document: string;
   ivaTypeId: number;
+  stateId: number;
+  city: string;
   email: string;
   password: string;
   password2?: string;
@@ -217,12 +220,15 @@ export interface Client {
   updatedAt?: string;
   identification?: Identification;
   ivaType?: IvaType;
+  state?: State;
 }
 
 export interface Supplier {
   id?: number;
   cuit: string;
   name: string;
+  stateId: number;
+  city: string;
   email?: string;
   phone?: string;
   mobile?: string;
@@ -230,6 +236,7 @@ export interface Supplier {
   info?: string;
   createdAt?: string;
   updatedAt?: string;
+  state?: State;
 }
 
 export interface Discharge {
@@ -345,6 +352,14 @@ export interface CashRegister {
   otherTributes: number;
   user?: User;
   cashMovements?: CashMovement[];
+  uniques?: CashMovementsDetail[];
+}
+
+export interface State {
+  id?: number;
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CashMovement {

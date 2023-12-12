@@ -3,12 +3,12 @@ import { HiPlus } from 'react-icons/Hi';
 import { useMemo, useState, useEffect } from 'react';
 
 import { Client } from '../interfaces';
-import { ConfirmationModal, Drawer } from '../componets/clients';
+import { ConfirmationModal, Drawer, exportToexcel } from '../componets/clients';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common';
 import { useColumns } from '../componets/clients/hooks';
-import { useGetClients, useGetIvaTypes } from '../hooks';
+import { useGetClients, useGetIvaTypes, useGetStates } from '../hooks';
 import { useGetIdentifications } from '../hooks/useIdentifications';
 
 export const Clients = () => {
@@ -20,8 +20,10 @@ export const Clients = () => {
       name: '',
       document: '',
       email: '',
-      password: '',
-      password2: '',
+      stateId: 14,
+      city: '',
+      password: 'hola123',
+      password2: 'hola123',
       phone: '',
       mobile: '',
       address: '',
@@ -38,8 +40,10 @@ export const Clients = () => {
   const { data: clients, isFetching: isFetchingClients } = useGetClients();
   const { data: identifications, isFetching: isFetchingIdentifications } = useGetIdentifications();
   const { data: ivaTypes, isFetching: isFetchingIvaTypes } = useGetIvaTypes();
+  const { data: states, isFetching: isFetchingStates } = useGetStates();
 
-  const isIndeterminate = isFetchingClients || isFetchingIdentifications || isFetchingIvaTypes;
+  const isIndeterminate =
+    isFetchingClients || isFetchingIdentifications || isFetchingIvaTypes || isFetchingStates;
 
   const { columns } = useColumns({ onOpen, onOpenModal, setinitialValues });
 
@@ -71,19 +75,21 @@ export const Clients = () => {
         CREAR CLIENTE
       </Button>
 
-      {!clients || !identifications || !ivaTypes ? (
+      {!clients || !identifications || !ivaTypes || !states ? (
         <Loading />
       ) : (
         <>
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={clients.length}
               columns={columns}
               data={clients}
+              exportToExcel={() => exportToexcel(clients)}
             />
           </Box>
           <Drawer
@@ -93,6 +99,7 @@ export const Clients = () => {
             ivaTypes={ivaTypes}
             resetValues={resetValues}
             setinitialValues={setinitialValues}
+            states={states}
             onClose={onClose}
           />
           <ConfirmationModal

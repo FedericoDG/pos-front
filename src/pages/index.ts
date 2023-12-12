@@ -12,6 +12,7 @@ export * from './DriveDetails';
 export * from './Drivers';
 export * from './GeneratePriceListReport';
 export * from './Home';
+export * from './IvaBook';
 export * from './LoadCost';
 export * from './LoadDischarges';
 export * from './LoadProductTrans';

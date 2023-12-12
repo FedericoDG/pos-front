@@ -7,10 +7,8 @@ export const schema = z.object({
     .min(11, 'Debe tener 11 dígitos')
     .max(11, 'Debe tener 11 dígitos'),
   name: z.string({ required_error: 'El Nombre es requerido' }).trim(),
-  email: z
-    .string({ required_error: 'El Email es requerido' })
-    .email('No es un Email válido')
-    .optional(),
+  email: z.string({ required_error: 'El Email es requerido' }).email('No es un Email válido'),
+  // .optional(),
   phone: z
     .string()
     .regex(/^[0-9]+$/, 'Sólo se aceptan números')

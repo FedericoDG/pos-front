@@ -41,6 +41,7 @@ export const CashRegisterDetails = () => {
   const { user } = useMyContext();
   const [algo, setAlgo] = useState<Algo[]>([]);
   const [enabledFilter, setEnabledFilter] = useState(true);
+  const [enabledFilter2, setEnabledFilter2] = useState(true);
   const { id } = useParams();
 
   const printRef = useRef<any | null>(null);
@@ -140,7 +141,7 @@ export const CashRegisterDetails = () => {
       rechargePercent: movement.rechargePercent,
       warehouseId: movement.warehouseId,
       cashMovementId: movement.id!,
-      movementIds: [] //OJOACA
+      movementIds: []
     };
 
     createAfipInvoce(sale);
@@ -175,16 +176,28 @@ export const CashRegisterDetails = () => {
             w="full"
           >
             <Stack direction="row" justifyContent="space-between" w="full">
-              <FormControl alignItems="center" display="flex">
-                <Switch
-                  id="filter"
-                  isChecked={enabledFilter}
-                  onChange={(e) => setEnabledFilter(e.target.checked)}
-                />
-                <FormLabel htmlFor="filter" mb="0" ml="2">
-                  Desplegar todos los detalles
-                </FormLabel>
-              </FormControl>
+              <HStack justifyContent="flex-start">
+                <FormControl alignItems="center" display="flex" minW="250px" >
+                  <Switch
+                    id="filter"
+                    isChecked={enabledFilter2}
+                    onChange={(e) => setEnabledFilter2(e.target.checked)}
+                  />
+                  <FormLabel htmlFor="filter" mb="0" ml="2">
+                    Ver Productos Agrupados
+                  </FormLabel>
+                </FormControl>
+                <FormControl alignItems="center" display="flex">
+                  <Switch
+                    id="filter"
+                    isChecked={enabledFilter}
+                    onChange={(e) => setEnabledFilter(e.target.checked)}
+                  />
+                  <FormLabel htmlFor="filter" mb="0" ml="2">
+                    Desplegar detalles
+                  </FormLabel>
+                </FormControl>
+              </HStack>
               <Button
                 alignSelf={'flex-end'}
                 colorScheme="linkedin"
@@ -354,17 +367,82 @@ export const CashRegisterDetails = () => {
                   </TableContainer>
                 </HStack>
 
+                {
+                  enabledFilter2 && invoces && invoces.length > 0 &&
+                  <>
+                    <Text mt={4} textAlign="left">
+                      Productos
+                    </Text>
+                    <HStack alignItems="flex-start">
+                      <TableContainer w="full">
+                        <Table size="sm" >
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white">Nombre</Th>
+                              <Th isNumeric bg="gray.700" color="white">Cantidad</Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {
+                              cashRegister.uniques?.map((el, idx) => {
+                                if (idx % 2 === 0) {
+                                  return (
+                                    <Tr key={nanoid()}>
+                                      <Td color="#4a5568" fontWeight="semibold">
+                                        {el.product?.name}
+                                      </Td>
+                                      <Td isNumeric color="#4a5568" fontWeight="semibold">
+                                        {el.quantity} {el.product?.unit?.code}
+                                      </Td>
+                                    </Tr>
+                                  );
+                                } else { }
+                              })
+                            }
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                      <TableContainer w="full">
+                        <Table size="sm" >
+                          <Thead>
+                            <Tr>
+                              <Th bg="gray.700" color="white">Nombre</Th>
+                              <Th isNumeric bg="gray.700" color="white">Cantidad</Th>
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {
+                              cashRegister.uniques?.map((el, idx) => {
+                                if (idx % 2 !== 0) {
+                                  return (
+                                    <Tr key={nanoid()}>
+                                      <Td color="#4a5568" fontWeight="semibold">
+                                        {el.product?.name}
+                                      </Td>
+                                      <Td isNumeric color="#4a5568" fontWeight="semibold">
+                                        {el.quantity} {el.product?.unit?.code}
+                                      </Td>
+                                    </Tr>
+                                  );
+                                } else { }
+                              })
+                            }
+                          </Tbody>
+                        </Table>
+                      </TableContainer>
+                    </HStack>
+                  </>
+                }
 
                 <Stack>
                   {invoces && invoces.length > 0 &&
-                    <TableContainer m="0" w="full">
+                    <TableContainer mt="4" w="full">
                       <Table size="sm">
                         <Text as={'caption'} textAlign="left">
                           Ventas
                         </Text>
                         <Thead>
                           <Tr>
-                            {/*  <Th bg="gray.700" className="no-print" color="white" w="50px" /> */}
                             <Th bg="gray.700" color="white" w="215px" >Tipo</Th>
                             <Th bg="gray.700" color="white" w="250px">
                               Fecha
@@ -384,21 +462,10 @@ export const CashRegisterDetails = () => {
                           {invoces.map((movement) => (
                             <React.Fragment key={nanoid()}>
                               <Tr
-                                // bg={algo.some((el) => el.open) ? 'gray.50' : 'white'}
                                 bg='gray.50'
                                 cursor="pointer"
                                 onClick={() => handleClick(movement.id!)}
                               >
-                                {/*  <Td className="no-print">
-                                <Icon
-                                  as={MdKeyboardArrowRight}
-                                  transform={
-                                    algo.find((el) => el.id === movement.id)?.open
-                                      ? 'rotate(90deg)'
-                                      : ''
-                                  }
-                                />
-                              </Td> */}
                                 <Td>
                                   {
                                     movement.invoceTypeId === 4 &&
@@ -817,7 +884,6 @@ export const CashRegisterDetails = () => {
                         </Text>
                         <Thead>
                           <Tr>
-                            {/*  <Th bg="gray.700" className="no-print" color="white" w="50px" /> */}
                             <Th bg="gray.700" color="white" w="215px" >Tipo</Th>
                             <Th bg="gray.700" color="white" w="250px">
                               Fecha
@@ -831,7 +897,6 @@ export const CashRegisterDetails = () => {
                           {creditNotes.map((movement) => (
                             <React.Fragment key={nanoid()}>
                               <Tr
-                                // bg={algo.some((el) => el.open) ? 'gray.50' : 'white'}
                                 bg='gray.50'
                                 cursor="pointer"
                                 onClick={() => handleClick(movement.id!)}

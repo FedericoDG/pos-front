@@ -2,7 +2,7 @@ import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { HiPlus } from 'react-icons/Hi';
 import { useEffect, useMemo, useState } from 'react';
 
-import { ConfirmationModal, Drawer } from '../componets/products';
+import { ConfirmationModal, Drawer, exportToexcel } from '../componets/products';
 import { CustomTable } from '../componets/table';
 import { DashBoard } from '../componets/common';
 import { Loading } from '../componets/common/';
@@ -43,7 +43,7 @@ export const Products = () => {
 
     resetValues.categoryId = categories[0].id!;
     resetValues.unitId = units[0].id!;
-    resetValues.ivaConditionId = ivaConditions[5].id!;
+    resetValues.ivaConditionId = ivaConditions[2].id!;
   }, [categories, ivaConditions, resetValues, units]);
 
   const isIndeterminate =
@@ -86,12 +86,14 @@ export const Products = () => {
           <Box bg="white" p="4" rounded="md" shadow="md" w="full">
             <CustomTable
               showColumsSelector
+              showExportToExcelButton
               showGlobalFilter
               showNavigation
               showPrintOption
               amount={products.length}
               columns={columns}
               data={products}
+              exportToExcel={() => exportToexcel(products)}
             />
           </Box>
           <Drawer

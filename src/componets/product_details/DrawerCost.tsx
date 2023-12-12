@@ -52,7 +52,7 @@ export const DrawerCost = ({
 
   const queryClient = useQueryClient();
 
-  const [_, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const onSuccess = () => {
     queryClient.invalidateQueries({
@@ -78,6 +78,7 @@ export const DrawerCost = ({
     setinitialValues(resetValues);
     actions.resetForm();
     onClose();
+    setSearchParams('tab=0');
   };
 
   const close = () => {

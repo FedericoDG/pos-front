@@ -30,7 +30,7 @@ export const PurchasesProvider = ({ children }: Props) => {
         return updatedItems;
       }
 
-      return [...currentItems, { ...product }];
+      return [{ ...product }, ...currentItems];
     });
   };
 

@@ -153,14 +153,7 @@ export const Basket = ({ cashMovement }: Props) => {
             productos: ({totalCartItems})
           </Text>
           <Stack p="2">
-            <Button
-              colorScheme="brand"
-              // rightIcon={<ArrowForwardIcon />}
-              size="lg"
-              variant="solid"
-              w="full"
-              onClick={handleSubmit}
-            >
+            <Button colorScheme="brand" size="lg" variant="solid" w="full" onClick={handleSubmit}>
               CREAR NOTA DE CRÉDITO
             </Button>
           </Stack>

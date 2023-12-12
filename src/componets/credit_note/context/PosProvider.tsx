@@ -98,13 +98,7 @@ export const PosProvider = ({ children }: Props) => {
 
   const totalCartItems = useMemo(() => cart.length, [cart]);
 
-  const steps = useMemo(
-    () => [
-      { title: 'Paso 1', description: 'Editar comprobante' },
-      // { title: 'Paso 2', description: 'Agregar Productos' },
-    ],
-    []
-  );
+  const steps = useMemo(() => [{ title: 'Paso 1', description: 'Editar comprobante' }], []);
 
   const { goToNext, goToPrevious, activeStep, setActiveStep } = useSteps({
     index: 1,

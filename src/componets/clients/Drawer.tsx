@@ -16,10 +16,11 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'sonner';
 
-import { Client, Identification, IvaType } from '../../interfaces';
+import { Client, Identification, IvaType, State } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useCreateClient, useUpdateClient } from '../../hooks/';
 
@@ -29,6 +30,7 @@ interface Props {
   initialValues: Client;
   identifications: Identification[];
   ivaTypes: IvaType[];
+  states: State[];
   resetValues: Client;
   isOpen: boolean;
   onClose: () => void;
@@ -39,6 +41,7 @@ export const Drawer = ({
   initialValues,
   identifications,
   ivaTypes,
+  states,
   resetValues,
   setinitialValues,
   isOpen,
@@ -49,27 +52,29 @@ export const Drawer = ({
   const { mutateAsync: createClient, isLoading: isLoadingCreate } = useCreateClient();
   const { mutateAsync: updateClient, isLoading: isLoadingUpdate } = useUpdateClient();
 
-  const onSubmit = async (values: Client, actions: FormikHelpers<Client>) => {
+  const onSubmit = async (values: Client) => {
     delete values.password2;
 
     const parsedValues = {
       ...values,
       identificationId: Number(values.identificationId),
       ivaTypeId: Number(values.ivaTypeId),
+      stateId: Number(values.stateId),
+      city: values.city.toUpperCase(),
     };
 
     if (values?.id) {
-      updateClient(parsedValues).finally(() => {
-        setinitialValues(resetValues);
-        actions.resetForm();
-        onClose();
-      });
+      updateClient(parsedValues)
+        .then(() => toast.success('Cliente actualizado'))
+        .finally(() => {
+          close();
+        });
     } else {
-      createClient(parsedValues).finally(() => {
-        setinitialValues(resetValues);
-        actions.resetForm();
-        onClose();
-      });
+      createClient(parsedValues)
+        .then(() => toast.success('Cliente creado'))
+        .finally(() => {
+          close();
+        });
     }
   };
 
@@ -145,12 +150,43 @@ export const Drawer = ({
                 </Flex>
 
                 <Flex gap="4" justifyContent="space-between">
+                  <Box w="49%">
+                    <FormLabel htmlFor="stateId">Provincia:</FormLabel>
+                    <Select
+                      defaultValue={initialValues.stateId}
+                      id="stateId"
+                      name="stateId"
+                      onChange={handleChange}
+                    >
+                      {states.map((state) => (
+                        <option key={state.name} value={state.id}>
+                          {state.id} - {state.name}
+                        </option>
+                      ))}
+                    </Select>
+                    {errors.stateId && touched.stateId && (
+                      <ErrorMessage>{errors.stateId}</ErrorMessage>
+                    )}
+                  </Box>
+                  <Box w="49%">
+                    <FormLabel htmlFor="city">Ciudad:</FormLabel>
+                    <Input
+                      id="city"
+                      name="city"
+                      placeholder="Posadas"
+                      value={values.city}
+                      onChange={handleChange}
+                    />
+                    {errors.city && touched.city && <ErrorMessage>{errors.city}</ErrorMessage>}
+                  </Box>
+                </Flex>
+
+                <Flex gap="4" justifyContent="space-between">
                   <Box w="67%">
-                    <FormLabel htmlFor="identificationId">Tipo de identificación</FormLabel>
+                    <FormLabel htmlFor="identificationId">Tipo de identificación:</FormLabel>
                     <Select
                       defaultValue={initialValues.identificationId}
                       id="identificationId"
-                      //minW="224px"
                       name="identificationId"
                       onChange={handleChange}
                     >
@@ -203,7 +239,7 @@ export const Drawer = ({
 
                 <Flex gap="4" justifyContent="space-between" />
 
-                {!initialValues.id && (
+                {/* {!initialValues.id && (
                   <Flex gap="4" justifyContent="space-between">
                     <Box w="full">
                       <FormLabel htmlFor="password">Contraseña:</FormLabel>
@@ -235,7 +271,7 @@ export const Drawer = ({
                       )}
                     </Box>
                   </Flex>
-                )}
+                )} */}
 
                 <Flex gap="4" justifyContent="space-between">
                   <Box>

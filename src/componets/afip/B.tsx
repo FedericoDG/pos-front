@@ -54,7 +54,7 @@ export const B = ({ cashMovement, settings }: Props) => {
           Imprimir
         </Button>
       </Stack>
-      <Flex ref={printRef} direction="column" minH="297mm" w="210mm">
+      <Flex ref={printRef} direction="column" minH="267mm" w="210mm">
         <Stack className="header">
           <HStack alignItems="flex-start" justifyContent="space-between" pos="relative">
             <HStack p={2} w="50%">
@@ -72,7 +72,6 @@ export const B = ({ cashMovement, settings }: Props) => {
             </HStack>
             <HStack
               border="solid black"
-              //borderTop={0}
               borderWidth={1}
               justifyContent="center"
               left="95mm"
@@ -187,6 +186,7 @@ export const B = ({ cashMovement, settings }: Props) => {
             </Tbody>
           </Table>
         </TableContainer>
+        <div style={{ flex: 1 }} />
         <HStack alignItems="flex-start" color="#4a5568" flex={1} fontSize="sm">
           {cashMovement.cbteTipo !== 8 && (
             <Stack>

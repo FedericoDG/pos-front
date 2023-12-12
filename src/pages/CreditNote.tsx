@@ -17,25 +17,14 @@ export const CreditNote = () => {
         {!cashMovement?.cashMovementDetails ? (
           <Loading />
         ) : (
-          <>
-            {/* <Steps /> */}
-
-            <Box w="full">
-              <StepperWrapper step={1}>
-                <Stack>
-                  <Card cashMovement={cashMovement} />
-                  <ProductsTable cashMovement={cashMovement} />
-                </Stack>
-              </StepperWrapper>
-
-              {/*  <StepperWrapper step={2}>
-                <Stack>
-                  <Card cashMovement={cashMovement} />
-                  <FinishSale />
-                </Stack>
-              </StepperWrapper> */}
-            </Box>
-          </>
+          <Box w="full">
+            <StepperWrapper step={1}>
+              <Stack>
+                <Card cashMovement={cashMovement} />
+                <ProductsTable cashMovement={cashMovement} />
+              </Stack>
+            </StepperWrapper>
+          </Box>
         )}
       </DashBoard>
     </PosProvider>

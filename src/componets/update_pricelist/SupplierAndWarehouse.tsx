@@ -90,7 +90,6 @@ export const SupplierAndWarehouse = () => {
             placeholder="Seleccionar Lista de Precio"
             selectedOptionColorScheme="brand"
             tabIndex={1}
-            // value={priceList}
             onChange={(e) => setPriceList(e)}
           />
         </Box>

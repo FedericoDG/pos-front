@@ -28,6 +28,7 @@ import { Loading } from '../componets/common';
 import { useColumns } from '../componets/cash_register_status/hooks';
 import { useCashRegisterStatus, useCloseCashRegister, useOpenCashRegister } from '../hooks';
 import { useMyContext } from '../context';
+import { exportToexcel } from '../componets/cash_register_status';
 
 export const CashRegisterStatus = () => {
   const { user } = useMyContext();
@@ -124,10 +125,12 @@ export const CashRegisterStatus = () => {
               <Box bg="white" p="4" rounded="md" shadow="md" w="full">
                 <CustomTable
                   showColumsSelector
+                  showExportToExcelButton
                   showPrintOption
                   amount={[cashRegister].length}
                   columns={columns}
                   data={[cashRegister]}
+                  exportToExcel={() => exportToexcel(cashRegister)}
                 />
               </Box>
             </>

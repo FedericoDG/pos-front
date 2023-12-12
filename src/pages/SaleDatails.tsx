@@ -65,7 +65,7 @@ export const SaleDetails = () => {
               Imprimir
             </Button>
           </Stack>
-          <Stack ref={printRef} minH="297mm" w="210mm">
+          <Stack ref={printRef} minH="267mm" w="210mm">
             <Stack className="header">
               <HStack alignItems="flex-start" justifyContent="space-between" pos="relative">
                 <HStack p={2} w="50%">
@@ -83,7 +83,6 @@ export const SaleDetails = () => {
                 </HStack>
                 <HStack
                   border="solid black"
-                  //borderTop={0}
                   borderWidth={1}
                   justifyContent="center"
                   left="95mm"
@@ -215,7 +214,7 @@ export const SaleDetails = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-
+            <div style={{ flex: 1 }} />
             <HStack alignItems="flex-start" color="#4a5568" fontSize="sm">
               <Stack>
                 <Text fontWeight={700} width="180px">

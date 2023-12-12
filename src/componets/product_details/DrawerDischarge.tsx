@@ -55,14 +55,18 @@ export const DrawerDischarge = ({
 
   const queryClient = useQueryClient();
 
-  const [_, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const onSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['products'] });
     toast.success('Baja de productos realizada');
   };
 
-  const { mutate: createDischarge } = useCreateDischarge(onSuccess);
+  const onError = (error: any) => {
+    toast.error(error.response.data.body.message);
+  };
+
+  const { mutateAsync: createDischarge } = useCreateDischarge(onSuccess, onError);
 
   const onSubmit = (values: Discharge, actions: FormikHelpers<Discharge>) => {
     const parsedValues = {
@@ -83,6 +87,7 @@ export const DrawerDischarge = ({
     setinitialValues(resetValues);
     actions.resetForm();
     onClose();
+    setSearchParams('tab=0');
   };
 
   const close = () => {

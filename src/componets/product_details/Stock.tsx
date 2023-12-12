@@ -26,7 +26,7 @@ import { ImPrinter } from 'react-icons/im';
 import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
 
-import { useGetStockMovements, useGetWarehousesWOStock } from '../../hooks';
+import { useGetStockMovements } from '../../hooks';
 import { Product, Warehouse } from '../../interfaces';
 import { formatDate, getInvoiceLetter } from '../../utils';
 
@@ -39,9 +39,10 @@ export interface MappedWarehouse extends Warehouse {
 
 interface Props {
   product: Product;
+  warehouses: Warehouse[];
 }
 
-export const Stock = ({ product }: Props) => {
+export const Stock = ({ product, warehouses }: Props) => {
   const [from, setFrom] = useState<string>(new Date().toISOString().split('T')[0]);
   const [to, setTo] = useState<string>(new Date().toISOString().split('T')[0]);
   const [mappedWarehouses, setMappedWarehouses] = useState<MappedWarehouse[]>([]);
@@ -51,7 +52,6 @@ export const Stock = ({ product }: Props) => {
     toast('Consulta sobre evolución de stock exitosa');
   };
 
-  const { data: warehouses } = useGetWarehousesWOStock();
   const { mutate, data } = useGetStockMovements(onSuccess);
 
   const printRef = useRef<any | null>(null);
@@ -61,17 +61,20 @@ export const Stock = ({ product }: Props) => {
   });
 
   useEffect(() => {
-    if (!warehouses) return;
-
-    const mappedWarehouses = warehouses
-      .map((el) => ({ ...el, value: el.id, label: el.code }))
-      .filter((el) => el.driver !== 1);
+    const mappedWarehouses = warehouses.map((el) => {
+      if (el.driver === 1) {
+        return { ...el, value: el.id, label: `**CHOFER** ${el.code}` };
+      } else {
+        return { ...el, value: el.id, label: `*DEPOSITO* ${el.code}` };
+      }
+    });
+    //.filter((el) => el.driver !== 1);
 
     setMappedWarehouses(mappedWarehouses);
   }, [warehouses]);
 
   useEffect(() => {
-    if (!warehouses || mappedWarehouses.length < 1) return;
+    if (mappedWarehouses.length < 1) return;
     setWarehouse(mappedWarehouses[0]);
   }, [mappedWarehouses, warehouses]);
 
@@ -173,7 +176,7 @@ export const Stock = ({ product }: Props) => {
                 <Divider />
                 {data.body.stock.length > 0 ? (
                   <Stack w="full">
-                    <Graph />
+                    <Graph product={product} stock={data.body.stock} />
                     <TableContainer my={2} w="full">
                       <Table size="sm">
                         <Thead>
@@ -187,11 +190,11 @@ export const Stock = ({ product }: Props) => {
                             <Th bg="gray.700" color="white">
                               CONCEPTO
                             </Th>
-                            {/* <Th isNumeric bg="gray.700" color="white">
-                            STOCK Anterior
-                          </Th> */}
                             <Th isNumeric bg="gray.700" color="white">
-                              STOCK ACTUAL
+                              Variación
+                            </Th>
+                            <Th isNumeric bg="gray.700" color="white">
+                              STOCK
                             </Th>
                           </Tr>
                         </Thead>
@@ -315,7 +318,7 @@ export const Stock = ({ product }: Props) => {
                                 )}
 
                               {/* TRANSFERENCIA */}
-                              {el.movement.concept === 'Transferencia' && (
+                              {el.movement.concept.includes('Transferencia') && (
                                 <Td>
                                   <Link
                                     color="black"
@@ -350,20 +353,26 @@ export const Stock = ({ product }: Props) => {
 
                               <Td>{el.movement.concept}</Td>
 
-                              {/*  {idx === data.body.stock.length - 1 ? (
-                              <Td isNumeric />
-                            ) : (
-                              <Td isNumeric>
-                                {data.body.stock[`${idx + 1}`].stock} {product.unit?.code}
-                              </Td>
-                            )} */}
+                              {idx === data.body.stock.length - 1 ? (
+                                <Td isNumeric>
+                                  {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    0 {product.unit?.code}
+                                    <EvoIcon el={el} />
+                                  </div> */}
+                                </Td>
+                              ) : (
+                                <Td isNumeric>
+                                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    {Math.abs(el.stock - data.body.stock[`${idx + 1}`].stock)}{' '}
+                                    {product.unit?.code}
+                                    <EvoIcon el={el} />
+                                  </div>
+                                </Td>
+                              )}
 
                               <Td isNumeric>
-                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                  {/* {Math.max(el.stock, 0)} {product.unit?.code} */}
-                                  {el.stock} {product.unit?.code}
-                                  <EvoIcon el={el} />
-                                </div>
+                                {/* {Math.max(el.stock, 0)} {product.unit?.code} */}
+                                {el.stock} {product.unit?.code}
                               </Td>
                             </Tr>
                           ))}
@@ -376,8 +385,6 @@ export const Stock = ({ product }: Props) => {
                     NO EXISTEN DATOS PARA LAS FECHAS Y DEPÓSITO SELECCIONADO
                   </Text>
                 )}
-
-                <pre>{JSON.stringify(data.body.stock, null, 2)}</pre>
               </Stack>
             </Stack>
           </Stack>

@@ -12,7 +12,7 @@ import { Basket, CartItem, Modal, usePosContext } from '.';
 export const ProductsTable = () => {
   const { priceList, warehouse, cart } = usePosContext();
   const { data: products, refetch } = useGetPriceListByWarehouseId(priceList?.id!, warehouse?.id!);
-  const { tableInput } = useMyContext();
+  const { user, tableInput } = useMyContext();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -43,9 +43,13 @@ export const ProductsTable = () => {
         <CustomTable
           showGlobalFilter
           showNavigation
-          amount={products.length}
+          amount={
+            user.role?.id !== 4
+              ? products.length
+              : products.filter((product) => product.stock! > 0).length
+          }
           columns={columns}
-          data={products}
+          data={user.role?.id !== 4 ? products : products.filter((product) => product.stock! > 0)}
           flag="products"
         />
 

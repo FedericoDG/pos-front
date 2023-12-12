@@ -85,7 +85,6 @@ export const Basket = ({ refetch }: Props) => {
       console.log('ERROR');
     }
   }, [client?.document, settings, totalCart]);
-  //if (cart.length === 0) return null;
 
   return (
     <Stack

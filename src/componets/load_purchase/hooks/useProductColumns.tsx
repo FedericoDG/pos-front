@@ -36,7 +36,11 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
               type="submit"
               variant="ghost"
               onClick={() => {
-                setActiveProduct({ ...row.original, quantity: 0, price: 0 });
+                setActiveProduct({
+                  ...row.original,
+                  quantity: 0,
+                  price: row.original.costs ? row.original.costs[0].price : 0,
+                });
                 onOpen();
               }}
             >

@@ -1,8 +1,10 @@
 export { default as formatCurrency } from './formatCurrency';
 export * from './formatDate';
+export * from './getCFiscal';
 export * from './getInvoceLetterById';
 export * from './getInvoiceLetter';
 export * from './getInvoiceName';
+export * from './getInvoiceNameAndLetter';
 export * from './getRole';
 export * from './index';
 export * from './isError';

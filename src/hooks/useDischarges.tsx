@@ -38,14 +38,10 @@ export const useGetDischarge = (id: number) =>
     select: (data) => data.body.discharge,
   });
 
-export const useCreateDischarge = (onSuccess: () => void) => {
+export const useCreateDischarge = (onSuccess: () => void, onError: (error: any) => void) => {
   return useMutation(createDischarge, {
     onSuccess: onSuccess,
-    onError: (error) => {
-      if (isError(error)) {
-        throw new Error(error.message);
-      }
-    },
+    onError: onError,
   });
 };
 

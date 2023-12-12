@@ -19,12 +19,10 @@ export const DebouncedInput = ({
 }: Props) => {
   const [value, setValue] = useState(initialValue);
 
-  // setValue if any initialValue changes
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
-  // debounce onChange — triggered on every keypress
   useEffect(() => {
     const timeout = setTimeout(() => {
       onChange(value);

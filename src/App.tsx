@@ -1,8 +1,6 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { ReactQueryDevtools } from 'react-query/devtools';
-// eslint-disable-next-line import/order
 import { QueryClient, QueryClientProvider } from 'react-query';
-
 import { Toaster } from 'sonner';
 
 import { AppProvider } from './context';

@@ -19,6 +19,7 @@ import {
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { toast } from 'sonner';
 
 import { Category, IVACondition, Product, Unit } from '../../interfaces';
 import { useCreateProduct, useUpdateProduct } from '../../hooks/';
@@ -77,21 +78,26 @@ export const Drawer = ({
       await updateProduct(parsedValues)
         .then(() => {
           if (isSuccess) {
-            console.log('UDATE OK');
-            console.log(data);
+            toast.success('Producto actualizado');
           }
         })
         .finally(() => {
           setinitialValues(resetValues);
           actions.resetForm();
-          onClose();
+          close();
         });
     } else {
-      createProduct(parsedValues).finally(() => {
-        setinitialValues(resetValues);
-        actions.resetForm();
-        onClose();
-      });
+      createProduct(parsedValues)
+        .then(() => {
+          if (isSuccess) {
+            toast.success('Producto creado');
+          }
+        })
+        .finally(() => {
+          setinitialValues(resetValues);
+          actions.resetForm();
+          close();
+        });
     }
   };
 
@@ -124,7 +130,6 @@ export const Drawer = ({
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton color="white" />
-          {/* x' bgGradient='linear(to-r, green.200, pink.500)' */}
           <DrawerHeader
             bgGradient="linear(to-r, brand.600, blue.500)"
             borderBottomWidth="1px"

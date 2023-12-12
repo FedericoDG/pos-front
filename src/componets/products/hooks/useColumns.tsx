@@ -1,10 +1,21 @@
-import { Badge, Box, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import {
+  Badge,
+  Box,
+  Icon,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from '@chakra-ui/react';
 import { BsThreeDots } from 'react-icons/bs';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa';
 import { TbListDetails } from 'react-icons/Tb';
 import { useNavigate } from 'react-router-dom';
+import { GoAlert, GoGraph } from 'react-icons/go';
+import { AiFillDollarCircle, AiOutlineDollarCircle } from 'react-icons/ai';
 
 import { Product } from '../../../interfaces';
 import { formatCurrency } from '../../../utils';
@@ -119,6 +130,36 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
                   onClick={() => navigate(`/panel/productos/detalles/${row.original.id}`)}
                 >
                   Ver Detalles
+                </MenuItem>
+                <MenuItem
+                  icon={<Icon as={GoGraph} />}
+                  onClick={() => navigate(`/panel/productos/detalles/${row.original.id}?tab=1`)}
+                >
+                  Ver Evolución del Stock
+                </MenuItem>
+                <MenuItem
+                  icon={<GoAlert />}
+                  onClick={() =>
+                    navigate(`/panel/productos/detalles/${row.original.id}?tab=0&discharge=1`)
+                  }
+                >
+                  Cargar pérdida de stock
+                </MenuItem>
+                <MenuItem
+                  icon={<Icon as={AiOutlineDollarCircle} />}
+                  onClick={() =>
+                    navigate(`/panel/productos/detalles/${row.original.id}?tab=0&price=1`)
+                  }
+                >
+                  Actualizar Precios
+                </MenuItem>
+                <MenuItem
+                  icon={<Icon as={AiFillDollarCircle} />}
+                  onClick={() =>
+                    navigate(`/panel/productos/detalles/${row.original.id}?tab=0&cost=1`)
+                  }
+                >
+                  Actualizar Costo
                 </MenuItem>
                 <MenuItem
                   icon={<FaRegEdit />}

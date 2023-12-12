@@ -15,7 +15,7 @@ export const Basket = () => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    toast.success('Costos actualizaos');
+    toast.success('Costos actualizados');
     emptyCart();
     queryClient.invalidateQueries({ queryKey: ['stocks', 'costs', 'discharges', 'transfers'] });
   };

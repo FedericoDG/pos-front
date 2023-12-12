@@ -30,8 +30,6 @@ export const Card = ({ user }: Props) => {
       >
         <Image
           alt="Imagen de Perfil"
-          // border="5px solid"
-          // borderColor="#4D5499"
           borderRadius="full"
           boxSize="150px"
           mb={-20}

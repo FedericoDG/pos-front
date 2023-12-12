@@ -32,8 +32,6 @@ export interface SelectedInvoceType extends InvoceType {
   value: number | undefined;
 }
 
-//export interface CartItem extends CashMovementsDetail { }
-
 interface PosContext {
   activeStep: number;
   addItem: (product: CashMovementsDetail) => void;

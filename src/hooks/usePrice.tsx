@@ -17,7 +17,7 @@ const createPrice = (price: Price) => postRequest('/prices/', price);
 const createPriceManyPercentage = (cart: Prices) => postRequest('/prices/many-percentage/', cart);
 const deletePrice = (id: number) => deleteRequest(`/prices/${id}`);
 
-export const useCreatePrice = (onSuccess: () => void) => {
+export const useCreatePrice = (onSuccess: (res: any) => void) => {
   return useMutation(createPrice, {
     onSuccess: onSuccess,
     onError: (error) => {

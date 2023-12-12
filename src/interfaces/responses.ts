@@ -21,6 +21,7 @@ import {
   Reason,
   Role,
   Settings,
+  State,
   Stock2,
   Supplier,
   Transfer,
@@ -141,7 +142,7 @@ export interface WarehousesResponse {
 
 export interface PriceListReportResponse {
   body: {
-    pricelists: Array<PriceList2[]>; // ERROR
+    pricelists: Array<PriceList2[]>;
   };
 }
 
@@ -294,6 +295,12 @@ export interface OtherTributesResponse {
   };
 }
 
+export interface StatesResponse {
+  body: {
+    states: State[];
+  };
+}
+
 export interface BalanceResponse {
   body: {
     from: string;
@@ -342,5 +349,46 @@ export interface BalanceResponse {
     clients: ClientWithTotal[];
     users: UserWithTotal[];
     user?: User;
+  };
+}
+
+export interface LibroIva {
+  body: {
+    from: string;
+    to: string;
+    totalSubTotal: number;
+    totalIva: number;
+    totalTotal: number;
+    total0: number;
+    total0025: number;
+    total005: number;
+    total0105: number;
+    total021: number;
+    total027: number;
+    movements: {
+      id: number;
+      isCreditNote: boolean;
+      subTotal: number;
+      iva: number;
+      total: number;
+      invoceTypeId: number;
+      posNumber: number;
+      invoceNumberAfip: number;
+      cae: string;
+      vtoCae: string;
+      creditNote: number;
+      cbteTipo: number;
+      info: string;
+      ivaDetails: {
+        '0': number;
+        '0.21': number;
+        '0.105': number;
+        '0.025': number;
+        '0.05': number;
+        '0.27': number;
+      };
+      createdAt: string;
+      client: Client;
+    }[];
   };
 }

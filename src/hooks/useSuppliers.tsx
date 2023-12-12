@@ -27,33 +27,17 @@ export const useGetSupplier = (id: number) =>
     select: (data) => data.body.supplier,
   });
 
-export const useCreateSupplier = () => {
-  const queryClient = useQueryClient();
-
+export const useCreateSupplier = (onSuccess: (res: any) => void, onError: (error: any) => void) => {
   return useMutation(createSupplier, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('suppliers');
-    },
-    onError: (error) => {
-      if (isError(error)) {
-        throw new Error(error.message);
-      }
-    },
+    onSuccess: onSuccess,
+    onError: onError,
   });
 };
 
-export const useUpdateSupplier = () => {
-  const queryClient = useQueryClient();
-
+export const useUpdateSupplier = (onSuccess: (res: any) => void, onError: (error: any) => void) => {
   return useMutation(updateSupplier, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('suppliers');
-    },
-    onError: (error) => {
-      if (isError(error)) {
-        throw new Error(error.message);
-      }
-    },
+    onSuccess: onSuccess,
+    onError: onError,
   });
 };
 
