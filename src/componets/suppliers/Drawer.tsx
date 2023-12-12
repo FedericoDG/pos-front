@@ -19,7 +19,7 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { toast } from 'sonner';
-import { QueryClient, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 import { State, Supplier } from '../../interfaces';
 import { useCreateSupplier, useUpdateSupplier } from '../../hooks/';

@@ -51,12 +51,7 @@ export const Drawer = ({
   const firstField = useRef<HTMLInputElement | null>(null);
 
   const { mutateAsync: createProduct, isLoading: isLoadingCreate } = useCreateProduct();
-  const {
-    mutateAsync: updateProduct,
-    isLoading: isLoadingUpdate,
-    data,
-    isSuccess,
-  } = useUpdateProduct();
+  const { mutateAsync: updateProduct, isLoading: isLoadingUpdate, isSuccess } = useUpdateProduct();
 
   const onSubmit = async (values: Product, actions: FormikHelpers<Product>) => {
     const parsedValues = {

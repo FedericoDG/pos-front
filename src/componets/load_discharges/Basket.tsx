@@ -30,7 +30,11 @@ export const Basket = () => {
     setActiveStep(1);
   };
 
-  const { mutate } = useCreateDischarge(onSuccess);
+  const onError = (error: any) => {
+    toast.error(error.response.data.body.message);
+  };
+
+  const { mutate } = useCreateDischarge(onSuccess, onError);
 
   const handleSubmit = useCallback(() => {
     const discharge = {

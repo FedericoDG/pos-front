@@ -59,7 +59,11 @@ export const Drawer = ({
     toast.success('Baja de productos realizada');
   };
 
-  const { mutate: createDischarge } = useCreateDischarge(onSuccess);
+  const onError = (error: any) => {
+    toast.error(error.response.data.body.message);
+  };
+
+  const { mutate: createDischarge } = useCreateDischarge(onSuccess, onError);
 
   const onSubmit = (values: Discharge, actions: FormikHelpers<Discharge>) => {
     const parsedValues = {
