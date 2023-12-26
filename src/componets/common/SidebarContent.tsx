@@ -15,6 +15,7 @@ import { MdPointOfSale } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 import { useMyContext } from '../../context';
+import { roles } from '../../interfaces';
 
 import { NavItem, NavItemDivider } from '.';
 
@@ -41,6 +42,10 @@ export const SidebarContent = (props: Props) => {
     onTogglePriceList,
     onToggleProducts,
     onToggleStock,
+  } = useMyContext();
+
+  const {
+    user: { role },
   } = useMyContext();
 
   return (
@@ -78,42 +83,55 @@ export const SidebarContent = (props: Props) => {
       </Flex>
       <Flex aria-label="Main Navigation" as="nav" color="gray.600" direction="column" fontSize="sm">
         {/* POS */}
-        <NavItem icon={MdPointOfSale} link="/panel/pos">
-          Punto de Venta
-        </NavItem>
-        <NavItem icon={MdPointOfSale} link="/panel/presupuesto">
-          Remito Valorizado
-        </NavItem>
+        {role?.id && role?.id <= roles.DRIVER && (
+          <>
+            {role.id <= roles.SELLER && (
+              <NavItem icon={MdPointOfSale} link="/panel/pos">
+                Punto de Venta
+              </NavItem>
+            )}
+            <NavItem icon={MdPointOfSale} link="/panel/presupuesto">
+              Remito Valorizado
+            </NavItem>
+          </>
+        )}
 
         {/* CASH REGISTER */}
-        <NavItemDivider
-          icon={FaDollarSign}
-          onClick={() => {
-            onToggleCashRegister();
-            onCloseStock();
-            onCloseProducts();
-            onClosePriceList();
-          }}
-        >
-          Caja
-          <Icon
-            as={MdKeyboardArrowRight}
-            ml="auto"
-            transform={isOpenCashRegister ? 'rotate(90deg)' : ''}
-          />
-        </NavItemDivider>
-        <Collapse in={isOpenCashRegister}>
-          <NavItem link="/panel/caja/">
-            <Box pl="8" py="0">
-              Listar
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/caja/estado">
-            <Box pl="8" py="0">
-              Estado
-            </Box>
-          </NavItem>
-        </Collapse>
+        {role?.id && role?.id <= roles.DRIVER && (
+          <>
+            <NavItemDivider
+              icon={FaDollarSign}
+              onClick={() => {
+                onToggleCashRegister();
+                onCloseStock();
+                onCloseProducts();
+                onClosePriceList();
+              }}
+            >
+              Caja
+              <Icon
+                as={MdKeyboardArrowRight}
+                ml="auto"
+                transform={isOpenCashRegister ? 'rotate(90deg)' : ''}
+              />
+            </NavItemDivider>
+
+            <Collapse in={isOpenCashRegister}>
+              {role?.id && role?.id <= roles.ADMIN && (
+                <NavItem link="/panel/caja/">
+                  <Box pl="8" py="0">
+                    Listar
+                  </Box>
+                </NavItem>
+              )}
+              <NavItem link="/panel/caja/estado">
+                <Box pl="8" py="0">
+                  Estado
+                </Box>
+              </NavItem>
+            </Collapse>
+          </>
+        )}
 
         {/* PRODUCTS */}
         <NavItemDivider
@@ -138,72 +156,82 @@ export const SidebarContent = (props: Props) => {
               Listar
             </Box>
           </NavItem>
-          <NavItem link="/panel/productos/costos">
-            <Box pl="8" py="0">
-              Actualizar Costos
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/productos/categorias">
-            <Box pl="8" py="0">
-              Categorías
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/productos/unidades">
-            <Box pl="8" py="0">
-              Unidades
-            </Box>
-          </NavItem>
+          {role?.id && role?.id <= roles.ADMIN && (
+            <>
+              <NavItem link="/panel/productos/costos">
+                <Box pl="8" py="0">
+                  Actualizar Costos
+                </Box>
+              </NavItem>
+              <NavItem link="/panel/productos/categorias">
+                <Box pl="8" py="0">
+                  Categorías
+                </Box>
+              </NavItem>
+              <NavItem link="/panel/productos/unidades">
+                <Box pl="8" py="0">
+                  Unidades
+                </Box>
+              </NavItem>
+            </>
+          )}
         </Collapse>
 
         {/* STOCK */}
-        <NavItemDivider
-          icon={AiOutlineStock}
-          onClick={() => {
-            onToggleStock();
-            onCloseCashRegister();
-            onCloseProducts();
-            onClosePriceList();
-          }}
-        >
-          Stock
-          <Icon
-            as={MdKeyboardArrowRight}
-            ml="auto"
-            transform={isOpenStock ? 'rotate(90deg)' : ''}
-          />
-        </NavItemDivider>
-        <Collapse in={isOpenStock}>
-          <NavItem link="/panel/stock/">
-            <Box pl="8" py="0">
-              Listar
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/stock/compras">
-            <Box pl="8" py="0">
-              Compras
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/stock/transferencias">
-            <Box pl="8" py="0">
-              Transferencias
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/stock/transferencias-choferes">
-            <Box pl="8" py="0">
-              Transferencias Choferes
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/stock/bajas">
-            <Box pl="8" py="0">
-              Bajas
-            </Box>
-          </NavItem>
-          <NavItem link="/panel/stock/depositos">
-            <Box pl="8" py="0">
-              Depósitos
-            </Box>
-          </NavItem>
-        </Collapse>
+        {role?.id && role?.id <= roles.ADMIN && (
+          <>
+            <NavItemDivider
+              icon={AiOutlineStock}
+              onClick={() => {
+                onToggleStock();
+                onCloseCashRegister();
+                onCloseProducts();
+                onClosePriceList();
+              }}
+            >
+              Stock
+              <Icon
+                as={MdKeyboardArrowRight}
+                ml="auto"
+                transform={isOpenStock ? 'rotate(90deg)' : ''}
+              />
+            </NavItemDivider>
+            <Collapse in={isOpenStock}>
+              <NavItem link="/panel/stock/">
+                <Box pl="8" py="0">
+                  Listar
+                </Box>
+              </NavItem>
+              <>
+                <NavItem link="/panel/stock/compras">
+                  <Box pl="8" py="0">
+                    Compras
+                  </Box>
+                </NavItem>
+                <NavItem link="/panel/stock/transferencias">
+                  <Box pl="8" py="0">
+                    Transferencias
+                  </Box>
+                </NavItem>
+                <NavItem link="/panel/stock/transferencias-choferes">
+                  <Box pl="8" py="0">
+                    Transferencias Choferes
+                  </Box>
+                </NavItem>
+                <NavItem link="/panel/stock/bajas">
+                  <Box pl="8" py="0">
+                    Bajas
+                  </Box>
+                </NavItem>
+                <NavItem link="/panel/stock/depositos">
+                  <Box pl="8" py="0">
+                    Depósitos
+                  </Box>
+                </NavItem>
+              </>
+            </Collapse>
+          </>
+        )}
 
         {/* PRICELISTS */}
         <NavItemDivider
@@ -223,11 +251,13 @@ export const SidebarContent = (props: Props) => {
           />
         </NavItemDivider>
         <Collapse in={isOpenPriceList}>
-          <NavItem link="/panel/lista-de-precios/">
-            <Box pl="8" py="0">
-              Listar
-            </Box>
-          </NavItem>
+          {role?.id && role?.id <= roles.ADMIN && (
+            <NavItem link="/panel/lista-de-precios/">
+              <Box pl="8" py="0">
+                Listar
+              </Box>
+            </NavItem>
+          )}
           <NavItem link="/panel/lista-de-precios/generar-reporte">
             <Box pl="8" py="0">
               Generar Reporte
@@ -236,34 +266,46 @@ export const SidebarContent = (props: Props) => {
         </Collapse>
 
         {/* DRIVERS */}
-        <NavItem icon={GiCarWheel} link="/panel/choferes">
-          Choferes
-        </NavItem>
+        {role?.id && role?.id <= roles.ADMIN && (
+          <NavItem icon={GiCarWheel} link="/panel/choferes">
+            Choferes
+          </NavItem>
+        )}
 
         {/* CLIENTS */}
-        <NavItem icon={BsPersonVcard} link="/panel/clientes">
-          Clientes
-        </NavItem>
+        {role?.id && role?.id <= roles.SELLER && (
+          <NavItem icon={BsPersonVcard} link="/panel/clientes">
+            Clientes
+          </NavItem>
+        )}
 
         {/* SUPPLIERS */}
-        <NavItem icon={BsPersonVcardFill} link="/panel/proveedores">
-          Proveedores
-        </NavItem>
+        {role?.id && role?.id <= roles.ADMIN && (
+          <NavItem icon={BsPersonVcardFill} link="/panel/proveedores">
+            Proveedores
+          </NavItem>
+        )}
 
         {/* BALANCE */}
-        <NavItem icon={FaChartLine} link="/panel/balance">
-          Ingresos
-        </NavItem>
+        {role?.id && role?.id <= roles.ADMIN && (
+          <NavItem icon={FaChartLine} link="/panel/balance">
+            Ingresos
+          </NavItem>
+        )}
 
         {/* LIBRO IVA */}
-        <NavItem icon={FaBook} link="/panel/libro-iva">
-          Libro IVA
-        </NavItem>
+        {role?.id && role?.id <= roles.ADMIN && (
+          <NavItem icon={FaBook} link="/panel/libro-iva">
+            Libro IVA
+          </NavItem>
+        )}
 
         {/* USERS */}
-        <NavItem icon={FaUserFriends} link="/panel/usuarios">
-          Usuarios
-        </NavItem>
+        {role?.id && role?.id <= roles.SUPERAMIN && (
+          <NavItem icon={FaUserFriends} link="/panel/usuarios">
+            Usuarios
+          </NavItem>
+        )}
       </Flex>
     </Box>
   );

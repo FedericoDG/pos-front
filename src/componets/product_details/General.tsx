@@ -24,6 +24,8 @@ import { useRef } from 'react';
 
 import { formatDate, formatCurrency } from '../../utils';
 import { Product } from '../../interfaces';
+import { useMyContext } from '../../context';
+import { roles } from '../../interfaces/roles';
 
 interface Props {
   product: Product;
@@ -33,6 +35,10 @@ interface Props {
 }
 
 export const General = ({ product, onOpen, onOpen2, onOpen3 }: Props) => {
+  const {
+    user: { role },
+  } = useMyContext();
+
   const barcodeRef = useRef<any | null>(null);
 
   const getBgColor = ({
@@ -192,7 +198,15 @@ export const General = ({ product, onOpen, onOpen2, onOpen3 }: Props) => {
                 </Table>
               </TableContainer>
             </Stack>
-            <Button colorScheme="brand" mb="4" ml="auto" size="sm" w="210px" onClick={onOpen2}>
+            <Button
+              colorScheme="brand"
+              isDisabled={!!role?.id && role?.id >= roles.SELLER}
+              mb="4"
+              ml="auto"
+              size="sm"
+              w="210px"
+              onClick={onOpen2}
+            >
               CARGAR PERDIDA
             </Button>
           </Stack>
@@ -235,7 +249,15 @@ export const General = ({ product, onOpen, onOpen2, onOpen3 }: Props) => {
               </Tbody>
             </Table>
           </TableContainer>
-          <Button colorScheme="brand" mb="4" ml="auto" size="sm" w="210px" onClick={onOpen}>
+          <Button
+            colorScheme="brand"
+            isDisabled={!!role?.id && role?.id >= roles.SELLER}
+            mb="4"
+            ml="auto"
+            size="sm"
+            w="210px"
+            onClick={onOpen}
+          >
             ACTUALIZAR PRECIOS
           </Button>
 
@@ -263,7 +285,14 @@ export const General = ({ product, onOpen, onOpen2, onOpen3 }: Props) => {
               </Table>
             </TableContainer>
           )}
-          <Button colorScheme="brand" ml="auto" size="sm" w="210px" onClick={onOpen3}>
+          <Button
+            colorScheme="brand"
+            isDisabled={!!role?.id && role?.id >= roles.SELLER}
+            ml="auto"
+            size="sm"
+            w="210px"
+            onClick={onOpen3}
+          >
             ACTUALIZAR COSTO
           </Button>
         </Stack>

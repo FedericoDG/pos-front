@@ -7,6 +7,8 @@ import { Drawer, DrawerCost, DrawerDischarge, General, Stock } from '../componet
 import { Discharge, Price } from '../interfaces';
 import { useGetProduct, useGetReasons, useGetWarehousesWOStock } from '../hooks';
 import { useGetPriceLists } from '../hooks/';
+import { useMyContext } from '../context';
+import { roles } from '../interfaces/roles';
 
 interface Cost {
   productId: number;
@@ -14,6 +16,10 @@ interface Cost {
 }
 
 export const ProductDetails = () => {
+  const {
+    user: { role },
+  } = useMyContext();
+
   const resetValues: Price = useMemo(
     () => ({
       productId: 1,
@@ -101,9 +107,11 @@ export const ProductDetails = () => {
           <Tabs bg="white" defaultIndex={Number(searchParams.get('tab'))} variant="line" w="full">
             <TabList>
               <Tab onClick={() => setSearchParams('tab=0')}>General</Tab>
-              <Tab onClick={() => setSearchParams('tab=1')}>
-                Evolución del Stock - {product.name}
-              </Tab>
+              {role?.id && role.id <= roles.ADMIN && (
+                <Tab onClick={() => setSearchParams('tab=1')}>
+                  Evolución del Stock - {product.name}
+                </Tab>
+              )}
             </TabList>
             <TabPanels>
               <TabPanel>

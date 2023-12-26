@@ -149,7 +149,7 @@ export const Drawer = ({
                   <Box>
                     <FormLabel htmlFor="roleId">Rol:</FormLabel>
                     <Select
-                      defaultValue={initialValues.role?.id}
+                      defaultValue={initialValues.role?.id || initialValues.roleId}
                       id="roleId"
                       minW="224px"
                       name="roleId"
