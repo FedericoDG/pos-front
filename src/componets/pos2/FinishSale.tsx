@@ -132,7 +132,8 @@ export const FinishSale = () => {
     updateCartWithError,
     warehouse,
     invoceType,
-    subTotalCart
+    subTotalCart,
+    totalDiscount
   } = usePosContext();
 
   const [option, setOption] = useState('1');
@@ -198,7 +199,7 @@ export const FinishSale = () => {
 
   const onSubmit = async (values: Values) => {
     const parsedValues = {
-      discount: Number(values.discount),
+      discount: Number(values.discount) + Number(totalDiscount),
       recharge: Number(values.recharge),
     };
 

@@ -16,6 +16,7 @@ interface Props {
 
 export const PosProvider = ({ children }: Props) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [totalDiscount, setTotalDiscount] = useState<number>(0);
   const [client, setClient] = useState<SelectedClient | null>({} as SelectedClient);
   const [invoceType, setInvoceType] = useState<SelectedInvoceType | null>({} as SelectedInvoceType);
   const [priceList, setPriceList] = useState<SelectedPriceList | null>({} as SelectedPriceList);
@@ -149,6 +150,8 @@ export const PosProvider = ({ children }: Props) => {
       subTotalCart,
       totalIvaCart,
       recalculateCart,
+      totalDiscount,
+      setTotalDiscount,
     }),
     [
       activeStep,
@@ -168,6 +171,7 @@ export const PosProvider = ({ children }: Props) => {
       subTotalCart,
       totalIvaCart,
       recalculateCart,
+      totalDiscount,
     ]
   );
 
@@ -201,6 +205,8 @@ export const usePosContext = () => {
     subTotalCart,
     totalIvaCart,
     recalculateCart,
+    totalDiscount,
+    setTotalDiscount,
   } = useContext(posContext);
 
   return {
@@ -229,5 +235,7 @@ export const usePosContext = () => {
     subTotalCart,
     totalIvaCart,
     recalculateCart,
+    totalDiscount,
+    setTotalDiscount,
   };
 };

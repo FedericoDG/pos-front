@@ -161,7 +161,7 @@ export const A = ({ cashMovement, settings }: Props) => {
                           </Th>
                           <Th className="coso">Descripción</Th>
                           <Th isNumeric className="coso">
-                            Precio unitatio
+                            Precio unitario
                           </Th>
                           <Th isNumeric className="coso">
                             Alícuota

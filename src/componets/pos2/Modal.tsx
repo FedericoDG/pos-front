@@ -48,7 +48,7 @@ export const Modal = ({
   cancelRef,
   setActiveProduct,
 }: Props) => {
-  const { addItem, cart, iva } = usePosContext();
+  const { addItem, cart, iva, setTotalDiscount } = usePosContext();
   const { user } = useMyContext();
 
   const onSubmit = (values: Values, actions: FormikHelpers<Values>) => {
@@ -62,6 +62,7 @@ export const Modal = ({
       }
     } else {
       if (discount > 0) {
+        setTotalDiscount(curr => curr + activeProduct.price * discount / 100);
         addItem({ ...activeProduct!, quantity: values.quantity, price: activeProduct.price * (1 - discount / 100), hasDiscount: true, discount: discount, error: false, tax: 0 });
       } else {
         addItem({ ...activeProduct!, quantity: values.quantity, hasDiscount: false, discount: 0, error: false, tax: 0 });
