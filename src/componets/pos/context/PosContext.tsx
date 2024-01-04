@@ -34,6 +34,7 @@ export interface CartItem extends Product {
   allow: boolean;
   hasDiscount: boolean;
   discount: number;
+  totalDiscount: number;
 }
 
 interface PosContext {

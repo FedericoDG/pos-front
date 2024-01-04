@@ -144,7 +144,7 @@ export const FinishSale = () => {
   const [cartCopy, setCartCopy] = useState<CartItem[]>([]);
 
   const subTotalCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price, 0),
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price - item.totalDiscount, 0),
     [cartCopy]
   );
 
@@ -154,7 +154,7 @@ export const FinishSale = () => {
   );
 
   const totalCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax), 0),
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax) - item.totalDiscount, 0),
     [cartCopy]
   );
 
@@ -199,7 +199,7 @@ export const FinishSale = () => {
 
   const onSubmit = async (values: Values) => {
     const parsedValues = {
-      discount: Number(values.discount) + Number(totalDiscount),
+      discount: Number(values.discount),
       recharge: Number(values.recharge),
     };
 
@@ -213,6 +213,7 @@ export const FinishSale = () => {
         tax: Number(item.tax),
         price: item.price,
         allow: item.allownegativestock === 'ENABLED' ? true : false,
+        totalDiscount: item.totalDiscount,
       })),
       invoceTypeId: invoceType?.id!,
       payments: values?.payments?.map((item) => ({
@@ -682,37 +683,7 @@ export const FinishSale = () => {
                       </Box>
                     </Stack>
 
-                    <Stack bg='gray.800' color='whitesmoke' pb="4" px="4" rounded='md' w="full">
-                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
-                        <Text textAlign="right" w="80%" >
-                          Subtotal
-                        </Text>
-                        <Text fontSize={24} textAlign="right" w="20%">
-                          {formatCurrency(subTotalCartCopy)}
-                        </Text>
-                      </Stack>
-
-                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
-                        <Text textAlign="right" w="80%" >
-                          IVA
-                        </Text>
-                        <Text fontSize={24} textAlign="right" w="20%">
-                          {formatCurrency(totalIvaCartCopy)}
-                        </Text>
-                      </Stack>
-                      {
-                        values.otherTributes?.filter(el => Number(el.amount) > 0).length && values.otherTributes?.filter(el => Number(el.amount) > 0).length > 0 && (
-                          <Stack direction='row' justifyContent="flex-end" w="full">
-                            <Text textAlign="right" w="80%" >
-                              (Otros Impuestos)
-                            </Text>
-                            <Text fontSize={18} textAlign="right" w="20%">
-                              {formatCurrency(values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0))}
-                            </Text>
-                          </Stack>
-                        )
-                      }
-                      <Divider ml="auto" w="50%" />
+                    <Stack bg='gray.800' color='whitesmoke' p="4" rounded='md' w="full">
                       <Flex justifyContent="space-between" ml="auto" w="50%">
                         <Text fontSize={24}>TOTAL:</Text>
                         <Text fontSize={24} fontWeight="semibold" textAlign="right">
@@ -770,30 +741,17 @@ export const FinishSale = () => {
                                     iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}%)
                                   </Text>
                                 }
+                                {
+                                  item.totalDiscount > 0 &&
+                                  <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                                }
                                 <Text px="2" textDecoration="underline">
-                                  subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                                  subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax) - item.totalDiscount)}
                                 </Text>
                               </Box>
                             </Stack>
                           );
                         })}
-                      </Stack>
-                      <Divider />
-                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
-                        <Text textAlign="right" w="50%" >
-                          Subtotal
-                        </Text>
-                        <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(subTotalCartCopy)}
-                        </Text>
-                      </Stack>
-                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
-                        <Text textAlign="right" w="50%" >
-                          IVA
-                        </Text>
-                        <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(totalIvaCartCopy)}
-                        </Text>
                       </Stack>
                       <Divider />
                       <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">

@@ -31,6 +31,8 @@ export const B = ({ cashMovement, settings }: Props) => {
     content: () => printRef.current,
   });
 
+  const someDiscount = cashMovement.cashMovementDetails?.some((el) => el.totalDiscount > 0);
+
   return (
     <Flex
       alignItems="center"
@@ -130,6 +132,11 @@ export const B = ({ cashMovement, settings }: Props) => {
                           <Th isNumeric className="coso">
                             Precio unitario
                           </Th>
+                          {someDiscount && (
+                            <Th isNumeric className="coso">
+                              Descuento
+                            </Th>
+                          )}
                           <Th isNumeric className="coso">
                             Total
                           </Th>
@@ -142,15 +149,25 @@ export const B = ({ cashMovement, settings }: Props) => {
                       </Td>
                       <Td>{movement.product?.name}</Td>
                       <Td isNumeric>{formatCurrency(movement.price)}</Td>
+                      {someDiscount && <Td isNumeric>{formatCurrency(movement.totalDiscount)}</Td>}
                       <Td isNumeric>
-                        {formatCurrency(movement.quantity * movement.price * (1 + movement.tax))}
+                        {formatCurrency(
+                          (movement.quantity * movement.price - movement.totalDiscount) *
+                          (1 + movement.tax)
+                        )}
                       </Td>
                     </Tr>
                   </Fragment>
                 );
               })}
               <Tr>
-                <Td borderWidth={0} colSpan={3} fontSize={16} fontWeight={500} textAlign="right">
+                <Td
+                  borderWidth={0}
+                  colSpan={someDiscount ? 4 : 3}
+                  fontSize={16}
+                  fontWeight={500}
+                  textAlign="right"
+                >
                   Subtotal:
                 </Td>
                 <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
@@ -160,7 +177,7 @@ export const B = ({ cashMovement, settings }: Props) => {
               {cashMovement.otherTributes > 0 &&
                 cashMovement.otherTributesDetails?.map((tribute) => (
                   <Tr key={tribute.id}>
-                    <Td borderWidth={0} colSpan={3} textAlign="right">
+                    <Td borderWidth={0} colSpan={someDiscount ? 4 : 3} textAlign="right">
                       {tribute.otherTribute?.description}
                     </Td>
                     <Td isNumeric borderWidth={0}>
@@ -171,7 +188,7 @@ export const B = ({ cashMovement, settings }: Props) => {
               <Tr>
                 <Td
                   borderWidth={0}
-                  colSpan={3}
+                  colSpan={someDiscount ? 4 : 3}
                   fontSize={18}
                   fontWeight={700}
                   pb="100px"

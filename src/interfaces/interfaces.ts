@@ -407,6 +407,7 @@ export interface CashMovementsDetail {
   tax: number;
   price: number;
   quantity: number;
+  totalDiscount: number;
   createdAt?: string;
   updatedAt?: string;
   product?: Product;

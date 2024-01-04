@@ -144,17 +144,17 @@ export const FinishSale = () => {
   const [cartCopy, setCartCopy] = useState<CartItem[]>([]);
 
   const subTotalCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price, 0),
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price - item.totalDiscount, 0),
     [cartCopy]
   );
 
   const totalIvaCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price * item.tax, 0),
+    () => cartCopy.reduce((acc, item) => acc + (item.quantity * item.price - item.totalDiscount) * item.tax, 0),
     [cartCopy]
   );
 
   const totalCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax), 0),
+    () => cartCopy.reduce((acc, item) => acc + ((item.quantity * item.price - item.totalDiscount) * (1 + item.tax)), 0),
     [cartCopy]
   );
 
@@ -213,6 +213,7 @@ export const FinishSale = () => {
         tax: Number(item.tax),
         price: item.price,
         allow: item.allownegativestock === 'ENABLED' ? true : false,
+        totalDiscount: item.totalDiscount,
       })),
       invoceTypeId: invoceType?.id!,
       payments: values?.payments?.map((item) => ({
@@ -850,13 +851,17 @@ export const FinishSale = () => {
                                 </Text>
                                 <Text px="2">precio: {formatCurrency(item.price)}</Text>
                                 {
+                                  item.totalDiscount > 0 &&
+                                  <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                                }
+                                {
                                   iva &&
                                   <Text px="2">
-                                    iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}%)
+                                    iva: {formatCurrency((item.price * item.quantity - item.totalDiscount) * item.tax)} ({item.tax * 100}%)
                                   </Text>
                                 }
                                 <Text px="2" textDecoration="underline">
-                                  subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                                  subtotal: {formatCurrency((item.price * item.quantity - item.totalDiscount) * (1 + item.tax))}
                                 </Text>
                               </Box>
                             </Stack>

@@ -133,15 +133,14 @@ export const Basket = ({ refetch }: Props) => {
                       cantidad: {item.quantity} {item.unit?.code}
                     </Text>
                     <Text px="2">precio: {formatCurrency(item.price)}</Text>
-                    {iva && (
-                      <Text px="2">
-                        iva: {formatCurrency(item.price * item.quantity * item.tax)} (
-                        {item.tax * 100}
-                        %)
-                      </Text>
+                    {item.totalDiscount > 0 && (
+                      <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
                     )}
                     <Text px="2" textDecoration="underline">
-                      subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                      subtotal:
+                      {formatCurrency(
+                        item.price * item.quantity * (1 + item.tax) - item.totalDiscount
+                      )}
                     </Text>
                   </Box>
                   <Box position="absolute" right={0} top={'50%'}>
