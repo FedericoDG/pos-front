@@ -621,7 +621,7 @@ export const CashRegisterDetails = () => {
                                                 borderBottomWidth="1"
                                                 borderColor="black"
                                                 borderStyle="solid"
-                                                colSpan={7}
+                                                colSpan={8}
                                                 color="black"
                                                 w="843px"
                                               >
@@ -647,11 +647,20 @@ export const CashRegisterDetails = () => {
                                                     {formatCurrency(detail.price * detail.quantity)}
                                                   </Td>
                                                   {
+                                                    detail.totalDiscount > 0 ?
+                                                      <Td isNumeric border="none" w="121px">
+                                                        {formatCurrency(detail.totalDiscount * -1)}
+                                                      </Td> :
+                                                      <Td isNumeric border="none" w="121px">
+                                                        {formatCurrency(0)}
+                                                      </Td>
+                                                  }
+                                                  {
                                                     movement.iva &&
                                                     (
 
                                                       <Td isNumeric border="none" w="121px">
-                                                        {formatCurrency(detail.price * detail.quantity * (detail.product?.ivaCondition?.tax!))}
+                                                        {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (detail.product?.ivaCondition?.tax!))}
                                                       </Td>
                                                     )
                                                   }
@@ -675,12 +684,12 @@ export const CashRegisterDetails = () => {
                                                       (
 
                                                         <Td isNumeric border="none" w="121px">
-                                                          {formatCurrency(detail.price * detail.quantity * (1 + detail.product?.ivaCondition?.tax!))}
+                                                          {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (1 + detail.product?.ivaCondition?.tax!))}
                                                         </Td>
                                                       ) :
                                                       (
                                                         <Td isNumeric border="none" w="121px">
-                                                          {formatCurrency(detail.price * detail.quantity)}
+                                                          {formatCurrency(detail.price * detail.quantity - detail.totalDiscount)}
                                                         </Td>
 
                                                       )

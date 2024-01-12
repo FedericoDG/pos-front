@@ -133,7 +133,6 @@ export const FinishSale = () => {
     warehouse,
     invoceType,
     subTotalCart,
-    totalDiscount
   } = usePosContext();
 
   const [option, setOption] = useState('1');
@@ -165,7 +164,7 @@ export const FinishSale = () => {
       console.log(subTotalCartCopy);
 
       for (let i = 0; i < cart.length; i++) {
-        const percent = (cart[i].quantity * cart[i].price) / subTotalCartCopy;
+        const percent = (cart[i].quantity * cart[i].price - cart[i].totalDiscount) / subTotalCartCopy;
 
         console.log('porcentaje: ', percent);
 
@@ -199,7 +198,7 @@ export const FinishSale = () => {
 
   const onSubmit = async (values: Values) => {
     const parsedValues = {
-      discount: Number(values.discount) + Number(totalDiscount),
+      discount: Number(values.discount),
       recharge: Number(values.recharge),
     };
 
@@ -284,6 +283,8 @@ export const FinishSale = () => {
           createAfipInvoce({ ...sale, cashMovementId, movementIds: res.body.ids });
         }
       });
+
+      console.log(sale);
     }
   };
 
@@ -852,7 +853,13 @@ export const FinishSale = () => {
                                 <Text px="2">precio: {formatCurrency(item.price)}</Text>
                                 {
                                   item.totalDiscount > 0 &&
-                                  <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                                  <>
+                                    <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                                    <Text px="2">
+                                      subtotal:{' '}
+                                      {formatCurrency(item.price * item.quantity - item.totalDiscount)}
+                                    </Text>
+                                  </>
                                 }
                                 {
                                   iva &&

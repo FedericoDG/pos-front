@@ -133,7 +133,6 @@ export const FinishSale = () => {
     warehouse,
     invoceType,
     subTotalCart,
-    totalDiscount
   } = usePosContext();
 
   const [option, setOption] = useState('1');
@@ -145,11 +144,6 @@ export const FinishSale = () => {
 
   const subTotalCartCopy = useMemo(
     () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price - item.totalDiscount, 0),
-    [cartCopy]
-  );
-
-  const totalIvaCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price * item.tax, 0),
     [cartCopy]
   );
 
@@ -165,7 +159,7 @@ export const FinishSale = () => {
       console.log(subTotalCartCopy);
 
       for (let i = 0; i < cart.length; i++) {
-        const percent = (cart[i].quantity * cart[i].price) / subTotalCartCopy;
+        const percent = (cart[i].quantity * cart[i].price - cart[i].totalDiscount) / subTotalCartCopy;
 
         console.log('porcentaje: ', percent);
 
@@ -736,17 +730,14 @@ export const FinishSale = () => {
                                 </Text>
                                 <Text px="2">precio: {formatCurrency(item.price)}</Text>
                                 {
-                                  iva &&
-                                  <Text px="2">
-                                    iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}%)
-                                  </Text>
-                                }
-                                {
                                   item.totalDiscount > 0 &&
-                                  <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                                  <>
+                                    <Text px="2">subtotal: {formatCurrency(item.price * item.quantity)}</Text>
+                                    <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                                  </>
                                 }
                                 <Text px="2" textDecoration="underline">
-                                  subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax) - item.totalDiscount)}
+                                  total: {formatCurrency(item.price * item.quantity * (1 + item.tax) - item.totalDiscount)}
                                 </Text>
                               </Box>
                             </Stack>
