@@ -149,7 +149,9 @@ export const B = ({ cashMovement, settings }: Props) => {
                       </Td>
                       <Td>{movement.product?.name}</Td>
                       <Td isNumeric>{formatCurrency(movement.price)}</Td>
-                      {someDiscount && <Td isNumeric>{formatCurrency(movement.totalDiscount)}</Td>}
+                      {someDiscount && (
+                        <Td isNumeric>{formatCurrency(movement.totalDiscount * -1)}</Td>
+                      )}
                       <Td isNumeric>
                         {formatCurrency(
                           (movement.quantity * movement.price - movement.totalDiscount) *
@@ -174,6 +176,38 @@ export const B = ({ cashMovement, settings }: Props) => {
                   {formatCurrency(cashMovement.subtotal)}
                 </Td>
               </Tr>
+              {cashMovement.discount > 0 && (
+                <Tr>
+                  <Td
+                    borderWidth={0}
+                    colSpan={someDiscount ? 4 : 3}
+                    fontSize={16}
+                    fontWeight={500}
+                    textAlign="right"
+                  >
+                    Descuento:
+                  </Td>
+                  <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                    {formatCurrency(cashMovement.discount * -1)}
+                  </Td>
+                </Tr>
+              )}
+              {cashMovement.recharge > 0 && (
+                <Tr>
+                  <Td
+                    borderWidth={0}
+                    colSpan={someDiscount ? 4 : 3}
+                    fontSize={16}
+                    fontWeight={500}
+                    textAlign="right"
+                  >
+                    Recargo:
+                  </Td>
+                  <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                    {formatCurrency(cashMovement.recharge)}
+                  </Td>
+                </Tr>
+              )}
               {cashMovement.otherTributes > 0 &&
                 cashMovement.otherTributesDetails?.map((tribute) => (
                   <Tr key={tribute.id}>
@@ -204,7 +238,7 @@ export const B = ({ cashMovement, settings }: Props) => {
           </Table>
         </TableContainer>
         <div style={{ flex: 1 }} />
-        <HStack alignItems="flex-start" color="#4a5568" flex={1} fontSize="sm">
+        <HStack alignItems="flex-start" color="#4a5568" fontSize="sm">
           {cashMovement.cbteTipo !== 8 && (
             <Stack>
               <Text fontWeight={700} width="180px">
@@ -218,7 +252,7 @@ export const B = ({ cashMovement, settings }: Props) => {
               ))}
             </Stack>
           )}
-          {cashMovement.discount > 0 && (
+          {/*  {cashMovement.discount > 0 && (
             <Stack>
               <Text fontWeight={700} width="180px">
                 DESCUENTO:
@@ -239,7 +273,7 @@ export const B = ({ cashMovement, settings }: Props) => {
                 <Text width="180px">{formatTwoDigits(cashMovement.rechargePercent)}%</Text>
               </HStack>
             </Stack>
-          )}
+          )} */}
         </HStack>
         <Stack
           color="#4a5568"

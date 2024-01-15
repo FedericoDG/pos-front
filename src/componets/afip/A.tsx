@@ -188,7 +188,7 @@ export const A = ({ cashMovement, settings }: Props) => {
                       <Td isNumeric>{formatCurrency(movement.price)}</Td>
                       {
                         someDiscount &&
-                        <Td isNumeric>{formatCurrency(movement.totalDiscount)}</Td>
+                        <Td isNumeric>{formatCurrency(movement.totalDiscount * -1)}</Td>
                       }
                       <Td isNumeric>{formatTwoDigits(movement.tax * 100)}%</Td>
                       <Td isNumeric>{formatCurrency(movement.quantity * movement.price - movement.totalDiscount)}</Td>
@@ -204,6 +204,38 @@ export const A = ({ cashMovement, settings }: Props) => {
                   {formatCurrency(cashMovement.subtotal - iva)}
                 </Td>
               </Tr>
+              {cashMovement.discount > 0 && (
+                <Tr>
+                  <Td
+                    borderWidth={0}
+                    colSpan={someDiscount ? 5 : 4}
+                    fontSize={16}
+                    fontWeight={500}
+                    textAlign="right"
+                  >
+                    Descuento:
+                  </Td>
+                  <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                    {formatCurrency(cashMovement.discount * -1)}
+                  </Td>
+                </Tr>
+              )}
+              {cashMovement.recharge > 0 && (
+                <Tr>
+                  <Td
+                    borderWidth={0}
+                    colSpan={someDiscount ? 5 : 4}
+                    fontSize={16}
+                    fontWeight={500}
+                    textAlign="right"
+                  >
+                    Recargo:
+                  </Td>
+                  <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                    {formatCurrency(cashMovement.recharge)}
+                  </Td>
+                </Tr>
+              )}
               {iva2.length > 0 &&
                 iva2.map((el) => (
                   <Tr key={nanoid()}>
@@ -265,7 +297,7 @@ export const A = ({ cashMovement, settings }: Props) => {
               ))}
             </Stack>
           )}
-          {cashMovement.discount > 0 && (
+          {/* {cashMovement.discount > 0 && (
             <Stack>
               <Text fontWeight={700} width="180px">
                 DESCUENTO:
@@ -286,7 +318,7 @@ export const A = ({ cashMovement, settings }: Props) => {
                 <Text width="180px">{formatTwoDigits(cashMovement.rechargePercent)}%</Text>
               </HStack>
             </Stack>
-          )}
+          )} */}
         </HStack>
         <Stack
           color="#4a5568"

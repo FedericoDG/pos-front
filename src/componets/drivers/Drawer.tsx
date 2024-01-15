@@ -80,8 +80,6 @@ export const Drawer = ({
 
   const { handleSubmit, handleChange, values, errors, touched } = formik;
 
-  console.log(errors);
-
   const close = () => {
     formik.resetForm();
     setinitialValues(resetValues);

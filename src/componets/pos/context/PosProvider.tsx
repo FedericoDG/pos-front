@@ -112,8 +112,6 @@ export const PosProvider = ({ children }: Props) => {
       for (let i = 0; i < cart.length; i++) {
         const percent = (cart[i].quantity * cart[i].price) / subTotalCart;
 
-        console.log('porcentaje: ', percent);
-
         const element = { ...cart[i], price: cart[i].price + percent * num };
 
         newCart.push(element);

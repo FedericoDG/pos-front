@@ -60,13 +60,13 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
         id: 'precio unitario',
         header: 'Precio U.',
         cell: (row: CellContext<CashMovementsDetail, unknown>) => row.renderValue(),
-        accessorFn: (x) => formatCurrency(x.price),
+        accessorFn: (x) => formatCurrency(x.price - x.totalDiscount),
       },
       {
         id: 'total',
         header: 'Total (incluye IVA)',
         cell: (row: CellContext<CashMovementsDetail, unknown>) => row.renderValue(),
-        accessorFn: (x) => formatCurrency(x.price * x.quantity * (1 + x.tax)),
+        accessorFn: (x) => formatCurrency((x.price * x.quantity - x.totalDiscount) * (1 + x.tax)),
       },
       {
         id: 'acciones',
@@ -80,7 +80,10 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
               type="submit"
               variant="ghost"
               onClick={() => {
-                setActiveProduct(row.original);
+                setActiveProduct({
+                  ...row.original,
+                  price: row.original.price - row.original.totalDiscount,
+                });
                 onOpen();
               }}
             >

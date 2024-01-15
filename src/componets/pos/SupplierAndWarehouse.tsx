@@ -8,7 +8,7 @@ import {
   useGetClients,
   useGetPriceLists,
   useGetInvoceTypes,
-  useGetAfip,
+  useGetAfip2,
 } from '../../hooks';
 import { Loading } from '../common';
 import { useMyContext } from '../../context';
@@ -27,7 +27,7 @@ export const SupplierAndWarehouse = () => {
   const { data: clients } = useGetClients();
   const { data: priceLists } = useGetPriceLists();
   const { data: invoceTypes } = useGetInvoceTypes();
-  const { data: afip } = useGetAfip();
+  const { data: afip } = useGetAfip2();
 
   const [mappedPriceLists, setMappedPriceLists] = useState<SelectedPriceList[]>([]);
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);

@@ -32,6 +32,7 @@ export interface CreditNote extends Sale {
 }
 
 const getAfip = () => getRequest<AfipResponse>(`/afip/settings/`);
+const getAfip2 = () => getRequest<AfipResponse>(`/afip/site-settings/`);
 const createInvoce = (sale: Sale) => postRequest(`/afip/`, sale);
 const createNoteCredit = (sale: CreditNote) => postRequest(`/afip/nota-credito`, sale);
 const createNoteCreditX = (sale: CreditNote) => postRequest(`/cashmovements/nota-credito`, sale);
@@ -39,6 +40,15 @@ const updateAfip = (settings: Afip) => putRequest(`/afip/settings`, settings);
 
 export const useGetAfip = () =>
   useQuery(['afip'], () => getAfip(), {
+    enabled: true,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body.afip,
+  });
+
+export const useGetAfip2 = () =>
+  useQuery(['afip'], () => getAfip2(), {
     enabled: true,
     retry: 1,
     cacheTime: 1,

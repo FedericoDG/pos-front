@@ -170,7 +170,7 @@ export const SaleDetails = () => {
                           <Td>{movement.product?.name}</Td>
                           <Td isNumeric>{formatCurrency(movement.price)}</Td>
                           {someDiscount &&
-                            <Td isNumeric>{formatCurrency(movement.totalDiscount)}</Td>
+                            <Td isNumeric>{formatCurrency(movement.totalDiscount * -1)}</Td>
                           }
                           <Td isNumeric>
                             {formatCurrency(
@@ -195,6 +195,38 @@ export const SaleDetails = () => {
                       {formatCurrency(cashMovement.subtotal)}
                     </Td>
                   </Tr>
+                  {cashMovement.discount > 0 && (
+                    <Tr>
+                      <Td
+                        borderWidth={0}
+                        colSpan={someDiscount ? 4 : 3}
+                        fontSize={16}
+                        fontWeight={500}
+                        textAlign="right"
+                      >
+                        Descuento:
+                      </Td>
+                      <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                        {formatCurrency(cashMovement.discount * -1)}
+                      </Td>
+                    </Tr>
+                  )}
+                  {cashMovement.recharge > 0 && (
+                    <Tr>
+                      <Td
+                        borderWidth={0}
+                        colSpan={someDiscount ? 4 : 3}
+                        fontSize={16}
+                        fontWeight={500}
+                        textAlign="right"
+                      >
+                        Recargo:
+                      </Td>
+                      <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                        {formatCurrency(cashMovement.recharge)}
+                      </Td>
+                    </Tr>
+                  )}
                   {cashMovement.otherTributes > 0 &&
                     cashMovement.otherTributesDetails?.map((tribute) => (
                       <Tr key={tribute.id}>
@@ -237,7 +269,7 @@ export const SaleDetails = () => {
                   </HStack>
                 ))}
               </Stack>
-              {cashMovement.discount > 0 && (
+              {/* {cashMovement.discount > 0 && (
                 <Stack>
                   <Text fontWeight={700} width="180px">
                     DESCUENTO:
@@ -258,7 +290,7 @@ export const SaleDetails = () => {
                     <Text width="180px">{formatTwoDigits(cashMovement.rechargePercent)}%</Text>
                   </HStack>
                 </Stack>
-              )}
+              )} */}
             </HStack>
             <Stack
               color="#4a5568"

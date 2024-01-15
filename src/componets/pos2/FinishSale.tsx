@@ -266,7 +266,7 @@ export const FinishSale = () => {
       }
     }
 
-    if (Math.round(totalCartCopy + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
+    if (Math.round(totalCartCopy + effectiveDOrR + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
       toast.error('El monto de la venta es distinto al de los pagos');
     } else {
       mutateAsync(sale).then((res: any) => {
@@ -280,12 +280,7 @@ export const FinishSale = () => {
   };
 
   const onSuccessAfip = (res: any) => {
-    toast('Comprobante de AFIP Creado'/* , {
-      action: {
-        label: 'Ver',
-        onClick: () => navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`)
-      },
-    } */);
+    toast('Comprobante de AFIP Creado');
     navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`);
   };
 
@@ -344,8 +339,28 @@ export const FinishSale = () => {
 
   const { handleSubmit, handleChange, values, errors, touched } = formik;
 
-  const totalCarttotalShoppingCart = useCallback((values: any) => Math.round((Number.EPSILON + totalCartCopy + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0))
-    * 100) / 100, [totalCartCopy]);
+  const effectiveDOrR = useMemo(() => {
+    if (Number(discount) > 0) {
+      if (percent) {
+        return Number((subTotalCart * Number(discount)) / 100 * -1);
+      } else {
+        return Number(Number(discount) * -1);
+      }
+    }
+
+    if (Number(recharge) > 0) {
+      if (percent) {
+        return Number((subTotalCart * Number(recharge)) / 100);
+      } else {
+        return Number(Number(recharge));
+      }
+    }
+
+    return 0;
+  }, [discount, percent, recharge, subTotalCart]);
+
+  const totalCarttotalShoppingCart = useCallback((values: any) => Math.round((Number.EPSILON + totalCartCopy + effectiveDOrR + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0))
+    * 100) / 100, [effectiveDOrR, totalCartCopy]);
 
   const applyDOrR = () => {
     if (Number(discount) <= 0 && Number(recharge) <= 0) return;
@@ -359,8 +374,7 @@ export const FinishSale = () => {
         totalToDiscount = subTotalCartCopy * Number(discount) / 100;
       }
 
-      console.log(totalToDiscount * -1);
-      recalculateCart(totalToDiscount * -1);
+      // recalculateCart(totalToDiscount * -1);
     } else if (Number(recharge) > 0) {
       let totalToRecharge: number;
 
@@ -370,7 +384,7 @@ export const FinishSale = () => {
         totalToRecharge = subTotalCartCopy * Number(recharge) / 100;
       }
 
-      recalculateCart(totalToRecharge);
+      // recalculateCart(totalToRecharge);
     }
 
     setLockDOrR(true);
@@ -676,12 +690,45 @@ export const FinishSale = () => {
                         />
                       </Box>
                     </Stack>
-
                     <Stack bg='gray.800' color='whitesmoke' p="4" rounded='md' w="full">
+                      {
+                        (Number(discount) > 0 || Number(recharge) > 0) && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            Subtotal
+                          </Text>
+                          <Text fontSize={24} textAlign="right" w="20%">
+                            {formatCurrency(subTotalCartCopy)}
+                          </Text>
+                        </Stack>
+                      }
+
+                      {
+                        Number(discount) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            Descuento
+                          </Text>
+                          <Text fontSize={24} textAlign="right" w="20%">
+                            {formatCurrency(effectiveDOrR)}
+                          </Text>
+                        </Stack>
+                      }
+                      {
+                        Number(recharge) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            Recargo
+                          </Text>
+                          <Text fontSize={24} textAlign="right" w="20%">
+                            {formatCurrency(Number(effectiveDOrR))}
+                          </Text>
+                        </Stack>
+                      }
                       <Flex justifyContent="space-between" ml="auto" w="50%">
                         <Text fontSize={24}>TOTAL:</Text>
                         <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                          {formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0))}
+                          {formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0) + effectiveDOrR)}
                         </Text>
                       </Flex>
                     </Stack>
@@ -745,12 +792,34 @@ export const FinishSale = () => {
                         })}
                       </Stack>
                       <Divider />
+                      {
+                        Number(discount) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="50%" >
+                            Descuento
+                          </Text>
+                          <Text fontSize={18} textAlign="right" w="50%">
+                            {formatCurrency(effectiveDOrR)}
+                          </Text>
+                        </Stack>
+                      }
+                      {
+                        Number(recharge) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="50%" >
+                            Recargo
+                          </Text>
+                          <Text fontSize={18} textAlign="right" w="50%">
+                            {formatCurrency(Number(effectiveDOrR))}
+                          </Text>
+                        </Stack>
+                      }
                       <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
                         <Text textAlign="right" w="50%" >
                           TOTAL
                         </Text>
                         <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(totalCartCopy)}
+                          {formatCurrency(totalCartCopy + effectiveDOrR)}
                         </Text>
                       </Stack>
                       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">

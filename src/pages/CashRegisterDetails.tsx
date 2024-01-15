@@ -147,6 +147,20 @@ export const CashRegisterDetails = () => {
     createAfipInvoce(sale);
   };
 
+  const otherDiscounts = useMemo(() => {
+    if (cashRegister?.cashMovements && cashRegister.cashMovements.length > 0) {
+
+      const aux = cashRegister?.cashMovements?.map(el => el.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount, 0));
+
+      return aux?.reduce((acc, el) => acc! + el!, 0);
+    }
+
+    return 0;
+  }, [cashRegister?.cashMovements]);
+
+
+
+
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
       {!cashRegister ? (
@@ -356,7 +370,7 @@ export const CashRegisterDetails = () => {
                       <Tbody>
                         <Tr>
                           <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.discounts)}
+                            {formatCurrency(cashRegister.discounts + (otherDiscounts || 0))}
                           </Td>
                           <Td isNumeric color="#4a5568" fontWeight="semibold">
                             {formatCurrency(cashRegister.recharges)}
@@ -497,7 +511,7 @@ export const CashRegisterDetails = () => {
                                   }
                                 </Td>
                                 <Td>{formatDateAndHour(movement.createdAt)}</Td>
-                                <Td isNumeric>{formatCurrency(movement.subtotal)}</Td>
+                                <Td isNumeric>{formatCurrency(movement.subtotal - movement.discount + movement.recharge)}</Td>
                                 <Td isNumeric>{formatCurrency(movement.otherTributes)}</Td>
                                 <Td isNumeric>{formatCurrency(movement.total)}</Td>
                               </Tr>
@@ -718,7 +732,7 @@ export const CashRegisterDetails = () => {
                                                   color="black"
                                                   w="843px"
                                                 >
-                                                  Descuentos
+                                                  Descuento sobre el total
                                                 </Th>
                                               </Tr>
                                             </Thead>
@@ -753,7 +767,7 @@ export const CashRegisterDetails = () => {
                                                   color="black"
                                                   w="843px"
                                                 >
-                                                  Recargos
+                                                  Recargo sobre el total
                                                 </Th>
                                               </Tr>
                                             </Thead>

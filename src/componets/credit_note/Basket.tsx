@@ -70,6 +70,7 @@ export const Basket = ({ cashMovement }: Props) => {
       quantity: Number(item.quantity),
       price: Number(item.price),
       tax: Number(item.tax),
+      totalDiscount: Number(item.totalDiscount),
     }));
 
     sale.cashMovementId = cashMovement.id!;
