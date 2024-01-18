@@ -154,8 +154,9 @@ export const B = ({ cashMovement, settings }: Props) => {
                       )}
                       <Td isNumeric>
                         {formatCurrency(
-                          (movement.quantity * movement.price - movement.totalDiscount) *
-                          (1 + movement.tax)
+                          movement.quantity * movement.price -
+                          movement.totalDiscount +
+                          movement.totalIVA
                         )}
                       </Td>
                     </Tr>

@@ -37,7 +37,7 @@ export const A = ({ cashMovement, settings }: Props) => {
   const iva = useMemo(
     () =>
       cashMovement.cashMovementDetails?.reduce(
-        (acc, el) => acc + ((el.quantity * el.price - el.totalDiscount) * el.tax),
+        (acc, el) => acc + el.totalIVA,
         0
       ) || 0,
     [cashMovement.cashMovementDetails]
@@ -46,7 +46,7 @@ export const A = ({ cashMovement, settings }: Props) => {
   const iva2 = useMemo(() => {
     const fede = cashMovement.cashMovementDetails?.reduce((acc: any, el) => {
       acc[el.tax] ??= 0;
-      acc[el.tax] += (el.quantity * el.price - el.totalDiscount) * el.tax;
+      acc[el.tax] += el.totalIVA;
 
       return acc;
     }, {});

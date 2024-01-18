@@ -71,6 +71,7 @@ export const Basket = ({ cashMovement }: Props) => {
       price: Number(item.price),
       tax: Number(item.tax),
       totalDiscount: Number(item.totalDiscount),
+      totalIVA: Number(item.totalIVA),
     }));
 
     sale.cashMovementId = cashMovement.id!;
@@ -89,6 +90,8 @@ export const Basket = ({ cashMovement }: Props) => {
       mutateAsyncX(sale);
     }
   };
+
+  console.log({ cart });
 
   return (
     <Stack
@@ -122,11 +125,14 @@ export const Basket = ({ cashMovement }: Props) => {
                     </Text>
                     <Text px="2">precio: {formatCurrency(item.price)}</Text>
                     <Text px="2">
-                      iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}
+                      iva: {formatCurrency(item.totalIVA)} ({item.tax * 100}
                       %)
                     </Text>
                     <Text px="2" textDecoration="underline">
-                      subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                      subtotal:{' '}
+                      {formatCurrency(
+                        item.price * item.quantity - item.totalDiscount + item.totalIVA
+                      )}
                     </Text>
                   </Box>
                   <Box position="absolute" right={0} top={'50%'}>

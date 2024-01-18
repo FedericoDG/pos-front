@@ -152,9 +152,61 @@ export const FinishSale = () => {
     [cartCopy]
   );
 
-  const totalCartCopy = useMemo(
+  const finalIVA = useMemo(() => {
+    if (percent) {
+      if (Number(discount) > 0) {
+        const percent = Number(discount) / 100;
+
+        console.log(`Se aplicó un descuento del ${percent * 100}%`);
+
+        return totalIvaCartCopy * (1 - percent);
+      }
+
+      if (Number(recharge) > 0) {
+        const percent = Number(recharge) / 100;
+
+        console.log(`Se aplicó un recargo del ${percent * 100}%`);
+
+        return totalIvaCartCopy * (1 + percent);
+
+      }
+    } else {
+      if (Number(discount) > 0) {
+        const percent = Number(discount) / subTotalCart;
+
+        console.log(`Se aplicó un descuento del ${percent * 100}%`);
+
+        return totalIvaCartCopy * (1 - percent);
+      }
+
+      if (Number(recharge) > 0) {
+        const percent = Number(recharge) / subTotalCart;
+
+        console.log(`Se aplicó un recargo del ${percent * 100}%`);
+
+        return totalIvaCartCopy * (1 + percent);
+      }
+    }
+
+    return totalIvaCartCopy;
+
+  }, [discount, percent, recharge, subTotalCart, totalIvaCartCopy]);
+
+
+  const totalCartCopyOriginal = useMemo(
     () => cartCopy.reduce((acc, item) => acc + ((item.quantity * item.price - item.totalDiscount) * (1 + item.tax)), 0),
     [cartCopy]
+  );
+
+  const totalCartCopy = useMemo(() => {
+    if ((Number(discount) > 0 || Number(recharge) > 0)) {
+
+      return cartCopy.reduce((acc, item) => acc + (item.quantity * item.price - item.totalDiscount), finalIVA);
+    };
+
+    return cartCopy.reduce((acc, item) => acc + ((item.quantity * item.price - item.totalDiscount) * (1 + item.tax)), 0);
+  },
+    [cartCopy, discount, finalIVA, recharge]
   );
 
   const recalculateCart = useCallback(
@@ -275,6 +327,7 @@ export const FinishSale = () => {
       toast.error('El monto de la venta es distinto al de los pagos');
     } else {
       mutateAsync(sale).then((res: any) => {
+        console.log({ sale });
         const { id: cashMovementId } = res.body.cashMovement;
 
         if (invoceType?.code !== '555' && user.roleId !== 4) {
@@ -822,7 +875,7 @@ export const FinishSale = () => {
                           IVA
                         </Text>
                         <Text fontSize={24} textAlign="right" w="20%">
-                          {formatCurrency(totalIvaCartCopy)}
+                          {lockDOrR ? formatCurrency(finalIVA) : formatCurrency(totalIvaCartCopy)}
                         </Text>
                       </Stack>
                       {
@@ -841,7 +894,9 @@ export const FinishSale = () => {
                       <Flex justifyContent="space-between" ml="auto" w="50%">
                         <Text fontSize={24}>TOTAL:</Text>
                         <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                          {formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0) + effectiveDOrR)}
+                          {lockDOrR ?
+                            formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0) + effectiveDOrR)
+                            : formatCurrency(totalCartCopyOriginal + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0))}
                         </Text>
                       </Flex>
                     </Stack>
@@ -949,7 +1004,7 @@ export const FinishSale = () => {
                           IVA
                         </Text>
                         <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(totalIvaCartCopy)}
+                          {lockDOrR ? formatCurrency(finalIVA) : formatCurrency(totalIvaCartCopy)}
                         </Text>
                       </Stack>
                       <Divider />
@@ -958,7 +1013,7 @@ export const FinishSale = () => {
                           TOTAL
                         </Text>
                         <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(totalCartCopy + effectiveDOrR)}
+                          {lockDOrR ? formatCurrency(totalCartCopy + effectiveDOrR) : formatCurrency(totalCartCopyOriginal)}
                         </Text>
                       </Stack>
                       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">

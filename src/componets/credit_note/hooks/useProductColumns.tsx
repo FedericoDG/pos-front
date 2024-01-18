@@ -66,7 +66,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
         id: 'total',
         header: 'Total (incluye IVA)',
         cell: (row: CellContext<CashMovementsDetail, unknown>) => row.renderValue(),
-        accessorFn: (x) => formatCurrency((x.price * x.quantity - x.totalDiscount) * (1 + x.tax)),
+        accessorFn: (x) => formatCurrency(x.price * x.quantity - x.totalDiscount + x.totalIVA),
       },
       {
         id: 'acciones',

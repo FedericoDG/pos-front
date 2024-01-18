@@ -408,6 +408,7 @@ export interface CashMovementsDetail {
   price: number;
   quantity: number;
   totalDiscount: number;
+  totalIVA: number;
   createdAt?: string;
   updatedAt?: string;
   product?: Product;
