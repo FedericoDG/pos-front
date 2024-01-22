@@ -37,7 +37,7 @@ export const A = ({ cashMovement, settings }: Props) => {
   const iva = useMemo(
     () =>
       cashMovement.cashMovementDetails?.reduce(
-        (acc, el) => acc + el.quantity * el.price * el.tax,
+        (acc, el) => acc + el.totalIVA,
         0
       ) || 0,
     [cashMovement.cashMovementDetails]
@@ -46,7 +46,7 @@ export const A = ({ cashMovement, settings }: Props) => {
   const iva2 = useMemo(() => {
     const fede = cashMovement.cashMovementDetails?.reduce((acc: any, el) => {
       acc[el.tax] ??= 0;
-      acc[el.tax] += el.quantity * el.price * el.tax;
+      acc[el.tax] += el.totalIVA;
 
       return acc;
     }, {});
@@ -62,6 +62,8 @@ export const A = ({ cashMovement, settings }: Props) => {
 
     return arr.filter((el) => el.percent !== 'IVA 0,00%');
   }, [cashMovement.cashMovementDetails]);
+
+  const someDiscount = cashMovement.cashMovementDetails?.some(el => el.totalDiscount > 0);
 
   return (
     <Flex
@@ -161,8 +163,14 @@ export const A = ({ cashMovement, settings }: Props) => {
                           </Th>
                           <Th className="coso">Descripción</Th>
                           <Th isNumeric className="coso">
-                            Precio unitatio
+                            Precio unitario
                           </Th>
+                          {
+                            someDiscount &&
+                            <Th isNumeric className="coso">
+                              Descuento
+                            </Th>
+                          }
                           <Th isNumeric className="coso">
                             Alícuota
                           </Th>
@@ -178,26 +186,62 @@ export const A = ({ cashMovement, settings }: Props) => {
                       </Td>
                       <Td>{movement.product?.name}</Td>
                       <Td isNumeric>{formatCurrency(movement.price)}</Td>
+                      {
+                        someDiscount &&
+                        <Td isNumeric>{formatCurrency(movement.totalDiscount * -1)}</Td>
+                      }
                       <Td isNumeric>{formatTwoDigits(movement.tax * 100)}%</Td>
-                      <Td isNumeric>{formatCurrency(movement.quantity * movement.price)}</Td>
+                      <Td isNumeric>{formatCurrency(movement.quantity * movement.price - movement.totalDiscount)}</Td>
                     </Tr>
                   </Fragment>
                 );
               })}
               <Tr>
-                <Td borderWidth={0} colSpan={4} fontSize={16} fontWeight={500} textAlign="right">
+                <Td borderWidth={0} colSpan={someDiscount ? 5 : 4} fontSize={16} fontWeight={500} textAlign="right">
                   Subtotal:
                 </Td>
                 <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
                   {formatCurrency(cashMovement.subtotal - iva)}
                 </Td>
               </Tr>
+              {cashMovement.discount > 0 && (
+                <Tr>
+                  <Td
+                    borderWidth={0}
+                    colSpan={someDiscount ? 5 : 4}
+                    fontSize={16}
+                    fontWeight={500}
+                    textAlign="right"
+                  >
+                    Descuento:
+                  </Td>
+                  <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                    {formatCurrency(cashMovement.discount * -1)}
+                  </Td>
+                </Tr>
+              )}
+              {cashMovement.recharge > 0 && (
+                <Tr>
+                  <Td
+                    borderWidth={0}
+                    colSpan={someDiscount ? 5 : 4}
+                    fontSize={16}
+                    fontWeight={500}
+                    textAlign="right"
+                  >
+                    Recargo:
+                  </Td>
+                  <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                    {formatCurrency(cashMovement.recharge)}
+                  </Td>
+                </Tr>
+              )}
               {iva2.length > 0 &&
                 iva2.map((el) => (
                   <Tr key={nanoid()}>
                     <Td
                       borderWidth={0}
-                      colSpan={4}
+                      colSpan={someDiscount ? 5 : 4}
                       fontSize={16}
                       fontWeight={500}
                       textAlign="right"
@@ -212,7 +256,7 @@ export const A = ({ cashMovement, settings }: Props) => {
               {cashMovement.otherTributes > 0 &&
                 cashMovement.otherTributesDetails?.map((tribute) => (
                   <Tr key={tribute.id}>
-                    <Td borderWidth={0} colSpan={4} textAlign="right">
+                    <Td borderWidth={0} colSpan={someDiscount ? 5 : 4} textAlign="right">
                       {tribute.otherTribute?.description}
                     </Td>
                     <Td isNumeric borderWidth={0}>
@@ -223,7 +267,7 @@ export const A = ({ cashMovement, settings }: Props) => {
               <Tr>
                 <Td
                   borderWidth={0}
-                  colSpan={4}
+                  colSpan={someDiscount ? 5 : 4}
                   fontSize={18}
                   fontWeight={700}
                   pb="100px"
@@ -253,7 +297,7 @@ export const A = ({ cashMovement, settings }: Props) => {
               ))}
             </Stack>
           )}
-          {cashMovement.discount > 0 && (
+          {/* {cashMovement.discount > 0 && (
             <Stack>
               <Text fontWeight={700} width="180px">
                 DESCUENTO:
@@ -274,7 +318,7 @@ export const A = ({ cashMovement, settings }: Props) => {
                 <Text width="180px">{formatTwoDigits(cashMovement.rechargePercent)}%</Text>
               </HStack>
             </Stack>
-          )}
+          )} */}
         </HStack>
         <Stack
           color="#4a5568"

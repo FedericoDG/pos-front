@@ -132,7 +132,7 @@ export const FinishSale = () => {
     updateCartWithError,
     warehouse,
     invoceType,
-    subTotalCart
+    subTotalCart,
   } = usePosContext();
 
   const [option, setOption] = useState('1');
@@ -143,41 +143,63 @@ export const FinishSale = () => {
   const [cartCopy, setCartCopy] = useState<CartItem[]>([]);
 
   const subTotalCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price, 0),
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price - item.totalDiscount, 0),
     [cartCopy]
   );
 
   const totalIvaCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price * item.tax, 0),
+    () => cartCopy.reduce((acc, item) => acc + (item.quantity * item.price - item.totalDiscount) * item.tax, 0),
     [cartCopy]
   );
 
-  const totalCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax), 0),
-    [cartCopy]
-  );
+  const finalIVA = useMemo(() => {
+    if (percent) {
+      if (Number(discount) > 0) {
+        const percent = Number(discount) / 100;
 
-  const recalculateCart = useCallback(
-    (num: number) => {
-      const newCart: CartItem[] = [];
-
-      console.log(subTotalCartCopy);
-
-      for (let i = 0; i < cart.length; i++) {
-        const percent = (cart[i].quantity * cart[i].price) / subTotalCartCopy;
-
-        console.log('porcentaje: ', percent);
-
-        const element = { ...cart[i], price: cart[i].price + percent * num / cart[i].quantity };
-
-        newCart.push(element);
+        return totalIvaCartCopy * (1 - percent);
       }
 
-      setCartCopy(newCart);
-    },
-    [cart, subTotalCartCopy]
+      if (Number(recharge) > 0) {
+        const percent = Number(recharge) / 100;
+
+        return totalIvaCartCopy * (1 + percent);
+
+      }
+    } else {
+      if (Number(discount) > 0) {
+        const percent = Number(discount) / subTotalCart;
+
+        return totalIvaCartCopy * (1 - percent);
+      }
+
+      if (Number(recharge) > 0) {
+        const percent = Number(recharge) / subTotalCart;
+
+        return totalIvaCartCopy * (1 + percent);
+      }
+    }
+
+    return totalIvaCartCopy;
+
+  }, [discount, percent, recharge, subTotalCart, totalIvaCartCopy]);
+
+
+  const totalCartCopyOriginal = useMemo(
+    () => cartCopy.reduce((acc, item) => acc + ((item.quantity * item.price - item.totalDiscount) * (1 + item.tax)), 0),
+    [cartCopy]
   );
 
+  const totalCartCopy = useMemo(() => {
+    if ((Number(discount) > 0 || Number(recharge) > 0)) {
+
+      return cartCopy.reduce((acc, item) => acc + (item.quantity * item.price - item.totalDiscount), finalIVA);
+    };
+
+    return cartCopy.reduce((acc, item) => acc + ((item.quantity * item.price - item.totalDiscount) * (1 + item.tax)), 0);
+  },
+    [cartCopy, discount, finalIVA, recharge]
+  );
 
   const initialValues = {
     discount: 0,
@@ -212,6 +234,7 @@ export const FinishSale = () => {
         tax: Number(item.tax),
         price: item.price,
         allow: item.allownegativestock === 'ENABLED' ? true : false,
+        totalDiscount: item.totalDiscount,
       })),
       invoceTypeId: invoceType?.id!,
       payments: values?.payments?.map((item) => ({
@@ -270,13 +293,11 @@ export const FinishSale = () => {
       }
     }
 
-    if (Math.round(totalCartCopy + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
+    if (Math.round(totalCartCopy + effectiveDOrR + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
       toast.error('El monto de la venta es distinto al de los pagos');
     } else {
       mutateAsync(sale).then((res: any) => {
         const { id: cashMovementId } = res.body.cashMovement;
-
-        console.log(res.body.ids);
 
         if (invoceType?.code !== '555' && user.roleId !== 4) {
           createAfipInvoce({ ...sale, cashMovementId, movementIds: res.body.ids });
@@ -348,37 +369,28 @@ export const FinishSale = () => {
 
   const { handleSubmit, handleChange, values, errors, touched } = formik;
 
-  const totalCarttotalShoppingCart = useCallback((values: any) => Math.round((Number.EPSILON + totalCartCopy + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0))
-    * 100) / 100, [totalCartCopy]);
-
-  const applyDOrR = () => {
-    if (Number(discount) <= 0 && Number(recharge) <= 0) return;
-
+  const effectiveDOrR = useMemo(() => {
     if (Number(discount) > 0) {
-      let totalToDiscount: number;
-
-      if (!percent) {
-        totalToDiscount = Number(discount);
+      if (percent) {
+        return Number((subTotalCart * Number(discount)) / 100 * -1);
       } else {
-        totalToDiscount = subTotalCartCopy * Number(discount) / 100;
+        return Number(Number(discount) * -1);
       }
-
-      console.log(totalToDiscount * -1);
-      recalculateCart(totalToDiscount * -1);
-    } else if (Number(recharge) > 0) {
-      let totalToRecharge: number;
-
-      if (!percent) {
-        totalToRecharge = Number(recharge);
-      } else {
-        totalToRecharge = subTotalCartCopy * Number(recharge) / 100;
-      }
-
-      recalculateCart(totalToRecharge);
     }
 
-    setLockDOrR(true);
-  };
+    if (Number(recharge) > 0) {
+      if (percent) {
+        return Number((subTotalCart * Number(recharge)) / 100);
+      } else {
+        return Number(Number(recharge));
+      }
+    }
+
+    return 0;
+  }, [discount, percent, recharge, subTotalCart]);
+
+  const totalCarttotalShoppingCart = useCallback((values: any) => Math.round((Number.EPSILON + totalCartCopy + effectiveDOrR + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0))
+    * 100) / 100, [effectiveDOrR, totalCartCopy]);
 
   const resetDOrR = () => {
     setCartCopy(cart);
@@ -562,7 +574,7 @@ export const FinishSale = () => {
                                 isDisabled={lockDOrR || (values.payments && values.payments?.length > 0)}
                                 size="md"
                                 variant="outline"
-                                onClick={applyDOrR}
+                                onClick={() => setLockDOrR(true)}
                               >
                                 <Icon as={BsCheckCircle} color="brand" mr="2" />
                                 Aplicar {option === "2" ? "Descuento" : "Recargo"}
@@ -776,12 +788,35 @@ export const FinishSale = () => {
                         </Text>
                       </Stack>
 
+                      {
+                        Number(discount) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            Descuento
+                          </Text>
+                          <Text fontSize={24} textAlign="right" w="20%">
+                            {formatCurrency(effectiveDOrR)}
+                          </Text>
+                        </Stack>
+                      }
+                      {
+                        Number(recharge) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            Recargo
+                          </Text>
+                          <Text fontSize={24} textAlign="right" w="20%">
+                            {formatCurrency(Number(effectiveDOrR))}
+                          </Text>
+                        </Stack>
+                      }
+
                       <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
                         <Text textAlign="right" w="80%" >
                           IVA
                         </Text>
                         <Text fontSize={24} textAlign="right" w="20%">
-                          {formatCurrency(totalIvaCartCopy)}
+                          {lockDOrR ? formatCurrency(finalIVA) : formatCurrency(totalIvaCartCopy)}
                         </Text>
                       </Stack>
                       {
@@ -800,7 +835,9 @@ export const FinishSale = () => {
                       <Flex justifyContent="space-between" ml="auto" w="50%">
                         <Text fontSize={24}>TOTAL:</Text>
                         <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                          {formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0))}
+                          {lockDOrR ?
+                            formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0) + effectiveDOrR)
+                            : formatCurrency(totalCartCopyOriginal + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0))}
                         </Text>
                       </Flex>
                     </Stack>
@@ -849,13 +886,23 @@ export const FinishSale = () => {
                                 </Text>
                                 <Text px="2">precio: {formatCurrency(item.price)}</Text>
                                 {
+                                  item.totalDiscount > 0 &&
+                                  <>
+                                    <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                                    <Text px="2">
+                                      subtotal:{' '}
+                                      {formatCurrency(item.price * item.quantity - item.totalDiscount)}
+                                    </Text>
+                                  </>
+                                }
+                                {
                                   iva &&
                                   <Text px="2">
-                                    iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}%)
+                                    iva: {formatCurrency((item.price * item.quantity - item.totalDiscount) * item.tax)} ({item.tax * 100}%)
                                   </Text>
                                 }
                                 <Text px="2" textDecoration="underline">
-                                  subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                                  subtotal: {formatCurrency((item.price * item.quantity - item.totalDiscount) * (1 + item.tax))}
                                 </Text>
                               </Box>
                             </Stack>
@@ -871,12 +918,34 @@ export const FinishSale = () => {
                           {formatCurrency(subTotalCartCopy)}
                         </Text>
                       </Stack>
+                      {
+                        Number(discount) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="50%" >
+                            Descuento
+                          </Text>
+                          <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
+                            {formatCurrency(effectiveDOrR)}
+                          </Text>
+                        </Stack>
+                      }
+                      {
+                        Number(recharge) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="50%" >
+                            Recargo
+                          </Text>
+                          <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
+                            {formatCurrency(Number(effectiveDOrR))}
+                          </Text>
+                        </Stack>
+                      }
                       <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
                         <Text textAlign="right" w="50%" >
                           IVA
                         </Text>
                         <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(totalIvaCartCopy)}
+                          {lockDOrR ? formatCurrency(finalIVA) : formatCurrency(totalIvaCartCopy)}
                         </Text>
                       </Stack>
                       <Divider />
@@ -885,7 +954,7 @@ export const FinishSale = () => {
                           TOTAL
                         </Text>
                         <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(totalCartCopy)}
+                          {lockDOrR ? formatCurrency(totalCartCopy + effectiveDOrR) : formatCurrency(totalCartCopyOriginal)}
                         </Text>
                       </Stack>
                       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">

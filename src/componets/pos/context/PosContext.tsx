@@ -34,6 +34,7 @@ export interface CartItem extends Product {
   allow: boolean;
   hasDiscount: boolean;
   discount: number;
+  totalDiscount: number;
 }
 
 interface PosContext {
@@ -54,11 +55,13 @@ interface PosContext {
   setIva: Dispatch<SetStateAction<boolean>>;
   setPriceList: Dispatch<SetStateAction<SelectedPriceList | null>>;
   setWarehouse: Dispatch<SetStateAction<SelectedWarehouse | null>>;
+  setTotalDiscount: Dispatch<SetStateAction<number>>;
   steps: Step[];
   subTotalCart: number;
   totalCart: number;
   totalIvaCart: number;
   totalCartItems: number;
+  totalDiscount: number;
   updateCartWithError: (arr: number[]) => void;
   recalculateCart: (num: number) => void;
   warehouse: SelectedWarehouse | null;

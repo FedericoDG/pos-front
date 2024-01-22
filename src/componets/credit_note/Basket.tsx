@@ -70,13 +70,15 @@ export const Basket = ({ cashMovement }: Props) => {
       quantity: Number(item.quantity),
       price: Number(item.price),
       tax: Number(item.tax),
+      totalDiscount: Number(item.totalDiscount),
+      totalIVA: Number(item.totalIVA),
     }));
 
     sale.cashMovementId = cashMovement.id!;
     sale.clientId = cashMovement.clientId;
     sale.warehouseId = cashMovement.warehouseId;
-    sale.discount = 0;
-    sale.recharge = 0;
+    sale.discount = cashMovement.discount;
+    sale.recharge = cashMovement.recharge;
     sale.payments = [{ amount: totalCart, paymentMethodId: 1 }];
     sale.info = '';
     sale.invoceTypeId = cashMovement.invoceIdAfip!;
@@ -121,11 +123,14 @@ export const Basket = ({ cashMovement }: Props) => {
                     </Text>
                     <Text px="2">precio: {formatCurrency(item.price)}</Text>
                     <Text px="2">
-                      iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}
+                      iva: {formatCurrency(item.totalIVA)} ({item.tax * 100}
                       %)
                     </Text>
                     <Text px="2" textDecoration="underline">
-                      subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                      subtotal:{' '}
+                      {formatCurrency(
+                        item.price * item.quantity - item.totalDiscount + item.totalIVA
+                      )}
                     </Text>
                   </Box>
                   <Box position="absolute" right={0} top={'50%'}>
@@ -147,7 +152,7 @@ export const Basket = ({ cashMovement }: Props) => {
           </Stack>
           <Divider />
           <Text fontFamily="mono" fontSize="xl" fontWeight="bold" px="2" textAlign="right">
-            {formatCurrency(totalCart)}
+            {formatCurrency(totalCart - cashMovement.discount + cashMovement.recharge)}
           </Text>
           <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">
             productos: ({totalCartItems})
@@ -171,7 +176,11 @@ export const Basket = ({ cashMovement }: Props) => {
             colorScheme="brand"
             onClick={() => {
               cashMovement.cashMovementDetails?.forEach((detail) =>
-                addItem({ ...detail, quantity: detail.quantity })
+                addItem({
+                  ...detail,
+                  quantity: detail.quantity,
+                  price: detail.price - detail.totalDiscount,
+                })
               );
             }}
           >

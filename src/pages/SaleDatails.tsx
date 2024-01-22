@@ -34,6 +34,8 @@ export const SaleDetails = () => {
   const { data: cashMovement, isLoading: isLoadingCashMovement } = useGetCashMovement(Number(id!));
   const { data: settings, isLoading: isLoadingSettings } = useGetSettings(1);
 
+  const someDiscount = cashMovement?.cashMovementDetails?.some((el) => el.totalDiscount > 0);
+
 
   return (
     <DashBoard
@@ -148,8 +150,13 @@ export const SaleDetails = () => {
                               </Th>
                               <Th className="coso">Descripción</Th>
                               <Th isNumeric className="coso">
-                                Precio unitatio
+                                Precio unitario
                               </Th>
+                              {someDiscount &&
+                                <Th isNumeric className="coso">
+                                  Descuento
+                                </Th>
+                              }
                               <Th isNumeric className="coso">
                                 Total
                               </Th>
@@ -162,9 +169,12 @@ export const SaleDetails = () => {
                           </Td>
                           <Td>{movement.product?.name}</Td>
                           <Td isNumeric>{formatCurrency(movement.price)}</Td>
+                          {someDiscount &&
+                            <Td isNumeric>{formatCurrency(movement.totalDiscount * -1)}</Td>
+                          }
                           <Td isNumeric>
                             {formatCurrency(
-                              movement.quantity * movement.price * (1 + movement.tax)
+                              movement.quantity * movement.price * (1 + movement.tax) - movement.totalDiscount
                             )}
                           </Td>
                         </Tr>
@@ -174,7 +184,7 @@ export const SaleDetails = () => {
                   <Tr>
                     <Td
                       borderWidth={0}
-                      colSpan={3}
+                      colSpan={someDiscount ? 4 : 3}
                       fontSize={16}
                       fontWeight={500}
                       textAlign="right"
@@ -185,10 +195,42 @@ export const SaleDetails = () => {
                       {formatCurrency(cashMovement.subtotal)}
                     </Td>
                   </Tr>
+                  {cashMovement.discount > 0 && (
+                    <Tr>
+                      <Td
+                        borderWidth={0}
+                        colSpan={someDiscount ? 4 : 3}
+                        fontSize={16}
+                        fontWeight={500}
+                        textAlign="right"
+                      >
+                        Descuento:
+                      </Td>
+                      <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                        {formatCurrency(cashMovement.discount * -1)}
+                      </Td>
+                    </Tr>
+                  )}
+                  {cashMovement.recharge > 0 && (
+                    <Tr>
+                      <Td
+                        borderWidth={0}
+                        colSpan={someDiscount ? 4 : 3}
+                        fontSize={16}
+                        fontWeight={500}
+                        textAlign="right"
+                      >
+                        Recargo:
+                      </Td>
+                      <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
+                        {formatCurrency(cashMovement.recharge)}
+                      </Td>
+                    </Tr>
+                  )}
                   {cashMovement.otherTributes > 0 &&
                     cashMovement.otherTributesDetails?.map((tribute) => (
                       <Tr key={tribute.id}>
-                        <Td borderWidth={0} colSpan={3} textAlign="right">
+                        <Td borderWidth={0} colSpan={someDiscount ? 4 : 3} textAlign="right">
                           {tribute.otherTribute?.description}
                         </Td>
                         <Td isNumeric borderWidth={0}>
@@ -199,7 +241,7 @@ export const SaleDetails = () => {
                   <Tr>
                     <Td
                       borderWidth={0}
-                      colSpan={3}
+                      colSpan={someDiscount ? 4 : 3}
                       fontSize={18}
                       fontWeight={700}
                       pb="100px"
@@ -227,7 +269,7 @@ export const SaleDetails = () => {
                   </HStack>
                 ))}
               </Stack>
-              {cashMovement.discount > 0 && (
+              {/* {cashMovement.discount > 0 && (
                 <Stack>
                   <Text fontWeight={700} width="180px">
                     DESCUENTO:
@@ -248,7 +290,7 @@ export const SaleDetails = () => {
                     <Text width="180px">{formatTwoDigits(cashMovement.rechargePercent)}%</Text>
                   </HStack>
                 </Stack>
-              )}
+              )} */}
             </HStack>
             <Stack
               color="#4a5568"

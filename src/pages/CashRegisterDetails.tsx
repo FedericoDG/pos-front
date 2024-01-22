@@ -147,6 +147,20 @@ export const CashRegisterDetails = () => {
     createAfipInvoce(sale);
   };
 
+  const otherDiscounts = useMemo(() => {
+    if (cashRegister?.cashMovements && cashRegister.cashMovements.length > 0) {
+
+      const aux = cashRegister?.cashMovements?.map(el => el.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount, 0));
+
+      return aux?.reduce((acc, el) => acc! + el!, 0);
+    }
+
+    return 0;
+  }, [cashRegister?.cashMovements]);
+
+
+
+
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
       {!cashRegister ? (
@@ -356,7 +370,7 @@ export const CashRegisterDetails = () => {
                       <Tbody>
                         <Tr>
                           <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.discounts)}
+                            {formatCurrency(cashRegister.discounts + (otherDiscounts || 0))}
                           </Td>
                           <Td isNumeric color="#4a5568" fontWeight="semibold">
                             {formatCurrency(cashRegister.recharges)}
@@ -497,7 +511,7 @@ export const CashRegisterDetails = () => {
                                   }
                                 </Td>
                                 <Td>{formatDateAndHour(movement.createdAt)}</Td>
-                                <Td isNumeric>{formatCurrency(movement.subtotal)}</Td>
+                                <Td isNumeric>{formatCurrency(movement.subtotal - movement.discount + movement.recharge)}</Td>
                                 <Td isNumeric>{formatCurrency(movement.otherTributes)}</Td>
                                 <Td isNumeric>{formatCurrency(movement.total)}</Td>
                               </Tr>
@@ -621,7 +635,7 @@ export const CashRegisterDetails = () => {
                                                 borderBottomWidth="1"
                                                 borderColor="black"
                                                 borderStyle="solid"
-                                                colSpan={7}
+                                                colSpan={8}
                                                 color="black"
                                                 w="843px"
                                               >
@@ -647,11 +661,20 @@ export const CashRegisterDetails = () => {
                                                     {formatCurrency(detail.price * detail.quantity)}
                                                   </Td>
                                                   {
+                                                    detail.totalDiscount > 0 ?
+                                                      <Td isNumeric border="none" w="121px">
+                                                        {formatCurrency(detail.totalDiscount * -1)}
+                                                      </Td> :
+                                                      <Td isNumeric border="none" w="121px">
+                                                        {formatCurrency(0)}
+                                                      </Td>
+                                                  }
+                                                  {
                                                     movement.iva &&
                                                     (
 
                                                       <Td isNumeric border="none" w="121px">
-                                                        {formatCurrency(detail.price * detail.quantity * (detail.product?.ivaCondition?.tax!))}
+                                                        {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (detail.product?.ivaCondition?.tax!))}
                                                       </Td>
                                                     )
                                                   }
@@ -675,12 +698,12 @@ export const CashRegisterDetails = () => {
                                                       (
 
                                                         <Td isNumeric border="none" w="121px">
-                                                          {formatCurrency(detail.price * detail.quantity * (1 + detail.product?.ivaCondition?.tax!))}
+                                                          {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (1 + detail.product?.ivaCondition?.tax!))}
                                                         </Td>
                                                       ) :
                                                       (
                                                         <Td isNumeric border="none" w="121px">
-                                                          {formatCurrency(detail.price * detail.quantity)}
+                                                          {formatCurrency(detail.price * detail.quantity - detail.totalDiscount)}
                                                         </Td>
 
                                                       )
@@ -709,7 +732,7 @@ export const CashRegisterDetails = () => {
                                                   color="black"
                                                   w="843px"
                                                 >
-                                                  Descuentos
+                                                  Descuento sobre el total
                                                 </Th>
                                               </Tr>
                                             </Thead>
@@ -744,7 +767,7 @@ export const CashRegisterDetails = () => {
                                                   color="black"
                                                   w="843px"
                                                 >
-                                                  Recargos
+                                                  Recargo sobre el total
                                                 </Th>
                                               </Tr>
                                             </Thead>

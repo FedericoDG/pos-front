@@ -58,7 +58,6 @@ export const ProductsTable = () => {
     tableInput.current.select();
   };
 
-  console.log(activeProduct);
   const onSubmit = (values: Values, actions: FormikHelpers<Values>) => {
     const price = Number(values.price);
     const quantity = Number(values.quantity);

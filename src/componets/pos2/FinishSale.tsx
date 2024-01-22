@@ -132,7 +132,7 @@ export const FinishSale = () => {
     updateCartWithError,
     warehouse,
     invoceType,
-    subTotalCart
+    subTotalCart,
   } = usePosContext();
 
   const [option, setOption] = useState('1');
@@ -143,17 +143,12 @@ export const FinishSale = () => {
   const [cartCopy, setCartCopy] = useState<CartItem[]>([]);
 
   const subTotalCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price, 0),
-    [cartCopy]
-  );
-
-  const totalIvaCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price * item.tax, 0),
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price - item.totalDiscount, 0),
     [cartCopy]
   );
 
   const totalCartCopy = useMemo(
-    () => cartCopy.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax), 0),
+    () => cartCopy.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax) - item.totalDiscount, 0),
     [cartCopy]
   );
 
@@ -164,7 +159,7 @@ export const FinishSale = () => {
       console.log(subTotalCartCopy);
 
       for (let i = 0; i < cart.length; i++) {
-        const percent = (cart[i].quantity * cart[i].price) / subTotalCartCopy;
+        const percent = (cart[i].quantity * cart[i].price - cart[i].totalDiscount) / subTotalCartCopy;
 
         console.log('porcentaje: ', percent);
 
@@ -212,6 +207,7 @@ export const FinishSale = () => {
         tax: Number(item.tax),
         price: item.price,
         allow: item.allownegativestock === 'ENABLED' ? true : false,
+        totalDiscount: item.totalDiscount,
       })),
       invoceTypeId: invoceType?.id!,
       payments: values?.payments?.map((item) => ({
@@ -270,7 +266,7 @@ export const FinishSale = () => {
       }
     }
 
-    if (Math.round(totalCartCopy + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
+    if (Math.round(totalCartCopy + effectiveDOrR + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
       toast.error('El monto de la venta es distinto al de los pagos');
     } else {
       mutateAsync(sale).then((res: any) => {
@@ -284,12 +280,7 @@ export const FinishSale = () => {
   };
 
   const onSuccessAfip = (res: any) => {
-    toast('Comprobante de AFIP Creado'/* , {
-      action: {
-        label: 'Ver',
-        onClick: () => navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`)
-      },
-    } */);
+    toast('Comprobante de AFIP Creado');
     navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`);
   };
 
@@ -348,8 +339,28 @@ export const FinishSale = () => {
 
   const { handleSubmit, handleChange, values, errors, touched } = formik;
 
-  const totalCarttotalShoppingCart = useCallback((values: any) => Math.round((Number.EPSILON + totalCartCopy + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0))
-    * 100) / 100, [totalCartCopy]);
+  const effectiveDOrR = useMemo(() => {
+    if (Number(discount) > 0) {
+      if (percent) {
+        return Number((subTotalCart * Number(discount)) / 100 * -1);
+      } else {
+        return Number(Number(discount) * -1);
+      }
+    }
+
+    if (Number(recharge) > 0) {
+      if (percent) {
+        return Number((subTotalCart * Number(recharge)) / 100);
+      } else {
+        return Number(Number(recharge));
+      }
+    }
+
+    return 0;
+  }, [discount, percent, recharge, subTotalCart]);
+
+  const totalCarttotalShoppingCart = useCallback((values: any) => Math.round((Number.EPSILON + totalCartCopy + effectiveDOrR + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0))
+    * 100) / 100, [effectiveDOrR, totalCartCopy]);
 
   const applyDOrR = () => {
     if (Number(discount) <= 0 && Number(recharge) <= 0) return;
@@ -363,8 +374,7 @@ export const FinishSale = () => {
         totalToDiscount = subTotalCartCopy * Number(discount) / 100;
       }
 
-      console.log(totalToDiscount * -1);
-      recalculateCart(totalToDiscount * -1);
+      // recalculateCart(totalToDiscount * -1);
     } else if (Number(recharge) > 0) {
       let totalToRecharge: number;
 
@@ -374,7 +384,7 @@ export const FinishSale = () => {
         totalToRecharge = subTotalCartCopy * Number(recharge) / 100;
       }
 
-      recalculateCart(totalToRecharge);
+      // recalculateCart(totalToRecharge);
     }
 
     setLockDOrR(true);
@@ -680,42 +690,45 @@ export const FinishSale = () => {
                         />
                       </Box>
                     </Stack>
-
-                    <Stack bg='gray.800' color='whitesmoke' pb="4" px="4" rounded='md' w="full">
-                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
-                        <Text textAlign="right" w="80%" >
-                          Subtotal
-                        </Text>
-                        <Text fontSize={24} textAlign="right" w="20%">
-                          {formatCurrency(subTotalCartCopy)}
-                        </Text>
-                      </Stack>
-
-                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
-                        <Text textAlign="right" w="80%" >
-                          IVA
-                        </Text>
-                        <Text fontSize={24} textAlign="right" w="20%">
-                          {formatCurrency(totalIvaCartCopy)}
-                        </Text>
-                      </Stack>
+                    <Stack bg='gray.800' color='whitesmoke' p="4" rounded='md' w="full">
                       {
-                        values.otherTributes?.filter(el => Number(el.amount) > 0).length && values.otherTributes?.filter(el => Number(el.amount) > 0).length > 0 && (
-                          <Stack direction='row' justifyContent="flex-end" w="full">
-                            <Text textAlign="right" w="80%" >
-                              (Otros Impuestos)
-                            </Text>
-                            <Text fontSize={18} textAlign="right" w="20%">
-                              {formatCurrency(values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0))}
-                            </Text>
-                          </Stack>
-                        )
+                        (Number(discount) > 0 || Number(recharge) > 0) && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            Subtotal
+                          </Text>
+                          <Text fontSize={24} textAlign="right" w="20%">
+                            {formatCurrency(subTotalCartCopy)}
+                          </Text>
+                        </Stack>
                       }
-                      <Divider ml="auto" w="50%" />
+
+                      {
+                        Number(discount) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            Descuento
+                          </Text>
+                          <Text fontSize={24} textAlign="right" w="20%">
+                            {formatCurrency(effectiveDOrR)}
+                          </Text>
+                        </Stack>
+                      }
+                      {
+                        Number(recharge) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="80%" >
+                            Recargo
+                          </Text>
+                          <Text fontSize={24} textAlign="right" w="20%">
+                            {formatCurrency(Number(effectiveDOrR))}
+                          </Text>
+                        </Stack>
+                      }
                       <Flex justifyContent="space-between" ml="auto" w="50%">
                         <Text fontSize={24}>TOTAL:</Text>
                         <Text fontSize={24} fontWeight="semibold" textAlign="right">
-                          {formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0))}
+                          {formatCurrency(totalCartCopy + (values.otherTributes?.reduce((acc, el) => acc + Number(el.amount), 0) || 0) + effectiveDOrR)}
                         </Text>
                       </Flex>
                     </Stack>
@@ -764,13 +777,14 @@ export const FinishSale = () => {
                                 </Text>
                                 <Text px="2">precio: {formatCurrency(item.price)}</Text>
                                 {
-                                  iva &&
-                                  <Text px="2">
-                                    iva: {formatCurrency(item.price * item.quantity * item.tax)} ({item.tax * 100}%)
-                                  </Text>
+                                  item.totalDiscount > 0 &&
+                                  <>
+                                    <Text px="2">subtotal: {formatCurrency(item.price * item.quantity)}</Text>
+                                    <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                                  </>
                                 }
                                 <Text px="2" textDecoration="underline">
-                                  subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                                  total: {formatCurrency(item.price * item.quantity * (1 + item.tax) - item.totalDiscount)}
                                 </Text>
                               </Box>
                             </Stack>
@@ -778,29 +792,34 @@ export const FinishSale = () => {
                         })}
                       </Stack>
                       <Divider />
-                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
-                        <Text textAlign="right" w="50%" >
-                          Subtotal
-                        </Text>
-                        <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(subTotalCartCopy)}
-                        </Text>
-                      </Stack>
-                      <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
-                        <Text textAlign="right" w="50%" >
-                          IVA
-                        </Text>
-                        <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(totalIvaCartCopy)}
-                        </Text>
-                      </Stack>
-                      <Divider />
+                      {
+                        Number(discount) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="50%" >
+                            Descuento
+                          </Text>
+                          <Text fontSize={18} textAlign="right" w="50%">
+                            {formatCurrency(effectiveDOrR)}
+                          </Text>
+                        </Stack>
+                      }
+                      {
+                        Number(recharge) > 0 && lockDOrR &&
+                        <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
+                          <Text textAlign="right" w="50%" >
+                            Recargo
+                          </Text>
+                          <Text fontSize={18} textAlign="right" w="50%">
+                            {formatCurrency(Number(effectiveDOrR))}
+                          </Text>
+                        </Stack>
+                      }
                       <Stack alignItems="center" direction='row' justifyContent="flex-end" w="full">
                         <Text textAlign="right" w="50%" >
                           TOTAL
                         </Text>
                         <Text fontSize="xl" fontWeight="bold" textAlign="right" w="50%">
-                          {formatCurrency(totalCartCopy)}
+                          {formatCurrency(totalCartCopy + effectiveDOrR)}
                         </Text>
                       </Stack>
                       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">

@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 
 import { formatCurrency } from '../../utils';
 import { useCheckCart, useGetAfip } from '../../hooks';
+import { Loading } from '../common';
 
 import { usePosContext } from './context';
 
@@ -36,7 +37,6 @@ export const Basket = ({ refetch }: Props) => {
     goToNext,
     warehouse,
     updateCartWithError,
-    iva,
   } = usePosContext();
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export const Basket = ({ refetch }: Props) => {
     mutate({ warehouseId: warehouse?.id!, cart: mappedCart });
   };
 
-  const { data: settings } = useGetAfip();
+  const { data: settings, isLoading } = useGetAfip();
 
   return (
     <Stack
@@ -88,16 +88,18 @@ export const Basket = ({ refetch }: Props) => {
       rounded="md"
       w="35%"
     >
-      {cart.length > 0 && settings ? (
+      {isLoading ? (
+        <Loading minH="334px" />
+      ) : cart.length > 0 ? (
         <Stack w="full">
           <Heading color="brand.500" fontSize="28" pt="2" textAlign="center">
             LISTA DE PRODUCTOS
           </Heading>
-          {client?.document === '00000000' && totalCart > settings?.maxPerInvoice && (
+          {client?.document === '00000000' && totalCart > settings?.maxPerInvoice! && (
             <Alert status="error">
               <AlertIcon />
               {`El importe máximo de facturación para identificar a consumidores finales es de ${formatCurrency(
-                settings?.maxPerInvoice
+                settings?.maxPerInvoice!
               )}`}
             </Alert>
           )}
@@ -133,15 +135,17 @@ export const Basket = ({ refetch }: Props) => {
                       cantidad: {item.quantity} {item.unit?.code}
                     </Text>
                     <Text px="2">precio: {formatCurrency(item.price)}</Text>
-                    {iva && (
-                      <Text px="2">
-                        iva: {formatCurrency(item.price * item.quantity * item.tax)} (
-                        {item.tax * 100}
-                        %)
-                      </Text>
+                    {item.totalDiscount > 0 && (
+                      <>
+                        <Text px="2">subtotal: {formatCurrency(item.price * item.quantity)}</Text>
+                        <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
+                      </>
                     )}
                     <Text px="2" textDecoration="underline">
-                      subtotal: {formatCurrency(item.price * item.quantity * (1 + item.tax))}
+                      total:
+                      {formatCurrency(
+                        item.price * item.quantity * (1 + item.tax) - item.totalDiscount
+                      )}
                     </Text>
                   </Box>
                   <Box position="absolute" right={0} top={'50%'}>
@@ -171,7 +175,7 @@ export const Basket = ({ refetch }: Props) => {
           <Stack p="2">
             <Button
               colorScheme="brand"
-              isDisabled={client?.document === '00000000' && totalCart > settings?.maxPerInvoice}
+              isDisabled={client?.document === '00000000' && totalCart > settings?.maxPerInvoice!}
               rightIcon={<ArrowForwardIcon />}
               size="lg"
               variant="solid"

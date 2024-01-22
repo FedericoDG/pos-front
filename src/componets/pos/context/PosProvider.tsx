@@ -16,6 +16,7 @@ interface Props {
 
 export const PosProvider = ({ children }: Props) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [totalDiscount, setTotalDiscount] = useState<number>(0);
   const [client, setClient] = useState<SelectedClient | null>({} as SelectedClient);
   const [invoceType, setInvoceType] = useState<SelectedInvoceType | null>({} as SelectedInvoceType);
   const [priceList, setPriceList] = useState<SelectedPriceList | null>({} as SelectedPriceList);
@@ -73,19 +74,36 @@ export const PosProvider = ({ children }: Props) => {
   };
 
   const subTotalCart = useMemo(
-    () => cart.reduce((acc, item) => acc + item.quantity * item.price, 0),
+    () => cart.reduce((acc, item) => acc + (item.quantity * item.price - item.totalDiscount), 0),
     [cart]
   );
 
   const totalIvaCart = useMemo(
-    () => cart.reduce((acc, item) => acc + item.quantity * item.price * item.tax, 0),
+    () =>
+      cart.reduce(
+        (acc, item) => acc + (item.quantity * item.price - item.totalDiscount) * item.tax,
+        0
+      ),
     [cart]
   );
 
   const totalCart = useMemo(
-    () => cart.reduce((acc, item) => acc + item.quantity * (item.price + item.price * item.tax), 0),
+    () =>
+      cart.reduce(
+        (acc, item) => acc + (item.quantity * item.price - item.totalDiscount) * (1 + item.tax),
+        0
+      ),
     [cart]
   );
+  /* const totalCart = useMemo(
+    () =>
+      cart.reduce(
+        (acc, item) =>
+          acc + item.quantity * (item.price + item.price * item.tax) - item.totalDiscount,
+        0
+      ),
+    [cart]
+  ); */
 
   const recalculateCart = useCallback(
     (num: number) => {
@@ -93,8 +111,6 @@ export const PosProvider = ({ children }: Props) => {
 
       for (let i = 0; i < cart.length; i++) {
         const percent = (cart[i].quantity * cart[i].price) / subTotalCart;
-
-        console.log('porcentaje: ', percent);
 
         const element = { ...cart[i], price: cart[i].price + percent * num };
 
@@ -149,6 +165,8 @@ export const PosProvider = ({ children }: Props) => {
       subTotalCart,
       totalIvaCart,
       recalculateCart,
+      totalDiscount,
+      setTotalDiscount,
     }),
     [
       activeStep,
@@ -168,6 +186,7 @@ export const PosProvider = ({ children }: Props) => {
       subTotalCart,
       totalIvaCart,
       recalculateCart,
+      totalDiscount,
     ]
   );
 
@@ -201,6 +220,8 @@ export const usePosContext = () => {
     subTotalCart,
     totalIvaCart,
     recalculateCart,
+    totalDiscount,
+    setTotalDiscount,
   } = useContext(posContext);
 
   return {
@@ -229,5 +250,7 @@ export const usePosContext = () => {
     subTotalCart,
     totalIvaCart,
     recalculateCart,
+    totalDiscount,
+    setTotalDiscount,
   };
 };
