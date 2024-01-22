@@ -77,8 +77,8 @@ export const Basket = ({ cashMovement }: Props) => {
     sale.cashMovementId = cashMovement.id!;
     sale.clientId = cashMovement.clientId;
     sale.warehouseId = cashMovement.warehouseId;
-    sale.discount = 0;
-    sale.recharge = 0;
+    sale.discount = cashMovement.discount;
+    sale.recharge = cashMovement.recharge;
     sale.payments = [{ amount: totalCart, paymentMethodId: 1 }];
     sale.info = '';
     sale.invoceTypeId = cashMovement.invoceIdAfip!;
@@ -90,8 +90,6 @@ export const Basket = ({ cashMovement }: Props) => {
       mutateAsyncX(sale);
     }
   };
-
-  console.log({ cart });
 
   return (
     <Stack
@@ -154,7 +152,7 @@ export const Basket = ({ cashMovement }: Props) => {
           </Stack>
           <Divider />
           <Text fontFamily="mono" fontSize="xl" fontWeight="bold" px="2" textAlign="right">
-            {formatCurrency(totalCart)}
+            {formatCurrency(totalCart - cashMovement.discount + cashMovement.recharge)}
           </Text>
           <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">
             productos: ({totalCartItems})
@@ -178,7 +176,11 @@ export const Basket = ({ cashMovement }: Props) => {
             colorScheme="brand"
             onClick={() => {
               cashMovement.cashMovementDetails?.forEach((detail) =>
-                addItem({ ...detail, quantity: detail.quantity })
+                addItem({
+                  ...detail,
+                  quantity: detail.quantity,
+                  price: detail.price - detail.totalDiscount,
+                })
               );
             }}
           >

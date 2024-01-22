@@ -83,6 +83,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
                 setActiveProduct({
                   ...row.original,
                   price: row.original.price - row.original.totalDiscount,
+                  quantity: row.original.quantity,
                 });
                 onOpen();
               }}

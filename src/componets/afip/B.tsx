@@ -33,6 +33,32 @@ export const B = ({ cashMovement, settings }: Props) => {
 
   const someDiscount = cashMovement.cashMovementDetails?.some((el) => el.totalDiscount > 0);
 
+  const newSubTotal =
+    cashMovement.cashMovementDetails?.reduce(
+      (acc, el) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax),
+      0
+    ) || 0;
+
+  const newDiscount = () => {
+    const originalDiscount =
+      cashMovement.cashMovementDetails?.reduce(
+        (acc, el) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax),
+        0
+      ) || 0;
+
+    return (cashMovement.discount + originalDiscount - cashMovement.subtotal) * -1;
+  };
+
+  const newRecharge = () => {
+    const originalRecharge =
+      cashMovement.cashMovementDetails?.reduce(
+        (acc, el) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax),
+        0
+      ) || 0;
+
+    return cashMovement.recharge + cashMovement.subtotal - originalRecharge;
+  };
+
   return (
     <Flex
       alignItems="center"
@@ -130,6 +156,9 @@ export const B = ({ cashMovement, settings }: Props) => {
                           </Th>
                           <Th className="coso">Descripción</Th>
                           <Th isNumeric className="coso">
+                            % IVA
+                          </Th>
+                          <Th isNumeric className="coso">
                             Precio unitario
                           </Th>
                           {someDiscount && (
@@ -148,15 +177,17 @@ export const B = ({ cashMovement, settings }: Props) => {
                         {movement.quantity} {movement.product?.unit?.code}
                       </Td>
                       <Td>{movement.product?.name}</Td>
-                      <Td isNumeric>{formatCurrency(movement.price)}</Td>
+                      <Td isNumeric>{formatTwoDigits(movement.tax * 100)}%</Td>
+                      <Td isNumeric>{formatCurrency(movement.price * (1 + movement.tax))}</Td>
                       {someDiscount && (
-                        <Td isNumeric>{formatCurrency(movement.totalDiscount * -1)}</Td>
+                        <Td isNumeric>
+                          {formatCurrency(movement.totalDiscount * (1 + movement.tax) * -1)}
+                        </Td>
                       )}
                       <Td isNumeric>
                         {formatCurrency(
-                          movement.quantity * movement.price -
-                          movement.totalDiscount +
-                          movement.totalIVA
+                          movement.quantity * movement.price * (1 + movement.tax) -
+                          movement.totalDiscount * (1 + movement.tax)
                         )}
                       </Td>
                     </Tr>
@@ -166,7 +197,7 @@ export const B = ({ cashMovement, settings }: Props) => {
               <Tr>
                 <Td
                   borderWidth={0}
-                  colSpan={someDiscount ? 4 : 3}
+                  colSpan={someDiscount ? 5 : 4}
                   fontSize={16}
                   fontWeight={500}
                   textAlign="right"
@@ -174,14 +205,14 @@ export const B = ({ cashMovement, settings }: Props) => {
                   Subtotal:
                 </Td>
                 <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
-                  {formatCurrency(cashMovement.subtotal)}
+                  {formatCurrency(newSubTotal)}
                 </Td>
               </Tr>
               {cashMovement.discount > 0 && (
                 <Tr>
                   <Td
                     borderWidth={0}
-                    colSpan={someDiscount ? 4 : 3}
+                    colSpan={someDiscount ? 5 : 4}
                     fontSize={16}
                     fontWeight={500}
                     textAlign="right"
@@ -189,7 +220,7 @@ export const B = ({ cashMovement, settings }: Props) => {
                     Descuento:
                   </Td>
                   <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
-                    {formatCurrency(cashMovement.discount * -1)}
+                    {formatCurrency(newDiscount())}
                   </Td>
                 </Tr>
               )}
@@ -197,7 +228,7 @@ export const B = ({ cashMovement, settings }: Props) => {
                 <Tr>
                   <Td
                     borderWidth={0}
-                    colSpan={someDiscount ? 4 : 3}
+                    colSpan={someDiscount ? 5 : 4}
                     fontSize={16}
                     fontWeight={500}
                     textAlign="right"
@@ -205,7 +236,7 @@ export const B = ({ cashMovement, settings }: Props) => {
                     Recargo:
                   </Td>
                   <Td isNumeric borderWidth={0} fontSize={16} fontWeight={500}>
-                    {formatCurrency(cashMovement.recharge)}
+                    {formatCurrency(newRecharge())}
                   </Td>
                 </Tr>
               )}
@@ -223,7 +254,7 @@ export const B = ({ cashMovement, settings }: Props) => {
               <Tr>
                 <Td
                   borderWidth={0}
-                  colSpan={someDiscount ? 4 : 3}
+                  colSpan={someDiscount ? 5 : 4}
                   fontSize={18}
                   fontWeight={700}
                   pb="100px"

@@ -157,15 +157,11 @@ export const FinishSale = () => {
       if (Number(discount) > 0) {
         const percent = Number(discount) / 100;
 
-        console.log(`Se aplicó un descuento del ${percent * 100}%`);
-
         return totalIvaCartCopy * (1 - percent);
       }
 
       if (Number(recharge) > 0) {
         const percent = Number(recharge) / 100;
-
-        console.log(`Se aplicó un recargo del ${percent * 100}%`);
 
         return totalIvaCartCopy * (1 + percent);
 
@@ -174,15 +170,11 @@ export const FinishSale = () => {
       if (Number(discount) > 0) {
         const percent = Number(discount) / subTotalCart;
 
-        console.log(`Se aplicó un descuento del ${percent * 100}%`);
-
         return totalIvaCartCopy * (1 - percent);
       }
 
       if (Number(recharge) > 0) {
         const percent = Number(recharge) / subTotalCart;
-
-        console.log(`Se aplicó un recargo del ${percent * 100}%`);
 
         return totalIvaCartCopy * (1 + percent);
       }
@@ -208,28 +200,6 @@ export const FinishSale = () => {
   },
     [cartCopy, discount, finalIVA, recharge]
   );
-
-  const recalculateCart = useCallback(
-    (num: number) => {
-      const newCart: CartItem[] = [];
-
-      console.log(subTotalCartCopy);
-
-      for (let i = 0; i < cart.length; i++) {
-        const percent = (cart[i].quantity * cart[i].price - cart[i].totalDiscount) / subTotalCartCopy;
-
-        console.log('porcentaje: ', percent);
-
-        const element = { ...cart[i], price: cart[i].price + percent * num / cart[i].quantity };
-
-        newCart.push(element);
-      }
-
-      setCartCopy(newCart);
-    },
-    [cart, subTotalCartCopy]
-  );
-
 
   const initialValues = {
     discount: 0,
@@ -327,7 +297,6 @@ export const FinishSale = () => {
       toast.error('El monto de la venta es distinto al de los pagos');
     } else {
       mutateAsync(sale).then((res: any) => {
-        console.log({ sale });
         const { id: cashMovementId } = res.body.cashMovement;
 
         if (invoceType?.code !== '555' && user.roleId !== 4) {
@@ -422,34 +391,6 @@ export const FinishSale = () => {
 
   const totalCarttotalShoppingCart = useCallback((values: any) => Math.round((Number.EPSILON + totalCartCopy + effectiveDOrR + (values.otherTributes?.reduce((acc: any, el: any) => acc + Number(el.amount), 0) || 0))
     * 100) / 100, [effectiveDOrR, totalCartCopy]);
-
-  const applyDOrR = () => {
-    if (Number(discount) <= 0 && Number(recharge) <= 0) return;
-
-    if (Number(discount) > 0) {
-      let totalToDiscount: number;
-
-      if (!percent) {
-        totalToDiscount = Number(discount);
-      } else {
-        totalToDiscount = subTotalCartCopy * Number(discount) / 100;
-      }
-
-      // recalculateCart(totalToDiscount * -1);
-    } else if (Number(recharge) > 0) {
-      let totalToRecharge: number;
-
-      if (!percent) {
-        totalToRecharge = Number(recharge);
-      } else {
-        totalToRecharge = subTotalCartCopy * Number(recharge) / 100;
-      }
-
-      // recalculateCart(totalToRecharge);
-    }
-
-    setLockDOrR(true);
-  };
 
   const resetDOrR = () => {
     setCartCopy(cart);
@@ -633,7 +574,7 @@ export const FinishSale = () => {
                                 isDisabled={lockDOrR || (values.payments && values.payments?.length > 0)}
                                 size="md"
                                 variant="outline"
-                                onClick={applyDOrR}
+                                onClick={() => setLockDOrR(true)}
                               >
                                 <Icon as={BsCheckCircle} color="brand" mr="2" />
                                 Aplicar {option === "2" ? "Descuento" : "Recargo"}
