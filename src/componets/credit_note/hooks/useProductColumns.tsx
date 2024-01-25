@@ -2,27 +2,33 @@ import { Box, Button } from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { Dispatch, useMemo, useCallback } from 'react';
 
-import { CashMovementsDetail } from '../../../interfaces';
+import { CashMovement, CashMovementsDetail } from '../../../interfaces';
 import { usePosContext } from '..';
 import { formatCurrency } from '../../../utils';
 
 interface Props {
   onOpen: () => void;
   setActiveProduct: Dispatch<React.SetStateAction<CashMovementsDetail>>;
+  cashMovement: CashMovement;
 }
 
-export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
+export const useProductColumns = ({ onOpen, setActiveProduct, cashMovement }: Props) => {
   const { cart } = usePosContext();
 
   const isDisabled = useCallback(
     (product: CashMovementsDetail) => {
       const productExist = cart.find((el: CashMovementsDetail) => el.id === product.id);
 
-      if (productExist?.quantity! >= product.quantity!) return true;
+      if (
+        productExist?.quantity! >= product.quantity! ||
+        cashMovement.discount > 0 ||
+        cashMovement.recharge > 0
+      )
+        return true;
 
       return false;
     },
-    [cart]
+    [cart, cashMovement]
   );
 
   const stock = useCallback(

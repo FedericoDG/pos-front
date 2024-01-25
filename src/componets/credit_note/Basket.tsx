@@ -151,9 +151,44 @@ export const Basket = ({ cashMovement }: Props) => {
             })}
           </Stack>
           <Divider />
-          <Text fontFamily="mono" fontSize="xl" fontWeight="bold" px="2" textAlign="right">
-            {formatCurrency(totalCart - cashMovement.discount + cashMovement.recharge)}
-          </Text>
+          <Stack alignItems="center" direction="row" justifyContent="flex-end" w="full">
+            <Text textAlign="right" w="60%">
+              SubTotal:
+            </Text>
+            <Text fontFamily="mono" fontSize="xl" px="2" textAlign="right">
+              {formatCurrency(totalCart)}
+            </Text>
+          </Stack>
+          {Number(cashMovement.discount) > 0 && (
+            <Stack alignItems="center" direction="row" justifyContent="flex-end" w="full">
+              <Text textAlign="right" w="60%">
+                Descuento:
+              </Text>
+              <Text fontFamily="mono" fontSize="xl" px="2" textAlign="right">
+                {formatCurrency(cashMovement.discount * -1)}
+              </Text>
+            </Stack>
+          )}
+          {Number(cashMovement.recharge) > 0 && (
+            <Stack alignItems="center" direction="row" justifyContent="flex-end" w="full">
+              <Text textAlign="right" w="60%">
+                Recargo:
+              </Text>
+              <Text fontFamily="mono" fontSize="xl" px="2" textAlign="right">
+                {formatCurrency(cashMovement.recharge)}
+              </Text>
+            </Stack>
+          )}
+          <Divider />
+          <Stack alignItems="center" direction="row" justifyContent="flex-end" w="full">
+            <Text fontSize="xl" textAlign="right" w="60%">
+              TOTAL:
+            </Text>
+            <Text fontFamily="mono" fontSize="xl" fontWeight="bold" px="2" textAlign="right">
+              {formatCurrency(totalCart - cashMovement.discount + cashMovement.recharge)}
+            </Text>
+          </Stack>
+
           <Text fontFamily="mono" fontSize="xl" fontWeight="normal" px="2" textAlign="right">
             productos: ({totalCartItems})
           </Text>

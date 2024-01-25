@@ -147,19 +147,64 @@ export const CashRegisterDetails = () => {
     createAfipInvoce(sale);
   };
 
-  const otherDiscounts = useMemo(() => {
-    if (cashRegister?.cashMovements && cashRegister.cashMovements.length > 0) {
+  /*   const otherDiscounts = useMemo(() => {
+      if (cashRegister?.cashMovements && cashRegister.cashMovements.length > 0) {
+  
+        const aux = cashRegister?.cashMovements?.map(el => el.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount * (1 + el.tax), 0));
+  
+        return aux?.reduce((acc, el) => acc! + el!, 0);
+      }
+  
+      return 0;
+    }, [cashRegister?.cashMovements]); */
 
-      const aux = cashRegister?.cashMovements?.map(el => el.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount, 0));
+  const newDiscount = (cashMovement: any) => {
+    const originalDiscount =
+      cashMovement.cashMovementsDetails?.reduce(
+        (acc: any, el: any) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax),
+        0
+      ) || 0;
 
-      return aux?.reduce((acc, el) => acc! + el!, 0);
+
+    return (Math.max(cashMovement.discount + originalDiscount - cashMovement.subtotal, 0));
+  };
+
+  const newRecharge = (cashMovement: any) => {
+    const originalRecharge =
+      cashMovement.cashMovementsDetails?.reduce(
+        (acc: any, el: any) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax),
+        0
+      ) || 0;
+
+    return (Math.max(cashMovement.recharge - originalRecharge + cashMovement.subtotal, 0));
+  };
+
+  const newTotalDiscount = () => {
+    if (isIndeterminate) return;
+    let acc = 0;
+
+    for (const coso of cashRegister?.cashMovements!) {
+      const fede = coso?.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount * (1 + el.tax), 0) || 0;
+
+
+      acc += newDiscount(coso) + fede;
     }
 
-    return 0;
-  }, [cashRegister?.cashMovements]);
+
+    return acc;
+  };
+
+  const newTotalRecharge = () => {
+    if (isIndeterminate) return;
+    let acc = 0;
+
+    for (const coso of cashRegister?.cashMovements!) {
+      acc += newRecharge(coso);
+    }
 
 
-
+    return acc;
+  };
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
@@ -370,10 +415,10 @@ export const CashRegisterDetails = () => {
                       <Tbody>
                         <Tr>
                           <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.discounts + (otherDiscounts || 0))}
+                            {formatCurrency(newTotalDiscount()!)}
                           </Td>
                           <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.recharges)}
+                            {formatCurrency(newTotalRecharge()!)}
                           </Td>
                         </Tr>
                       </Tbody>
@@ -654,16 +699,16 @@ export const CashRegisterDetails = () => {
                                                     {detail.product?.name}
                                                   </Td>
                                                   <Td border="none" w="131px">
-                                                    {formatCurrency(detail.price)}
+                                                    {formatCurrency(detail.price * (1 + detail.tax))}
                                                   </Td>
 
                                                   <Td isNumeric border="none" w="121px">
-                                                    {formatCurrency(detail.price * detail.quantity)}
+                                                    {formatCurrency(detail.price * (1 + detail.tax) * detail.quantity)}
                                                   </Td>
                                                   {
                                                     detail.totalDiscount > 0 ?
-                                                      <Td isNumeric border="none" w="121px">
-                                                        {formatCurrency(detail.totalDiscount * -1)}
+                                                      <Td isNumeric border="none" color="red.600" w="121px">
+                                                        {formatCurrency(detail.totalDiscount * -1 * (1 + detail.tax))}
                                                       </Td> :
                                                       <Td isNumeric border="none" w="121px">
                                                         {formatCurrency(0)}
@@ -674,7 +719,7 @@ export const CashRegisterDetails = () => {
                                                     (
 
                                                       <Td isNumeric border="none" w="121px">
-                                                        {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (detail.product?.ivaCondition?.tax!))}
+                                                        {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (detail.product?.ivaCondition?.tax!) * (1 - movement.discountPercent / 100 + movement.rechargePercent / 100))}
                                                       </Td>
                                                     )
                                                   }
@@ -739,10 +784,11 @@ export const CashRegisterDetails = () => {
                                             <Tbody>
                                               <Tr >
                                                 <Td border="none" w="150px">
-                                                  {formatCurrency(movement.discount)}
+                                                  {formatCurrency(newDiscount(movement))}
                                                 </Td>
                                                 <Td border="none" w="693px">
                                                   {Math.round(movement.discountPercent * 100) / 100}%
+                                                  {/*   {Math.round(movement.discountPercent * 100) / 100}% */}
                                                 </Td>
                                               </Tr>
                                             </Tbody>
@@ -774,7 +820,7 @@ export const CashRegisterDetails = () => {
                                             <Tbody>
                                               <Tr >
                                                 <Td border="none" w="150px">
-                                                  {formatCurrency(movement.recharge)}
+                                                  {formatCurrency(newRecharge(movement))}
                                                 </Td>
                                                 <Td border="none" w="693px">
                                                   {Math.round(movement.rechargePercent * 100) / 100}%

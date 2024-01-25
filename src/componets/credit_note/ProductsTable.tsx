@@ -1,4 +1,4 @@
-import { Box, Stack, useDisclosure } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Stack, useDisclosure } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 
 import { CustomTable } from '../table';
@@ -23,7 +23,7 @@ export const ProductsTable = ({ cashMovement }: Props) => {
 
   const [activeProduct, setActiveProduct] = useState({} as CashMovementsDetail);
 
-  const { columns } = useProductColumns({ onOpen, setActiveProduct });
+  const { columns } = useProductColumns({ onOpen, setActiveProduct, cashMovement });
 
   const handleClose = () => {
     setActiveProduct({} as CashMovementsDetail);
@@ -44,6 +44,13 @@ export const ProductsTable = ({ cashMovement }: Props) => {
         shadow="md"
       >
         <Box width="64%">
+          {(cashMovement.recharge > 0 || cashMovement.discount > 0) && (
+            <Alert status="warning">
+              <AlertIcon />
+              Esta factura posee un descuento o recargo sobre el total, por lo tanto no es posible
+              anularla parcialmente. Utilice el botón de &apos;AGREGAR TODOS&apos;.
+            </Alert>
+          )}
           <CustomTable
             showGlobalFilter
             showNavigation
