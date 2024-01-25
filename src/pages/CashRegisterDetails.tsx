@@ -706,19 +706,16 @@ export const CashRegisterDetails = () => {
                                                     {formatCurrency(detail.price * (1 + detail.tax) * detail.quantity)}
                                                   </Td>
                                                   {
-                                                    detail.totalDiscount > 0 ?
-                                                      <Td isNumeric border="none" color="red.600" w="121px">
-                                                        {formatCurrency(detail.totalDiscount * -1 * (1 + detail.tax))}
-                                                      </Td> :
-                                                      <Td isNumeric border="none" w="121px">
-                                                        {formatCurrency(0)}
-                                                      </Td>
+                                                    detail.totalDiscount > 0 &&
+                                                    <Td isNumeric border="none" color="red.600" w="121px">
+                                                      {formatCurrency(detail.totalDiscount * -1 * (1 + detail.tax))}
+                                                    </Td>
                                                   }
                                                   {
-                                                    movement.iva &&
+                                                    movement.iva && movement.invoceTypeId == 1 &&
                                                     (
 
-                                                      <Td isNumeric border="none" w="121px">
+                                                      <Td isNumeric border="none" color="blue" w="121px">
                                                         {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (detail.product?.ivaCondition?.tax!) * (1 - movement.discountPercent / 100 + movement.rechargePercent / 100))}
                                                       </Td>
                                                     )
