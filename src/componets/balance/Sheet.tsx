@@ -64,6 +64,7 @@ export const Sheet = () => {
     to,
   };
 
+
   const { data: balance, isFetching, isSuccess } = useGetBalance(data);
 
   const handleDownload = () => {
@@ -86,7 +87,7 @@ export const Sheet = () => {
             .padStart(3, '0')}-${el.cashMovement?.id?.toString().padStart(8, '0')}`,
         Cliente: el.client?.name,
         Usuario: `${el.user?.name} ${el.user?.lastname}`,
-        Monto: el.concept === 'Venta' ? el.amount : el.amount * -1,
+        Monto: el.concept === 'Venta' ? el.cashMovement!.total : el.cashMovement!.total * -1,
       });
     });
 
@@ -520,7 +521,7 @@ export const Sheet = () => {
                                 </Td>
                                 {el.concept === 'Venta' ? (
                                   <Td isNumeric fontSize={14}>
-                                    {formatCurrency(el.amount)}
+                                    {formatCurrency(el.cashMovement!.total)}
                                   </Td>
                                 ) : (
                                   <Td isNumeric color="red.600" fontSize={14}>
