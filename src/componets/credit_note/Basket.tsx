@@ -21,6 +21,8 @@ export const Basket = ({ cashMovement }: Props) => {
 
   const navigate = useNavigate();
 
+  console.log({ cart });
+
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'F9') {
@@ -214,7 +216,7 @@ export const Basket = ({ cashMovement }: Props) => {
                 addItem({
                   ...detail,
                   quantity: detail.quantity,
-                  price: detail.price - detail.totalDiscount,
+                  price: detail.price - detail.totalDiscount / detail.quantity,
                 })
               );
             }}

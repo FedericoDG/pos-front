@@ -66,13 +66,13 @@ export const useProductColumns = ({ onOpen, setActiveProduct, cashMovement }: Pr
         id: 'precio unitario',
         header: 'Precio U.',
         cell: (row: CellContext<CashMovementsDetail, unknown>) => row.renderValue(),
-        accessorFn: (x) => formatCurrency(x.price - x.totalDiscount),
+        accessorFn: (x) => formatCurrency(x.price - x.totalDiscount / x.quantity),
       },
       {
         id: 'total',
         header: 'Total (incluye IVA)',
         cell: (row: CellContext<CashMovementsDetail, unknown>) => row.renderValue(),
-        accessorFn: (x) => formatCurrency(x.price * x.quantity - x.totalDiscount + x.totalIVA),
+        accessorFn: (x) => formatCurrency(x.price * x.quantity - x.totalDiscount + x.totalIVA), // ACA
       },
       {
         id: 'acciones',
@@ -88,7 +88,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct, cashMovement }: Pr
               onClick={() => {
                 setActiveProduct({
                   ...row.original,
-                  price: row.original.price - row.original.totalDiscount,
+                  price: row.original.price - row.original.totalDiscount / row.original.quantity,
                   quantity: row.original.quantity,
                 });
                 onOpen();
