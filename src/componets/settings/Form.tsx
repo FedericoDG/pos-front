@@ -171,7 +171,20 @@ export const Form = ({ afip, settings }: Props) => {
             {errors.cuit && touched.cuit && <ErrorMessage>{errors.cuit}</ErrorMessage>}
           </Box>
           <Box w="full">
-            <FormLabel htmlFor="invoceName">Nombre del Comprobante Interno:</FormLabel>
+            <FormLabel htmlFor="start">Inicio de Actividades:</FormLabel>
+            <Input
+              id="start"
+              isDisabled={isLoading}
+              name="start"
+              placeholder="01/01/2000"
+              type="start"
+              value={values.start}
+              onChange={handleChange}
+            />
+            {errors.start && touched.start && <ErrorMessage>{errors.start}</ErrorMessage>}
+          </Box>
+          <Box w="full">
+            <FormLabel htmlFor="invoceName">Nombre del Comprobante Int.:</FormLabel>
             <Input
               id="invoceName"
               isDisabled={isLoading}
@@ -186,7 +199,7 @@ export const Form = ({ afip, settings }: Props) => {
             )}
           </Box>
           <Box w="full">
-            <FormLabel htmlFor="invoceNumber">N° Próximo Comprobante Interno:</FormLabel>
+            <FormLabel htmlFor="invoceNumber">N° Próx. Comprobante Int.:</FormLabel>
             <Input
               id="invoceNumber"
               isDisabled={isLoading}

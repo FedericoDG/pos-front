@@ -6,6 +6,7 @@ export const schema = z.object({
   cp: z.string({ required_error: 'El Código Postal es obligatorio' }).trim(),
   province: z.string({ required_error: 'La provincia es obligatoria' }).trim(),
   cuit: z.string({ required_error: 'El CUIT es obligatorio' }).trim(),
+  start: z.string({ required_error: 'La fecha de Inicio de Actividades es obligatorio' }).trim(),
   invoceName: z.string({ required_error: 'El Nombre del Comprobante es obligatorio' }).trim(),
   invoceNumber: z.preprocess(
     (val) => Number(val),

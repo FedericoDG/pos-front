@@ -18,6 +18,7 @@ export interface Settings {
   province: string;
   ivaCondition: string;
   cuit: string;
+  start: string;
   invoceName: string;
   invoceNumber: number;
   imageURL: string;

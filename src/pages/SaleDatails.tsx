@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Flex,
   Stack,
@@ -15,12 +15,11 @@ import {
 } from '@chakra-ui/react';
 import { ImPrinter } from 'react-icons/im';
 import { useReactToPrint } from 'react-to-print';
-import { Fragment, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 
 import { DashBoard, Loading } from '../componets/common';
 import { useGetCashMovement, useGetSettings } from '../hooks';
 import { formatCurrency, formatDate, getInvoiceName } from '../utils';
-import { formatTwoDigits } from '../utils/formatCurrency';
 
 export const SaleDetails = () => {
   const { id } = useParams();
@@ -35,6 +34,21 @@ export const SaleDetails = () => {
   const { data: settings, isLoading: isLoadingSettings } = useGetSettings(1);
 
   const someDiscount = cashMovement?.cashMovementDetails?.some((el) => el.totalDiscount > 0);
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('return') !== 'true') return;
+
+    const timer = window.setTimeout(() => {
+      navigate(-1);
+    }, 5000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [navigate, searchParams]);
 
 
   return (
@@ -116,6 +130,7 @@ export const SaleDetails = () => {
                   </Text>
                   <Text>Fecha: {formatDate(cashMovement.createdAt)}</Text>
                   <Text>CUIT: {settings.cuit}</Text>
+                  <Text>Inicio de Actividades: {settings.start}</Text>
                 </Stack>
               </HStack>
 

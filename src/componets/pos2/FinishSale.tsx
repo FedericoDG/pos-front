@@ -152,28 +152,6 @@ export const FinishSale = () => {
     [cartCopy]
   );
 
-  const recalculateCart = useCallback(
-    (num: number) => {
-      const newCart: CartItem[] = [];
-
-      console.log(subTotalCartCopy);
-
-      for (let i = 0; i < cart.length; i++) {
-        const percent = (cart[i].quantity * cart[i].price - cart[i].totalDiscount) / subTotalCartCopy;
-
-        console.log('porcentaje: ', percent);
-
-        const element = { ...cart[i], price: cart[i].price + percent * num / cart[i].quantity };
-
-        newCart.push(element);
-      }
-
-      setCartCopy(newCart);
-    },
-    [cart, subTotalCartCopy]
-  );
-
-
   const initialValues = {
     discount: 0,
     recharge: 0,
@@ -188,8 +166,6 @@ export const FinishSale = () => {
   const { data: otherTributes } = useGetOtherTributes();
 
   const queryClient = useQueryClient();
-
-  const { user } = useMyContext();
 
   const onSubmit = async (values: Values) => {
     const parsedValues = {
@@ -269,28 +245,17 @@ export const FinishSale = () => {
     if (Math.round(totalCartCopy + effectiveDOrR + sale.otherTributes.reduce((acc, el) => acc + el.amount, 0)) !== Math.round(sale.payments.reduce((acc, el) => acc + el.amount, 0))) {
       toast.error('El monto de la venta es distinto al de los pagos');
     } else {
-      mutateAsync(sale).then((res: any) => {
-        const { id } = res.body.cashMovement;
-
-        if (invoceType?.code !== '555' && user.roleId !== 4) {
-          createAfipInvoce({ ...sale, cashMovementId: id });
-        }
-      });
+      mutateAsync(sale);
     }
   };
 
-  const onSuccessAfip = (res: any) => {
-    toast('Comprobante de AFIP Creado');
-    navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`);
-  };
-
   const onSuccess = (res: any) => {
-    toast.success('Venta Realizada', {
-      action: {
-        label: 'Ver',
-        onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`)
-      }
-    });
+    /*  toast.success('Venta Realizada', {
+       action: {
+         label: 'Ver',
+         onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`)
+       }
+     }); */
 
     toast('Comprobante Interno Creado');
 
@@ -301,12 +266,8 @@ export const FinishSale = () => {
     emptyCart();
     setActiveStep(1);
 
-    navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}`);
+    navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}?return=true`);
 
-  };
-
-  const onErrorAfip = (error: any) => {
-    toast.error(error.response.data.body.message);
   };
 
   const onReset = () => {
@@ -326,7 +287,6 @@ export const FinishSale = () => {
   };
 
   const { mutateAsync, isLoading } = useCreateCashMovement(onSuccess, cb);
-  const { mutateAsync: createAfipInvoce } = useCreateAfipInvoce(onSuccessAfip, onErrorAfip);
 
   const formik = useFormik({
     enableReinitialize: true,

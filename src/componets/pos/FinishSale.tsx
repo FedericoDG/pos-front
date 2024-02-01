@@ -308,16 +308,16 @@ export const FinishSale = () => {
 
   const onSuccessAfip = (res: any) => {
     toast('Comprobante de AFIP Creado');
-    navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}`);
+    navigate(`/panel/caja/detalles/venta/afip/${res.body.cashMovement.id}?return=true`);
   };
 
   const onSuccess = (res: any) => {
-    toast.success('Venta Realizada', {
+    /* toast.success('Venta Realizada', {
       action: {
         label: 'Ver',
         onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`)
       }
-    });
+    }); */
 
     toast('Comprobante Interno Creado', {
       action: {

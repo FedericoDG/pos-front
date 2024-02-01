@@ -680,11 +680,84 @@ export const CashRegisterDetails = () => {
                                                 borderBottomWidth="1"
                                                 borderColor="black"
                                                 borderStyle="solid"
-                                                colSpan={8}
                                                 color="black"
-                                                w="843px"
+                                                w="150px"
                                               >
-                                                Detalle
+                                                Cant.
+                                              </Th>
+                                              <Th
+                                                borderBottomWidth="1"
+                                                borderColor="black"
+                                                borderStyle="solid"
+                                                color="black"
+                                                w="341px"
+                                              >
+                                                Producto
+                                              </Th>
+                                              <Th
+                                                isNumeric
+                                                borderBottomWidth="1"
+                                                borderColor="black"
+                                                borderStyle="solid"
+                                                color="black"
+                                                w="131px"
+                                              >
+                                                Precio
+                                              </Th>
+                                              <Th
+                                                isNumeric
+                                                borderBottomWidth="1"
+                                                borderColor="black"
+                                                borderStyle="solid"
+                                                color="black"
+                                                w="121px"
+                                              >
+                                                Subtotal
+                                              </Th>
+                                              {
+                                                movement.iva && movement.invoceTypeId == 1 &&
+                                                (
+                                                  <Th
+                                                    isNumeric
+                                                    borderBottomWidth="1"
+                                                    borderColor="black"
+                                                    borderStyle="solid"
+                                                    color="black"
+                                                    w="121px"
+                                                  >
+                                                    IVA
+                                                  </Th>
+                                                )
+                                              }
+                                              <Th
+                                                isNumeric
+                                                borderBottomWidth="1"
+                                                borderColor="black"
+                                                borderStyle="solid"
+                                                color="black"
+                                                w="100px"
+                                              >
+                                                % IVA
+                                              </Th>
+                                              <Th
+                                                isNumeric
+                                                borderBottomWidth="1"
+                                                borderColor="black"
+                                                borderStyle="solid"
+                                                color="black"
+                                                w="121px"
+                                              >
+                                                Desc. Ind.
+                                              </Th>
+                                              <Th
+                                                isNumeric
+                                                borderBottomWidth="1"
+                                                borderColor="black"
+                                                borderStyle="solid"
+                                                color="black"
+                                                w="100px"
+                                              >
+                                                Total
                                               </Th>
                                             </Tr>
                                           </Thead>
@@ -698,18 +771,30 @@ export const CashRegisterDetails = () => {
                                                   <Td border="none" w="341px">
                                                     {detail.product?.name}
                                                   </Td>
-                                                  <Td border="none" w="131px">
-                                                    {formatCurrency(detail.price * (1 + detail.tax))}
-                                                  </Td>
-
-                                                  <Td isNumeric border="none" w="121px">
-                                                    {formatCurrency(detail.price * (1 + detail.tax) * detail.quantity)}
-                                                  </Td>
                                                   {
-                                                    detail.totalDiscount > 0 &&
-                                                    <Td isNumeric border="none" color="red.600" w="121px">
-                                                      {formatCurrency(detail.totalDiscount * -1 * (1 + detail.tax))}
-                                                    </Td>
+                                                    movement.iva && movement.invoceTypeId == 1 ?
+                                                      (
+                                                        <Td border="none" w="131px">
+                                                          {formatCurrency(detail.price - detail.totalDiscount / detail.quantity)}
+                                                        </Td>
+                                                      ) : (
+                                                        <Td border="none" w="131px">
+                                                          {formatCurrency(detail.price * (1 + detail.tax))}
+                                                        </Td>
+                                                      )
+                                                  }
+
+                                                  {
+                                                    movement.iva && movement.invoceTypeId == 1 ?
+                                                      (
+                                                        <Td isNumeric border="none" w="121px">
+                                                          {formatCurrency((detail.price * detail.quantity - detail.totalDiscount))}
+                                                        </Td>
+                                                      ) : (
+                                                        <Td isNumeric border="none" w="121px">
+                                                          {formatCurrency(detail.price * (1 + detail.tax) * detail.quantity)}
+                                                        </Td>
+                                                      )
                                                   }
                                                   {
                                                     movement.iva && movement.invoceTypeId == 1 &&
@@ -723,17 +808,27 @@ export const CashRegisterDetails = () => {
                                                   {
                                                     movement.iva ?
                                                       (
-                                                        <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w="100px">
+                                                        <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w={movement.iva && movement.invoceTypeId == 1 ? '200px' : "100px"}>
                                                           {`${formatTwoDigits(detail.product?.ivaCondition?.tax! * 100)}%`}
                                                         </Td>
 
                                                       ) :
                                                       (
-                                                        <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w="100px">
+                                                        <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w={movement.iva && movement.invoceTypeId == 1 ? '200px' : "100px"}>
                                                           {`${formatTwoDigits(0)}%`}
                                                         </Td>
 
                                                       )
+                                                  }
+                                                  {
+                                                    detail.totalDiscount > 0 ?
+                                                      <Td isNumeric border="none" color="red.600" w="121px">
+                                                        {formatCurrency(detail.totalDiscount * -1 * (1 + detail.tax))}
+                                                      </Td>
+                                                      :
+                                                      <Td isNumeric border="none" w="121px">
+                                                        {' '}
+                                                      </Td>
                                                   }
                                                   {
                                                     movement.iva ?

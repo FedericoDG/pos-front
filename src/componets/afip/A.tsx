@@ -14,8 +14,9 @@ import {
 } from '@chakra-ui/react';
 import { ImPrinter } from 'react-icons/im';
 import { useReactToPrint } from 'react-to-print';
-import { Fragment, useMemo, useRef } from 'react';
+import { Fragment, useEffect, useMemo, useRef } from 'react';
 import { nanoid } from 'nanoid';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { CashMovement, Settings } from '../../interfaces';
 import { formatDate, formatCurrency, getInvoiceName, getInvoiceLetter } from '../../utils';
@@ -64,6 +65,22 @@ export const A = ({ cashMovement, settings }: Props) => {
   }, [cashMovement.cashMovementDetails]);
 
   const someDiscount = cashMovement.cashMovementDetails?.some(el => el.totalDiscount > 0);
+
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('return') !== 'true') return;
+
+    const timer = window.setTimeout(() => {
+      navigate(-1);
+    }, 5000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [navigate, searchParams]);
 
   return (
     <Flex
@@ -128,6 +145,7 @@ export const A = ({ cashMovement, settings }: Props) => {
               </Text>
               <Text>Fecha: {formatDate(cashMovement.createdAt)}</Text>
               <Text>CUIT: {settings.cuit}</Text>
+              <Text>Inicio de Actividades: {settings.start}</Text>
             </Stack>
           </HStack>
 

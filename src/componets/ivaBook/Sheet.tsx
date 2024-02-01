@@ -193,8 +193,8 @@ export const Sheet = () => {
                                 <Td fontSize={12}>{el.client.name}</Td>
                                 <Td fontSize={12}>{el.client.document}</Td>
                                 <Td isNumeric color={el.isCreditNote ? 'red.600' : 'black'} fontSize={12}>{creditNotesIds.includes(el.invoceTypeId) ? formatCurrency(el.subTotal * -1) : formatCurrency(el.subTotal)}</Td>
-                                <Td isNumeric color={el.isCreditNote ? 'red.600' : 'black'} fontSize={12}>{creditNotesIds.includes(el.invoceTypeId) ? formatCurrency(el.iva * -1) : formatCurrency(el.iva)}</Td>
-                                <Td isNumeric color={el.isCreditNote ? 'red.600' : 'black'} fontSize={12}>{creditNotesIds.includes(el.invoceTypeId) ? formatCurrency(el.total * -1) : formatCurrency(el.total)}</Td>
+                                <Td isNumeric color={el.isCreditNote ? 'red.600' : 'black'} fontSize={12}>{creditNotesIds.includes(el.invoceTypeId) ? formatCurrency(el.iva) : formatCurrency(el.iva)}</Td>
+                                <Td isNumeric color={el.isCreditNote ? 'red.600' : 'black'} fontSize={12}>{creditNotesIds.includes(el.invoceTypeId) ? formatCurrency(el.total) : formatCurrency(el.total)}</Td>
                               </Tr>
                             ))
                           }
