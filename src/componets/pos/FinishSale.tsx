@@ -312,13 +312,6 @@ export const FinishSale = () => {
   };
 
   const onSuccess = (res: any) => {
-    /* toast.success('Venta Realizada', {
-      action: {
-        label: 'Ver',
-        onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`)
-      }
-    }); */
-
     toast('Comprobante Interno Creado', {
       action: {
         label: 'Ver',
@@ -885,7 +878,7 @@ export const FinishSale = () => {
                                   cantidad: {item.quantity} {item.unit?.code}
                                 </Text>
                                 <Text px="2">precio: {formatCurrency(item.price)}</Text>
-                                {
+                                {/* {
                                   item.totalDiscount > 0 &&
                                   <>
                                     <Text px="2">descuento: {formatCurrency(item.totalDiscount * -1)}</Text>
@@ -903,7 +896,7 @@ export const FinishSale = () => {
                                 }
                                 <Text px="2" textDecoration="underline">
                                   subtotal: {formatCurrency((item.price * item.quantity - item.totalDiscount) * (1 + item.tax))}
-                                </Text>
+                                </Text> */}
                               </Box>
                             </Stack>
                           );

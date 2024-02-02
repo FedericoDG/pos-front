@@ -147,39 +147,6 @@ export const CashRegisterDetails = () => {
     createAfipInvoce(sale);
   };
 
-  /*   const otherDiscounts = useMemo(() => {
-      if (cashRegister?.cashMovements && cashRegister.cashMovements.length > 0) {
-  
-        const aux = cashRegister?.cashMovements?.map(el => el.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount * (1 + el.tax), 0));
-  
-        return aux?.reduce((acc, el) => acc! + el!, 0);
-      }
-  
-      return 0;
-    }, [cashRegister?.cashMovements]); */
-
-  const newDiscount = (cashMovement: any) => {
-    const originalDiscount =
-      cashMovement.cashMovementsDetails?.reduce(
-        /* (acc: any, el: any) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax), */
-        (acc: any, el: any) => acc + (el.price * el.quantity - el.totalDiscount),
-        0
-      ) || 0;
-
-
-    return (Math.max(cashMovement.discount + originalDiscount - cashMovement.subtotal, 0));
-  };
-
-  const newDiscount2 = (cashMovement: any) => {
-
-    const originalDiscount =
-      cashMovement.cashMovementsDetails?.reduce(
-        (acc: any, el: any) => acc + ((el.price * el.quantity) - el.totalDiscount), 0
-      ) || 0;
-
-    return (Math.max(cashMovement.discount, 0));
-  };
-
   const newRecharge = (cashMovement: any) => {
     const originalRecharge =
       cashMovement.cashMovementsDetails?.reduce(
@@ -190,23 +157,6 @@ export const CashRegisterDetails = () => {
     return (Math.max(cashMovement.recharge - originalRecharge + cashMovement.subtotal, 0));
   };
 
-  const newTotalDiscount = () => {
-    if (isIndeterminate) return;
-    let acc = 0;
-
-    for (const coso of cashRegister?.cashMovements!) {
-      const fede = coso?.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount * (1 + el.tax), 0) || 0;
-      // const fede = coso?.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount, 0) || 0;
-
-
-      acc += newDiscount(coso);
-    }
-
-
-    return acc;
-  };
-
-
   const newTotalRecharge = () => {
     if (isIndeterminate) return;
     let acc = 0;
@@ -214,7 +164,6 @@ export const CashRegisterDetails = () => {
     for (const coso of cashRegister?.cashMovements!) {
       acc += newRecharge(coso);
     }
-
 
     return acc;
   };
@@ -787,11 +736,11 @@ export const CashRegisterDetails = () => {
                                                   {
                                                     movement.iva && movement.invoceTypeId == 1 ?
                                                       (
-                                                        <Td border="none" w="131px">
+                                                        <Td isNumeric border="none" w="131px">
                                                           {formatCurrency(detail.price)}
                                                         </Td>
                                                       ) : (
-                                                        <Td border="none" w="131px">
+                                                        <Td isNumeric border="none" w="131px">
                                                           {formatCurrency(detail.price * (1 + detail.tax))}
                                                         </Td>
                                                       )
@@ -799,9 +748,14 @@ export const CashRegisterDetails = () => {
 
                                                   {
                                                     detail.totalDiscount > 0 ?
-                                                      <Td isNumeric border="none" color="red.600" w="121px">
-                                                        {formatCurrency(detail.totalDiscount * -1)}
-                                                      </Td>
+                                                      movement.invoceTypeId == 1 ?
+                                                        <Td isNumeric border="none" color="green.600" w="121px">
+                                                          {formatCurrency(detail.totalDiscount * -1)}
+                                                        </Td>
+                                                        :
+                                                        <Td isNumeric border="none" color="red.600" w="121px">
+                                                          {formatCurrency(detail.totalDiscount * (1 + detail.tax) * -1)}
+                                                        </Td>
                                                       :
                                                       <Td isNumeric border="none" w="121px">
                                                         {' '}
@@ -816,7 +770,7 @@ export const CashRegisterDetails = () => {
                                                         </Td>
                                                       ) : (
                                                         <Td isNumeric border="none" w="121px">
-                                                          {formatCurrency(detail.price * (1 + detail.tax) * detail.quantity)}
+                                                          {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (1 + detail.tax))}
                                                         </Td>
                                                       )
                                                   }
@@ -889,12 +843,11 @@ export const CashRegisterDetails = () => {
                                             </Thead>
                                             <Tbody>
                                               <Tr >
-                                                <Td border="none" w="150px">
-                                                  {formatCurrency(newDiscount2(movement))}
+                                                <Td border="none" color='red.600' w="150px">
+                                                  {formatCurrency(movement.discount)}
                                                 </Td>
                                                 <Td border="none" w="693px">
-                                                  {Math.round(movement.discountPercent * 100) / 100}%
-                                                  {/*   {Math.round(movement.discountPercent * 100) / 100}% */}
+                                                  {Math.round(movement.discountPercent)}%
                                                 </Td>
                                               </Tr>
                                             </Tbody>

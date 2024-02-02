@@ -71,16 +71,18 @@ export const A = ({ cashMovement, settings }: Props) => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get('return') !== 'true') return;
+    const handleUserKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'F9') {
+        return navigate(-1);
+      }
+    };
 
-    const timer = window.setTimeout(() => {
-      navigate(-1);
-    }, 5000);
+    window.addEventListener('keydown', handleUserKeyPress);
 
     return () => {
-      window.clearTimeout(timer);
+      window.removeEventListener('keydown', handleUserKeyPress);
     };
-  }, [navigate, searchParams]);
+  }, [navigate]);
 
   return (
     <Flex

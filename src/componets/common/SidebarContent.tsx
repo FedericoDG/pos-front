@@ -91,7 +91,7 @@ export const SidebarContent = (props: Props) => {
               </NavItem>
             )}
             <NavItem icon={MdPointOfSale} link="/panel/presupuesto">
-              Remito Valorizado
+              Remito
             </NavItem>
           </>
         )}

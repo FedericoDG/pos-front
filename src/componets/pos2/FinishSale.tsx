@@ -250,13 +250,6 @@ export const FinishSale = () => {
   };
 
   const onSuccess = (res: any) => {
-    /*  toast.success('Venta Realizada', {
-       action: {
-         label: 'Ver',
-         onClick: () => navigate(`/panel/caja/detalles/${res.body.cashMovement.cashRegisterId}`)
-       }
-     }); */
-
     toast('Comprobante Interno Creado');
 
     queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -267,7 +260,6 @@ export const FinishSale = () => {
     setActiveStep(1);
 
     navigate(`/panel/caja/detalles/venta/${res.body.cashMovement.id}?return=true`);
-
   };
 
   const onReset = () => {

@@ -229,7 +229,7 @@ export const Sheet = () => {
                           <Thead>
                             <Tr>
                               <Th bg="gray.700" color="white">
-                                Presupuesto
+                                Remito
                               </Th>
                               <Th isNumeric bg="gray.700" color="white">
                                 TOTAL
