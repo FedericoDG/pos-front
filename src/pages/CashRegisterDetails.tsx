@@ -161,12 +161,23 @@ export const CashRegisterDetails = () => {
   const newDiscount = (cashMovement: any) => {
     const originalDiscount =
       cashMovement.cashMovementsDetails?.reduce(
-        (acc: any, el: any) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax),
+        /* (acc: any, el: any) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax), */
+        (acc: any, el: any) => acc + (el.price * el.quantity - el.totalDiscount),
         0
       ) || 0;
 
 
     return (Math.max(cashMovement.discount + originalDiscount - cashMovement.subtotal, 0));
+  };
+
+  const newDiscount2 = (cashMovement: any) => {
+
+    const originalDiscount =
+      cashMovement.cashMovementsDetails?.reduce(
+        (acc: any, el: any) => acc + ((el.price * el.quantity) - el.totalDiscount), 0
+      ) || 0;
+
+    return (Math.max(cashMovement.discount, 0));
   };
 
   const newRecharge = (cashMovement: any) => {
@@ -185,14 +196,16 @@ export const CashRegisterDetails = () => {
 
     for (const coso of cashRegister?.cashMovements!) {
       const fede = coso?.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount * (1 + el.tax), 0) || 0;
+      // const fede = coso?.cashMovementsDetails?.reduce((acc, el) => acc + el.totalDiscount, 0) || 0;
 
 
-      acc += newDiscount(coso) + fede;
+      acc += newDiscount(coso);
     }
 
 
     return acc;
   };
+
 
   const newTotalRecharge = () => {
     if (isIndeterminate) return;
@@ -415,7 +428,7 @@ export const CashRegisterDetails = () => {
                       <Tbody>
                         <Tr>
                           <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(newTotalDiscount()!)}
+                            {formatCurrency(cashRegister.discounts)}
                           </Td>
                           <Td isNumeric color="#4a5568" fontWeight="semibold">
                             {formatCurrency(newTotalRecharge()!)}
@@ -712,6 +725,16 @@ export const CashRegisterDetails = () => {
                                                 color="black"
                                                 w="121px"
                                               >
+                                                Desc. Ind.
+                                              </Th>
+                                              <Th
+                                                isNumeric
+                                                borderBottomWidth="1"
+                                                borderColor="black"
+                                                borderStyle="solid"
+                                                color="black"
+                                                w="121px"
+                                              >
                                                 Subtotal
                                               </Th>
                                               {
@@ -745,16 +768,6 @@ export const CashRegisterDetails = () => {
                                                 borderColor="black"
                                                 borderStyle="solid"
                                                 color="black"
-                                                w="121px"
-                                              >
-                                                Desc. Ind.
-                                              </Th>
-                                              <Th
-                                                isNumeric
-                                                borderBottomWidth="1"
-                                                borderColor="black"
-                                                borderStyle="solid"
-                                                color="black"
                                                 w="100px"
                                               >
                                                 Total
@@ -775,13 +788,24 @@ export const CashRegisterDetails = () => {
                                                     movement.iva && movement.invoceTypeId == 1 ?
                                                       (
                                                         <Td border="none" w="131px">
-                                                          {formatCurrency(detail.price - detail.totalDiscount / detail.quantity)}
+                                                          {formatCurrency(detail.price)}
                                                         </Td>
                                                       ) : (
                                                         <Td border="none" w="131px">
                                                           {formatCurrency(detail.price * (1 + detail.tax))}
                                                         </Td>
                                                       )
+                                                  }
+
+                                                  {
+                                                    detail.totalDiscount > 0 ?
+                                                      <Td isNumeric border="none" color="red.600" w="121px">
+                                                        {formatCurrency(detail.totalDiscount * -1)}
+                                                      </Td>
+                                                      :
+                                                      <Td isNumeric border="none" w="121px">
+                                                        {' '}
+                                                      </Td>
                                                   }
 
                                                   {
@@ -800,7 +824,7 @@ export const CashRegisterDetails = () => {
                                                     movement.iva && movement.invoceTypeId == 1 &&
                                                     (
 
-                                                      <Td isNumeric border="none" color="blue" w="121px">
+                                                      <Td isNumeric border="none" w="121px">
                                                         {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (detail.product?.ivaCondition?.tax!) * (1 - movement.discountPercent / 100 + movement.rechargePercent / 100))}
                                                       </Td>
                                                     )
@@ -808,34 +832,24 @@ export const CashRegisterDetails = () => {
                                                   {
                                                     movement.iva ?
                                                       (
-                                                        <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w={movement.iva && movement.invoceTypeId == 1 ? '200px' : "100px"}>
+                                                        <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w={"100px"}>
                                                           {`${formatTwoDigits(detail.product?.ivaCondition?.tax! * 100)}%`}
                                                         </Td>
 
                                                       ) :
                                                       (
-                                                        <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w={movement.iva && movement.invoceTypeId == 1 ? '200px' : "100px"}>
+                                                        <Td border="none" fontSize={12} style={{ textAlign: 'right' }} w={"100px"}>
                                                           {`${formatTwoDigits(0)}%`}
                                                         </Td>
 
                                                       )
                                                   }
                                                   {
-                                                    detail.totalDiscount > 0 ?
-                                                      <Td isNumeric border="none" color="red.600" w="121px">
-                                                        {formatCurrency(detail.totalDiscount * -1 * (1 + detail.tax))}
-                                                      </Td>
-                                                      :
-                                                      <Td isNumeric border="none" w="121px">
-                                                        {' '}
-                                                      </Td>
-                                                  }
-                                                  {
                                                     movement.iva ?
                                                       (
 
                                                         <Td isNumeric border="none" w="121px">
-                                                          {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (1 + detail.product?.ivaCondition?.tax!))}
+                                                          {formatCurrency((detail.price * detail.quantity - detail.totalDiscount) * (1 + (detail.product?.ivaCondition?.tax!) * (1 - movement.discountPercent / 100 + movement.rechargePercent / 100)))}
                                                         </Td>
                                                       ) :
                                                       (
@@ -876,7 +890,7 @@ export const CashRegisterDetails = () => {
                                             <Tbody>
                                               <Tr >
                                                 <Td border="none" w="150px">
-                                                  {formatCurrency(newDiscount(movement))}
+                                                  {formatCurrency(newDiscount2(movement))}
                                                 </Td>
                                                 <Td border="none" w="693px">
                                                   {Math.round(movement.discountPercent * 100) / 100}%
