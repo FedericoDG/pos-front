@@ -54,6 +54,7 @@ export const Drawer = ({
 
   const onSubmit = async (values: Client) => {
     delete values.password2;
+    if (values.email === '') delete values.email;
 
     const parsedValues = {
       ...values,
@@ -90,6 +91,8 @@ export const Drawer = ({
   });
 
   const { handleSubmit, handleChange, values, errors, touched } = formik;
+
+  console.log(errors);
 
   const close = () => {
     // resetForm();
@@ -145,7 +148,7 @@ export const Drawer = ({
                       value={values.email}
                       onChange={handleChange}
                     />
-                    {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+                    {/* {errors.email && touched.email && <ErrorMessage>{errors.email}</ErrorMessage>} */}
                   </Box>
                 </Flex>
 

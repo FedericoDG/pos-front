@@ -209,7 +209,7 @@ export interface Client {
   ivaTypeId: number;
   stateId: number;
   city: string;
-  email: string;
+  email?: string;
   password: string;
   password2?: string;
   phone?: string;

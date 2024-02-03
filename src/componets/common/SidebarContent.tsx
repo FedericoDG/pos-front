@@ -83,18 +83,15 @@ export const SidebarContent = (props: Props) => {
       </Flex>
       <Flex aria-label="Main Navigation" as="nav" color="gray.600" direction="column" fontSize="sm">
         {/* POS */}
-        {role?.id && role?.id <= roles.DRIVER && (
-          <>
-            {role.id <= roles.SELLER && (
-              <NavItem icon={MdPointOfSale} link="/panel/pos">
-                Punto de Venta
-              </NavItem>
-            )}
-            <NavItem icon={MdPointOfSale} link="/panel/presupuesto">
-              Remito
-            </NavItem>
-          </>
+
+        {role?.id && role.id <= roles.DRIVER && (
+          <NavItem icon={MdPointOfSale} link="/panel/pos">
+            Punto de Venta
+          </NavItem>
         )}
+        <NavItem icon={MdPointOfSale} link="/panel/presupuesto">
+          Remito
+        </NavItem>
 
         {/* CASH REGISTER */}
         {role?.id && role?.id <= roles.DRIVER && (

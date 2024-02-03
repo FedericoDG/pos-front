@@ -30,7 +30,7 @@ import { formatCurrency, formatDate, formatDateAndHour } from '../utils';
 import { useCashRegister, useCreateAfipInvoce } from '../hooks';
 import { useMyContext } from '../context';
 import { formatTwoDigits } from '../utils/formatCurrency';
-import { CashMovement } from '../interfaces';
+import { CashMovement, roles } from '../interfaces';
 
 interface Algo {
   id: number | undefined;
@@ -124,7 +124,7 @@ export const CashRegisterDetails = () => {
   const { mutateAsync: createAfipInvoce } = useCreateAfipInvoce(onSuccessAfip, onErrorAfip);
 
   const fiscalizar = (movement: CashMovement) => {
-    const cart = movement.cashMovementsDetails?.map(el => ({ productId: el.productId, price: el.price, quantity: el.quantity, tax: el.tax }));
+    const cart = movement.cashMovementsDetails?.map(el => ({ productId: el.productId, price: el.price, quantity: el.quantity, tax: el.tax, totalDiscount: el.totalDiscount }));
     const otherTributes = movement.otherTributesDetails?.map(el => ({ amount: el.amount, id: el.id, otherTributeId: el.otherTributeId })) || [];
     const payments = movement.paymentMethodDetails?.map(el => ({ amount: el.amount, paymentMethodId: el.paymentMethodId }));
     const sale = {
@@ -530,15 +530,15 @@ export const CashRegisterDetails = () => {
                                       <Button colorScheme='brand' size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/${movement.id}`)}>Ver Comprobante Interno</Button>
                                     </Td>
                                     {
-                                      movement.iva &&
+                                      movement.iva && movement.cae &&
                                       <Td borderWidth={0} textAlign='right'>
                                         <Button colorScheme='brand' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/venta/afip/${movement.id}`)}>Ver Comprobante AFIP</Button>
                                       </Td>
                                     }
                                     {
-                                      movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote &&
+                                      movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote && user.roleId <= roles.ADMIN &&
                                       <Td borderWidth={0} textAlign='right'>
-                                        <Button colorScheme='orange' size='sm' onClick={() => navigate(`/panel/caja/detalles/nota-credito/${movement.id}`)}>Crear Nota de Crédito</Button>
+                                        <Button colorScheme='orange' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/nota-credito/${movement.id}`)}>Crear Nota de Crédito</Button>
                                       </Td>
                                     }
                                     {
@@ -554,7 +554,7 @@ export const CashRegisterDetails = () => {
                                       </Td>
                                     }
                                     {
-                                      movement.iva && !movement.cae &&
+                                      movement.iva && !movement.cae && user.roleId <= roles.ADMIN &&
                                       <Td borderWidth={0} textAlign='right'>
                                         <Button colorScheme='red' size='sm' onClick={() => fiscalizar(movement)}>Fiscalizar Factura</Button>
                                       </Td>
