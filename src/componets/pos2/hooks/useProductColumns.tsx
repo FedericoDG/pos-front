@@ -101,6 +101,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
                   allow: row.original.allownegativestock === 'ENABLE' ? true : false,
                   discount: 0,
                   hasDiscount: false,
+                  totalDiscount: 0,
                 });
                 onOpen();
               }}

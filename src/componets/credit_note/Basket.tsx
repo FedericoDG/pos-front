@@ -21,8 +21,6 @@ export const Basket = ({ cashMovement }: Props) => {
 
   const navigate = useNavigate();
 
-  console.log({ cart });
-
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'F9') {

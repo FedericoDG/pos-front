@@ -36,10 +36,9 @@ import { AiFillLock, AiFillUnlock } from 'react-icons/ai';
 import { toast } from 'sonner';
 
 import { ErrorMessage, Loading } from '../common';
-import { useCreateAfipInvoce, useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods, useGetSettings } from '../../hooks';
+import { useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods, useGetSettings } from '../../hooks';
 import { formatCurrency } from '../../utils';
 import { useGetInvoceTypes } from '../../hooks/';
-import { useMyContext } from '../../context';
 
 import { CartItem, schema } from '.';
 import { usePosContext } from '.';
@@ -326,6 +325,8 @@ export const FinishSale = () => {
         totalToDiscount = subTotalCartCopy * Number(discount) / 100;
       }
 
+      console.log(totalToDiscount);
+
       // recalculateCart(totalToDiscount * -1);
     } else if (Number(recharge) > 0) {
       let totalToRecharge: number;
@@ -335,6 +336,8 @@ export const FinishSale = () => {
       } else {
         totalToRecharge = subTotalCartCopy * Number(recharge) / 100;
       }
+
+      console.log(totalToRecharge);
 
       // recalculateCart(totalToRecharge);
     }

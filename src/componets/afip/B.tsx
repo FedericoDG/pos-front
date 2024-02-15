@@ -14,7 +14,7 @@ import {
 import { ImPrinter } from 'react-icons/im';
 import { useReactToPrint } from 'react-to-print';
 import { Fragment, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { CashMovement, Settings } from '../../interfaces';
 import { formatDate, formatCurrency, getInvoiceName, getInvoiceLetter } from '../../utils';
@@ -61,8 +61,6 @@ export const B = ({ cashMovement, settings }: Props) => {
   };
 
   const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {

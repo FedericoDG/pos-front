@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Flex,
   Stack,
@@ -36,8 +36,6 @@ export const SaleDetails = () => {
   const someDiscount = cashMovement?.cashMovementDetails?.some((el) => el.totalDiscount > 0);
 
   const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
