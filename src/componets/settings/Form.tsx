@@ -3,6 +3,7 @@ import {
   Button,
   FormLabel,
   Input,
+  Select,
   Stack,
   Flex,
   Divider,
@@ -19,15 +20,17 @@ import { Afip, Settings } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useUpdateSettings } from '../../hooks/useSettings';
 import { useUpdateAfip } from '../../hooks';
+import { PriceList, Pricelists } from '../../interfaces/interfaces';
 
 import { schema } from './schemas';
 
 interface Props {
   settings: Settings;
   afip: Afip;
+  priceLists: Pricelists[];
 }
 
-export const Form = ({ afip, settings }: Props) => {
+export const Form = ({ afip, settings, priceLists }: Props) => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
@@ -63,6 +66,7 @@ export const Form = ({ afip, settings }: Props) => {
       ...rest,
       invoceNumber: Number(values.invoceNumber),
       showOtherTaxes: showOtherTaxes ? 1 : 0,
+      defaultPriceListDriver: Number(values.defaultPriceListDriver),
     };
 
     const parsedValuesAfip = {
@@ -370,6 +374,31 @@ export const Form = ({ afip, settings }: Props) => {
               type="nextInvoceNumberNCM"
               value={values.nextInvoceNumberNCM}
             />
+          </Box>
+        </Flex>
+
+        <Flex direction="column" gap="2" mt="8">
+          <Heading size="md">Parámetros de Aplicación Móvil</Heading>
+          <Divider w="full" />
+        </Flex>
+        <Flex gap="2" mt="8">
+          <Box w="49%">
+            <FormLabel htmlFor="defaultPriceListDriver">Lista de precios para Choferes:</FormLabel>
+            <Select
+              id="defaultPriceListDriver"
+              name="defaultPriceListDriver"
+              value={values.defaultPriceListDriver}
+              onChange={handleChange}
+            >
+              {priceLists.map((state) => (
+                <option key={state.code} value={state.id}>
+                  {state.code}
+                </option>
+              ))}
+            </Select>
+            {errors.defaultPriceListDriver && touched.defaultPriceListDriver && (
+              <ErrorMessage>{errors.defaultPriceListDriver}</ErrorMessage>
+            )}
           </Box>
         </Flex>
 

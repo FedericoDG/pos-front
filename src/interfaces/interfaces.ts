@@ -23,6 +23,7 @@ export interface Settings {
   invoceNumber: number;
   imageURL: string;
   showOtherTaxes: number;
+  defaultPriceListDriver: number;
 }
 
 export interface Afip {
