@@ -20,7 +20,7 @@ import { Afip, Settings } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useUpdateSettings } from '../../hooks/useSettings';
 import { useUpdateAfip } from '../../hooks';
-import { PriceList, Pricelists } from '../../interfaces/interfaces';
+import { Pricelists } from '../../interfaces/interfaces';
 
 import { schema } from './schemas';
 
