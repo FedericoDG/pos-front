@@ -199,7 +199,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         size: 80,
       },
     ],
-    [navigate, onOpen, onOpenModal, setinitialValues]
+    [navigate, onOpen, onOpenModal, role?.id, setinitialValues]
   );
 
   return { columns };

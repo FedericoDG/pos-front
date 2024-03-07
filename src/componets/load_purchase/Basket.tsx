@@ -55,7 +55,7 @@ export const Basket = () => {
     setTransport('');
     setActiveStep(1);
   };
-  const { mutate } = useCreatePurchase(onSuccess);
+  const { mutate, isLoading } = useCreatePurchase(onSuccess);
 
   if (cart.length === 0) return null;
 
@@ -100,7 +100,13 @@ export const Basket = () => {
       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" textAlign="right">
         productos: ({totalCartItems})
       </Text>
-      <Button colorScheme="brand" variant="solid" w="full" onClick={handleSubmit}>
+      <Button
+        colorScheme="brand"
+        isDisabled={isLoading}
+        variant="solid"
+        w="full"
+        onClick={handleSubmit}
+      >
         CARGAR COMPRA
       </Button>
     </Stack>
