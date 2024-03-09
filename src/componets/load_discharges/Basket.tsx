@@ -34,7 +34,7 @@ export const Basket = () => {
     toast.error(error.response.data.body.message);
   };
 
-  const { mutate } = useCreateDischarge(onSuccess, onError);
+  const { mutate, isLoading } = useCreateDischarge(onSuccess, onError);
 
   const handleSubmit = useCallback(() => {
     const discharge = {
@@ -108,7 +108,15 @@ export const Basket = () => {
       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" textAlign="right">
         productos: ({totalCartItems})
       </Text>
-      <Button colorScheme="brand" variant="solid" w="full" onClick={handleSubmit}>
+      <Button
+        colorScheme="brand"
+        isDisabled={isLoading}
+        isLoading={isLoading}
+        loadingText="CARGANDO PÉRDIDA DE STOCK"
+        variant="solid"
+        w="full"
+        onClick={handleSubmit}
+      >
         CARGAR PÉRDIDA DE STOCK
       </Button>
     </Stack>

@@ -31,7 +31,7 @@ export const Basket = () => {
     setActiveStep(1);
   };
 
-  const { mutate } = useCreateTransfer(onSuccess);
+  const { mutate, isLoading } = useCreateTransfer(onSuccess);
 
   const handleSubmit = useCallback(() => {
     const transfers = {
@@ -96,8 +96,16 @@ export const Basket = () => {
       <Text fontFamily="mono" fontSize="xl" fontWeight="normal" textAlign="right">
         productos: ({totalCartItems})
       </Text>
-      <Button colorScheme="brand" variant="solid" w="full" onClick={handleSubmit}>
-        TRANFERIR STOCK
+      <Button
+        colorScheme="brand"
+        isDisabled={isLoading}
+        isLoading={isLoading}
+        loadingText="TRANSFIRIENDO STOCK"
+        variant="solid"
+        w="full"
+        onClick={handleSubmit}
+      >
+        TRANSFERIR STOCK
       </Button>
     </Stack>
   );

@@ -103,6 +103,8 @@ export const Basket = () => {
       <Button
         colorScheme="brand"
         isDisabled={isLoading}
+        isLoading={isLoading}
+        loadingText="CARGANDO COMPRA"
         variant="solid"
         w="full"
         onClick={handleSubmit}

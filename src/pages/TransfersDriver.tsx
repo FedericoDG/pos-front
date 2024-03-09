@@ -44,7 +44,7 @@ export const TransfersDriver = () => {
         size="lg"
         onClick={() => navigate('/panel/stock/transferencias-choferes/crear')}
       >
-        TRANFERIR STOCK
+        TRANSFERIR STOCK
       </Button>
 
       {!transfers ? (

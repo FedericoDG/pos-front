@@ -44,7 +44,7 @@ export const Transfers = () => {
         size="lg"
         onClick={() => navigate('/panel/stock/transferencias/crear')}
       >
-        TRANFERIR STOCK
+        TRANSFERIR STOCK
       </Button>
 
       {!transfers ? (
