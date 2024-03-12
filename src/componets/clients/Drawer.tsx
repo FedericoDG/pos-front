@@ -56,6 +56,8 @@ export const Drawer = ({
     delete values.password2;
     if (values.email === '') delete values.email;
 
+    console.log({ values });
+
     const parsedValues = {
       ...values,
       identificationId: Number(values.identificationId),

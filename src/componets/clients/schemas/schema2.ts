@@ -10,7 +10,6 @@ export const schema2 = z.object({
     .regex(/^[0-9]+$/, 'Sólo se aceptan números')
     .min(8, 'Mínimo 8 dígitos')
     .max(11, 'Máximo 11 dígitos'),
-  email: z.string({ required_error: 'El Email es requerido' }).email('No es un Email válido'),
   phone: z
     .string()
     .regex(/^[0-9]+$/, 'Sólo se aceptan números')
