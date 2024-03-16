@@ -57,6 +57,12 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
         accessorKey: 'code',
       },
       {
+        id: 'cod_barras',
+        header: 'Código de Barras',
+        cell: (row: CellContext<Product, unknown>) => row.renderValue(),
+        accessorKey: 'barcode',
+      },
+      {
         id: 'stock',
         header: 'Stock',
         cell: ({ row }: CellContext<Product, unknown>) => (

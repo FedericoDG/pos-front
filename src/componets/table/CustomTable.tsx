@@ -215,6 +215,7 @@ export const CustomTable = <T extends object>({
                     <Th
                       key={header.id}
                       bg="brand.700"
+                      className={header.id === 'cod_barras' ? 'display_none' : ''}
                       colSpan={header.colSpan}
                       color="whitesmoke"
                       px="1"
@@ -246,11 +247,18 @@ export const CustomTable = <T extends object>({
           <Tbody>
             {table.getRowModel().rows.map((row) => (
               <Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <Td key={cell.id} px="1" textAlign={(cell.column.columnDef.meta as any)?.align}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Td>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <Td
+                      key={cell.id}
+                      className={cell.id.includes('cod_barras') ? 'display_none' : ''}
+                      px="1"
+                      textAlign={(cell.column.columnDef.meta as any)?.align}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Td>
+                  );
+                })}
               </Tr>
             ))}
           </Tbody>

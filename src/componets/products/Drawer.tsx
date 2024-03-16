@@ -67,6 +67,7 @@ export const Drawer = ({
       alertlowstock:
         !values.alertlowstock || values.alertlowstock === 'DISABLED' ? 'DISABLED' : 'ENABLED',
       lowstock: Number(values.lowstock),
+      barcode: values.barcode.length === 12 ? '0' + values.barcode : values.barcode,
     };
 
     if (values?.id) {
