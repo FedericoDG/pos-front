@@ -87,3 +87,19 @@
 .display_none {
   display: none;
 }
+
+.cut-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 130px;
+  height: 1.2em;
+  white-space: nowrap;
+}
+
+.padding0 {
+  padding: 0 !important;
+}
+
+.paddingX0 {
+  padding-right: 0px !important;
+}
