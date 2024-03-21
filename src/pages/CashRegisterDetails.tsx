@@ -103,7 +103,7 @@ export const CashRegisterDetails = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const invoces = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 1 || el.invoceTypeId === 2 || el.invoceTypeId === 4), [cashRegister?.cashMovements]);
+  const invoces = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 1 || el.invoceTypeId === 2 || el.invoceTypeId === 3 || el.invoceTypeId === 4), [cashRegister?.cashMovements]);
   const creditNotes = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 5 || el.invoceTypeId === 6 || el.invoceTypeId === 7 || el.invoceTypeId === 8), [cashRegister?.cashMovements]);
 
 
@@ -513,7 +513,7 @@ export const CashRegisterDetails = () => {
                                     <Badge colorScheme='green'>Factura M</Badge>
                                   }
                                   {
-                                    movement.invoceTypeId === 3 && movement.cae &&
+                                    movement.invoceTypeId === 3 && !movement.cae &&
                                     <Badge colorScheme='red'>Factura M</Badge>
                                   }
                                 </Td>
