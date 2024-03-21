@@ -14,7 +14,7 @@ interface Props {
 export const TicketX = ({ printRef, settings, cashMovement }: Props) => {
   return (
     <Stack ref={printRef} padding="2.5mm" width="80mm">
-      <Text align="center">{settings.name}</Text>
+      <Text align="center" backgroundColor='white'>{settings.name}</Text>
       <HStack justifyContent="center" px={2} py={2} w="full">
         <Text
           border="solid black"
