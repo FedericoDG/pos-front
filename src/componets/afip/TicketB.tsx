@@ -206,6 +206,14 @@ export const TicketB = ({ printRef,
           </Stack>
         )}
       </Stack>
+      <Stack alignItems={'flex-end'} justifyContent={'flex-end'}>
+        <Text fontSize="xs" fontWeight={500}>
+          CAE: {cashMovement.cae}
+        </Text>
+        <Text fontSize="xs" fontWeight={500}>
+          VTO. CAE: {formatDate(cashMovement.vtoCae)}
+        </Text>
+      </Stack>
     </Stack>
   );
 };
