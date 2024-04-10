@@ -55,7 +55,19 @@ export const Basket = () => {
     setTransport('');
     setActiveStep(1);
   };
-  const { mutate, isLoading } = useCreatePurchase(onSuccess);
+
+  const onError = () => {
+    toast.error('Ocurrió un problema. No se pudo cargar la compra');
+    //emptyCart();
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+    //setSupplier(null);
+    // setWarehouse(null);
+    // setDriver('');
+    // setTransport('');
+    // setActiveStep(1);
+  };
+
+  const { mutate, isLoading } = useCreatePurchase(onSuccess, onError);
 
   if (cart.length === 0) return null;
 

@@ -9,11 +9,19 @@ import {
   PriceListByIdResponse,
 } from '../interfaces';
 
+interface Query {
+  id: number;
+  warehouseId: number;
+  query: string;
+}
+
 const getPriceLists = () => getRequest<PriceListsResponse>(`/pricelists`);
 const getPriceListById = (priceListId: number) =>
   getRequest<PriceListByIdResponse>(`/pricelists/${priceListId}`);
 const getPriceListByWareId = (priceListId: number, warehouseId: number) =>
   getRequest<PriceListByWareIdResponse>(`/pricelists/${priceListId}/${warehouseId}`);
+const getPriceListByWareIdQuery = (priceListId: number, warehouseId: number, query: string) =>
+  getRequest<PriceListByWareIdResponse>(`/pricelists/query/${priceListId}/${warehouseId}/${query}`);
 const getPriceListsReport = (
   products: string | null,
   pricelists: string | null,
@@ -23,6 +31,7 @@ const getPriceListsReport = (
     `/pricelists/report?products=${products}&pricelists=${pricelists}&warehouses=${warehouses}`
   );
 const createPriceList = (priceList: Pricelists) => postRequest('/pricelists/', priceList);
+const queryPriceList = (priceList: Query) => postRequest('/pricelists/', priceList);
 const updatePriceList = (priceList: Pricelists) =>
   putRequest(`/pricelists/${priceList?.id}`, priceList);
 const deletePriceList = (id: number) => deleteRequest(`/pricelists/${id}`);
@@ -79,6 +88,21 @@ export const useCreatePriceLists = () => {
   const queryClient = useQueryClient();
 
   return useMutation(createPriceList, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('priceLists');
+    },
+    onError: (error) => {
+      if (isError(error)) {
+        throw new Error(error.message);
+      }
+    },
+  });
+};
+
+export const useQueryPriceLists = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(queryPriceList, {
     onSuccess: () => {
       queryClient.invalidateQueries('priceLists');
     },

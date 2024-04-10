@@ -37,13 +37,14 @@ export const useGetPurchase = (id: number) =>
     select: (data) => data.body.purchase,
   });
 
-export const useCreatePurchase = (onSuccess: () => any) => {
+export const useCreatePurchase = (onSuccess: () => any, onError: () => any) => {
   return useMutation(createPurchase, {
     onSuccess,
-    onError: (error) => {
+    onError,
+    /*  onError: (error) => {
       if (isError(error)) {
         throw new Error(error.message);
       }
-    },
+    }, */
   });
 };
