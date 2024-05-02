@@ -11,6 +11,8 @@ export const CreditNote = () => {
 
   const { data: cashMovement, isFetching } = useGetCashMovement(Number(id));
 
+  console.log(cashMovement);
+
   return (
     <PosProvider>
       <DashBoard isIndeterminate={isFetching} title="Crear Nota de Crédito">
