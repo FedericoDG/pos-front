@@ -536,7 +536,7 @@ export const CashRegisterDetails = () => {
                                       </Td>
                                     }
                                     {
-                                      movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote && user.roleId <= roles.DRIVER && movement.invoceIdAfip !== null &&
+                                      (movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote && user.roleId <= roles.DRIVER && movement.invoceIdAfip !== null) || (movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote && user.roleId <= roles.DRIVER && movement.invoceIdAfip === null && movement.invoceTypeId === 4) &&
                                       <Td borderWidth={0} textAlign='right'>
                                         <Button colorScheme='orange' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/nota-credito/${movement.id}`)}>Crear Nota de Crédito</Button>
                                       </Td>
