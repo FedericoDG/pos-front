@@ -1,4 +1,4 @@
-import { isError, useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 import { getRequest, postRequest } from '../services';
 import { PurchaseResponse, PurchasesResponse } from '../interfaces';

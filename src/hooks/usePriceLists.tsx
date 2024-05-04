@@ -20,8 +20,8 @@ const getPriceListById = (priceListId: number) =>
   getRequest<PriceListByIdResponse>(`/pricelists/${priceListId}`);
 const getPriceListByWareId = (priceListId: number, warehouseId: number) =>
   getRequest<PriceListByWareIdResponse>(`/pricelists/${priceListId}/${warehouseId}`);
-const getPriceListByWareIdQuery = (priceListId: number, warehouseId: number, query: string) =>
-  getRequest<PriceListByWareIdResponse>(`/pricelists/query/${priceListId}/${warehouseId}/${query}`);
+/* const getPriceListByWareIdQuery = (priceListId: number, warehouseId: number, query: string) =>
+  getRequest<PriceListByWareIdResponse>(`/pricelists/query/${priceListId}/${warehouseId}/${query}`); */
 const getPriceListsReport = (
   products: string | null,
   pricelists: string | null,
