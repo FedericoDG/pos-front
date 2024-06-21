@@ -97,7 +97,7 @@ export const useColumns = ({ warehouses }: Props) => {
       id: 'acciones',
       header: 'Acciones',
       cell: ({ row }: CellContext<Stock2, unknown>) => (
-        <Box fontFamily="IBM Plex Sans">
+        <Box fontFamily="Poppins">
           <Menu placement="left-start">
             <MenuButton
               aria-label="Options"

@@ -46,7 +46,7 @@ export const useProductColumns = () => {
         id: 'acciones',
         header: 'Acciones',
         cell: ({ row }: CellContext<ProductWithPrice, unknown>) => (
-          <Box fontFamily="IBM Plex Sans">
+          <Box fontFamily="Poppins">
             <Button
               colorScheme="brand"
               isDisabled={percentage <= 0 || isDisabled(row.original!)}

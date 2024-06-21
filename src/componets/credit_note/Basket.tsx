@@ -59,7 +59,7 @@ export const Basket = ({ cashMovement }: Props) => {
     toast.error(error.response.data.body.message);
   };
 
-  const { mutateAsync } = useCreateAfipCreditNote(onSuccessAfip, onErrorAfip);
+  const { mutateAsync, isLoading } = useCreateAfipCreditNote(onSuccessAfip, onErrorAfip);
   const { mutateAsync: mutateAsyncX } = useCreateAfipCreditNoteX(onSuccessAfip, onErrorAfip);
 
   const handleSubmit = () => {
@@ -193,7 +193,16 @@ export const Basket = ({ cashMovement }: Props) => {
             productos: ({totalCartItems})
           </Text>
           <Stack p="2">
-            <Button colorScheme="brand" size="lg" variant="solid" w="full" onClick={handleSubmit}>
+            <Button
+              colorScheme="brand"
+              isDisabled={isLoading}
+              isLoading={isLoading}
+              loadingText="CREANDO NOTA DE CRÉDITO"
+              size="lg"
+              variant="solid"
+              w="full"
+              onClick={handleSubmit}
+            >
               CREAR NOTA DE CRÉDITO
             </Button>
           </Stack>

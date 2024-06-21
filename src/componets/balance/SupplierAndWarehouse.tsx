@@ -4,7 +4,7 @@ import { Select } from 'chakra-react-select';
 import { useEffect, useState } from 'react';
 
 import { Loading } from '../common';
-import { useGetClients, useGetInvoceTypes, useGetUsers } from '../../hooks';
+import { useGetClients, useGetInvoceTypes, useGetSettings, useGetUsers } from '../../hooks';
 
 import { SelectedUser, useBalanceContext, SelectedClient, SelectedInvoice } from '.';
 
@@ -26,13 +26,14 @@ export const SupplierAndWarehouse = () => {
   const { data: users } = useGetUsers();
   const { data: clients } = useGetClients();
   const { data: invoiceList } = useGetInvoceTypes();
+  const { data: settings } = useGetSettings(1);
 
   const [mappedUsers, setMappedUsers] = useState<SelectedUser[]>([]);
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
   const [mappedInvoices, setMappedInvoices] = useState<SelectedInvoice[]>([]);
 
   useEffect(() => {
-    if (!users || !clients || !invoiceList) return;
+    if (!users || !clients || !invoiceList || !settings) return;
 
     const mappedUsers = users.map((el) => ({
       value: el.id,
@@ -51,19 +52,35 @@ export const SupplierAndWarehouse = () => {
     mappedClients.unshift({ value: 0, label: 'TODOS' });
 
     setMappedClients(mappedClients!);
+  }, [users, clients, invoiceList, settings]);
 
-    const mappedInvoices = invoiceList
-      .filter(
-        (el) => el.code === '001' || el.code === '006' || el.code === '051' || el.code === '555'
-      )
-      .map((el) => ({
-        value: el.id,
-        label: el.description,
-      }));
+  useEffect(() => {
+    if (!users || !clients || !invoiceList || !settings) return;
+
+    let mappedInvoices;
+
+    if (settings.responsableInscripto === 0) {
+      mappedInvoices = invoiceList
+        .filter(
+          (el) => el.code === '001' || el.code === '006' || el.code === '051' || el.code === '555'
+        )
+        .map((el) => ({
+          value: el.id,
+          label: el.description,
+        }));
+    } else {
+      mappedInvoices = invoiceList
+        .filter((el) => el.code === '011' || el.code === '555')
+        .map((el) => ({
+          value: el.id,
+          label: el.description,
+        }));
+    }
 
     setMappedInvoices(mappedInvoices);
+
     if (invoices.length === 0) setInvoices(mappedInvoices);
-  }, [clients, invoiceList, invoices.length, setInvoices, users]);
+  }, [clients, invoiceList, invoices.length, setInvoices, settings, users]);
 
   useEffect(() => {
     const handleUserKeyPress = (e: KeyboardEvent) => {
@@ -79,7 +96,7 @@ export const SupplierAndWarehouse = () => {
     };
   }, [goToNext]);
 
-  if (!users || !clients || !invoiceList) return <Loading />;
+  if (!users || !clients || !invoiceList || !settings) return <Loading />;
 
   return (
     <Stack bg="white" mb="4" p="4" rounded="md" shadow="md" w="full">

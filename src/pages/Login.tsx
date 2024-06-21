@@ -24,17 +24,19 @@ interface LoginI {
 }
 
 export const Login = () => {
-  const { dispatchLogin } = useMyContext();
+  const { dispatchLogin, setResponsableInscripto } = useMyContext();
   const login = async (values: LoginI) => {
     try {
       const {
-        body: { user, token },
+        body: { user, token, responsableInscripto },
       } = await postRequest('/auth/login', values);
 
       sessionStorage.write('user', { ...user, logged: true });
       sessionStorage.write('token', token);
+      sessionStorage.write('responsableInscripto', responsableInscripto.toString());
 
       dispatchLogin(user);
+      setResponsableInscripto(responsableInscripto);
     } catch (error: any) {
       toast.error('Usuario y/o contraseña inválida');
       throw new Error(error);
@@ -68,7 +70,7 @@ export const Login = () => {
                       as="span"
                       bg="red.500"
                       color="white"
-                      fontSize="x-small"
+                      fontSize="xs"
                       fontWeight="semibold"
                       mb="1"
                       px="1"
@@ -87,7 +89,7 @@ export const Login = () => {
                       as="span"
                       bg="red.500"
                       color="white"
-                      fontSize="x-small"
+                      fontSize="xs"
                       fontWeight="semibold"
                       mb="1"
                       px="1"

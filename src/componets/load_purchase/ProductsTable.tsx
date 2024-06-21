@@ -166,10 +166,10 @@ export const ProductsTable = () => {
 
             <ModalFooter>
               <Button tabIndex={4} type="reset" onClick={handleClose}>
-                Cancelar
+                CANCELAR
               </Button>
               <Button colorScheme="brand" ml={3} tabIndex={3} type="submit">
-                Agregar
+                AGREGAR
               </Button>
             </ModalFooter>
           </ModalContent>

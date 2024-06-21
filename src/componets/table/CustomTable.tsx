@@ -68,7 +68,9 @@ export const CustomTable = <T extends object>({
   showPrintOption = false,
   showExportToExcelButton = false,
   showSelectButton = false,
-  exportToExcel = () => { },
+  exportToExcel = () => {
+    1 === 1;
+  },
 }: ReactTableProps<T>) => {
   const [globalFilter, setGlobalFilter] = useState('');
 
@@ -140,13 +142,13 @@ export const CustomTable = <T extends object>({
       <Flex gap="1" justifyContent="flex-end">
         {showExportToExcelButton && (
           <Button colorScheme="green" leftIcon={<BsDownload />} size="sm" onClick={exportToExcel}>
-            Descargar Excel
+            DESCARGAR EXCEL
           </Button>
         )}
 
         {showPrintOption && (
           <Button colorScheme="linkedin" leftIcon={<ImPrinter />} size="sm" onClick={handlePrint}>
-            Imprimir
+            IMPRIMIR
           </Button>
         )}
 

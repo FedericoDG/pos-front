@@ -190,7 +190,7 @@ export const Drawer = ({
                   </Box>
                   <Box>
                     <Box>
-                      <FormLabel htmlFor="cost">Cost:</FormLabel>
+                      <FormLabel htmlFor="cost">Costo:</FormLabel>
                       <InputGroup>
                         <InputLeftAddon children="$" />
                         <Input
@@ -222,10 +222,10 @@ export const Drawer = ({
 
             <DrawerFooter borderTopWidth="1px" bottom="0" position="fixed" w="full">
               <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
-                Cancelar
+                CANCELAR
               </Button>
               <Button colorScheme="brand" type="submit" w="full">
-                Guardar
+                GUARDAR
               </Button>
             </DrawerFooter>
           </form>

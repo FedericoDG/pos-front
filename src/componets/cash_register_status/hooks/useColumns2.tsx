@@ -80,8 +80,8 @@ export const useColumns2 = () => {
         id: 'acciones',
         header: 'Acciones',
         cell: ({ row }: CellContext<CashRegister, unknown>) => (
-          <Box fontFamily="IBM Plex Sans">
-            <Box fontFamily="IBM Plex Sans">
+          <Box fontFamily="Poppins">
+            <Box fontFamily="Poppins">
               <Button
                 size="xs"
                 onClick={() => navigate(`/panel/CashRegisteros/${row.original.id}`)}

@@ -24,6 +24,7 @@ import {
   Login,
   Pos,
   Pos2,
+  Pos3,
   PriceListReport,
   PriceLists,
   ProductDetails,
@@ -99,6 +100,7 @@ export const AppRouter = () => (
         {/* POS */}
         <Route element={<Pos />} path="/panel/pos" />
         <Route element={<Pos2 />} path="/panel/presupuesto" />
+        <Route element={<Pos3 />} path="/panel/pos-c" />
         {/* CASH REGISTER */}
         <Route element={<CashRegisters />} path="/panel/caja" />
         <Route element={<CashRegisterStatus />} path="/panel/caja/estado" />

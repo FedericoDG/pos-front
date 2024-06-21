@@ -222,7 +222,7 @@ export const Card: FC<Props> = ({ disableBtn }) => {
 
           <ModalFooter>
             <Button colorScheme="brand" onClick={onClose}>
-              Cerrar
+              CERRAR
             </Button>
           </ModalFooter>
         </ModalContent>

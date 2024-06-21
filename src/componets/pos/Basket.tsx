@@ -204,7 +204,7 @@ export const Basket = ({ refetch }: Props) => {
               w="full"
               onClick={handleSubmit}
             >
-              IR A FINALIZAR VENTA
+              IR A FINZALIZAR VENTA
             </Button>
           </Stack>
         </Stack>

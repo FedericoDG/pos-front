@@ -112,7 +112,7 @@ export const Finish = () => {
           w="full"
           onClick={handleSubmit}
         >
-          CERRRAR CAJA
+          CERRAR CAJA
         </Button>
       </Stack>
     </Stack>

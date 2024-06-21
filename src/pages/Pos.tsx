@@ -138,10 +138,10 @@ export const Pos = () => {
 
                   <ModalFooter>
                     <Button tabIndex={3} type="reset" onClick={onClose}>
-                      Cancelar
+                      CANCELAR
                     </Button>
                     <Button colorScheme="brand" ml={3} tabIndex={2} type="submit">
-                      Agregar
+                      AGREGAR
                     </Button>
                   </ModalFooter>
                 </form>

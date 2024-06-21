@@ -103,10 +103,10 @@ export const Form = ({ user }: Props) => {
 
         <Stack direction="row" mt="4" spacing={4}>
           <Button type="reset" variant="outline" w="full" onClick={close}>
-            Cancelar
+            CANCELAR
           </Button>
           <Button colorScheme="brand" type="submit" w="full">
-            Guardar
+            GUARDAR
           </Button>
         </Stack>
       </form>

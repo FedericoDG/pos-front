@@ -70,7 +70,7 @@ export const Basket = () => {
                   variant="link"
                   onClick={() => removeItem(item.productId)}
                 >
-                  Quitar
+                  QUITAR
                 </Button>
               </Box>
             </Stack>
@@ -82,7 +82,7 @@ export const Basket = () => {
         productos: ({totalCartItems})
       </Text>
       <Button colorScheme="brand" variant="solid" w="full" onClick={handleSubmit}>
-        ACTUALIZAR COSTOS
+        Actualizar Costos
       </Button>
     </Stack>
   );

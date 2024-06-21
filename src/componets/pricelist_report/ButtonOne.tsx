@@ -21,7 +21,7 @@ export const ButtonOne = ({ goToNext, activeStep }: Props) => {
       size="lg"
       onClick={() => goToNext()}
     >
-      Siguiente Paso
+      SIGUIENTE PASO
     </Button>
   );
 };

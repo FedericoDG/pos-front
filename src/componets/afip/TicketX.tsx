@@ -13,7 +13,7 @@ interface Props {
 
 export const TicketX = ({ printRef, settings, cashMovement }: Props) => {
   return (
-    <Stack ref={printRef} padding="2.5mm" width="80mm">
+    <Stack ref={printRef} color={'black'} padding="2.5mm" width="80mm">
       <Text align="center" backgroundColor='white'>{settings.name}</Text>
       <HStack justifyContent="center" px={2} py={2} w="full">
         <Text
@@ -86,37 +86,37 @@ export const TicketX = ({ printRef, settings, cashMovement }: Props) => {
                   {idx % 21 === 0 && (
                     <>
                       <Tr>
-                        <Th isNumeric className="padding0">
-                          <Text fontSize={'x-small'}>Cant.</Text>
+                        <Th isNumeric className="padding0" color={'inherit'}>
+                          <Text fontSize={'small'} fontWeight={500}>Cant.</Text>
                         </Th>
-                        <Th>
-                          <Text fontSize={'x-small'}>Descripción</Text>
+                        <Th color={'inherit'}>
+                          <Text fontSize={'small'} fontWeight={500}>Descripción</Text>
                         </Th>
-                        <Th isNumeric className="paddingX0">
-                          <Text fontSize={'x-small'}>Total</Text>
+                        <Th isNumeric className="paddingX0" color={'inherit'}>
+                          <Text fontSize={'small'} fontWeight={500}>Total</Text>
                         </Th>
                       </Tr>
                     </>
                   )}
                   <Tr>
                     <Td isNumeric className="padding0">
-                      <Text fontSize={'x-small'}>{movement.quantity}</Text>
+                      <Text fontSize={'small'}>{movement.quantity}</Text>
                     </Td>
                     <Td>
-                      <Text fontSize={'x-small'}>{`P. unit.: ${formatCurrency(
+                      <Text fontSize={'small'}>{`P. unit.: ${formatCurrency(
                         movement.price
                       )}`}</Text>
                       {movement.totalDiscount > 0 && (
-                        <Text fontSize={'x-small'}>{`Desc.: ${formatCurrency(
+                        <Text fontSize={'small'}>{`Desc.: ${formatCurrency(
                           movement.totalDiscount * -1
                         )}`}</Text>
                       )}
-                      <Text className="cut-text" fontSize={'x-small'}>
+                      <Text className="cut-text" fontSize={'small'}>
                         {movement.product?.name}
                       </Text>
                     </Td>
                     <Td isNumeric className="paddingX0">
-                      <Text fontSize={'x-small'}>
+                      <Text fontSize={'small'}>
                         {formatCurrency(
                           movement.quantity * movement.price * (1 + movement.tax) -
                           movement.totalDiscount
@@ -172,7 +172,7 @@ export const TicketX = ({ printRef, settings, cashMovement }: Props) => {
               <Td borderWidth={0} colSpan={2} fontSize={14} fontWeight={500} textAlign="right">
                 TOTAL:
               </Td>
-              <Td isNumeric borderWidth={0} fontSize={14} fontWeight={700} paddingX={0}>
+              <Td isNumeric borderWidth={0} fontSize={14} fontWeight={500} paddingX={0}>
                 {formatCurrency(cashMovement.total)}
               </Td>
             </Tr>
@@ -182,13 +182,13 @@ export const TicketX = ({ printRef, settings, cashMovement }: Props) => {
       <div style={{ flex: 1 }} />
       <HStack alignItems="flex-start" color="#4a5568" fontSize="sm" w="full">
         <Stack w={'full'}>
-          <Text fontSize={'xs'} fontWeight={700}>
+          <Text color={'black'} fontSize={'small'} fontWeight={500}>
             FORMA DE PAGO:
           </Text>
           {cashMovement.paymentMethodDetails?.map((payment) => (
             <HStack key={payment.id} justifyContent={'space-between'} w="full">
-              <Text fontSize={'xs'}>{payment.paymentMethod.code}</Text>
-              <Text fontSize={'xs'}>{formatCurrency(payment.amount)}</Text>
+              <Text color={'black'} fontSize={'small'} fontWeight={500}>{payment.paymentMethod.code}</Text>
+              <Text color={'black'} fontSize={'small'} fontWeight={500}>{formatCurrency(payment.amount)}</Text>
             </HStack>
           ))}
         </Stack>
@@ -196,11 +196,11 @@ export const TicketX = ({ printRef, settings, cashMovement }: Props) => {
       <Stack color="#4a5568" style={{ borderWidth: '0 0 1px 0', borderColor: 'black' }}>
         {cashMovement.info && (
           <Stack>
-            <Text fontSize={'xs'} fontWeight={700}>
+            <Text color={'black'} fontSize={'small'} fontWeight={500}>
               OTRA INFORMACIÓN:
             </Text>
             <HStack>
-              <Text fontSize={'xs'}>{cashMovement.info}</Text>
+              <Text color={'black'} fontSize={'small'}>{cashMovement.info}</Text>
             </HStack>
           </Stack>
         )}

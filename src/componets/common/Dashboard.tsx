@@ -5,7 +5,7 @@ import {
   DrawerOverlay,
   Flex,
   HStack,
-  Icon,
+  /* Icon, */
   IconButton,
   Link,
   Menu,
@@ -19,7 +19,7 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
-import { FaBell } from 'react-icons/fa';
+/* import { FaBell } from 'react-icons/fa'; */
 import { FiChevronDown, FiMenu } from 'react-icons/fi';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -104,15 +104,15 @@ export const DashBoard = ({ children, title }: Props) => {
               </Text>
             </Box>
             <Flex align="center" gap="4" zIndex={999}>
-              <Icon as={FaBell} color="whitesmoke" cursor="pointer" fontSize="xl" />
+              {/* <Icon as={FaBell} color="whitesmoke" cursor="pointer" fontSize="xl" /> */}
               <Menu>
                 <MenuButton _focus={{ boxShadow: 'none' }} py={2} transition="all 0.3s">
                   <HStack>
                     <VStack alignItems="flex-start" ml="2" spacing="1px">
-                      <Text color="whitesmoke" fontSize="x-small" fontWeight="bold">
+                      <Text color="whitesmoke" fontSize="xs" fontWeight="bold">
                         {user.name.toLocaleUpperCase()} {user.lastname.toLocaleUpperCase()}
                       </Text>
-                      <Text color="whitesmoke" fontSize="xx-small" fontWeight="semibold">
+                      <Text color="whitesmoke" fontSize="xs" fontWeight="semibold">
                         {getRole(user.role?.name!)}
                       </Text>
                     </VStack>

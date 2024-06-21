@@ -10,17 +10,24 @@ import {
   Heading,
   FormControl,
   Switch,
+  Tooltip,
+  RadioGroup,
+  Radio,
 } from '@chakra-ui/react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { useQueryClient } from 'react-query';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 import { Afip, Settings } from '../../interfaces';
 import { ErrorMessage } from '../common';
 import { useUpdateSettings } from '../../hooks/useSettings';
 import { useUpdateAfip } from '../../hooks';
 import { Pricelists } from '../../interfaces/interfaces';
+import { responsables } from '../../utils/responsable';
+import { useMyContext } from '../../context';
+import { sessionStorage } from '../../utils';
 
 import { schema } from './schemas';
 
@@ -31,6 +38,8 @@ interface Props {
 }
 
 export const Form = ({ afip, settings, priceLists }: Props) => {
+  const { setResponsableInscripto } = useMyContext();
+  const [resp, setResp] = useState(() => settings.responsableInscripto);
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
@@ -59,6 +68,8 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
     delete rest.nextInvoceNumberNCA;
     delete rest.nextInvoceNumberB;
     delete rest.nextInvoceNumberNCB;
+    delete rest.nextInvoceNumberC;
+    delete rest.nextInvoceNumberNCC;
     delete rest.nextInvoceNumberM;
     delete rest.nextInvoceNumberNCM;
 
@@ -66,6 +77,8 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
       ...rest,
       invoceNumber: Number(values.invoceNumber),
       showOtherTaxes: showOtherTaxes ? 1 : 0,
+      responsableInscripto: resp,
+      ivaCondition: responsables[Number(resp)].name,
       defaultPriceListDriver: Number(values.defaultPriceListDriver),
     };
 
@@ -75,15 +88,23 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
       invoiceM: invoiceM ? 1 : 0,
     };
 
-    updateSettings(parsedValuesSettings);
+    updateSettings(parsedValuesSettings).then(() => {
+      sessionStorage.write2('responsableInscripto', resp.toString());
+      setResponsableInscripto(resp);
+    });
     updateAfipSettings(parsedValuesAfip);
 
     actions.resetForm();
   };
 
+  const initialValues = {
+    ...settings,
+    ...afip,
+  };
+
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: { ...settings, ...afip },
+    initialValues,
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: toFormikValidationSchema(schema),
@@ -162,7 +183,9 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
 
         <Flex gap="2" mt="8">
           <Box w="full">
-            <FormLabel htmlFor="cuit">CUIT:</FormLabel>
+            <Tooltip label="Este campo es solo para mostrar en los tickets/faturas. NO ESTÁ RELACIONADO CON LOS CERTIFICADOS PARA FACTURACIÓN DE AFIP.">
+              <FormLabel htmlFor="cuit">CUIT:</FormLabel>
+            </Tooltip>
             <Input
               id="cuit"
               isDisabled={isLoading}
@@ -188,7 +211,7 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
             {errors.start && touched.start && <ErrorMessage>{errors.start}</ErrorMessage>}
           </Box>
           <Box w="full">
-            <FormLabel htmlFor="invoceName">Nombre del Comprobante Int.:</FormLabel>
+            <FormLabel htmlFor="invoceName">Nombre Comprobante Int.:</FormLabel>
             <Input
               id="invoceName"
               isDisabled={isLoading}
@@ -203,7 +226,12 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
             )}
           </Box>
           <Box w="full">
-            <FormLabel htmlFor="invoceNumber">N° Próx. Comprobante Int.:</FormLabel>
+            <Tooltip
+              bg={'red.600'}
+              label="CUIDADO: Realizar cambios en este campo puede corromper su base de datos."
+            >
+              <FormLabel htmlFor="invoceNumber">N° Próx. Comprobante Int.:</FormLabel>
+            </Tooltip>
             <Input
               id="invoceNumber"
               isDisabled={isLoading}
@@ -219,8 +247,8 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
           </Box>
         </Flex>
 
-        <Flex gap="2" mt="8">
-          <Box w="full">
+        <Flex alignItems={'center'} gap="2" justifyContent={'space-between'} mt="8">
+          <Box>
             <FormControl alignItems="center" display="flex">
               <Switch
                 colorScheme="brand"
@@ -231,15 +259,17 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
                 onChange={handleChange}
               />
               <FormLabel htmlFor="filter" mb="0" ml="2">
-                Hahilitar Otros Impuestos
+                Habilitar Otros Impuestos
               </FormLabel>
             </FormControl>
           </Box>
         </Flex>
 
         <Flex gap="2" mt="8">
-          <Box w="full">
-            <FormLabel htmlFor="imageURL">URL logotipo (120x120):</FormLabel>
+          <Box w="49.5%">
+            <Tooltip label="Tamaño recomendado: 120px por 120px">
+              <FormLabel htmlFor="imageURL">URL logotipo:</FormLabel>
+            </Tooltip>
             <Input
               id="imageURL"
               isDisabled={isLoading}
@@ -258,8 +288,36 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
           <Divider w="full" />
         </Flex>
 
-        <Flex gap="2" mt="8">
-          <Box w="full">
+        <Flex alignItems={'flex-end'} gap="2" justifyContent={'space-between'} mt="8">
+          <Box w="74%">
+            <Tooltip label="Establece qué tipo de comprobante emitirá el sistema.">
+              <FormLabel htmlFor="responsableInscripto">Condición Fiscal:</FormLabel>
+            </Tooltip>
+            <RadioGroup
+              id="responsableInscripto"
+              name="responsableInscripto"
+              value={resp.toString()}
+              onChange={(e) => setResp(Number(e))}
+            >
+              <Stack direction="row" spacing={5}>
+                {responsables.map((el) => (
+                  <Radio key={el.id} colorScheme="brand" value={el.id.toString()}>
+                    {el.name}
+                  </Radio>
+                ))}
+                {/*  <Radio colorScheme="brand" value="0">
+                  Responsable Inscripto
+                </Radio>
+                <Radio colorScheme="brand" value="1">
+                  Responsable Monotributo
+                </Radio>
+                <Radio colorScheme="brand" value="2">
+                  Exento
+                </Radio> */}
+              </Stack>
+            </RadioGroup>
+          </Box>
+          <Box>
             <FormControl alignItems="center" display="flex">
               <Switch
                 colorScheme="brand"
@@ -313,68 +371,98 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
         </Flex>
 
         <Flex gap="2" mt="8">
-          <Box w="full">
-            <FormLabel htmlFor="nextInvoceNumberA">Sig. Factura A:</FormLabel>
-            <Input
-              id="nextInvoceNumberA"
-              isDisabled={true}
-              name="nextInvoceNumberA"
-              type="nextInvoceNumberA"
-              value={values.nextInvoceNumberA}
-            />
-          </Box>
-          <Box w="full">
-            <FormLabel htmlFor="nextInvoceNumberB">Sig. Factura B:</FormLabel>
-            <Input
-              id="nextInvoceNumberB"
-              isDisabled={true}
-              name="nextInvoceNumberB"
-              type="nextInvoceNumberB"
-              value={values.nextInvoceNumberB}
-            />
-          </Box>
-          <Box w="full">
-            <FormLabel htmlFor="nextInvoceNumberM">Sig. Factura M:</FormLabel>
-            <Input
-              id="nextInvoceNumberM"
-              isDisabled={true}
-              name="nextInvoceNumberM"
-              type="nextInvoceNumberM"
-              value={values.nextInvoceNumberM}
-            />
-          </Box>
+          {settings.responsableInscripto === 0 ? (
+            <>
+              <Box w="full">
+                <FormLabel htmlFor="nextInvoceNumberA">Siguiente Factura A:</FormLabel>
+                <Input
+                  id="nextInvoceNumberA"
+                  isDisabled={true}
+                  name="nextInvoceNumberA"
+                  type="nextInvoceNumberA"
+                  value={values.nextInvoceNumberA}
+                />
+              </Box>
+              <Box w="full">
+                <FormLabel htmlFor="nextInvoceNumberM">Siguiente Factura M:</FormLabel>
+                <Input
+                  id="nextInvoceNumberM"
+                  isDisabled={true}
+                  name="nextInvoceNumberM"
+                  type="nextInvoceNumberM"
+                  value={values.nextInvoceNumberM}
+                />
+              </Box>
+              <Box w="full">
+                <FormLabel htmlFor="nextInvoceNumberB">Siguiente Factura B:</FormLabel>
+                <Input
+                  id="nextInvoceNumberB"
+                  isDisabled={true}
+                  name="nextInvoceNumberB"
+                  type="nextInvoceNumberB"
+                  value={values.nextInvoceNumberB}
+                />
+              </Box>
+            </>
+          ) : (
+            <Box w="49%">
+              <FormLabel htmlFor="nextInvoceNumberC">Siguiente Factura C:</FormLabel>
+              <Input
+                id="nextInvoceNumberC"
+                isDisabled={true}
+                name="nextInvoceNumberC"
+                type="nextInvoceNumberC"
+                value={values.nextInvoceNumberC}
+              />
+            </Box>
+          )}
         </Flex>
         <Flex gap="2" mt="8">
-          <Box w="full">
-            <FormLabel htmlFor="nextInvoceNumberNCA">Sig. Nota de Crédito A:</FormLabel>
-            <Input
-              id="nextInvoceNumberNCA"
-              isDisabled={true}
-              name="nextInvoceNumber"
-              type="nextInvoceNumberNCA"
-              value={values.nextInvoceNumberNCA}
-            />
-          </Box>
-          <Box w="full">
-            <FormLabel htmlFor="nextInvoceNumberNCB">Sig. Nota de Crédito B:</FormLabel>
-            <Input
-              id="nextInvoceNumberNCB"
-              isDisabled={true}
-              name="nextInvoceNumberNCB"
-              type="nextInvoceNumberNCB"
-              value={values.nextInvoceNumberNCB}
-            />
-          </Box>
-          <Box w="full">
-            <FormLabel htmlFor="nextInvoceNumberNCM">Sig. Nota de Crédito M:</FormLabel>
-            <Input
-              id="nextInvoceNumberNCM"
-              isDisabled={true}
-              name="nextInvoceNumberNCM"
-              type="nextInvoceNumberNCM"
-              value={values.nextInvoceNumberNCM}
-            />
-          </Box>
+          {settings.responsableInscripto === 0 ? (
+            <>
+              <Box w="full">
+                <FormLabel htmlFor="nextInvoceNumberNCA">Siguiente Nota de Crédito A:</FormLabel>
+                <Input
+                  id="nextInvoceNumberNCA"
+                  isDisabled={true}
+                  name="nextInvoceNumber"
+                  type="nextInvoceNumberNCA"
+                  value={values.nextInvoceNumberNCA}
+                />
+              </Box>
+              <Box w="full">
+                <FormLabel htmlFor="nextInvoceNumberNCM">Siguiente Nota de Crédito M:</FormLabel>
+                <Input
+                  id="nextInvoceNumberNCM"
+                  isDisabled={true}
+                  name="nextInvoceNumberNCM"
+                  type="nextInvoceNumberNCM"
+                  value={values.nextInvoceNumberNCM}
+                />
+              </Box>
+              <Box w="full">
+                <FormLabel htmlFor="nextInvoceNumberNCB">Siguiente Nota de Crédito B:</FormLabel>
+                <Input
+                  id="nextInvoceNumberNCB"
+                  isDisabled={true}
+                  name="nextInvoceNumberNCB"
+                  type="nextInvoceNumberNCB"
+                  value={values.nextInvoceNumberNCB}
+                />
+              </Box>
+            </>
+          ) : (
+            <Box w="49%">
+              <FormLabel htmlFor="nextInvoceNumberNCC">Siguiente Nota de Crédito C:</FormLabel>
+              <Input
+                id="nextInvoceNumberNCC"
+                isDisabled={true}
+                name="nextInvoceNumberNCC"
+                type="nextInvoceNumberNCC"
+                value={values.nextInvoceNumberNCC}
+              />
+            </Box>
+          )}
         </Flex>
 
         <Flex direction="column" gap="2" mt="8">
@@ -404,7 +492,7 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
 
         <Stack direction="row" mt="4" spacing={4}>
           <Button type="reset" variant="outline" w="full" onClick={close}>
-            Cancelar
+            CANCELAR
           </Button>
           <Button
             colorScheme="brand"
@@ -413,7 +501,7 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
             type="submit"
             w="full"
           >
-            Guardar
+            GUARDAR
           </Button>
         </Stack>
       </form>

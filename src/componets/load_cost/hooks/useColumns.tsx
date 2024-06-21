@@ -52,7 +52,7 @@ export const useColumns = ({ onOpen, setActiveProduct }: Props) => {
       id: 'acciones',
       header: 'Acciones',
       cell: ({ row }: CellContext<Stock2, unknown>) => (
-        <Box fontFamily="IBM Plex Sans">
+        <Box fontFamily="Poppins">
           <Button
             colorScheme="brand"
             size="sm"

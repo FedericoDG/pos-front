@@ -80,7 +80,7 @@ export const Modal = ({
   };
 
   const initialValues = {
-    quantity: 0,
+    quantity: 1,
     discount: 0,
   };
 
@@ -171,10 +171,10 @@ export const Modal = ({
 
           <ModalFooter>
             <Button tabIndex={3} type="reset" onClick={onClose}>
-              Cancelar
+              CANCELAR
             </Button>
             <Button colorScheme="brand" ml={3} tabIndex={2} type="submit">
-              Agregar
+              AGREGAR
             </Button>
           </ModalFooter>
         </ModalContent>

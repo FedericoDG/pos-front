@@ -1,4 +1,4 @@
-import { Dispatch, MutableRefObject, createContext } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction, createContext } from 'react';
 
 import { User } from '../interfaces';
 
@@ -21,6 +21,8 @@ interface AppContext {
   tableInput: MutableRefObject<any>;
   top: MutableRefObject<null>;
   user: User;
+  responsableInscripto: number | null;
+  setResponsableInscripto: Dispatch<SetStateAction<number | null>>;
 }
 
 export const appContext = createContext({} as AppContext);

@@ -188,6 +188,7 @@ export const Drawer = ({
                     <Select
                       defaultValue={initialValues.identificationId}
                       id="identificationId"
+                      isDisabled={initialValues.document === '00000000'}
                       name="identificationId"
                       onChange={handleChange}
                     >
@@ -205,6 +206,7 @@ export const Drawer = ({
                     <FormLabel htmlFor="document">Número:</FormLabel>
                     <Input
                       id="document"
+                      isDisabled={initialValues.document === '00000000'}
                       name="document"
                       placeholder="28809909"
                       value={values.document}
@@ -222,6 +224,7 @@ export const Drawer = ({
                     <Select
                       defaultValue={initialValues.ivaTypeId}
                       id="ivaTypeId"
+                      isDisabled={initialValues.document === '00000000'}
                       minW="224px"
                       name="ivaTypeId"
                       onChange={handleChange}
@@ -326,7 +329,7 @@ export const Drawer = ({
 
             <DrawerFooter borderTopWidth="1px" bottom="0" position="fixed" w="full">
               <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
-                Cancelar
+                CANCELAR
               </Button>
               <Button
                 colorScheme="brand"
@@ -335,7 +338,7 @@ export const Drawer = ({
                 type="submit"
                 w="full"
               >
-                Guardar
+                GUARDAR
               </Button>
             </DrawerFooter>
           </form>

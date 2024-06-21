@@ -31,7 +31,7 @@ export const SupplierAndWarehouse = () => {
 
   const [mappedPriceLists, setMappedPriceLists] = useState<SelectedPriceList[]>([]);
   const [mappedClients, setMappedClients] = useState<SelectedClient[]>([]);
-  const [, setMappedInvoceTypes] = useState<SelectedInvoceType[]>([]);
+  const [mappedInvoceTypes, setMappedInvoceTypes] = useState<SelectedInvoceType[]>([]);
   const [mappedWarehouses, setMappedWarehouses] = useState<SelectedWarehouse[]>([]);
 
   const {
@@ -272,6 +272,22 @@ export const SupplierAndWarehouse = () => {
             tabIndex={3}
             value={client}
             onChange={(e) => setClient(e)}
+          />
+        </Box>
+        <Box w="49%">
+          <FormLabel htmlFor="client">Tipo de Comprobante:</FormLabel>
+          <Select
+            isClearable
+            isDisabled
+            isSearchable
+            colorScheme="brand"
+            id="invoceType"
+            options={mappedInvoceTypes}
+            placeholder="Seleccionar Tipo de Comprobante"
+            selectedOptionColorScheme="brand"
+            tabIndex={3}
+            value={invoceType}
+            onChange={(e) => setInvoceType(e)}
           />
         </Box>
       </Stack>

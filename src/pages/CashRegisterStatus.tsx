@@ -164,7 +164,7 @@ export const CashRegisterStatus = () => {
 
               <ModalFooter>
                 <Button tabIndex={3} onClick={onClose}>
-                  Cancelar
+                  CANCELAR
                 </Button>
                 <Button
                   colorScheme="brand"
@@ -173,7 +173,7 @@ export const CashRegisterStatus = () => {
                   tabIndex={2}
                   onClick={openCashRegister}
                 >
-                  Agregar
+                  AGREGAR
                 </Button>
               </ModalFooter>
             </ModalContent>

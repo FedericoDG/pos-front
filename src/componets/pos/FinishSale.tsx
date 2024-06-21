@@ -765,7 +765,7 @@ export const FinishSale = () => {
                           defaultValue={initialValues.info}
                           id="info"
                           name="info"
-                          placeholder="Info extra..."
+                          placeholder="información relevante"
                           onChange={handleChange}
                         />
                       </Box>

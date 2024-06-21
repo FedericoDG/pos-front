@@ -40,7 +40,7 @@ export const Footer = () => {
           fontWeight="bold"
           onClick={() => handleScroll(top)}
         >
-          Sistema
+          Sistema POS
         </chakra.a>
 
         <chakra.p

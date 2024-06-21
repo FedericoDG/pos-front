@@ -24,6 +24,7 @@ export interface Settings {
   imageURL: string;
   showOtherTaxes: number;
   defaultPriceListDriver: number;
+  responsableInscripto: number;
 }
 
 export interface Afip {
@@ -35,6 +36,8 @@ export interface Afip {
   nextInvoceNumberNCA?: number;
   nextInvoceNumberB?: number;
   nextInvoceNumberNCB?: number;
+  nextInvoceNumberC?: number;
+  nextInvoceNumberNCC?: number;
   nextInvoceNumberM?: number;
   nextInvoceNumberNCM?: number;
   certExpiration?: string;

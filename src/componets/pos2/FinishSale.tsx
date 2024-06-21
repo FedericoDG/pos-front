@@ -7,9 +7,10 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
   FormLabel,
-  Icon,
   Heading,
+  Icon,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -18,6 +19,7 @@ import {
   RadioGroup,
   Select,
   Stack,
+  Switch,
   Text,
   Textarea,
   Tooltip,
@@ -36,7 +38,7 @@ import { AiFillLock, AiFillUnlock } from 'react-icons/ai';
 import { toast } from 'sonner';
 
 import { ErrorMessage, Loading } from '../common';
-import { useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods, useGetSettings } from '../../hooks';
+import { useCreateCashMovement, useGetOtherTributes, useGetPaymentMethods2, useGetSettings } from '../../hooks';
 import { formatCurrency } from '../../utils';
 import { useGetInvoceTypes } from '../../hooks/';
 
@@ -140,6 +142,7 @@ export const FinishSale = () => {
   const [percent, setPercent] = useState(true);
   const [lockDOrR, setLockDOrR] = useState(false);
   const [cartCopy, setCartCopy] = useState<CartItem[]>([]);
+  const [checkingAccount, setCheckingAccount] = useState(false);
 
   const subTotalCartCopy = useMemo(
     () => cartCopy.reduce((acc, item) => acc + item.quantity * item.price - item.totalDiscount, 0),
@@ -160,7 +163,7 @@ export const FinishSale = () => {
   const navigate = useNavigate();
 
   const { data: settings } = useGetSettings(1);
-  const { data: paymentMethods } = useGetPaymentMethods();
+  const { data: paymentMethods } = useGetPaymentMethods2();
   const { data: invoceTypes } = useGetInvoceTypes();
   const { data: otherTributes } = useGetOtherTributes();
 
@@ -185,6 +188,7 @@ export const FinishSale = () => {
         totalDiscount: item.totalDiscount,
       })),
       invoceTypeId: invoceType?.id!,
+      // { amount: 610, paymentMethodId: 1 }
       payments: values?.payments?.map((item) => ({
         amount: Number(item.amount),
         paymentMethodId: Number(item.paymentMethodId),
@@ -355,6 +359,7 @@ export const FinishSale = () => {
     formik.setFieldValue('discharge', '0');
     formik.setFieldValue('recharge', '0');
     formik.setFieldValue('payments', []);
+    setCheckingAccount(false);
   };
 
   useEffect(() => {
@@ -545,84 +550,107 @@ export const FinishSale = () => {
                           <FormLabel htmlFor="payments">Forma de Pago</FormLabel>
                         </AbsoluteCenter>
                       </Box>
-
-                      <FieldArray
-                        name="payments"
-                        render={(arrayHelpers) => (
-                          <Stack w="full">
-                            {values.payments?.map((_, index) => (
-                              <Stack key={index} w="full">
-                                <Stack alignItems="flex-end" direction="row" w="full">
-                                  <Box w={'29%'}>
-                                    <InputGroup>
-                                      <InputLeftAddon children="$" />
-                                      <Input
-                                        autoComplete='off'
-                                        defaultValue={
-                                          values.payments?.length === 1 ?
-                                            totalCarttotalShoppingCart(values)
-                                            : values.payments &&
-                                            Math.round((Number(values.payments[index].amount)) * 100) / 100
-
-                                        }
-                                        id={`payments[${index}].amount`}
-                                        name={`payments[${index}].amount`}
-                                        placeholder='importe'
-                                        onChange={handleChange}
-                                        onFocus={(event) => setTimeout(() => event.target.select(), 100)}
-                                      />
-                                    </InputGroup>
-                                  </Box>
-
-                                  <Box w='59%'>
-                                    <Select
-                                      id={`payments.${index}.paymentMethodId`}
-                                      minW="224px"
-                                      name={`payments.${index}.paymentMethodId`}
-                                      onChange={handleChange}
-                                    >
-                                      {paymentMethods.map((method) => (
-                                        <option key={method.code} value={method.id}>
-                                          {method.code}
-                                        </option>
-                                      ))}
-                                    </Select>
-                                  </Box>
-                                  <Button flex={1} onClick={() => arrayHelpers.remove(index)}>
-                                    <Icon as={FaRegTrashAlt} color="brand" ml="0 auto" />
-                                  </Button>
-                                </Stack>
-                                {Array.isArray(errors.payments) && (
-                                  <ErrorMessage>{errors.payments[index]['amount']}</ErrorMessage>
-                                )}
-                              </Stack>
-
-                            ))}
-
-                            <Button
-                              colorScheme="brand"
-                              isDisabled={
-                                totalCarttotalShoppingCart(values)
-                                <= (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)
+                      {
+                        client?.document !== "00000000" &&
+                        <FormControl alignItems="center" display="flex">
+                          <Switch
+                            colorScheme='green'
+                            id="filter"
+                            isChecked={checkingAccount}
+                            size={'lg'}
+                            onChange={(e) => {
+                              setCheckingAccount(e.target.checked);
+                              if (checkingAccount) {
+                                formik.setFieldValue('payments', []);
+                              } else {
+                                formik.setFieldValue('payments', [{ amount: totalCartCopy + effectiveDOrR, paymentMethodId: 6 }]);
                               }
-                              size="md"
-                              variant="outline"
-                              onClick={() => {
-                                formik.setFieldValue('otherTributes', values.otherTributes?.filter(el => Number(el.amount) > 0));
-                                arrayHelpers.push({
-                                  amount:
-                                    totalCarttotalShoppingCart(values)
-                                    - (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0),
-                                  paymentMethodId: '1',
-                                });
-                              }}
-                            >
-                              <Icon as={BsPlusCircle} color="brand" mr="2" />
-                              Forma de Pago
-                            </Button>
-                          </Stack>
-                        )}
-                      />
+                            }}
+                          />
+                          <FormLabel htmlFor="filter" mb="0" ml="2">
+                            Cuenta Corriente
+                          </FormLabel>
+                        </FormControl>
+                      }
+                      {!checkingAccount && (
+                        <FieldArray
+                          name="payments"
+                          render={(arrayHelpers) => (
+                            <Stack w="full">
+                              {values.payments?.map((_, index) => (
+                                <Stack key={index} w="full">
+                                  <Stack alignItems="flex-end" direction="row" w="full">
+                                    <Box w={'29%'}>
+                                      <InputGroup>
+                                        <InputLeftAddon children="$" />
+                                        <Input
+                                          autoComplete='off'
+                                          defaultValue={
+                                            values.payments?.length === 1 ?
+                                              totalCarttotalShoppingCart(values)
+                                              : values.payments &&
+                                              Math.round((Number(values.payments[index].amount)) * 100) / 100
+
+                                          }
+                                          id={`payments[${index}].amount`}
+                                          name={`payments[${index}].amount`}
+                                          placeholder='importe'
+                                          onChange={handleChange}
+                                          onFocus={(event) => setTimeout(() => event.target.select(), 100)}
+                                        />
+                                      </InputGroup>
+                                    </Box>
+
+                                    <Box w='59%'>
+                                      <Select
+                                        id={`payments.${index}.paymentMethodId`}
+                                        minW="224px"
+                                        name={`payments.${index}.paymentMethodId`}
+                                        onChange={handleChange}
+                                      >
+                                        {paymentMethods.map((method) => (
+                                          <option key={method.code} value={method.id}>
+                                            {method.code}
+                                          </option>
+                                        ))}
+                                      </Select>
+                                    </Box>
+                                    <Button flex={1} onClick={() => arrayHelpers.remove(index)}>
+                                      <Icon as={FaRegTrashAlt} color="brand" ml="0 auto" />
+                                    </Button>
+                                  </Stack>
+                                  {Array.isArray(errors.payments) && !checkingAccount && (
+                                    <ErrorMessage>{errors.payments[index]['amount']}</ErrorMessage>
+                                  )}
+                                </Stack>
+
+                              ))}
+                              <Button
+                                colorScheme="brand"
+                                isDisabled={
+                                  totalCarttotalShoppingCart(values)
+                                  <= (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0)
+                                }
+                                size="md"
+                                variant="outline"
+                                onClick={() => {
+                                  formik.setFieldValue('otherTributes', values.otherTributes?.filter(el => Number(el.amount) > 0));
+                                  arrayHelpers.push({
+                                    amount:
+                                      totalCarttotalShoppingCart(values)
+                                      - (values.payments?.reduce((acc, el) => acc + Number(el.amount), 0) || 0),
+                                    paymentMethodId: '1',
+                                  });
+                                }}
+                              >
+                                <Icon as={BsPlusCircle} color="brand" mr="2" />
+                                FORMA DE PAGO
+                              </Button>
+                            </Stack>
+                          )}
+                        />)
+                      }
+
                       {typeof errors.payments === 'string' && (
                         <ErrorMessage>{errors.payments}</ErrorMessage>
                       )}
@@ -640,7 +668,7 @@ export const FinishSale = () => {
                           defaultValue={initialValues.info}
                           id="info"
                           name="info"
-                          placeholder="Info extra..."
+                          placeholder="Información relevante"
                           onChange={handleChange}
                         />
                       </Box>

@@ -153,7 +153,7 @@ export const Sheet = () => {
                     size="sm"
                     onClick={handlePrint}
                   >
-                    Imprimir
+                    IMPRIMIR
                   </Button>
                 </HStack>
               </Stack>
@@ -428,7 +428,7 @@ export const Sheet = () => {
                         size="sm"
                         onClick={handleDownload}
                       >
-                        Descargar Excel
+                        DESCARGAR EXCEL
                       </Button>
                       <Button
                         colorScheme="linkedin"
@@ -436,7 +436,7 @@ export const Sheet = () => {
                         size="sm"
                         onClick={handlePrint2}
                       >
-                        Imprimir
+                        IMPRIMIR
                       </Button>
                     </HStack>
                     <Stack ref={printRef2}>

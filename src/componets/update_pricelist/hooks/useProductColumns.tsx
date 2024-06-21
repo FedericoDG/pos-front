@@ -51,7 +51,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct }: Props) => {
         id: 'acciones',
         header: 'Acciones',
         cell: ({ row }: CellContext<ProductWithPrice, unknown>) => (
-          <Box fontFamily="IBM Plex Sans">
+          <Box fontFamily="Poppins">
             <Button
               colorScheme="brand"
               isDisabled={isDisabled(row.original!)}

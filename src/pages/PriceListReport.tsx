@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, Switch, Button, Text } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Switch, Button, Text, HStack } from '@chakra-ui/react';
 import { Heading, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { ImPrinter } from 'react-icons/im';
 import { nanoid } from 'nanoid';
@@ -9,7 +9,7 @@ import { useSearchParams } from 'react-router-dom';
 import { DashBoard, Loading } from '../componets/common';
 import { formatDate } from '../utils';
 import { PriceList2 } from '../interfaces';
-import { useGetPriceListsReport } from '../hooks';
+import { useGetPriceListsReport, useGetSettings } from '../hooks';
 import formatCurrency from '../utils/formatCurrency';
 
 export const PriceListReport = () => {
@@ -35,8 +35,9 @@ export const PriceListReport = () => {
   const listPricesRef = useRef<HTMLDivElement | null>(null);
 
   const { data, isFetching } = useGetPriceListsReport(products, pricelists, warehouses);
+  const { data: settings, isLoading: isLoadingSettings } = useGetSettings(1);
 
-  const isIndeterminate = isFetching;
+  const isIndeterminate = isFetching && isLoadingSettings;
 
   useEffect(() => {
     if (!data) return;
@@ -130,7 +131,7 @@ export const PriceListReport = () => {
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles del Producto">
-      {!data ? (
+      {!data || !settings ? (
         <Loading />
       ) : (
         <Stack
@@ -261,7 +262,7 @@ export const PriceListReport = () => {
                 size="sm"
                 onClick={handlePrint}
               >
-                Imprimir
+                IMPRIMIR
               </Button>
             </Box>
           </Stack>
@@ -274,7 +275,19 @@ export const PriceListReport = () => {
             p="1"
             w="210mm"
           >
-            <Text>Acá iría el membrete con las datos de la empresa, fecha, etc.</Text>
+            <HStack p={2} w="50%">
+              {settings.imageURL && (
+                <img alt="logo" height={120} src={settings.imageURL} width={120} />
+              )}
+              <Stack px={settings.imageURL ? '' : 8}>
+                <Text fontWeight={500}>{settings.name}</Text>
+                <Text>{settings.address}</Text>
+                <Text>
+                  {settings.cp} - {settings.province}
+                </Text>
+                <Text>{settings.ivaCondition}</Text>
+              </Stack>
+            </HStack>
             {filteredProducts.map((priceList) => {
               const fede = priceList.filter((el) => el.price > 0);
 

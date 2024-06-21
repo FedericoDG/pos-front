@@ -59,7 +59,7 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
         id: 'acciones',
         header: 'Acciones',
         cell: ({ row }: CellContext<Client, unknown>) => (
-          <Box fontFamily="IBM Plex Sans">
+          <Box fontFamily="Poppins">
             <Menu placement="left-start">
               <MenuButton
                 aria-label="Options"

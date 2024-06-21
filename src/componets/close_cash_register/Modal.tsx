@@ -174,10 +174,10 @@ export const Modal = ({
 
           <ModalFooter>
             <Button tabIndex={5} type="reset" onClick={onClose}>
-              Cancelar
+              CANCELAR
             </Button>
             <Button colorScheme="brand" ml={3} tabIndex={4} type="submit">
-              Agregar
+              AGREGAR
             </Button>
           </ModalFooter>
         </ModalContent>

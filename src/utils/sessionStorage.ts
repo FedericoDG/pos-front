@@ -9,4 +9,5 @@ export const sessionStorage = {
     }
   },
   remove: (key: string) => window.localStorage.removeItem(key),
+  write2: (key: string, value: string) => window.localStorage.setItem(key, JSON.stringify(value)),
 };

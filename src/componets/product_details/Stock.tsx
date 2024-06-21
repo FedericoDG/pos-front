@@ -156,7 +156,7 @@ export const Stock = ({ product, warehouses }: Props) => {
                 size="sm"
                 onClick={handlePrint}
               >
-                Imprimir
+                IMPRIMIR
               </Button>
             </HStack>
             <Stack ref={printRef}>

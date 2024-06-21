@@ -31,7 +31,7 @@ export const MakeRequest = () => {
           )
         }
       >
-        Generar Reporte / Imprimir
+        GENERAR REPORTE / IMPRIMIR
       </Button>
     </Stack>
   );

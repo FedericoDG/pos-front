@@ -6,6 +6,7 @@ import {
   useMemo,
   useReducer,
   useRef,
+  useState,
 } from 'react';
 import { useDisclosure } from '@chakra-ui/react';
 
@@ -43,6 +44,17 @@ export const AppProvider = ({ children }: Props) => {
   const { isOpen: isOpenStock, onToggle: onToggleStock, onClose: onCloseStock } = useDisclosure();
 
   const [user, dispatch] = useReducer(authReducer, {}, init);
+  const initResponsableInscripto = () => {
+    const res = sessionStorage.read('responsableInscripto');
+
+    if (res) return Number(res);
+
+    return null;
+  };
+
+  const [responsableInscripto, setResponsableInscripto] = useState<number | null>(() =>
+    initResponsableInscripto()
+  );
 
   const top = useRef(null);
   const bottom = useRef(null);
@@ -52,6 +64,11 @@ export const AppProvider = ({ children }: Props) => {
     if (!user) return;
     sessionStorage.write('user', user);
   }, [user]);
+
+  useEffect(() => {
+    if (!responsableInscripto) return;
+    sessionStorage.write2('responsableInscripto', responsableInscripto.toString());
+  }, [responsableInscripto]);
 
   const handleScroll = (ref: MutableRefObject<HTMLElement | null>) => {
     setTimeout(() => {
@@ -81,12 +98,14 @@ export const AppProvider = ({ children }: Props) => {
       tableInput,
       top,
       user,
+      responsableInscripto,
+      setResponsableInscripto,
     }),
     [
+      isOpenCashRegister,
       isOpenPriceList,
       isOpenProducts,
       isOpenStock,
-      isOpenCashRegister,
       onCloseCashRegister,
       onClosePriceList,
       onCloseProducts,
@@ -96,6 +115,7 @@ export const AppProvider = ({ children }: Props) => {
       onToggleProducts,
       onToggleStock,
       user,
+      responsableInscripto,
     ]
   );
 
@@ -122,6 +142,8 @@ export const useMyContext = () => {
     tableInput,
     top,
     user,
+    responsableInscripto,
+    setResponsableInscripto,
   } = useContext(appContext);
 
   const dispatchLogin = (user: User) => dispatch(loginAction(user));
@@ -151,5 +173,7 @@ export const useMyContext = () => {
     tableInput,
     top,
     user,
+    responsableInscripto,
+    setResponsableInscripto,
   };
 };

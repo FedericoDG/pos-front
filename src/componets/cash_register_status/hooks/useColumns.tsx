@@ -73,7 +73,7 @@ export const useColumns = () => {
         id: 'acciones',
         header: 'Ver Detalles',
         cell: ({ row }: CellContext<CashRegister, unknown>) => (
-          <Box fontFamily="IBM Plex Sans">
+          <Box fontFamily="Poppins">
             <Button size="xs" onClick={() => navigate(`/panel/caja/detalles/${row.original.id}`)}>
               <Icon as={TbListDetails} />
             </Button>

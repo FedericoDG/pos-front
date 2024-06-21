@@ -51,7 +51,7 @@ export const Basket = () => {
                   variant="link"
                   onClick={() => removeItem(item.productId)}
                 >
-                  Quitar
+                  QUITAR
                 </Button>
               </Box>
             </Stack>

@@ -222,7 +222,7 @@ export const Drawer = ({
                     />
                   </Box>
 
-                  <Box>
+                  <Box w="49%">
                     <FormLabel htmlFor="allownegativestock">Permitir stock negativo:</FormLabel>
                     <Switch
                       colorScheme="red"
@@ -248,7 +248,7 @@ export const Drawer = ({
                     />
                   </Box>
 
-                  <Box>
+                  <Box w={'49%'}>
                     <FormLabel htmlFor="lowstock">Stock mínimo:</FormLabel>
                     <Input
                       id="lowstock"
@@ -265,10 +265,10 @@ export const Drawer = ({
 
             <DrawerFooter borderTopWidth="1px" bottom="0" position="fixed" w="full">
               <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
-                Cancelar
+                CANCELAR
               </Button>
               <Button colorScheme="brand" type="submit" w="full">
-                Guardar
+                GUARDAR
               </Button>
             </DrawerFooter>
           </form>

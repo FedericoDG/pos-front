@@ -103,8 +103,8 @@ export const CashRegisterDetails = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const invoces = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 1 || el.invoceTypeId === 2 || el.invoceTypeId === 3 || el.invoceTypeId === 4), [cashRegister?.cashMovements]);
-  const creditNotes = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 5 || el.invoceTypeId === 6 || el.invoceTypeId === 7 || el.invoceTypeId === 8), [cashRegister?.cashMovements]);
+  const invoces = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 1 || el.invoceTypeId === 2 || el.invoceTypeId === 3 || el.invoceTypeId === 4 || el.invoceTypeId === 9), [cashRegister?.cashMovements]);
+  const creditNotes = useMemo(() => cashRegister?.cashMovements?.filter(el => el.invoceTypeId === 5 || el.invoceTypeId === 6 || el.invoceTypeId === 7 || el.invoceTypeId === 8 || el.invoceTypeId === 10), [cashRegister?.cashMovements]);
 
 
   const onSuccessAfip = (res: any) => {
@@ -198,7 +198,7 @@ export const CashRegisterDetails = () => {
           >
             <Stack direction="row" justifyContent="space-between" w="full">
               <HStack justifyContent="flex-start">
-                <FormControl alignItems="center" display="flex" minW="250px" >
+                <FormControl alignItems="center" display="flex" minW="300px" >
                   <Switch
                     id="filter"
                     isChecked={enabledFilter2}
@@ -226,7 +226,7 @@ export const CashRegisterDetails = () => {
                 size="sm"
                 onClick={handlePrint}
               >
-                Imprimir
+                IMPRIMIR
               </Button>
             </Stack>
             <Stack ref={printRef} py="8" w="1024px">
@@ -516,6 +516,14 @@ export const CashRegisterDetails = () => {
                                     movement.invoceTypeId === 3 && !movement.cae &&
                                     <Badge colorScheme='red'>Factura M</Badge>
                                   }
+                                  {
+                                    movement.invoceTypeId === 9 && movement.cae &&
+                                    <Badge colorScheme='green'>Factura C</Badge>
+                                  }
+                                  {
+                                    movement.invoceTypeId === 9 && !movement.cae &&
+                                    <Badge colorScheme='red'>Factura C</Badge>
+                                  }
                                 </Td>
                                 <Td>{formatDateAndHour(movement.createdAt)}</Td>
                                 <Td isNumeric>{formatCurrency(movement.subtotal - movement.discount + movement.recharge)}</Td>
@@ -536,7 +544,7 @@ export const CashRegisterDetails = () => {
                                       </Td>
                                     }
                                     {
-                                      (movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote && user.roleId <= roles.DRIVER && movement.invoceIdAfip !== null) || (movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote && user.roleId <= roles.DRIVER && movement.invoceIdAfip === null && movement.invoceTypeId === 4) &&
+                                      ((movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote && user.roleId <= roles.DRIVER && movement.invoceIdAfip !== null) || (movement.invoceTypeId !== 5 && movement.invoceTypeId !== 6 && movement.invoceTypeId !== 7 && !movement.creditNote && user.roleId <= roles.DRIVER)) &&
                                       <Td borderWidth={0} textAlign='right'>
                                         <Button colorScheme='orange' display="block" m="0 auto" size='sm' onClick={() => navigate(`/panel/caja/detalles/nota-credito/${movement.id}`)}>Crear Nota de Crédito</Button>
                                       </Td>
@@ -1045,6 +1053,10 @@ export const CashRegisterDetails = () => {
                                   {
                                     movement.invoceTypeId === 8 &&
                                     <Badge bg='gray.50'>Nota de Crédito X</Badge>
+                                  }
+                                  {
+                                    movement.invoceTypeId === 10 &&
+                                    <Badge bg='gray.50'>Nota de Crédito C</Badge>
                                   }
                                 </Td>
                                 <Td>{formatDateAndHour(movement.createdAt)}</Td>

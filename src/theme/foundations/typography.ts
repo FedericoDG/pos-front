@@ -36,9 +36,12 @@ const typography = {
     black: '900',
   },
   fonts: {
-    heading: '"IBM Plex Sans", sans-serif',
-    body: '"IBM Plex Sans", sans-serif',
+    heading: '"Poppins", sans-serif',
+    body: '"Poppins", sans-serif',
     mono: '"IBM Plex Mono", monospace',
+    /* heading: '"IBM Plex Sans", sans-serif',
+    body: '"IBM Plex Sans", sans-serif',
+    mono: '"IBM Plex Mono", monospace', */
   },
   fontSizes: {
     xs: '0.75rem',

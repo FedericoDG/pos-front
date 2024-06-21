@@ -86,7 +86,7 @@ export const SaleDetails = () => {
               size="sm"
               onClick={handlePrint}
             >
-              Imprimir
+              IMPRIMIR
             </Button>
           </Stack>
           {

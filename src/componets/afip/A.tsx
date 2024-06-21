@@ -110,7 +110,7 @@ export const A = ({ cashMovement, settings }: Props) => {
           size="sm"
           onClick={handlePrint}
         >
-          Imprimir
+          IMPRIMIR
         </Button>
       </Stack>
       {

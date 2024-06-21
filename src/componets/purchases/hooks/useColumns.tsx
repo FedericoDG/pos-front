@@ -66,7 +66,7 @@ export const useColumns = () => {
         id: 'acciones',
         header: 'Acciones',
         cell: ({ row }: CellContext<Purchase, unknown>) => (
-          <Box fontFamily="IBM Plex Sans">
+          <Box fontFamily="Poppins">
             <Menu placement="left-start">
               <MenuButton
                 aria-label="Options"

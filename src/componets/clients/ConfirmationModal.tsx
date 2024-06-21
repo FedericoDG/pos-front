@@ -43,7 +43,7 @@ export const ConfirmationModal = ({
 
         <ModalFooter>
           <Button colorScheme="brand" mr={3} onClick={onClose}>
-            Cancelar
+            CANCELAR
           </Button>
           <Button
             colorScheme="red"
@@ -54,7 +54,7 @@ export const ConfirmationModal = ({
               setinitialValues(resetValues);
             }}
           >
-            Eliminar
+            ELIMINAR
           </Button>
         </ModalFooter>
       </ModalContent>

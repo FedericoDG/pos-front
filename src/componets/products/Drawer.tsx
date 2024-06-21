@@ -16,7 +16,7 @@ import {
   Switch,
   Textarea,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useRef } from 'react';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { FormikHelpers, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { toast } from 'sonner';
@@ -49,11 +49,13 @@ export const Drawer = ({
   onClose,
 }: Props) => {
   const firstField = useRef<HTMLInputElement | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { mutateAsync: createProduct, isLoading: isLoadingCreate } = useCreateProduct();
-  const { mutateAsync: updateProduct, isLoading: isLoadingUpdate, isSuccess } = useUpdateProduct();
+  const { mutateAsync: createProduct } = useCreateProduct();
+  const { mutateAsync: updateProduct } = useUpdateProduct();
 
   const onSubmit = async (values: Product, actions: FormikHelpers<Product>) => {
+    setIsLoading(true);
     const parsedValues = {
       ...values,
       status: !values.status || values.status === 'DISABLED' ? 'DISABLED' : 'ENABLED',
@@ -73,26 +75,36 @@ export const Drawer = ({
     if (values?.id) {
       await updateProduct(parsedValues)
         .then(() => {
-          if (isSuccess) {
-            toast.success('Producto actualizado');
-          }
+          toast.success('Producto actualizado');
+          setinitialValues(resetValues);
+          actions.resetForm();
+          close();
+        })
+        .catch((_) => {
+          toast.error('Ha ocurrido un error');
         })
         .finally(() => {
           setinitialValues(resetValues);
           actions.resetForm();
           close();
+          setIsLoading(false);
         });
     } else {
       createProduct(parsedValues)
         .then(() => {
-          if (isSuccess) {
-            toast.success('Producto creado');
-          }
+          toast.success('Producto creado');
+          setinitialValues(resetValues);
+          actions.resetForm();
+          close();
+        })
+        .catch((_) => {
+          toast.error('Ha ocurrido un error');
         })
         .finally(() => {
           setinitialValues(resetValues);
           actions.resetForm();
           close();
+          setIsLoading(false);
         });
     }
   };
@@ -235,6 +247,9 @@ export const Drawer = ({
                       placeholder="012345678912"
                       value={values.barcode}
                       onChange={handleChange}
+                      onKeyDown={(e) => {
+                        e.key === 'Enter' && e.preventDefault();
+                      }}
                     />
                     {errors.barcode && touched.barcode && (
                       <ErrorMessage>{errors.barcode}</ErrorMessage>
@@ -266,7 +281,7 @@ export const Drawer = ({
                     />
                   </Box>
 
-                  <Box>
+                  <Box w="49%">
                     <FormLabel htmlFor="allownegativestock">Permitir stock negativo:</FormLabel>
                     <Switch
                       colorScheme="red"
@@ -292,7 +307,7 @@ export const Drawer = ({
                     />
                   </Box>
 
-                  <Box>
+                  <Box w={'49%'}>
                     <FormLabel htmlFor="lowstock">Stock mínimo:</FormLabel>
                     <Input
                       id="lowstock"
@@ -310,16 +325,16 @@ export const Drawer = ({
 
             <DrawerFooter borderTopWidth="1px" bottom="0" position="fixed" w="full">
               <Button mr={3} type="reset" variant="outline" w="full" onClick={close}>
-                Cancelar
+                CANCELAR
               </Button>
               <Button
                 colorScheme="brand"
-                isLoading={isLoadingCreate || isLoadingUpdate}
+                isLoading={isLoading}
                 loadingText="Guardando"
                 type="submit"
                 w="full"
               >
-                Guardar
+                GUARDAR
               </Button>
             </DrawerFooter>
           </form>

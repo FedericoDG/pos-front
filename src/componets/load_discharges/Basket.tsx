@@ -94,7 +94,7 @@ export const Basket = () => {
                   variant="link"
                   onClick={() => removeItem(item.productId)}
                 >
-                  Quitar
+                  QUITAR
                 </Button>
               </Box>
             </Stack>
@@ -117,7 +117,7 @@ export const Basket = () => {
         w="full"
         onClick={handleSubmit}
       >
-        CARGAR PÉRDIDA DE STOCK
+        Cargar Pérdida de Stock
       </Button>
     </Stack>
   );

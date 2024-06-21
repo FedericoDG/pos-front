@@ -57,7 +57,7 @@ export const DischargeDetails = () => {
             size="sm"
             onClick={handlePrint}
           >
-            Imprimir
+            IMPRIMIR
           </Button>
           <Stack ref={printRef} minW="1024px" py="8">
             <Stack>

@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 
 import { useMyContext } from '../../context';
 import { roles } from '../../interfaces';
+import { responsables } from '../../utils/responsable';
 
 import { NavItem, NavItemDivider } from '.';
 
@@ -46,6 +47,7 @@ export const SidebarContent = (props: Props) => {
 
   const {
     user: { role },
+    responsableInscripto,
   } = useMyContext();
 
   return (
@@ -68,7 +70,7 @@ export const SidebarContent = (props: Props) => {
       zIndex="sticky"
       {...props}
     >
-      <Flex align="center" px="4" py="12px">
+      <Flex align="flex-start" flexDirection={'column'} ml="2" px="4" py="12px">
         <Text
           _dark={{
             color: 'white',
@@ -76,16 +78,35 @@ export const SidebarContent = (props: Props) => {
           color="brand.500"
           fontSize="2xl"
           fontWeight="bold"
-          ml="2"
         >
-          <Link to="/panel/">Sistema</Link>
+          <Link to="/panel/">Sistema POS</Link>
         </Text>
+        {responsableInscripto !== null ? (
+          <Text bg={'green.200'} color={'green.800'} fontSize={'smaller'} px={'4px'} py={'2px'}>
+            {`${responsables[responsableInscripto].name}`}
+          </Text>
+        ) : (
+          <Text
+            align={'center'}
+            bg={'red.600'}
+            color={'white'}
+            fontSize={'sm'}
+            px={'4px'}
+            py={'2px'}
+          >
+            {`ALERTA: Dirígaje a 'Parámetros del Sitio' y guarde la configuración.`}
+          </Text>
+        )}
       </Flex>
       <Flex aria-label="Main Navigation" as="nav" color="gray.600" direction="column" fontSize="sm">
         {/* POS */}
 
-        {role?.id && role.id <= roles.DRIVER && (
+        {role?.id && role.id <= roles.DRIVER && responsableInscripto === 0 ? (
           <NavItem icon={MdPointOfSale} link="/panel/pos">
+            Punto de Venta
+          </NavItem>
+        ) : (
+          <NavItem icon={MdPointOfSale} link="/panel/pos-c">
             Punto de Venta
           </NavItem>
         )}
@@ -291,7 +312,7 @@ export const SidebarContent = (props: Props) => {
         )}
 
         {/* LIBRO IVA */}
-        {role?.id && role?.id <= roles.ADMIN && (
+        {role?.id && role?.id <= roles.ADMIN && responsableInscripto === 0 && (
           <NavItem icon={FaBook} link="/panel/libro-iva">
             Libro IVA
           </NavItem>

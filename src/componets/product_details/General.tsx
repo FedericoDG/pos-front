@@ -207,7 +207,7 @@ export const General = ({ product, onOpen, onOpen2, onOpen3 }: Props) => {
               w="210px"
               onClick={onOpen2}
             >
-              CARGAR PERDIDA
+              CARGAR PÉRDIDA
             </Button>
           </Stack>
         )}

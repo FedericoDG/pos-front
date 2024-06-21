@@ -33,8 +33,6 @@ export const ProductsTable = ({ cashMovement }: Props) => {
 
   if (!cashMovement) return null;
 
-  // console.log({ cashMovement });
-
   return (
     <Stack bg="white">
       <Stack
