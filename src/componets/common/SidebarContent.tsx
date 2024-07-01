@@ -94,7 +94,7 @@ export const SidebarContent = (props: Props) => {
             px={'4px'}
             py={'2px'}
           >
-            {`ALERTA: Dirígaje a 'Parámetros del Sitio' y guarde la configuración.`}
+            {`ALERTA: Diríjase a 'Parámetros del Sitio' y guarde la configuración.`}
           </Text>
         )}
       </Flex>
