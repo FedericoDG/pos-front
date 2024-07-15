@@ -221,6 +221,7 @@ export interface Client {
   address?: string;
   info?: string;
   roleId: number;
+  currentAccountActive: number;
   createdAt?: string;
   updatedAt?: string;
   identification?: Identification;
@@ -352,6 +353,7 @@ export interface CashRegister {
   credit: number;
   transfer: number;
   mercadoPago: number;
+  currentAccount: number;
   discounts: number;
   recharges: number;
   otherTributes: number;
@@ -501,4 +503,25 @@ export interface Movement {
   client?: Client;
   paymentMethod?: PaymentMethod;
   cashMovement?: CashMovement;
+}
+
+export interface CurrentAccount {
+  id?: number;
+  clientId: number;
+  balance: number;
+  createdAt: string;
+  updatedAt: string;
+  client: Client;
+}
+
+export interface CurrentAccountDetails {
+  id?: number;
+  currentAccountId: number;
+  paymentMethodId: number;
+  amount: number;
+  type: string;
+  details: string | null;
+  createdAt: string;
+  updatedAt: string;
+  paymentMethod: PaymentMethod | null;
 }

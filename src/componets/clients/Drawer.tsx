@@ -13,6 +13,7 @@ import {
   Input,
   Select,
   Stack,
+  Switch,
   Textarea,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useRef } from 'react';
@@ -90,7 +91,7 @@ export const Drawer = ({
     onSubmit,
   });
 
-  const { handleSubmit, handleChange, values, errors, touched } = formik;
+  const { handleSubmit, handleChange, values, errors, touched, setFieldValue } = formik;
 
   const close = () => {
     // resetForm();
@@ -241,42 +242,6 @@ export const Drawer = ({
                   </Box>
                 </Flex>
 
-                <Flex gap="4" justifyContent="space-between" />
-
-                {/* {!initialValues.id && (
-                  <Flex gap="4" justifyContent="space-between">
-                    <Box w="full">
-                      <FormLabel htmlFor="password">Contraseña:</FormLabel>
-                      <Input
-                        autoComplete="new-password"
-                        id="password"
-                        name="password"
-                        placeholder="hola123"
-                        type="password"
-                        value={values.password}
-                        onChange={handleChange}
-                      />
-                      {errors.password && touched.password && (
-                        <ErrorMessage>{errors.password}</ErrorMessage>
-                      )}
-                    </Box>
-                    <Box w="full">
-                      <FormLabel htmlFor="password2">Repetir contraseña:</FormLabel>
-                      <Input
-                        id="password2"
-                        name="password2"
-                        placeholder="hola123"
-                        type="password"
-                        value={values.password2 || ''}
-                        onChange={handleChange}
-                      />
-                      {errors.password2 && touched.password2 && (
-                        <ErrorMessage>{errors.password2}</ErrorMessage>
-                      )}
-                    </Box>
-                  </Flex>
-                )} */}
-
                 <Flex gap="4" justifyContent="space-between">
                   <Box>
                     <FormLabel htmlFor="phone">Teléfono:</FormLabel>
@@ -313,6 +278,24 @@ export const Drawer = ({
                     />
                   </Box>
                 </Flex>
+
+                {values.id !== 1 && (
+                  <Box>
+                    <FormLabel htmlFor="currentAccountActive">
+                      Habilitar Cuenta Corriente:
+                    </FormLabel>
+                    <Switch
+                      colorScheme="brand"
+                      id="currentAccountActive"
+                      isChecked={values.currentAccountActive === 1}
+                      name="currentAccountActive"
+                      size="md"
+                      onChange={(e) => {
+                        setFieldValue('currentAccountActive', e.target.checked ? 1 : 0);
+                      }}
+                    />
+                  </Box>
+                )}
 
                 <Box>
                   <FormLabel htmlFor="info">Información extra:</FormLabel>

@@ -31,6 +31,7 @@ export const Clients = () => {
       roleId: 5,
       identificationId: 35,
       ivaTypeId: 5,
+      currentAccountActive: 0,
     }),
     []
   );

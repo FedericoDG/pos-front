@@ -206,9 +206,15 @@ export const Sheet = () => {
                               <Td isNumeric>{formatCurrency(balance?.incomes.totalTransfer!)}</Td>
                             </Tr>
                             <Tr>
-                              <Td borderColor="black">Mercado Pago</Td>
-                              <Td isNumeric borderColor="black">
+                              <Td>Mercado Pago</Td>
+                              <Td isNumeric>
                                 {formatCurrency(balance?.incomes.totalMercadoPago!)}
+                              </Td>
+                            </Tr>
+                            <Tr>
+                              <Td borderColor="black">Cuenta Corriente</Td>
+                              <Td isNumeric borderColor="black">
+                                {formatCurrency(balance?.incomes.totalCurrentAccount!)}
                               </Td>
                             </Tr>
                           </Tbody>

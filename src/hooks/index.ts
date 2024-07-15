@@ -1,4 +1,3 @@
-export * from './index';
 export * from './useAfip';
 export * from './useBalance';
 export * from './useCashMovements';
@@ -6,6 +5,7 @@ export * from './useCashRegisters';
 export * from './useCategories';
 export * from './useClients';
 export * from './useCosts';
+export * from './useCurrentAccounts';
 export * from './useDischarges';
 export * from './useGetIVAConditions';
 export * from './useIdentifications';

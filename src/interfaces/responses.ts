@@ -1,3 +1,5 @@
+import { CurrentAccount, CurrentAccountDetails } from './interfaces';
+
 import {
   Afip,
   CashMovement,
@@ -339,6 +341,7 @@ export interface BalanceResponse {
       totalCredit: number;
       totalTransfer: number;
       totalMercadoPago: number;
+      totalCurrentAccount: number;
     };
     outcomes: {
       purchases: number;
@@ -390,5 +393,15 @@ export interface LibroIva {
       createdAt: string;
       client: Client;
     }[];
+  };
+}
+
+export interface ClientCurrentAccountResponse {
+  body: {
+    currentAccount: CurrentAccount;
+    currentAccountDetails: CurrentAccountDetails[];
+    charges: number;
+    payments: number;
+    total: number;
   };
 }

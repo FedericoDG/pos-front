@@ -3,6 +3,7 @@ export * from './CashRegisterDetails';
 export * from './CashRegisters';
 export * from './CashRegisterStatus';
 export * from './Categories';
+export * from './ClientDetails';
 export * from './Clients';
 export * from './CloseCashRegister';
 export * from './CreditNote';

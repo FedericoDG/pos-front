@@ -363,6 +363,14 @@ export const CashRegisterDetails = () => {
                             {formatCurrency(cashRegister.mercadoPago)}
                           </Td>
                         </Tr>
+                        <Tr>
+                          <Td color="#4a5568" fontWeight="semibold">
+                            Cuenta Corriente
+                          </Td>
+                          <Td isNumeric color="#4a5568" fontWeight="semibold">
+                            {formatCurrency(cashRegister.currentAccount)}
+                          </Td>
+                        </Tr>
                       </Tbody>
                     </Table>
                   </TableContainer>

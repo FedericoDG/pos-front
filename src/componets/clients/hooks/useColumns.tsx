@@ -69,12 +69,14 @@ export const useColumns = ({ onOpen, onOpenModal, setinitialValues }: Props) => 
                 variant="link"
               />
               <MenuList>
-                <MenuItem
-                  icon={<TbListDetails />}
-                  onClick={() => navigate(`/panel/Clientos/${row.original.id}`)}
-                >
-                  Ver Detalles
-                </MenuItem>
+                {row.original.currentAccountActive === 1 && (
+                  <MenuItem
+                    icon={<TbListDetails />}
+                    onClick={() => navigate(`/panel/cliente/${row.original.id}`)}
+                  >
+                    Cuenta Corriente
+                  </MenuItem>
+                )}
                 <MenuItem
                   icon={<FaRegEdit />}
                   onClick={() => {

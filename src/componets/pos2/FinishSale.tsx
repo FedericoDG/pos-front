@@ -167,6 +167,7 @@ export const FinishSale = () => {
   const { data: invoceTypes } = useGetInvoceTypes();
   const { data: otherTributes } = useGetOtherTributes();
 
+
   const queryClient = useQueryClient();
 
   const onSubmit = async (values: Values) => {
@@ -551,10 +552,10 @@ export const FinishSale = () => {
                         </AbsoluteCenter>
                       </Box>
                       {
-                        client?.document !== "00000000" &&
+                        client?.document !== "00000000" && client?.currentAccountActive === 1 &&
                         <FormControl alignItems="center" display="flex">
                           <Switch
-                            colorScheme='green'
+                            colorScheme='brand'
                             id="filter"
                             isChecked={checkingAccount}
                             size={'lg'}

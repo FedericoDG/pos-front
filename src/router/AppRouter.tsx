@@ -6,6 +6,7 @@ import {
   CashRegisters,
   CashRegisterStatus,
   Categories,
+  ClientDetails,
   Clients,
   CloseCashRegister,
   CreditNote,
@@ -92,6 +93,7 @@ export const AppRouter = () => (
         />
         {/* CLIENTS */}
         <Route element={<Clients />} path="/panel/clientes" />
+        <Route element={<ClientDetails />} path="/panel/cliente/:id" />
         {/* SUPPLIERS */}
         <Route element={<Suppliers />} path="/panel/proveedores" />
         {/* DRIVERS */}
