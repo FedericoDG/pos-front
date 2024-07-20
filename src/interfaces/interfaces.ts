@@ -519,9 +519,11 @@ export interface CurrentAccountDetails {
   currentAccountId: number;
   paymentMethodId: number;
   amount: number;
+  prevAmount: number;
   type: string;
   details: string | null;
   createdAt: string;
   updatedAt: string;
   paymentMethod: PaymentMethod | null;
+  cashMovement?: CashMovement;
 }

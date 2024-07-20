@@ -10,6 +10,7 @@ import {
   Clients,
   CloseCashRegister,
   CreditNote,
+  CurrentAccount,
   DischargeDetails,
   Discharges,
   DriverDetails,
@@ -47,6 +48,7 @@ import {
   Users,
   Warehouses,
 } from '../pages';
+import { Ticket } from '../componets/current_account';
 
 import { PrivateRoute, PublicRoute } from './';
 
@@ -94,6 +96,9 @@ export const AppRouter = () => (
         {/* CLIENTS */}
         <Route element={<Clients />} path="/panel/clientes" />
         <Route element={<ClientDetails />} path="/panel/cliente/:id" />
+        {/* CURRENT ACCOUNT */}
+        <Route element={<CurrentAccount />} path="/panel/cuenta-corriente" />
+        <Route element={<Ticket />} path="/panel/cuenta-corriente/recibo/:id" />
         {/* SUPPLIERS */}
         <Route element={<Suppliers />} path="/panel/proveedores" />
         {/* DRIVERS */}

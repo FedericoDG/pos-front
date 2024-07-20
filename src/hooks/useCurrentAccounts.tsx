@@ -1,6 +1,6 @@
 import { isError, useMutation, useQuery, useQueryClient } from 'react-query';
 
-import { ClientCurrentAccountResponse } from '../interfaces';
+import { ClientCurrentAccountResponse, CurrentAccount, CurrentAccountDetails } from '../interfaces';
 import { getRequest, postRequest } from '../services';
 
 export interface Payment {
@@ -12,12 +12,39 @@ export interface Payment {
   details: string;
 }
 
-const getCurrentAccount = (id: number) =>
+interface Data {
+  clientId: number;
+  from: string;
+  to: string;
+}
+
+export interface GetRecibo {
+  body: {
+    currentAccountDetails: CurrentAccountDetails & { currentAccount: CurrentAccount; };
+  };
+}
+
+const getCurrentAccount = (data: Data) =>
+  getRequest<ClientCurrentAccountResponse>(
+    `/currentaccount?clientId=${data.clientId}&from=${data.from}&to=${data.to}`
+  );
+
+const getCurrentAccount2 = (id: number) =>
   getRequest<ClientCurrentAccountResponse>(`/currentaccount/${id}`);
 const createCurrentAccountPayment = (payment: Payment) => postRequest('/currentaccount/', payment);
+const getRecibo = (id: number) => getRequest<GetRecibo>(`/currentaccount/recibo/${id}`);
 
-export const useGetCurrentAccount = (id: number) =>
-  useQuery(['currentAccount', id], () => getCurrentAccount(id), {
+export const useGetCurrentAccount = (data: Data) =>
+  useQuery(['currentAccount'], () => getCurrentAccount(data), {
+    enabled: true,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body,
+  });
+
+export const useGetCurrentAccount2 = (id: number) =>
+  useQuery(['currentAccount', id], () => getCurrentAccount2(id), {
     enabled: !!id,
     retry: 1,
     cacheTime: 1,
@@ -39,3 +66,12 @@ export const useCreateCurrentAccountPayment = () => {
     },
   });
 };
+
+export const useGetRecibo = (id: number) =>
+  useQuery(['currentAccount', id], () => getRecibo(id), {
+    enabled: !!id,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body,
+  });

@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
+  Badge,
   Button,
   HStack,
   Stack,
@@ -18,7 +19,7 @@ import { useReactToPrint } from 'react-to-print';
 import { useRef } from 'react';
 import { nanoid } from 'nanoid';
 
-import { useGetCurrentAccount, useGetPaymentMethods2 } from '../hooks';
+import { useGetCurrentAccount2, useGetPaymentMethods2 } from '../hooks';
 import { DashBoard, Loading } from '../componets/common';
 import { Modal } from '../componets/current_account';
 import { formatCurrency, formatDate } from '../utils';
@@ -26,10 +27,11 @@ import { formatCurrency, formatDate } from '../utils';
 export const ClientDetails = () => {
   const { id } = useParams();
 
+  const navigate = useNavigate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data, isFetching } = useGetCurrentAccount(Number(id));
+  const { data, isFetching } = useGetCurrentAccount2(Number(id));
   const { data: paymentMethods, isFetching: isFetching2 } = useGetPaymentMethods2();
 
   const printRef = useRef<any | null>(null);
@@ -142,6 +144,9 @@ export const ClientDetails = () => {
                         MÉTODO DE PAGO
                       </Th>
                       <Th bg="gray.700" color="white">
+                        COMPROBANTE
+                      </Th>
+                      <Th bg="gray.700" color="white">
                         DETALLES
                       </Th>
                     </Tr>
@@ -158,6 +163,7 @@ export const ClientDetails = () => {
                         </Td>
                         <Td>{`${el.type === 'PAYMENT' ? 'Pago' : 'Cargo'}`}</Td>
                         <Td>{el.type === 'PAYMENT' ? el.paymentMethod?.code : ''}</Td>
+                        <Td>{el.type === 'PAYMENT' ? <Badge cursor={'pointer'} onClick={() => navigate('/panel')}>Ver Comprobante</Badge> : ''}</Td>
                         <Td>{el.details}</Td>
                       </Tr>
                     ))}

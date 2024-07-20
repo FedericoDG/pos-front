@@ -22,6 +22,7 @@ import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 import { ErrorMessage } from '../common';
 import { PaymentMethod } from '../../interfaces/interfaces';
@@ -50,15 +51,19 @@ export const Modal = ({
   currentAccountId
 }: Props) => {
 
-  const { mutateAsync, isLoading } = useCreateCurrentAccountPayment();
+  const [disabled, setDisabled] = useState(false);
+
+  const { mutateAsync } = useCreateCurrentAccountPayment();
 
   const onSubmit = (values: Values) => {
+    setDisabled(true);
 
     const data = { ...values, amount: Number(values.amount), currentAccountId, paymentMethodId: Number(values.paymentMethodId), type: 'PAYMENT' };
 
     mutateAsync(data).then(() => {
-      toast.success('Pago Creado');
+      toast.success('Pago Cargado');
     }).finally(() => {
+      setDisabled(false);
       onClose();
     });
   };
@@ -167,7 +172,7 @@ export const Modal = ({
             <Button tabIndex={3} type="reset" onClick={onClose}>
               CANCELAR
             </Button>
-            <Button colorScheme="brand" disabled={isLoading} ml={3} tabIndex={2} type="submit">
+            <Button colorScheme="brand" disabled={disabled} ml={3} tabIndex={2} type="submit">
               Aceptar
             </Button>
           </ModalFooter>

@@ -71,7 +71,9 @@ export const SupplierAndWarehouse = () => {
               el.code !== '008' &&
               el.code !== '053' &&
               el.code !== '051' &&
-              el.code !== '666'
+              el.code !== '666' &&
+              el.code !== '011' &&
+              el.code !== '013'
           );
 
           setMappedInvoceTypes(filter);
@@ -84,7 +86,9 @@ export const SupplierAndWarehouse = () => {
               el.code !== '008' &&
               el.code !== '001' &&
               el.code !== '053' &&
-              el.code !== '666'
+              el.code !== '666' &&
+              el.code !== '011' &&
+              el.code !== '013'
           );
 
           setMappedInvoceTypes(filter);

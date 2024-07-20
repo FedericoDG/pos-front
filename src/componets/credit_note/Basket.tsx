@@ -65,6 +65,10 @@ export const Basket = ({ cashMovement }: Props) => {
   const handleSubmit = () => {
     const sale = {} as CreditNote;
 
+    const isCurrentAccount = cashMovement.paymentMethodDetails?.some(
+      (el) => el.paymentMethod.code === 'Cuenta Corriente'
+    );
+
     sale.cart = cart.map((item) => ({
       productId: item.productId!,
       quantity: Number(item.quantity),
@@ -83,6 +87,7 @@ export const Basket = ({ cashMovement }: Props) => {
     sale.info = '';
     sale.invoceTypeId = cashMovement.invoceIdAfip!;
     sale.invoceNumber = cashMovement.invoceNumberAfip!;
+    sale.isCurrentAccount = isCurrentAccount!;
 
     if (cashMovement.iva) {
       mutateAsync(sale);

@@ -7,6 +7,7 @@ export * from './ClientDetails';
 export * from './Clients';
 export * from './CloseCashRegister';
 export * from './CreditNote';
+export * from './CurrentAccount';
 export * from './Discharges';
 export * from './DischargesDetails';
 export * from './DriveDetails';

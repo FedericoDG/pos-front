@@ -29,6 +29,7 @@ export interface CreditNote extends Sale {
   invoceTypeId: number;
   invoceNumber: number;
   creditNote: number;
+  isCurrentAccount: boolean;
 }
 
 const getAfip = () => getRequest<AfipResponse>(`/afip/settings/`);
