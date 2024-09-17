@@ -11,6 +11,7 @@ import {
   CloseCashRegister,
   CreditNote,
   CurrentAccount,
+  CurrentAccountResume,
   DischargeDetails,
   Discharges,
   DriverDetails,
@@ -99,6 +100,7 @@ export const AppRouter = () => (
         {/* CURRENT ACCOUNT */}
         <Route element={<CurrentAccount />} path="/panel/cuenta-corriente" />
         <Route element={<Ticket />} path="/panel/cuenta-corriente/recibo/:id" />
+        <Route element={<CurrentAccountResume />} path="/panel/cuenta-corriente-resumen" />
         {/* SUPPLIERS */}
         <Route element={<Suppliers />} path="/panel/proveedores" />
         {/* DRIVERS */}

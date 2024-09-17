@@ -3,7 +3,7 @@ const formatCurrency = (number: number) =>
 
 export const formatTwoDigits = (number: number) =>
   new Intl.NumberFormat('es-AR', {
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
     useGrouping: false,
   }).format(number);

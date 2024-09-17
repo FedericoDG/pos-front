@@ -405,3 +405,16 @@ export interface ClientCurrentAccountResponse {
     total: number;
   };
 }
+
+export interface ResumeCurrentAccountResponse {
+  body: {
+    currentAccount: {
+      id: number;
+      clientId: number;
+      balance: number;
+      client: Client;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+  };
+}

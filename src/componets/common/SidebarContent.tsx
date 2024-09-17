@@ -285,9 +285,14 @@ export const SidebarContent = (props: Props) => {
 
         {/* CURRENT ACCOUNT */}
         {role?.id && role?.id <= roles.SELLER && (
-          <NavItem icon={BsPersonVcard} link="/panel/cuenta-corriente">
-            Cuenta Corriente
-          </NavItem>
+          <>
+            <NavItem icon={BsPersonVcard} link="/panel/cuenta-corriente-resumen">
+              Cta. Cte. - Resumen
+            </NavItem>
+            <NavItem icon={BsPersonVcard} link="/panel/cuenta-corriente">
+              Cta. Cte. - Individual
+            </NavItem>
+          </>
         )}
 
         {/* DRIVERS */}
