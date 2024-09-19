@@ -10,7 +10,7 @@ import {
   FaBook,
 } from 'react-icons/fa';
 import { GiCarWheel } from 'react-icons/gi';
-import { MdKeyboardArrowRight } from 'react-icons/md';
+import { MdKeyboardArrowRight, MdOutlineAccountBalanceWallet } from 'react-icons/md';
 import { MdPointOfSale } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
@@ -43,6 +43,9 @@ export const SidebarContent = (props: Props) => {
     onTogglePriceList,
     onToggleProducts,
     onToggleStock,
+    isOpenCurrentAccount,
+    onToggleCurrentAccount,
+    onCloseCurrentAccount,
   } = useMyContext();
 
   const {
@@ -124,6 +127,7 @@ export const SidebarContent = (props: Props) => {
                 onCloseStock();
                 onCloseProducts();
                 onClosePriceList();
+                onCloseCurrentAccount();
               }}
             >
               Caja
@@ -159,6 +163,7 @@ export const SidebarContent = (props: Props) => {
             onCloseCashRegister();
             onClosePriceList();
             onCloseStock();
+            onCloseCurrentAccount();
           }}
         >
           Productos
@@ -205,6 +210,7 @@ export const SidebarContent = (props: Props) => {
                 onCloseCashRegister();
                 onCloseProducts();
                 onClosePriceList();
+                onCloseCurrentAccount();
               }}
             >
               Stock
@@ -259,6 +265,7 @@ export const SidebarContent = (props: Props) => {
             onCloseCashRegister();
             onCloseProducts();
             onCloseStock();
+            onCloseCurrentAccount();
           }}
         >
           Listas de Precios
@@ -283,17 +290,42 @@ export const SidebarContent = (props: Props) => {
           </NavItem>
         </Collapse>
 
-        {/* CURRENT ACCOUNT */}
         {role?.id && role?.id <= roles.SELLER && (
           <>
-            <NavItem icon={BsPersonVcard} link="/panel/cuenta-corriente-resumen">
-              Cta. Cte. - Resumen
-            </NavItem>
-            <NavItem icon={BsPersonVcard} link="/panel/cuenta-corriente">
-              Cta. Cte. - Individual
-            </NavItem>
+            <NavItemDivider
+              icon={MdOutlineAccountBalanceWallet}
+              onClick={() => {
+                onToggleCurrentAccount();
+                onClosePriceList();
+                onCloseCashRegister();
+                onCloseProducts();
+                onCloseStock();
+              }}
+            >
+              Cuenta Corriente
+              <Icon
+                as={MdKeyboardArrowRight}
+                ml="auto"
+                transform={isOpenCurrentAccount ? 'rotate(90deg)' : ''}
+              />
+            </NavItemDivider>
+            <Collapse in={isOpenCurrentAccount}>
+              <NavItem link="/panel/cuenta-corriente-resumen">
+                <Box pl="8" py="0">
+                  Resumen
+                </Box>
+              </NavItem>
+              <NavItem link="/panel/cuenta-corriente">
+                <Box pl="8" py="0">
+                  Detalles
+                </Box>
+              </NavItem>
+            </Collapse>
           </>
         )}
+        {/* PRICELISTS */}
+
+        {/* CURRENT ACCOUNT */}
 
         {/* DRIVERS */}
         {role?.id && role?.id <= roles.ADMIN && (

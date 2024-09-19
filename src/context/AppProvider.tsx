@@ -41,6 +41,11 @@ export const AppProvider = ({ children }: Props) => {
     onToggle: onTogglePriceList,
     onClose: onClosePriceList,
   } = useDisclosure();
+  const {
+    isOpen: isOpenCurrentAccount,
+    onToggle: onToggleCurrentAccount,
+    onClose: onCloseCurrentAccount,
+  } = useDisclosure();
   const { isOpen: isOpenStock, onToggle: onToggleStock, onClose: onCloseStock } = useDisclosure();
 
   const [user, dispatch] = useReducer(authReducer, {}, init);
@@ -100,6 +105,9 @@ export const AppProvider = ({ children }: Props) => {
       user,
       responsableInscripto,
       setResponsableInscripto,
+      isOpenCurrentAccount,
+      onToggleCurrentAccount,
+      onCloseCurrentAccount,
     }),
     [
       isOpenCashRegister,
@@ -116,6 +124,9 @@ export const AppProvider = ({ children }: Props) => {
       onToggleStock,
       user,
       responsableInscripto,
+      isOpenCurrentAccount,
+      onToggleCurrentAccount,
+      onCloseCurrentAccount,
     ]
   );
 
@@ -144,6 +155,9 @@ export const useMyContext = () => {
     user,
     responsableInscripto,
     setResponsableInscripto,
+    isOpenCurrentAccount,
+    onToggleCurrentAccount,
+    onCloseCurrentAccount,
   } = useContext(appContext);
 
   const dispatchLogin = (user: User) => dispatch(loginAction(user));
@@ -175,5 +189,8 @@ export const useMyContext = () => {
     user,
     responsableInscripto,
     setResponsableInscripto,
+    isOpenCurrentAccount,
+    onToggleCurrentAccount,
+    onCloseCurrentAccount,
   };
 };

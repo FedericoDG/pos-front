@@ -10,14 +10,17 @@ interface AppContext {
   isOpenPriceList: boolean;
   isOpenProducts: boolean;
   isOpenStock: boolean;
+  isOpenCurrentAccount: boolean;
   onClosePriceList: () => void;
   onCloseCashRegister: () => void;
   onCloseProducts: () => void;
   onCloseStock: () => void;
+  onCloseCurrentAccount: () => void;
   onTogglePriceList: () => void;
   onToggleCashRegister: () => void;
   onToggleProducts: () => void;
   onToggleStock: () => void;
+  onToggleCurrentAccount: () => void;
   tableInput: MutableRefObject<any>;
   top: MutableRefObject<null>;
   user: User;

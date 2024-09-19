@@ -2,6 +2,7 @@ export * from './context/CurrentAccountContext';
 export * from './context/CurrentAccountProvider';
 export * from './Modal';
 export * from './Sheet';
+export * from './SheetResume';
 export * from './StepperWrapper';
 export * from './Steps';
 export * from './SupplierAndWarehouse';
