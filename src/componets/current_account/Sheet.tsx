@@ -236,7 +236,6 @@ export const Sheet = () => {
             <Modal currentAccountId={data.currentAccount.id!} handleClose={handleClose} isOpen={isOpen} max={data.total * -1} paymentMetods={paymentMethods} />
           </Stack>
       }
-      <pre>{JSON.stringify(data?.currentAccountDetails, null, 2)}</pre>
     </Stack >
   );
 };
