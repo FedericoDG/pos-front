@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react';
 import { useRef } from 'react';
 import { ImPrinter } from 'react-icons/im';
@@ -44,7 +45,7 @@ export const Ticket = () => {
             Imprimir
           </Button>
         </Stack>
-        {!settings || isLoading ? (
+        {!recibo || !settings || isLoading ? (
           <Loading />
         ) : (
           <Stack
@@ -84,14 +85,14 @@ export const Ticket = () => {
               pos="relative"
             >
               <Text fontSize="small">
-                Señores: {recibo?.currentAccountDetails.currentAccount.client.name}
+                Señores: {recibo?.currentAccountDetails.currentAccount?.client.name}
               </Text>
               <Text fontSize="small">
-                Domicilio: {recibo?.currentAccountDetails.currentAccount.client?.address}
+                Domicilio: {recibo?.currentAccountDetails.currentAccount?.client?.address}
               </Text>
               <Text fontSize="small">
-                {recibo?.currentAccountDetails.currentAccount.client?.identification?.description}:{' '}
-                {recibo?.currentAccountDetails.currentAccount.client?.document}
+                {recibo?.currentAccountDetails.currentAccount?.client?.identification?.description}:{' '}
+                {recibo?.currentAccountDetails.currentAccount?.client?.document}
               </Text>
             </Stack>
 
@@ -102,7 +103,8 @@ export const Ticket = () => {
               <Stack height={'full'}>
                 <div style={{ flex: 1 }} />
                 <Text>{`SALDO RESTANTE: ${formatCurrency(
-                  recibo?.currentAccountDetails.prevAmount! - recibo?.currentAccountDetails.amount!
+                  recibo?.currentAccountDetails?.prevAmount! -
+                  recibo?.currentAccountDetails?.amount!
                 )}`}</Text>
               </Stack>
             </Stack>

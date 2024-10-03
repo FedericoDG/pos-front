@@ -9,7 +9,6 @@ import {
   TableContainer,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
@@ -19,9 +18,8 @@ import { useReactToPrint } from 'react-to-print';
 import { ImPrinter } from 'react-icons/im';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
 
-import { formatCurrency, formatDate } from '../../utils';
+import { formatCurrency } from '../../utils';
 import { Client } from '../../interfaces';
 
 interface Props {
@@ -107,7 +105,6 @@ export const SheetResume = ({ currentAccount }: Props) => {
           </Table>
         </TableContainer>
       </Stack>
-
     </Stack >
   );
 };

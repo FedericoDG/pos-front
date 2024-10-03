@@ -27,7 +27,7 @@ import { useQueryClient } from 'react-query';
 
 import { DashBoard, Loading } from '../componets/common';
 import { formatCurrency, formatDate, formatDateAndHour } from '../utils';
-import { useCashRegister, useCreateAfipInvoce } from '../hooks';
+import { useCashRegister, useCreateAfipInvoce, useGetByCashRegisterId } from '../hooks';
 import { useMyContext } from '../context';
 import { formatTwoDigits } from '../utils/formatCurrency';
 import { CashMovement, roles } from '../interfaces';
@@ -50,7 +50,11 @@ export const CashRegisterDetails = () => {
     Number(id)
   );
 
-  const isIndeterminate = isFetchingCashCashRegister;
+  const { data: currentAccountDetails, isFetching: isFetchingCurrentAccountDetails } = useGetByCashRegisterId(
+    Number(id)
+  );
+
+  const isIndeterminate = isFetchingCashCashRegister || isFetchingCurrentAccountDetails;
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -1425,6 +1429,49 @@ export const CashRegisterDetails = () => {
                   }
                 </Stack>
               </Stack>
+              {currentAccountDetails?.currentAccountDetails && currentAccountDetails?.currentAccountDetails.length &&
+                <HStack w={'full'}>
+
+                  <Stack w={'50%'}>
+                    <Text mt={4} textAlign="left">
+                      Cobros de Cuenta Corriente
+                    </Text>
+
+                    <TableContainer w="full">
+                      <Table size="sm" >
+                        <Thead>
+                          <Tr>
+                            <Th isNumeric bg="gray.700" color="white">Pago</Th>
+                            <Th bg="gray.700" color="white">Método de pago</Th>
+                            <Th isNumeric bg="gray.700" color="white">Comprobante</Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {
+                            currentAccountDetails?.currentAccountDetails.map((el) => {
+
+                              return (
+                                <Tr key={nanoid()}>
+                                  <Td isNumeric fontWeight="semibold">
+                                    {formatCurrency(el.amount)}
+                                  </Td>
+                                  <Td fontWeight="semibold">
+                                    {el.paymentMethod?.code}
+                                  </Td>
+                                  <Td isNumeric fontWeight="semibold">
+                                    <Button size="xs" onClick={() => navigate(`/panel/cuenta-corriente/recibo/${el.id}`)}>Ver Comprobante</Button>
+                                  </Td>
+                                </Tr>
+                              );
+
+                            })
+                          }
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                  </Stack>
+                </HStack>
+              }
             </Stack>
           </Flex>
         </>

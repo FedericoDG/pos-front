@@ -137,6 +137,9 @@ export const ClientDetails = () => {
                       <Th isNumeric bg="gray.700" color="white">
                         MONTO
                       </Th>
+                      <Th isNumeric bg="gray.700" color="white">
+                        MONTO PREVIO
+                      </Th>
                       <Th bg="gray.700" color="white">
                         TIPO
                       </Th>
@@ -145,9 +148,6 @@ export const ClientDetails = () => {
                       </Th>
                       <Th bg="gray.700" color="white">
                         COMPROBANTE
-                      </Th>
-                      <Th bg="gray.700" color="white">
-                        DETALLES
                       </Th>
                     </Tr>
                   </Thead>
@@ -161,10 +161,10 @@ export const ClientDetails = () => {
                             : formatCurrency(el.amount * -1)
                             }`}
                         </Td>
+                        <Td isNumeric>{formatCurrency(el.prevAmount === 0 ? el.prevAmount : el.prevAmount * -1)}</Td>
                         <Td>{`${el.type === 'PAYMENT' ? 'Pago' : 'Cargo'}`}</Td>
                         <Td>{el.type === 'PAYMENT' ? el.paymentMethod?.code : ''}</Td>
-                        <Td>{el.type === 'PAYMENT' ? <Badge cursor={'pointer'} onClick={() => navigate('/panel')}>Ver Comprobante</Badge> : ''}</Td>
-                        <Td>{el.details}</Td>
+                        <Td>{el.type === 'PAYMENT' ? <Badge cursor={'pointer'} onClick={() => navigate(`/panel/cuenta-corriente/recibo/${el.id}`)}>Ver Comprobante</Badge> : ''}</Td>
                       </Tr>
                     ))}
                   </Tbody>

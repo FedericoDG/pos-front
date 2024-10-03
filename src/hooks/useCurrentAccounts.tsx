@@ -28,6 +28,11 @@ export interface GetRecibo {
     currentAccountDetails: CurrentAccountDetails & { currentAccount: CurrentAccount; };
   };
 }
+export interface getCurrentAccountDetails {
+  body: {
+    currentAccountDetails: CurrentAccountDetails[];
+  };
+}
 
 const getCurrentAccount = (data: Data) =>
   getRequest<ClientCurrentAccountResponse>(
@@ -40,6 +45,8 @@ const getCurrentAccountResume = () =>
   getRequest<ResumeCurrentAccountResponse>(`/currentaccount/resume/all`);
 const createCurrentAccountPayment = (payment: Payment) => postRequest('/currentaccount/', payment);
 const getRecibo = (id: number) => getRequest<GetRecibo>(`/currentaccount/recibo/${id}`);
+const getbyCashRegisterId = (id: number) =>
+  getRequest<getCurrentAccountDetails>(`/currentaccount/details/${id}`);
 
 export const useGetCurrentAccount = (data: Data) =>
   useQuery(['currentAccount'], () => getCurrentAccount(data), {
@@ -85,6 +92,15 @@ export const useCreateCurrentAccountPayment = () => {
 
 export const useGetRecibo = (id: number) =>
   useQuery(['currentAccount', id], () => getRecibo(id), {
+    enabled: !!id,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body,
+  });
+
+export const useGetByCashRegisterId = (id: number) =>
+  useQuery(['currentAccount', id], () => getbyCashRegisterId(id), {
     enabled: !!id,
     retry: 1,
     cacheTime: 1,

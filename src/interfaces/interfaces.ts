@@ -517,6 +517,7 @@ export interface CurrentAccount {
 export interface CurrentAccountDetails {
   id?: number;
   currentAccountId: number;
+  cashRegisterId: number;
   paymentMethodId: number;
   amount: number;
   prevAmount: number;
