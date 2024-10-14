@@ -83,7 +83,16 @@ export const Basket = ({ cashMovement }: Props) => {
     sale.warehouseId = cashMovement.warehouseId;
     sale.discount = cashMovement.discount;
     sale.recharge = cashMovement.recharge;
-    sale.payments = [{ amount: totalCart, paymentMethodId: 1 }];
+    //
+    sale.payments = [
+      {
+        amount: totalCart,
+        paymentMethodId:
+          cashMovement?.paymentMethodDetails?.length! > 1
+            ? 1
+            : cashMovement.paymentMethodDetails?.[0].paymentMethodId || 1,
+      },
+    ];
     sale.info = '';
     sale.invoceTypeId = cashMovement.invoceIdAfip!;
     sale.invoceNumber = cashMovement.invoceNumberAfip!;

@@ -74,7 +74,7 @@ export const useProductColumns = ({ onOpen, setActiveProduct, cashMovement }: Pr
         cell: (row: CellContext<CashMovementsDetail, unknown>) => row.renderValue(),
         accessorFn: (x) => formatCurrency(x.price * x.quantity - x.totalDiscount + x.totalIVA), // ACA
       },
-      {
+      /*       {
         id: 'acciones',
         header: 'Acciones',
         cell: ({ row }: CellContext<CashMovementsDetail, unknown>) => (
@@ -101,9 +101,9 @@ export const useProductColumns = ({ onOpen, setActiveProduct, cashMovement }: Pr
         meta: {
           align: 'center',
         },
-      },
+      }, */
     ],
-    [isDisabled, onOpen, setActiveProduct, stock]
+    [stock]
   );
 
   return { columns };
