@@ -17,13 +17,13 @@ export const ProductsTable = ({ cashMovement }: Props) => {
   const { cart } = usePosContext();
   const { tableInput } = useMyContext();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
 
   const cancelRef = useRef<HTMLInputElement | null>(null);
 
   const [activeProduct, setActiveProduct] = useState({} as CashMovementsDetail);
 
-  const { columns } = useProductColumns({ onOpen, setActiveProduct, cashMovement });
+  const { columns } = useProductColumns();
 
   const handleClose = () => {
     setActiveProduct({} as CashMovementsDetail);
