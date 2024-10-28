@@ -105,10 +105,19 @@ export const Ticket = () => {
               )} en concepto de cancelación parcial de saldo en cuenta corriente.`}</Text>
               <Stack height={'full'}>
                 <div style={{ flex: 1 }} />
-                <Text>{`SALDO RESTANTE: ${formatCurrency(
+                {
                   recibo?.currentAccountDetails?.prevAmount! -
-                  recibo?.currentAccountDetails?.amount!
-                )}`}</Text>
+                    recibo?.currentAccountDetails?.amount < 0 ?
+                    <Text>{`SALDO A FAVOR: ${formatCurrency(
+                      (recibo?.currentAccountDetails?.prevAmount! -
+                        recibo?.currentAccountDetails?.amount!) * -1
+                    )}`}</Text>
+                    :
+                    <Text>{`SALDO RESTANTE: ${formatCurrency(
+                      recibo?.currentAccountDetails?.prevAmount! -
+                      recibo?.currentAccountDetails?.amount!
+                    )}`}</Text>
+                }
               </Stack>
             </Stack>
           </Stack>
