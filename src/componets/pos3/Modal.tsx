@@ -92,7 +92,7 @@ export const Modal = ({
           .number({
             invalid_type_error: 'Sólo se permiten números'
           })
-          .min(1, 'Minimo: 1')
+          .min(0.1, 'Minimo: 0.1')
           .max(
             activeProduct.allownegativestock === 'DISABLED' || user.role?.name === 'DRIVER'
               ? activeProduct.stock! -
