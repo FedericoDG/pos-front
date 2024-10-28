@@ -72,9 +72,12 @@ export const Ticket = () => {
               </Text>
             </HStack>
 
-            <HStack justify={'flex-end'}>
+            <Stack alignItems={'flex-end'}>
               <Text>{formatDate(recibo?.currentAccountDetails.createdAt)}</Text>
-            </HStack>
+              <Text fontSize="small" fontWeight={400}>
+                N°: {recibo.currentAccountDetails?.id!.toString().padStart(8, '0')}
+              </Text>
+            </Stack>
 
             <Stack
               alignItems="flex-start"
