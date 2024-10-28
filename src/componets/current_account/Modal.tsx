@@ -47,13 +47,13 @@ export const Modal = ({
   isOpen,
   handleClose,
   paymentMetods,
-  max,
+  // max,
   currentAccountId
 }: Props) => {
 
   const [disabled, setDisabled] = useState(false);
 
-  const { mutateAsync } = useCreateCurrentAccountPayment();
+  const { mutateAsync, isLoading } = useCreateCurrentAccountPayment();
 
   const onSubmit = (values: Values) => {
     setDisabled(true);
@@ -88,10 +88,10 @@ export const Modal = ({
             invalid_type_error: 'Sólo se permiten números'
           })
           .min(1, 'Mínimo: 1')
-          .max(
-            max,
-            `Máximo: $${max}`
-          )
+        /*  .max(
+           max,
+           `Máximo: $${max}`
+         ) */
       ),
     });
 
@@ -172,7 +172,7 @@ export const Modal = ({
             <Button tabIndex={3} type="reset" onClick={onClose}>
               CANCELAR
             </Button>
-            <Button colorScheme="brand" disabled={disabled} ml={3} tabIndex={2} type="submit">
+            <Button colorScheme="brand" disabled={disabled || isLoading} ml={3} tabIndex={2} type="submit">
               Aceptar
             </Button>
           </ModalFooter>
