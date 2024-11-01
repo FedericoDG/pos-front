@@ -24,19 +24,21 @@ interface LoginI {
 }
 
 export const Login = () => {
-  const { dispatchLogin, setResponsableInscripto } = useMyContext();
+  const { dispatchLogin, setResponsableInscripto, setPosEnabled } = useMyContext();
   const login = async (values: LoginI) => {
     try {
       const {
-        body: { user, token, responsableInscripto },
+        body: { user, token, responsableInscripto, posEnabled },
       } = await postRequest('/auth/login', values);
 
       sessionStorage.write('user', { ...user, logged: true });
       sessionStorage.write('token', token);
       sessionStorage.write('responsableInscripto', responsableInscripto.toString());
+      sessionStorage.write('posEnabled', posEnabled.toString());
 
       dispatchLogin(user);
       setResponsableInscripto(responsableInscripto);
+      setPosEnabled(posEnabled);
     } catch (error: any) {
       toast.error('Usuario y/o contraseña inválida');
       throw new Error(error);

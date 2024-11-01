@@ -51,6 +51,7 @@ export const SidebarContent = (props: Props) => {
   const {
     user: { role },
     responsableInscripto,
+    posEnabled,
   } = useMyContext();
 
   return (
@@ -104,14 +105,16 @@ export const SidebarContent = (props: Props) => {
       <Flex aria-label="Main Navigation" as="nav" color="gray.600" direction="column" fontSize="sm">
         {/* POS */}
 
-        {role?.id && role.id <= roles.DRIVER && responsableInscripto === 0 ? (
+        {posEnabled && role?.id && role.id <= roles.DRIVER && responsableInscripto === 0 ? (
           <NavItem icon={MdPointOfSale} link="/panel/pos">
             Punto de Venta
           </NavItem>
         ) : (
-          <NavItem icon={MdPointOfSale} link="/panel/pos-c">
-            Punto de Venta
-          </NavItem>
+          posEnabled && (
+            <NavItem icon={MdPointOfSale} link="/panel/pos-c">
+              Punto de Venta
+            </NavItem>
+          )
         )}
         <NavItem icon={MdPointOfSale} link="/panel/presupuesto">
           Remito

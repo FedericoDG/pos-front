@@ -25,6 +25,7 @@ export interface Settings {
   showOtherTaxes: number;
   defaultPriceListDriver: number;
   responsableInscripto: number;
+  posEnabled: boolean;
 }
 
 export interface Afip {

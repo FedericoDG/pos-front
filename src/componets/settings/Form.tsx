@@ -38,8 +38,9 @@ interface Props {
 }
 
 export const Form = ({ afip, settings, priceLists }: Props) => {
-  const { setResponsableInscripto } = useMyContext();
+  const { setResponsableInscripto, setPosEnabled } = useMyContext();
   const [resp, setResp] = useState(() => settings.responsableInscripto);
+  const [posE, setPosE] = useState(() => settings.posEnabled);
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
@@ -60,7 +61,7 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
   const isLoading = isLoadingSettings && isLoadingAfipSettings;
 
   const onSubmit = (values: Settings & Afip, actions: FormikHelpers<Settings & Afip>) => {
-    const { posNumber, maxPerInvoice, invoiceM, showOtherTaxes, ...rest } = values;
+    const { posNumber, maxPerInvoice, invoiceM, showOtherTaxes, posEnabled, ...rest } = values;
 
     delete rest.id;
     delete rest.certExpiration;
@@ -80,6 +81,7 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
       responsableInscripto: resp,
       ivaCondition: responsables[Number(resp)].name,
       defaultPriceListDriver: Number(values.defaultPriceListDriver),
+      posEnabled: Boolean(posE),
     };
 
     const parsedValuesAfip = {
@@ -90,7 +92,9 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
 
     updateSettings(parsedValuesSettings).then(() => {
       sessionStorage.write2('responsableInscripto', resp.toString());
+      sessionStorage.write2('posEnabled', Boolean(posEnabled).toString());
       setResponsableInscripto(resp);
+      setPosEnabled(Boolean(posEnabled));
     });
     updateAfipSettings(parsedValuesAfip);
 
@@ -247,7 +251,25 @@ export const Form = ({ afip, settings, priceLists }: Props) => {
           </Box>
         </Flex>
 
-        <Flex alignItems={'center'} gap="2" justifyContent={'space-between'} mt="8">
+        <Flex alignItems={'center'} gap="2" justifyContent={'flex-start'} mt="8">
+          <Box>
+            <FormControl alignItems="center" display="flex">
+              <Switch
+                colorScheme="red"
+                defaultChecked={settings.posEnabled}
+                id="posEnabled"
+                name="posEnabled"
+                size="md"
+                onChange={(e) => {
+                  setPosE(Boolean(e.target.checked));
+                  handleChange(e);
+                }}
+              />
+              <FormLabel htmlFor="filter" mb="0" ml="2">
+                Hablilitar Punto de Venta Fiscal
+              </FormLabel>
+            </FormControl>
+          </Box>
           <Box>
             <FormControl alignItems="center" display="flex">
               <Switch

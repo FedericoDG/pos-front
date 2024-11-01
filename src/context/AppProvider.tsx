@@ -61,6 +61,16 @@ export const AppProvider = ({ children }: Props) => {
     initResponsableInscripto()
   );
 
+  const initPosEnabled = () => {
+    const res = sessionStorage.read('posEnabled');
+
+    if (res) return JSON.parse(res);
+
+    return null;
+  };
+
+  const [posEnabled, setPosEnabled] = useState<boolean | null>(() => initPosEnabled());
+
   const top = useRef(null);
   const bottom = useRef(null);
   const tableInput = useRef();
@@ -74,6 +84,11 @@ export const AppProvider = ({ children }: Props) => {
     if (!responsableInscripto) return;
     sessionStorage.write2('responsableInscripto', responsableInscripto.toString());
   }, [responsableInscripto]);
+
+  useEffect(() => {
+    if (!posEnabled) return;
+    sessionStorage.write2('posEnabled', posEnabled.toString());
+  }, [posEnabled]);
 
   const handleScroll = (ref: MutableRefObject<HTMLElement | null>) => {
     setTimeout(() => {
@@ -108,6 +123,8 @@ export const AppProvider = ({ children }: Props) => {
       isOpenCurrentAccount,
       onToggleCurrentAccount,
       onCloseCurrentAccount,
+      setPosEnabled,
+      posEnabled,
     }),
     [
       isOpenCashRegister,
@@ -127,6 +144,7 @@ export const AppProvider = ({ children }: Props) => {
       isOpenCurrentAccount,
       onToggleCurrentAccount,
       onCloseCurrentAccount,
+      posEnabled,
     ]
   );
 
@@ -158,6 +176,8 @@ export const useMyContext = () => {
     isOpenCurrentAccount,
     onToggleCurrentAccount,
     onCloseCurrentAccount,
+    posEnabled,
+    setPosEnabled,
   } = useContext(appContext);
 
   const dispatchLogin = (user: User) => dispatch(loginAction(user));
@@ -192,5 +212,7 @@ export const useMyContext = () => {
     isOpenCurrentAccount,
     onToggleCurrentAccount,
     onCloseCurrentAccount,
+    posEnabled,
+    setPosEnabled,
   };
 };

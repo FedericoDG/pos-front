@@ -26,6 +26,8 @@ interface AppContext {
   user: User;
   responsableInscripto: number | null;
   setResponsableInscripto: Dispatch<SetStateAction<number | null>>;
+  posEnabled: boolean | null;
+  setPosEnabled: Dispatch<SetStateAction<boolean | null>>;
 }
 
 export const appContext = createContext({} as AppContext);
