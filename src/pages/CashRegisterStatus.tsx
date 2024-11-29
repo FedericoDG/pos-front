@@ -87,8 +87,6 @@ export const CashRegisterStatus = () => {
     };
   }, [onOpen]);
 
-  console.log(cashRegister);
-
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Caja - Estado">
       {!cashRegister ? (

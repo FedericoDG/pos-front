@@ -22,6 +22,7 @@ export const Ticket = () => {
   const { data: settings, isLoading } = useGetSettings(1);
   const { data: recibo } = useGetRecibo(Number(id));
 
+
   return (
     <DashBoard isIndeterminate={false} title="Cuenta Corriente">
       <Flex
@@ -45,7 +46,7 @@ export const Ticket = () => {
             Imprimir
           </Button>
         </Stack>
-        {!recibo || !settings || isLoading ? (
+        {!recibo?.currentAccountDetails?.id || !settings || isLoading ? (
           <Loading />
         ) : (
           <Stack

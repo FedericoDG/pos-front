@@ -154,23 +154,28 @@ export const CashRegisterDetails = () => {
   const newRecharge = (cashMovement: any) => {
     const originalRecharge =
       cashMovement.cashMovementsDetails?.reduce(
-        (acc: any, el: any) => acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax),
+        (acc: any, el: any) => {
+          return acc + (el.price * el.quantity - el.totalDiscount) * (1 + el.tax);
+        },
         0
       ) || 0;
 
     return (Math.max(cashMovement.recharge - originalRecharge + cashMovement.subtotal, 0));
   };
 
-  const newTotalRecharge = () => {
-    if (isIndeterminate) return;
-    let acc = 0;
-
-    for (const coso of cashRegister?.cashMovements!) {
-      acc += newRecharge(coso);
-    }
-
-    return acc;
-  };
+  /*  const newTotalRecharge = () => {
+     if (isIndeterminate) return;
+     let acc = 0;
+ 
+     for (const coso of cashRegister?.cashMovements!) {
+       acc += newRecharge(coso);
+     }
+ 
+ 
+     // acc = acc - cashRegister?.recharges! * 2;
+ 
+     return acc;
+   }; */
 
   return (
     <DashBoard isIndeterminate={isIndeterminate} title="Detalles de la Caja">
@@ -309,6 +314,7 @@ export const CashRegisterDetails = () => {
                         <Td isNumeric color="#4a5568" fontWeight="semibold">
                           {formatCurrency(cashRegister.otherTributes)}
                         </Td>
+                        {/* ACA */}
                         <Td isNumeric color="#4a5568" fontSize={16} fontWeight="bold">
                           {formatCurrency(cashRegister.initialBalance + cashRegister.sales + cashRegister.otherTributes - cashRegister.creditNotes)}
                         </Td>
@@ -318,7 +324,7 @@ export const CashRegisterDetails = () => {
                 </TableContainer>
 
                 <HStack alignItems="flex-start">
-                  <TableContainer w="full">
+                  <TableContainer w="50%">
                     <Table size="sm" >
                       <Thead>
                         <Tr>
@@ -378,7 +384,7 @@ export const CashRegisterDetails = () => {
                       </Tbody>
                     </Table>
                   </TableContainer>
-                  <TableContainer w="full">
+                  {/* <TableContainer w="full">
                     <Table size="sm" w="full">
                       <Thead>
                         <Tr>
@@ -397,7 +403,7 @@ export const CashRegisterDetails = () => {
                         </Tr>
                       </Tbody>
                     </Table>
-                  </TableContainer>
+                  </TableContainer> */}
                 </HStack>
 
                 {

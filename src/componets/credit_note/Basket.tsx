@@ -62,6 +62,47 @@ export const Basket = ({ cashMovement }: Props) => {
   const { mutateAsync, isLoading } = useCreateAfipCreditNote(onSuccessAfip, onErrorAfip);
   const { mutateAsync: mutateAsyncX } = useCreateAfipCreditNoteX(onSuccessAfip, onErrorAfip);
 
+  function applyDiscount(cart: any, discount: number) {
+    // Calcular el total actual del carrito sin descuento
+    const totalOriginal = cart.reduce(
+      (acc: number, item: any) => acc + item.price * item.quantity,
+      0
+    );
+
+    // Asignar descuento prorrateado a cada producto
+    const cartWithDiscount = cart.map((item: any) => {
+      const itemTotal = item.price * item.quantity;
+      const itemDiscount = (itemTotal / totalOriginal) * discount;
+      const priceAfterDiscount = item.price - itemDiscount / item.quantity;
+
+      return {
+        ...item,
+        discountedPrice: parseFloat(priceAfterDiscount.toFixed(2)),
+      };
+    });
+
+    return cartWithDiscount;
+  }
+
+  function applySurcharge(cart: any, surcharge: any) {
+    // Calcular el total actual del carrito sin recargo
+    const totalOriginal = cart.reduce((acc: any, item: any) => acc + item.price * item.quantity, 0);
+
+    // Asignar recargo prorrateado a cada producto
+    const cartWithSurcharge = cart.map((item: any) => {
+      const itemTotal = item.price * item.quantity;
+      const itemSurcharge = (itemTotal / totalOriginal) * surcharge;
+      const priceAfterSurcharge = item.price + itemSurcharge / item.quantity;
+
+      return {
+        ...item,
+        surchargedPrice: parseFloat(priceAfterSurcharge.toFixed(2)),
+      };
+    });
+
+    return cartWithSurcharge;
+  }
+
   const handleSubmit = () => {
     const sale = {} as CreditNote;
 
@@ -78,21 +119,24 @@ export const Basket = ({ cashMovement }: Props) => {
       totalIVA: Number(item.totalIVA),
     }));
 
+    if (cashMovement.discount > 0) {
+      console.log('TIENEDESCUENTO GENERAL');
+      sale.cart = applyDiscount(sale.cart, cashMovement.discount);
+    } else if (cashMovement.recharge > 0) {
+      console.log('TIENE RECARGO GENERAL');
+      sale.cart = applySurcharge(sale.cart, cashMovement.recharge);
+    }
+
     sale.cashMovementId = cashMovement.id!;
     sale.clientId = cashMovement.clientId;
     sale.warehouseId = cashMovement.warehouseId;
     sale.discount = cashMovement.discount;
     sale.recharge = cashMovement.recharge;
-    //
-    sale.payments = [
-      {
-        amount: totalCart,
-        paymentMethodId:
-          cashMovement?.paymentMethodDetails?.length! > 1
-            ? 1
-            : cashMovement.paymentMethodDetails?.[0].paymentMethodId || 1,
-      },
-    ];
+    sale.payments = cashMovement.paymentMethodDetails!.map((item) => ({
+      amount: item.amount,
+      paymentMethodId: item.paymentMethodId,
+    }));
+
     sale.info = '';
     sale.invoceTypeId = cashMovement.invoceIdAfip!;
     sale.invoceNumber = cashMovement.invoceNumberAfip!;
