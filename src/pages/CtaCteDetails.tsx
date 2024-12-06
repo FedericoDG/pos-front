@@ -99,7 +99,7 @@ export const CtaCteDetails = () => {
               IMPRIMIR
             </Button>
           </Stack>
-          {data.details.length > 0 ? (
+          {data?.details?.length > 0 ? (
             <Stack ref={printRef} py="8" w="1024px">
               <Stack>
                 <Text fontWeight="semibold" mt={4} textAlign="right">

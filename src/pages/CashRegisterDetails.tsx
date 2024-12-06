@@ -324,66 +324,73 @@ export const CashRegisterDetails = () => {
                 </TableContainer>
 
                 <HStack alignItems="flex-start">
-                  <TableContainer w="50%">
-                    <Table size="sm" >
-                      <Thead>
-                        <Tr>
-                          <Th bg="gray.700" color="white">Forma de Pago</Th>
-                          <Th isNumeric bg="gray.700" color="white">Efectivo</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        <Tr>
-                          <Td color="#4a5568" fontWeight="semibold">
-                            Efectivo
-                          </Td>
-                          <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.cash)}
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td color="#4a5568" fontWeight="semibold">
-                            Débito
-                          </Td>
-                          <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.debit)}
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td color="#4a5568" fontWeight="semibold">
-                            Crédito
-                          </Td>
-                          <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.credit)}
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td color="#4a5568" fontWeight="semibold">
-                            Transferencia
-                          </Td>
-                          <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.transfer)}
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td color="#4a5568" fontWeight="semibold">
-                            Mercado Pago
-                          </Td>
-                          <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.mercadoPago)}
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td color="#4a5568" fontWeight="semibold">
-                            Cuenta Corriente
-                          </Td>
-                          <Td isNumeric color="#4a5568" fontWeight="semibold">
-                            {formatCurrency(cashRegister.currentAccount)}
-                          </Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
+                  <Flex alignItems={'center'} justifyContent={'space-between'} w="full">
+                    <TableContainer w="50%">
+                      <Table size="sm" >
+                        <Thead>
+                          <Tr>
+                            <Th bg="gray.700" color="white">Forma de Pago</Th>
+                            <Th isNumeric bg="gray.700" color="white">Monto</Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          <Tr>
+                            <Td color="#4a5568" fontWeight="semibold">
+                              Efectivo
+                            </Td>
+                            <Td isNumeric color="#4a5568" fontWeight="semibold">
+                              {formatCurrency(cashRegister.cash)}
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td color="#4a5568" fontWeight="semibold">
+                              Débito
+                            </Td>
+                            <Td isNumeric color="#4a5568" fontWeight="semibold">
+                              {formatCurrency(cashRegister.debit)}
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td color="#4a5568" fontWeight="semibold">
+                              Crédito
+                            </Td>
+                            <Td isNumeric color="#4a5568" fontWeight="semibold">
+                              {formatCurrency(cashRegister.credit)}
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td color="#4a5568" fontWeight="semibold">
+                              Transferencia
+                            </Td>
+                            <Td isNumeric color="#4a5568" fontWeight="semibold">
+                              {formatCurrency(cashRegister.transfer)}
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td color="#4a5568" fontWeight="semibold">
+                              Mercado Pago
+                            </Td>
+                            <Td isNumeric color="#4a5568" fontWeight="semibold">
+                              {formatCurrency(cashRegister.mercadoPago)}
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td color="#4a5568" fontWeight="semibold">
+                              Cuenta Corriente
+                            </Td>
+                            <Td isNumeric color="#4a5568" fontWeight="semibold">
+                              {formatCurrency(cashRegister.currentAccount)}
+                            </Td>
+                          </Tr>
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                    {/* <Stack className='no-print' w="50%">
+                      <Button mx={'auto'} size={'md'} w="300px" onClick={() => navigate(`/panel/caja/detalles/${id}/cuenta-corriente`)}>
+                        Ver Cobros de Cuenta Corriente
+                      </Button>
+                    </Stack> */}
+                  </Flex>
                   {/* <TableContainer w="full">
                     <Table size="sm" w="full">
                       <Thead>
