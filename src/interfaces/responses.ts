@@ -231,6 +231,14 @@ export interface PaymentMethodsResponse {
   };
 }
 
+export interface CashRegisterCobrosResponse {
+  body: {
+    paymentResume: any;
+    details: any[];
+    client: Client;
+  };
+}
+
 export interface CashMovementsResponse {
   body: {
     cashMovements: CashMovement[];

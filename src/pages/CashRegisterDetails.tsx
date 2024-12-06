@@ -27,7 +27,7 @@ import { useQueryClient } from 'react-query';
 
 import { DashBoard, Loading } from '../componets/common';
 import { formatCurrency, formatDate, formatDateAndHour } from '../utils';
-import { useCashRegister, useCreateAfipInvoce, useGetByCashRegisterId } from '../hooks';
+import { useCashRegister, useCreateAfipInvoce } from '../hooks';
 import { useMyContext } from '../context';
 import { formatTwoDigits } from '../utils/formatCurrency';
 import { CashMovement, roles } from '../interfaces';
@@ -50,11 +50,11 @@ export const CashRegisterDetails = () => {
     Number(id)
   );
 
-  const { data: currentAccountDetails, isFetching: isFetchingCurrentAccountDetails } = useGetByCashRegisterId(
+  /* const { data: currentAccountDetails, isFetching: isFetchingCurrentAccountDetails } = useGetByCashRegisterId(
     Number(id)
-  );
+  ); */
 
-  const isIndeterminate = isFetchingCashCashRegister || isFetchingCurrentAccountDetails;
+  const isIndeterminate = isFetchingCashCashRegister; /* || isFetchingCurrentAccountDetails; */
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
@@ -1435,7 +1435,7 @@ export const CashRegisterDetails = () => {
                   }
                 </Stack>
               </Stack>
-              {currentAccountDetails?.currentAccountDetails && currentAccountDetails?.currentAccountDetails.length &&
+              {/*   {currentAccountDetails?.currentAccountDetails && currentAccountDetails?.currentAccountDetails.length &&
                 <HStack w={'full'}>
 
                   <Stack w={'50%'}>
@@ -1477,7 +1477,7 @@ export const CashRegisterDetails = () => {
                     </TableContainer>
                   </Stack>
                 </HStack>
-              }
+              } */}
             </Stack>
           </Flex>
         </>

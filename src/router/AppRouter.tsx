@@ -50,6 +50,7 @@ import {
   Warehouses,
 } from '../pages';
 import { Ticket } from '../componets/current_account';
+import { CtaCteDetails } from '../pages/CtaCteDetails';
 
 import { PrivateRoute, PublicRoute } from './';
 
@@ -115,6 +116,7 @@ export const AppRouter = () => (
         <Route element={<CashRegisterStatus />} path="/panel/caja/estado" />
         <Route element={<CashRegisterDetails />} path="/panel/caja/detalles/:id" />
         <Route element={<CloseCashRegister />} path="/panel/caja/detalles/:id/cerrar" />
+        <Route element={<CtaCteDetails />} path="/panel/caja/detalles/:id/cuenta-corriente" />
         <Route element={<SaleDetails />} path="/panel/caja/detalles/venta/:id" />
         <Route element={<SaleDetailsAfip />} path="/panel/caja/detalles/venta/afip/:id" />
         <Route element={<CreditNote />} path="/panel/caja/detalles/nota-credito/:id" />

@@ -1,8 +1,19 @@
-import { Box, Badge, Button, Icon } from '@chakra-ui/react';
+import {
+  Box,
+  Badge,
+  Button,
+  Icon,
+  Menu,
+  MenuButton,
+  IconButton,
+  MenuList,
+  MenuItem,
+} from '@chakra-ui/react';
 import { ColumnDef, CellContext } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { TbListDetails } from 'react-icons/Tb';
 import { useNavigate } from 'react-router-dom';
+import { BsThreeDots } from 'react-icons/bs';
 
 import { CashRegister } from '../../../interfaces';
 import { formatCurrency, formatDateAndHour } from '../../../utils';
@@ -71,12 +82,34 @@ export const useColumns = () => {
       },
       {
         id: 'acciones',
-        header: 'Ver Detalles',
+        header: 'Acciones',
         cell: ({ row }: CellContext<CashRegister, unknown>) => (
           <Box fontFamily="Poppins">
-            <Button size="xs" onClick={() => navigate(`/panel/caja/detalles/${row.original.id}`)}>
-              <Icon as={TbListDetails} />
-            </Button>
+            <Menu placement="left-start">
+              <MenuButton
+                aria-label="Options"
+                as={IconButton}
+                fontSize={24}
+                icon={<BsThreeDots />}
+                variant="link"
+              />
+              <MenuList>
+                <MenuItem
+                  icon={<TbListDetails />}
+                  onClick={() => navigate(`/panel/caja/detalles/${row.original.id}`)}
+                >
+                  Ver detalles
+                </MenuItem>
+                <MenuItem
+                  icon={<TbListDetails />}
+                  onClick={() =>
+                    navigate(`/panel/caja/detalles/${row.original.id}/cuenta-corriente`)
+                  }
+                >
+                  Ver cobros cta. cte.
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Box>
         ),
         meta: {

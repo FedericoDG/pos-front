@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from 'react-query';
 
-import { CashRegisterResponse, CashRegistersResponse } from '../interfaces';
+import {
+  CashRegisterCobrosResponse,
+  CashRegisterResponse,
+  CashRegistersResponse,
+} from '../interfaces';
 import { getRequest, postRequest, putRequest } from '../services';
 import { isError } from '../utils';
 
@@ -33,6 +37,8 @@ const getCashRegister = (id: number) => getRequest<CashRegisterResponse>(`/cashr
 const getCashRegisterStatus = () => getRequest<CashRegisterResponse>(`/cashregisters/status`);
 const getCashRegisterStatusByUserId = (id: number) =>
   getRequest<CashRegisterResponse>(`/cashregisters/statusByUserId/${id}`);
+const getCurrentAccountPayments = (id: number) =>
+  getRequest<CashRegisterCobrosResponse>(`/cashregisters/cobros/${id}`);
 const openCashRegister = (open: Open) => postRequest('/cashregisters/', open);
 const closeCashRegister = (close: Close) => putRequest('/cashregisters/', close);
 const closeCashRegisterById = (close: Close2) =>
@@ -72,6 +78,15 @@ export const useCashRegisterStatusByUserId = (id: number) =>
     cacheTime: 1,
     refetchOnWindowFocus: false,
     select: (data) => data.body.cashRegister,
+  });
+
+export const useCurrentAccountPayments = (id: number) =>
+  useQuery(['cashRegisters', id], () => getCurrentAccountPayments(id), {
+    enabled: !!id,
+    retry: 1,
+    cacheTime: 1,
+    refetchOnWindowFocus: false,
+    select: (data) => data.body,
   });
 
 export const useOpenCashRegister = (onSuccess: () => void) => {
